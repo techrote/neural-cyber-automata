@@ -1,6 +1,6 @@
 # neural-cyber-automata
 
-Neural cellular automata (NCA) for [cybersand](https://github.com/techrote/cybersand): small learned per-cell rules that make "living" materials such as nanite swarms, which move, repair, build and react together without any central brain. This repo holds the training pipeline, the toy test world, the compact runtime that a game can embed, and the plan for joining them to cybersand.
+Experiments with neural cellular automata (NCA): small learned per-cell rules that make "living" materials such as nanite swarms, which move, repair, build and react together without any central brain. This repo holds the training pipeline, a toy test world and a compact runtime that a game can embed. The motivating host is [cybersand](https://github.com/techrote/cybersand), but the work stays engine-agnostic until a bridge is approved.
 
 **Stage (2026-10-13):** planning only. Nothing is built yet; see [docs/STATE.md](docs/STATE.md).
 

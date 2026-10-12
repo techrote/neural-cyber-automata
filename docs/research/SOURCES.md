@@ -15,7 +15,7 @@ Ideas and published descriptions may be used freely. Code may only be copied or 
 | Source | What this project takes from it | Licence notes |
 |---|---|---|
 | Mordvintsev et al., "Growing Neural Cellular Automata", Distill, 2020 — <https://distill.pub/2020/growing-ca/> | The baseline model and training recipe reproduced in M1: perception filters, alive masking, stochastic updates, sample pool, damage during training | Article text CC-BY; any accompanying code must be checked before reuse |
-| Randazzo et al., "Self-classifying MNIST Digits", Distill, 2020 — <https://distill.pub/2020/selforg/mnist/> | Evidence that cells can agree on a shared, global answer through local messages only (relevant to I-002) | As above |
+| Randazzo et al., "Self-classifying MNIST Digits", Distill, 2020 — <https://distill.pub/2020/selforg/mnist/> | Evidence that cells can agree on a shared, global answer through local messages only (relevant to T-018) | As above |
 | Niklasson et al., "Self-Organising Textures", Distill, 2021 — <https://distill.pub/selforg/2021/textures/> | Training NCAs towards patterns and textures rather than fixed shapes (relevant to I-008) | As above |
 | Randazzo et al., "Adversarial Reprogramming of Neural Cellular Automata", Distill, 2021 — <https://distill.pub/selforg/2021/adversarial/> | How injected signals or rogue cells can steer a whole NCA (relevant to D-005 and to swarm robustness) | As above |
 
@@ -25,7 +25,7 @@ Ideas and published descriptions may be used freely. Code may only be copied or 
 |---|---|---|
 | Salimans et al., "Evolution Strategies as a Scalable Alternative to Reinforcement Learning", 2017 — <https://arxiv.org/abs/1703.03864> | The evolution-strategies method proposed in D-008 for behaviours scored in a non-differentiable world | Paper; no code taken |
 
-## cybersand (read-only reference)
+## cybersand (motivating host, read-only reference for M4; C-004, D-009)
 
 | Document | What this project takes from it |
 |---|---|

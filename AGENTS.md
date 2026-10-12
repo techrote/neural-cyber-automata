@@ -48,9 +48,10 @@ Record the conflict; never silently pick a side.
 
 ## Project-specific rules
 
-- **Proposed design stays proposed.** D-002 to D-008 are `[PROPOSED]`. A task that depends on one waits until the owner accepts it; say so on the issue and work on something independent.
+- **Experiment first, engine-agnostic** (D-009). Write for a generic grid world: cells, signals, intents. No engine-specific material IDs, cell layouts or schedulers before M4. Sizes such as hidden-state width and the intent set are configuration, not constants.
 - **Training evidence ladder** (finer than the general classes): `implemented` → `tested-on-CPU` → `ran-on-GPU <device>` → `trained` (checkpoint exists; config and seed recorded) → `evaluated` (scored on a versioned behaviour suite). A missing GPU is a blocker, never evidence of success.
 - **Every training or benchmark run** gets a row in [docs/RUNS.md](docs/RUNS.md): commit, device, environment, config hash, seed, result. No row, no claim.
 - **Public repo** (C-003): no personal context, machine nicknames, local paths or credentials in docs, issues or logs.
-- **cybersand is read-only from here.** Read its docs and code freely; never edit it from a task in this repo (I-001, awaiting the owner).
+- **cybersand is read-only from here** (C-004). Read its docs freely; never edit it or depend on its internals until the owner approves M4.
+- **Large files stay out of Git** (C-005): checkpoints and videos go to release assets, with their SHA-256 in RUNS.md.
 - **Copyright line only** (C-001). If any third-party code is copied or ported, record its source and licence in [docs/research/SOURCES.md](docs/research/SOURCES.md) first.

@@ -12,17 +12,9 @@ verified: 2026-10-13
 
 ## Open
 
-### I-001 — Rule: do not edit cybersand until M4 is approved
-
-[PROPOSED] Agent-suggested constraint, 2026-10-13: `FORBIDDEN until: owner approves starting M4` — no task in this repo changes cybersand code or docs. Pros: keeps the engine stable while NCA work is experimental. Cons: integration problems are found later. How hard to change later: easy.
-
-### I-002 — Nanites react to macro world events
-
-[IDEA] Raised by owner 2026-10-13 ("distributed pseudo-intelligences which react to macro world events maybe?"). Examples: explosions raise an alarm, a breached wall calls for repair, a large fire triggers retreat. D-005 proposes the mechanism. Would need: D-005 accepted and a list of the first events to support.
-
 ### I-003 — A strategist character commands nanites through signal fields
 
-[IDEA] Raised in discussion 2026-10-13. A small language model "cybergoblin" in cybersand issues commands such as "defend sector 4", which become signal-field writes the nanites respond to. Would need: D-005 accepted, M4 complete, and the strategist project itself.
+[IDEA] Raised in discussion 2026-10-13. A small language model character in a host game issues commands such as "defend sector 4", which become signal-field writes the cells respond to (D-005). Would need: M4 complete and the strategist project itself.
 
 ### I-004 — Behaviour catalogue beyond the first swarm
 
@@ -36,14 +28,24 @@ verified: 2026-10-13
 
 [IDEA] Raised by agent 2026-10-13. The Web build runs cellular simulation on a single worker, so nanite counts would need a lower cap there. Would need: M3 cost numbers and an owner decision on Web support.
 
-### I-007 — Store trained weights outside Git
-
-[PROPOSED] Agent-suggested rule, 2026-10-13: checkpoints and videos go to GitHub release assets or another store, with their hash recorded in [RUNS.md](RUNS.md); only tiny test fixtures live in Git. Pros: repository stays small. Cons: one more place to look. How hard to change later: easy.
-
 ### I-008 — Use the trained NCAs for art and textures
 
 [IDEA] Raised in discussion 2026-10-13. Self-organising textures and animated patterns as visual assets or effects, independent of gameplay. Would need: nothing beyond M1; purely optional.
 
 ### I-009 — Many parallel experiments on the K80 lanes
 
-[IDEA] Raised in discussion 2026-10-13. Each GPU die runs a different seed, setting or behaviour overnight (parameter sweeps, population-based training). Would need: D-006 accepted and M1 lane benchmark numbers.
+[IDEA] Raised in discussion 2026-10-13. Each GPU die runs a different seed, setting or behaviour overnight (parameter sweeps, population-based training). Would need: M1 lane benchmark numbers (T-007).
+
+## Closed (kept so they are not re-proposed)
+
+### I-001 — Rule: do not edit cybersand until M4 is approved
+
+[SUPERSEDED by C-004] Accepted by the owner 2026-10-13.
+
+### I-002 — Nanites react to macro world events
+
+[SUPERSEDED by T-018] Raised by owner 2026-10-13 ("distributed pseudo-intelligences which react to macro world events maybe?"); planned 2026-10-13 ("all as guessed") on top of D-005.
+
+### I-007 — Store trained weights outside Git
+
+[SUPERSEDED by C-005] Accepted by the owner 2026-10-13.
