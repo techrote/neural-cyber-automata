@@ -1,57 +1,55 @@
 ---
 title: Agent instructions — neural-cyber-automata
 kind: navigation
-summary: Where any agent starts in neural-cyber-automata, which documents decide what, and the few rules that always apply.
+summary: Task entry, current charter, authority and evidence requirements.
 owns: [agents.entry]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
-# AGENTS.md — neural-cyber-automata
+# Agent instructions
 
-Neural cellular automata (NCA) training, toy world and compact runtime for living materials (nanite swarms and similar) in the cybersand engine. Personal project of techrote.
+This repository serves training and testing intelligent behaviours for Cybersand. Its scope includes ACT-004 physical actors, movement and usable skills, human and model control, coordination and useful NCA experiments.
 
-## Read first, in this order
+## Read first
 
-1. [docs/README.md](docs/README.md): the map; find the pages your task needs.
-2. [docs/STATE.md](docs/STATE.md): what exists **now**. Untagged lines here are current; nothing else is.
-3. [docs/CONSTRAINTS.md](docs/CONSTRAINTS.md): what is required, forbidden or preferred.
-4. [docs/DECISIONS.md](docs/DECISIONS.md): what has been decided and why. Most design entries start as `[PROPOSED]`.
-5. Your issue, all its comments, and its read-set.
-6. Live state: default branch, open PRs touching your write-set, CI.
+1. [Documentation map](docs/README.md).
+2. [Current state](docs/STATE.md).
+3. [Constraints](docs/CONSTRAINTS.md) and [decisions](docs/DECISIONS.md).
+4. [Scope migration](docs/SCOPE_AND_MIGRATION.md) and the [implementation programme](docs/ROADMAP.md).
+5. The task issue, all comments, its read-set and dependencies.
+6. Live branches, overlapping PRs and relevant host revision.
 
-## How to read status
+The current user instruction takes precedence over older project instructions. Record a material change of scope in the decisions register; do not turn obsolete instructions into a permission loop. D-010 records the 18 October 2026 recharter. It authorizes research and design here, not a claim that a proposed control algorithm is accepted or implemented.
 
-Every claim carries a status by its location and tag. This section and [tools/check_docs.py](tools/check_docs.py) are the in-repo copy of the documentation rules.
+## Authority and status
 
-- `[CURRENT]` `[PARTIAL]` `[DEFECT]`: exists now.
-- `[TARGET D-###]` `[PLANNED T-###]`: accepted or scheduled, **not built**.
-- `[PROPOSED]` `[IDEA]` `[DEFERRED]` `[REJECTED]` `[ABANDONED]`: **not** planned or approved. Never implement these unless your issue says so.
-- `[FORBIDDEN until: …]`: do not do this. Only the owner lifts it.
-- Research findings: `[ESTABLISHED]` `[SUPPORTED]` `[TENTATIVE]` `[REFUTED]` `[OPEN]`. A finding never becomes a requirement by itself; only an accepted decision citing it can.
+Code on the default branch determines what exists. Latest owner instructions determine authorized scope. Accepted decisions specify requirements; research recommendations and implementation issue prompts do not prove runtime behaviour.
 
-When sources disagree:
+Use these distinctions:
 
-- code on the default branch decides what *is*;
-- the owner's recorded decisions and constraints decide what *should be*;
-- chat, issue comments and history decide nothing until written into these docs.
+- Current or partial: exists on the cited revision.
+- Accepted design: authorized but possibly unbuilt.
+- Proposed: a design candidate or experiment to assess.
+- Deferred: preserved but off the immediate path.
+- Evidence: reviewed, built, tested, ran on target, measured, owner accepted.
 
-Record the conflict; never silently pick a side.
+A paper result never becomes a Cybersand result. An untrained network, a mock service, a metadata flag, a green documentation check and a trained/evaluated policy are different evidence.
 
-## Rules
+## Working rules
 
-- One issue → one branch → one PR. Merge only when checks pass on the final head; then verify the merge landed.
-- The PR includes a **Docs impact** section. Behaviour changes update `docs/STATE.md` (or the owning page) in the same PR.
-- Report evidence by class: reviewed / built / tested / ran-on-target / measured / owner-accepted. Never present a weaker one as a stronger one.
-- Prefer new files behind named extension points ([docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)) over edits scattered through existing code.
-- Run `python tools/check_docs.py` before pushing docs changes.
-- Messages to the owner: plain language, direct links, one card at a time, pros/cons for any choice, evidence class stated.
+- One issue, one branch, one PR. Preserve unrelated work. Required checks must pass on the final head before a merge, then verify the merge.
+- A research prepass edits documentation and task definitions. Do not launch training, acquire compute, call a paid model service or modify a host runtime as a side effect.
+- Cybersand remains read-only for this prepass. Host integration changes need a corresponding Cybersand task and that project's acceptance process.
+- Keep the gameplay plant in Cybersand: Rapier integrates bodies/contacts, authored assists and compliant connections shape their behaviour, and the native cellular owner controls material changes. Controllers submit bounded requests. D-011 permits deliberate flex/play and gyro assistance without momentum accounting.
+- Preserve ACT003 wire/metal, perception, decision placement, coordination and training-privilege distinctions. A new version cannot silently reinterpret existing packets or presets.
+- Implement a registered extension with a declared contract before a framework-wide abstraction. Keep future choices replaceable.
+- Every PR states its documentation impact and exact evidence limits.
+- Run `python tools/check_docs.py --strict` for documentation changes. Do not weaken the checker to admit false status claims.
 
-## Project-specific rules
+## Experiments and publication
 
-- **Experiment first, engine-agnostic** (D-009). Write for a generic grid world: cells, signals, intents. No engine-specific material IDs, cell layouts or schedulers before M4. Sizes such as hidden-state width and the intent set are configuration, not constants.
-- **Training evidence ladder** (finer than the general classes): `implemented` → `tested-on-CPU` → `ran-on-GPU <device>` → `trained` (checkpoint exists; config and seed recorded) → `evaluated` (scored on a versioned behaviour suite). A missing GPU is a blocker, never evidence of success.
-- **Every training or benchmark run** gets a row in [docs/RUNS.md](docs/RUNS.md): commit, device, environment, config hash, seed, result. No row, no claim.
-- **Public repo** (C-003): no personal context, machine nicknames, local paths or credentials in docs, issues or logs.
-- **cybersand is read-only from here** (C-004). Read its docs freely; never edit it or depend on its internals until the owner approves M4.
-- **Large files stay out of Git** (C-005): checkpoints and videos go to release assets, with their SHA-256 in RUNS.md.
-- **Copyright line only** (C-001). If any third-party code is copied or ported, record its source and licence in [docs/research/SOURCES.md](docs/research/SOURCES.md) first.
+Training and benchmarks record the host and learner revisions, build/environment, seed sets, resolved configuration, observation/action schema, cadence, dataset and checkpoint hashes, budget, failures and evaluation suite. Use [RUNS.md](docs/RUNS.md) and immutable per-run manifests. Missing hardware is unmeasured, not a passing result.
+
+Compare matched physical capability and information budgets. Keep evaluator-only state out of policy input. Distinguish requested actions, admitted actions, actual actuation and passive/contact motion. Log interventions and resets.
+
+Public repository hygiene: no personal context, machine nicknames, local paths, credentials or private traces. Copyright line only; record third-party code provenance and licence before copying or porting. Large checkpoints, datasets and videos stay outside Git with hashes. Windows instructions should be complete and low friction.

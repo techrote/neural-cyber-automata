@@ -3,7 +3,7 @@ title: Constraints
 kind: constraints
 summary: The rules of the project. What must always hold, what must not be done (and until when), and the default preferences.
 owns: [constraints.register]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
 # Constraints
@@ -28,11 +28,19 @@ Every entry is tagged. `FORBIDDEN` always states its lift condition (`until: …
 
 [REQUIRED] Checkpoints, videos and datasets go to GitHub release assets (or another store the owner approves), with their SHA-256 recorded in [RUNS.md](RUNS.md). Only tiny test fixtures live in Git. Owner accepted 2026-10-13 (I-007).
 
-## Forbidden
+## Current scope and fidelity
 
-### C-004 — No edits to cybersand from this project
+### C-004 — Historical engine-agnostic bridge restriction
 
-[FORBIDDEN until: owner approves starting M4] No task in this repo changes cybersand code or docs, and no code here depends on cybersand's internals. Reading its docs is allowed. Owner accepted 2026-10-13 (I-001, D-009).
+[SUPERSEDED by D-010] The old M4 restriction was accepted on 13 October. The 18 October owner request authorizes Cybersand-specific research and rechartering this repository. The current prepass leaves Cybersand code and docs unchanged; later host edits belong to a corresponding Cybersand task and acceptance process.
+
+### C-006 — Plausible, stable authored mechanics
+
+[REQUIRED] D-011 governs fidelity. Bounded gyro assistance, approximate joints and controlled flex/play are allowed. No finite gyro momentum ledger or mechanically perfect connection is required. Train and evaluate the same declared gameplay mechanics, with equal assistance and limits in matched comparisons.
+
+### C-007 — Keep evidence and execution scope distinct
+
+[REQUIRED] This prepass produces research/design and task definitions. It does not run training or call model services. A later implementation task must record its budget and exact runtime. Unknown or unavailable readings are not zero; a learned metadata flag is not evidence of training. A proposed method becomes an executed experiment only when its task is commissioned.
 
 ## Preferred
 

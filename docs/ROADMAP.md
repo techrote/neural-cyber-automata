@@ -1,80 +1,104 @@
 ---
-title: Roadmap
+title: Cybersand behaviour implementation programme
 kind: roadmap
-summary: The order of upcoming work, as milestones with exit tests and tasks with IDs. Nothing here is built; finished work moves to the state page.
+summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
-# Roadmap
+# Implementation programme
 
-This page owns **order and scope**. Issue numbers and creation dates never imply order. Finished tasks leave this page: what they built is described in [STATE.md](STATE.md), and their evidence is in [evidence/](evidence/README.md) and [RUNS.md](RUNS.md).
+Prepared by T-100. This is an issue-based execution programme, not evidence of implementation or a launched training campaign. Assignment of an issue authorizes its bounded work subject to its actual dependencies. An open task does not require every other task to run.
 
-Gate key: ⚙️ an agent can verify it · 👁 needs the owner's eyes or hands (watching a result, or running a command on a GPU machine).
+D-010 defines the Cybersand mission. D-011 sets plausible gameplay emulation with deliberate flex/play. D-012/D-013 contain research recommendations whose value is established through the experiments below.
 
-**Design basis:** all tasks follow the accepted decisions D-002 to D-009. The project is in an engine-agnostic experiment phase (D-009): no task names a specific engine's materials, cell layout or scheduler before M4.
+## First useful milestone
 
-## M0 — Foundations: package, environments, run records
+A compatible game profile, a persistent adapter, a convincing authored baseline and one small learned skill can be compared on unseen scenarios with recorded feel, response, success and cost.
 
-**M0 is done when:** `nca doctor` prints a device and software report in CI (CPU) and on at least one GPU on an owner machine, and a smoke run adds its own row to [RUNS.md](RUNS.md).
+T-101 can start from this repository immediately after the prepass lands. T-102 can prepare recorded/sampled transport before ACT-004 is accepted, but its physical-game acceptance needs the actual host. Do not wait for all 29 rigs or a new NCA engine to test one available rig.
 
-| Task | Status | What | Depends on | Gate | Write-set | Issue |
-|---|---|---|---|---|---|---|
-| T-001 | [PLANNED T-001] | Python package skeleton with plug-in registries; CPU test workflow | — | ⚙️ | `pyproject.toml`, `src/nca/` (package root, `registry.py`), `tests/`, `.github/workflows/tests.yml` | [#2](https://github.com/techrote/neural-cyber-automata/issues/2) |
-| T-002 | [PLANNED T-002] | Pinned `modern` and `legacy-k80` environments, Windows setup scripts, `nca doctor` | T-001 | 👁 | `env/`, `scripts/`, `src/nca/doctor.py` | [#3](https://github.com/techrote/neural-cyber-automata/issues/3) |
-| T-003 | [PLANNED T-003] | Run records: config hashing, seeding, run folders, automatic RUNS.md row | T-001 | ⚙️ | `src/nca/runs/`, `docs/RUNS.md` | [#4](https://github.com/techrote/neural-cyber-automata/issues/4) |
-| T-004 | [PLANNED T-004] | M0 debt sweep and docs audit | T-001, T-002, T-003 | ⚙️ | refactors within M0 write-sets, `docs/` | [#5](https://github.com/techrote/neural-cyber-automata/issues/5) |
+## Active task definitions
 
-- **T-001 checks:** ⚙️ `pip install -e .` and `pytest` pass in CI; ⚙️ a registry test shows a dummy model and dummy world can be registered and looked up by name without editing existing files (C-020).
-- **T-002 checks:** ⚙️ `nca doctor` runs on CPU in CI and reports Python, PyTorch, CUDA, device name and compute capability, or "no GPU" (never blank); 👁 the owner runs one bundled command block per environment on a GPU machine and pastes the report; the report is saved as an evidence record. The legacy environment must report `sm_37` among PyTorch's supported architectures before any K80 claim.
-- **T-003 checks:** ⚙️ two runs with the same config and seed produce the same config hash and identical CPU outputs; ⚙️ a run without a RUNS.md row fails the test suite.
+| Task | Status | Scope | Depends on | Issue |
+|---|---|---|---|---|
+| T-101 | [PLANNED T-101] | Package, gameplay-profile contracts and reproducible run records | T-100 | [#11](https://github.com/techrote/neural-cyber-automata/issues/11) |
+| T-102 | [PLANNED T-102] | Persistent Cybersand host adapter and causal stepping conformance | T-101 | [#12](https://github.com/techrote/neural-cyber-automata/issues/12) |
+| T-103 | [PLANNED T-103] | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
+| T-104 | [PLANNED T-104] | Demonstration capture, consumed-action replay and intervention datasets | T-101, T-102 | [#14](https://github.com/techrote/neural-cyber-automata/issues/14) |
+| T-105 | [PLANNED T-105] | First learned actor skill: imitation and recurrent residual control | T-102, T-103, T-104 | [#15](https://github.com/techrote/neural-cyber-automata/issues/15) |
+| T-106 | [PLANNED T-106] | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |
+| T-107 | [PLANNED T-107] | Usable skills and feedback-driven task composition | T-103, T-104 | [#17](https://github.com/techrote/neural-cyber-automata/issues/17) |
+| T-108 | [PLANNED T-108] | Human takeover and asynchronous decision-model or LLM adapter | T-102, T-107 | [#18](https://github.com/techrote/neural-cyber-automata/issues/18) |
+| T-109 | [PLANNED T-109] | Runtime export, end-to-end throughput and deployment qualification | T-105 | [#19](https://github.com/techrote/neural-cyber-automata/issues/19) |
+| T-110 | [PLANNED T-110] | Conditional distributed NCA and coordination experiments for Cybersand | T-101, T-102, T-104 | [#20](https://github.com/techrote/neural-cyber-automata/issues/20) |
 
-## M1 — Baseline: reproduce Growing NCA
+Each issue contains an execution prompt, read-set, write-set, checks, limits and budget. No task may claim trained/physical/live-model evidence from a schema, mock or metadata flag.
 
-**M1 is done when:** an NCA trained on a small image grows that image from a single seed cell and regrows it after damage; the owner has watched the video; and steps-per-second for training is measured on every available device lane, each linked from [RUNS.md](RUNS.md).
+## Dependency gates
 
-| Task | Status | What | Depends on | Gate | Write-set | Issue |
-|---|---|---|---|---|---|---|
-| T-005 | [PLANNED T-005] | Growing NCA model and gradient trainer (perception filters, alive masking, stochastic updates, sample pool, damage) | T-001, T-003 | ⚙️ | `src/nca/models/growing.py`, `src/nca/train/gradient.py`, `tests/` | [#6](https://github.com/techrote/neural-cyber-automata/issues/6) |
-| T-006 | [PLANNED T-006] | Rollout viewer: frames to video/GIF, plus an interactive "click to damage" viewer that runs on Windows | T-005 | 👁 | `src/nca/view/` | [#7](https://github.com/techrote/neural-cyber-automata/issues/7) |
-| T-007 | [PLANNED T-007] | Device lane benchmark: training steps/s and memory on CPU, K80 (one die), and any modern GPU | T-002, T-005 | 👁 | `src/nca/bench/`, `docs/HARDWARE.md`, `docs/evidence/` | [#8](https://github.com/techrote/neural-cyber-automata/issues/8) |
-| T-008 | [PLANNED T-008] | M1 debt sweep and docs audit | T-005, T-006, T-007 | ⚙️ | refactors within M1 write-sets, `docs/` | [#9](https://github.com/techrote/neural-cyber-automata/issues/9) |
+**T-101:** Can start after the prepass merge; no ACT-004 implementation dependency for the package and recorded fixtures.
 
-- **T-005 checks:** ⚙️ a tiny configuration (16×16 target, few hundred steps) trains on CPU in CI and its loss falls below a recorded threshold; ⚙️ the implementation is written from the published description, not copied (C-001); sources listed in [research/SOURCES.md](research/SOURCES.md).
-- **T-006 checks:** 👁 the owner opens a video and the interactive viewer from a direct link or one command, and sees growth, damage and regrowth. Playback speed and zoom are settings, not fixed values.
-- **T-007 checks:** 👁 the owner runs one command per machine; ⚙️ results are written as an evidence record with device, driver, environment and settings; anything not run is listed as "not measured".
+**T-102:** Protocol/recorded and sampled lanes may be prepared now. ACT-004 game qualification is blocked until an accepted compatible host interface exists in Cybersand #178 or its follow-up.
 
-## M2 — Nanosand: first nanite behaviour
+**T-103:** Needs one accepted ACT-004 profile and actual game adapter; host mechanics changes use a separate Cybersand task.
 
-**M2 is done when:** in the toy world, nanites move towards an alarm source, regroup after part of the swarm is destroyed, react to at least two kinds of world event, and still do so with random update order and noise; mass error is exactly zero throughout; a versioned behaviour score and a video exist; the owner judges the behaviour from the video.
+**T-104:** Recorded/sampled preparation can run earlier; any ACT-004 dataset claim requires the physical game lane.
 
-| Task | Status | What | Depends on | Gate | Write-set | Issue |
-|---|---|---|---|---|---|---|
-| T-009 | [PLANNED T-009] | Toy world "nanosand": a few materials, gravity, walls, nanite material, intent resolution, mass checks, many copies batched on GPU | T-001, T-003 | ⚙️ | `src/nca/worlds/nanosand/`, `tests/` | — |
-| T-010 | [PLANNED T-010] | Signal fields (alarm source) and a nanite network with a hidden state plane | T-009 | ⚙️ | `src/nca/models/nanite.py`, `src/nca/worlds/nanosand/signals.py` | — |
-| T-011 | [PLANNED T-011] | Behaviour evaluation suite v1: fixed scenarios and seeds, versioned, with scores | T-009 | ⚙️ | `src/nca/eval/`, `evals/v1/` | — |
-| T-012 | [PLANNED T-012] | Evolution-strategies trainer with robustness training; first behaviour "swarm to alarm, regroup after damage" | T-010, T-011 | 👁 | `src/nca/train/es.py`, `configs/behaviours/swarm_alarm.*` | — |
-| T-018 | [PLANNED T-018] | Event-driven signal sources: explosion, breach and attractor events write signal fields; the swarm reacts (alarm, repair, retreat) | T-010, T-012 | 👁 | `src/nca/worlds/nanosand/events.py`, `configs/behaviours/` | — |
-| T-013 | [PLANNED T-013] | M2 debt sweep and docs audit | T-009 … T-012, T-018 | ⚙️ | refactors within M2 write-sets, `docs/` | — |
+**T-105:** Requires actual game adapter, stable baseline/profile, datasets and frozen evaluation criteria. Run only when this implementation/experiment task is commissioned.
 
-- **T-009 checks:** ⚙️ total mass per material is identical before and after 10,000 steps across 64 random worlds; ⚙️ same seed gives byte-identical worlds on CPU; ⚙️ GPU and CPU results agree for the same seed, or the difference is recorded as a gotcha with its cause.
-- **T-018 checks:** ⚙️ each event type is a registered plug-in that writes only through the signal-field interface (D-005); ⚙️ behaviour suite v1 gains event scenarios under a new suite version; 👁 the owner watches the swarm respond to two different events in one video.
-- **T-011 checks:** ⚙️ the suite has a version number; scores from different versions are never compared (rule recorded in the suite's README).
-- **T-012 checks:** ⚙️ the trained behaviour beats an untrained network on suite v1 by a margin recorded before training starts; 👁 the owner watches the video and says whether it reads as "a swarm". Swarm speed and cohesion are exposed as training settings so alternatives can be shown side by side.
+**T-106:** Starts only after one useful per-rig learned skill and accepted additional actor profiles exist.
 
-## M3 — Integer runtime
+**T-107:** Requires accepted ACT-004 mount/usable capabilities. An authored skill implementation can precede learned skill replacement.
 
-**M3 is done when:** a dependency-free C++ library runs the M2 nanite network in integer arithmetic, matches a Python integer reference byte-for-byte on every suite v1 scenario, builds in CI on Windows (MSVC) and Linux, and its cost per nanite update is measured on a desktop CPU.
+**T-108:** Deterministic mock providers first. A live provider requires an explicit chosen service and bounded call/spend budget in the commissioned task.
 
-| Task | Status | What | Depends on | Gate | Write-set | Issue |
-|---|---|---|---|---|---|---|
-| T-014 | [PLANNED T-014] | Quantisation to integer weights and a Python integer reference; score loss measured on suite v1 | T-012 | ⚙️ | `src/nca/quant/` | — |
-| T-015 | [PLANNED T-015] | C++ integer runtime library with byte-for-byte parity tests; Windows and Linux CI builds | T-014 | ⚙️ | `runtime/`, `.github/workflows/runtime.yml` | — |
-| T-016 | [PLANNED T-016] | CPU cost benchmark: nanite updates per second per core, single and multi-thread | T-015 | ⚙️ | `runtime/bench/`, `docs/evidence/` | — |
-| T-017 | [PLANNED T-017] | M3 debt sweep and docs audit | T-014, T-015, T-016 | ⚙️ | refactors within M3 write-sets, `docs/` | — |
+**T-109:** Requires a trained/evaluated candidate; additional platforms and accelerators are separately qualified lanes.
 
-## M4 — Host-engine bridge (needs the owner's go-ahead)
+**T-110:** Off the first actor-control critical path. Commission one named behaviour and topology before implementation; no open-ended cellular engine programme.
 
-**M4 is done when:** a written interface proposal for a chosen host engine (cybersand is the motivating candidate: hidden-state storage, intent resolution inside the host's scheduling rules, signal-field writers, CPU budget per tick) has been accepted by the owner, and a first active material runs in a host test scene behind a default-off setting.
 
-Tasks are added when M3 is complete and the owner approves starting M4 (C-004).
+The host adapter uses the accepted Cybersand mechanics, including deliberate assistance and compliant connections. The host remains separately responsible for actor bodies, native materials and usables. Missing host facilities become bounded Cybersand follow-ups, not a silent change to the research environment.
+
+## What can run in parallel
+
+After T-101, transport/conformance and dataset-format preparation can proceed independently, provided full T-104 completion still uses an accepted T-102 adapter. After T-102, baseline tuning (T-103) and capture/replay (T-104) have separate primary write-sets.
+
+After the baseline and dataset, one learned skill (T-105) and authored usable composition (T-107) can proceed separately. T-108 does not require the low-level policy to be neural: the same skill interface can use authored control. After a useful learned candidate, morphology work (T-106) and export/performance (T-109) can be independent.
+
+T-110 is a conditional side track with one named behaviour/topology at a time. It does not block the actor-control milestone.
+
+## Experiment and acceptance gates
+
+Before a learning run, freeze the profile, observation/action semantics, scenario split, reward, comparison metrics and budget. Begin with the [training specification](design/TRAINING_AND_EVALUATION.md) ceilings: three seeds and two learned configurations, at most 200,000 decisions or two hours per seed initially. These are caps, not a prediction of sufficient learning.
+
+Routine CI checks contracts, reset, sample handling and small fixtures. Long training and live model calls use explicit experiment tasks. Preserve failed and capped runs. A no-go or inconclusive result can satisfy a research issue if it answers the scoped question honestly and leaves reproducible evidence.
+
+Promotion requires matched capabilities and declared information/timing, no critical lifecycle failures, useful task performance, measured runtime cost and separately recorded owner feel judgement. Do not demand perfect joints, a gyro momentum ledger or exact energy conservation.
+
+## Preserved legacy programme
+
+All following tasks are deferred historical scopes. Their original IDs are retained and their original descriptions remain at [bootstrap 20d0634](https://github.com/techrote/neural-cyber-automata/blob/20d063423fda1e037f328fb32c40c00c73b121a5/docs/ROADMAP.md). Replacements do not mark the old work completed.
+
+| Task | Status | Original scope | Current destination | Original issue |
+|---|---|---|---|---|
+| T-001 | [DEFERRED] | Package skeleton | T-101 | [#2](https://github.com/techrote/neural-cyber-automata/issues/2) |
+| T-002 | [DEFERRED] | Modern/legacy environments | T-101 / T-109 | [#3](https://github.com/techrote/neural-cyber-automata/issues/3) |
+| T-003 | [DEFERRED] | Run records | T-101 / T-104 | [#4](https://github.com/techrote/neural-cyber-automata/issues/4) |
+| T-004 | [DEFERRED] | M0 audit | Per-task evidence/review | [#5](https://github.com/techrote/neural-cyber-automata/issues/5) |
+| T-005 | [DEFERRED] | Growing NCA baseline | T-110 | [#6](https://github.com/techrote/neural-cyber-automata/issues/6) |
+| T-006 | [DEFERRED] | NCA damage viewer | T-110 | [#7](https://github.com/techrote/neural-cyber-automata/issues/7) |
+| T-007 | [DEFERRED] | Device benchmark | T-109 | [#8](https://github.com/techrote/neural-cyber-automata/issues/8) |
+| T-008 | [DEFERRED] | M1 audit | Per-task evidence/review | [#9](https://github.com/techrote/neural-cyber-automata/issues/9) |
+| T-009 | [DEFERRED] | Nanosand toy world | T-110 | — |
+| T-010 | [DEFERRED] | Signals and nanite network | T-110 | — |
+| T-011 | [DEFERRED] | Behaviour suite | T-110 | — |
+| T-012 | [DEFERRED] | Evolution-strategies swarm | T-110 | — |
+| T-013 | [DEFERRED] | M2 audit | Per-task evidence/review | — |
+| T-014 | [DEFERRED] | Quantisation | T-109 / T-110 | — |
+| T-015 | [DEFERRED] | Integer runtime | T-109 / T-110 | — |
+| T-016 | [DEFERRED] | Cellular CPU benchmark | T-109 / T-110 | — |
+| T-017 | [DEFERRED] | M3 audit | Per-task evidence/review | — |
+| T-018 | [DEFERRED] | World-event signal response | T-110 | — |
+
+See [scope migration](SCOPE_AND_MIGRATION.md) for the rationale. The original NCA methods remain available; their old milestone order no longer controls actor research.

@@ -1,51 +1,63 @@
 ---
-title: Ideas
+title: Conditional research directions
 kind: ideas
-summary: Everything optional, undecided, postponed, rejected or abandoned, kept so it is neither forgotten nor mistaken for a plan.
+summary: Preserved optional ideas and the evidence needed before they expand the actor-control programme.
 owns: [ideas.register]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
-# Ideas
+# Conditional directions
 
-> **Nothing on this page is planned, approved or built.** Do not implement anything here unless an issue explicitly says so. An idea that gets adopted becomes a task or decision with its own ID, and its entry here becomes `[SUPERSEDED by T-###]`.
+Ideas here are not implemented or automatically commissioned. D-010 makes useful Cybersand behaviour the selection criterion.
 
-## Open
+### I-003 — Strategist commands local behaviour
 
-### I-003 — A strategist character commands nanites through signal fields
+[SUPERSEDED by T-108] Human/model intent is now part of the shared actor-skill research. Field-commanded nanites remain one optional T-110 implementation, not a required independent strategist project.
 
-[IDEA] Raised in discussion 2026-10-13. A small language model character in a host game issues commands such as "defend sector 4", which become signal-field writes the cells respond to (D-005). Would need: M4 complete and the strategist project itself.
+### I-004 — Behaviour catalogue beyond a first swarm
 
-### I-004 — Behaviour catalogue beyond the first swarm
+[IDEA] Repair, breach plugging, construction, consumption, retreat and quarantine remain candidates. Select one scenario/topology under T-110 and compare it with a simple authored alternative.
 
-[IDEA] Raised in discussion 2026-10-13: self-repair of a structure; build a bridge or plug a breach where a signal points; consume a target material; scatter from explosions; split into groups; quarantine a region. Would need: M2 working, then one roadmap task per behaviour.
+### I-005 — GPU cellular inference in the game
 
-### I-005 — GPU compute-shader runtime inside the game
+[DEFERRED] Consider only after measured CPU field-update cost becomes a limit and a target renderer/runtime is specified. Record determinism and synchronization implications separately from network arithmetic.
 
-[IDEA] Raised by agent 2026-10-13. Run nanite updates on the player's GPU instead of the CPU, to allow far larger swarms. Would need: M3 CPU cost numbers showing the CPU is the limit; a decision on how this keeps determinism (D-004).
+### I-006 — Cellular behaviour in the Web build
 
-### I-006 — Nanites in cybersand's Web build
+[DEFERRED] Needs a qualified network runtime and measured host budget. Do not assume the desktop actor or field count carries over.
 
-[IDEA] Raised by agent 2026-10-13. The Web build runs cellular simulation on a single worker, so nanite counts would need a lower cap there. Would need: M3 cost numbers and an owner decision on Web support.
+### I-008 — Self-organizing art/textures
 
-### I-008 — Use the trained NCAs for art and textures
+[DEFERRED] Retain as a possible Cybersand effect or actor-state visualization. Standalone art research is outside the current mission.
 
-[IDEA] Raised in discussion 2026-10-13. Self-organising textures and animated patterns as visual assets or effects, independent of gameplay. Would need: nothing beyond M1; purely optional.
+### I-009 — Parallel legacy-GPU experiments
 
-### I-009 — Many parallel experiments on the K80 lanes
+[DEFERRED] Qualify the lane and its workload first. Legacy GPU availability does not choose the learning method or block CPU/compatible-accelerator work.
 
-[IDEA] Raised in discussion 2026-10-13. Each GPU die runs a different seed, setting or behaviour overnight (parameter sweeps, population-based training). Would need: M1 lane benchmark numbers (T-007).
+### I-010 — Reservoir, spiking or unusual recurrent controllers
 
-## Closed (kept so they are not re-proposed)
+[IDEA] Potential compact temporal controllers if measured memory/inference constraints justify them. Compare against a small history/GRU policy before creating a new runtime.
 
-### I-001 — Rule: do not edit cybersand until M4 is approved
+### I-011 — Learn response parameters or morphology jointly
 
-[SUPERSEDED by C-004] Accepted by the owner 2026-10-13.
+[IDEA] Optimize a small set of permitted gait/assist/profile parameters, or compare authored body variants. Keep profile identity and abilities explicit; changing the actor during an algorithm comparison changes the experiment.
 
-### I-002 — Nanites react to macro world events
+### I-012 — World models and online planning
 
-[SUPERSEDED by T-018] Raised by owner 2026-10-13 ("distributed pseudo-intelligences which react to macro world events maybe?"); planned 2026-10-13 ("all as guessed") on top of D-005.
+[DEFERRED] Introduce only after a concrete need for anticipation and a prediction-quality/latency test. Contact, terrain destruction and emulated mechanisms need validation on the actual game.
 
-### I-007 — Store trained weights outside Git
+### I-013 — Continuous human-policy blending
 
-[SUPERSEDED by C-005] Accepted by the owner 2026-10-13.
+[DEFERRED] Begin with exclusive control and immediate takeover. Later compare assistance strength against task performance and perceived authority, with separate proposal/applied-action data.
+
+### I-001 — Original host-edit restriction
+
+[SUPERSEDED by C-004] Historical restriction; its generic-only component is superseded by D-010. Current prepass remains read-only toward Cybersand.
+
+### I-002 — React to macro world events
+
+[SUPERSEDED by T-018] Original task retained as deferred scope, now considered through T-110 with a concrete event/behaviour.
+
+### I-007 — Large artifacts outside Git
+
+[SUPERSEDED by C-005] Retained requirement.

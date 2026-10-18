@@ -1,16 +1,16 @@
 ---
 title: Run ledger
 kind: evidence
-summary: Append-only list of every training and benchmark run, with the exact code, device, settings and seed. A result without a row here is not a claim.
+summary: Training and benchmark provenance ledger; no such runs have occurred in this repository.
 owns: [runs.ledger]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
 # Run ledger
 
-Append rows; never edit or delete them. A correction is a new row that names the row it corrects. From T-003 onwards rows are written by the run tooling, not by hand.
+No training or benchmark runs yet. Documentation checks and source review belong to the evidence directory and are not training records.
 
-| Run ID | Date | Commit | Device (lane) | Environment | Config hash | Seed | Eval suite version | Result | Ladder rung | Evidence |
-|---|---|---|---|---|---|---|---|---|---|---|
+T-101 and T-104 specify immutable per-run manifests and a generated/merged ledger index. Workers do not concurrently append to a shared Markdown file. Corrections identify the prior record and retain it.
 
-No runs yet.
+| Run ID | Date | Learner and host revisions | Device/environment | Profile/config hash | Seed set and split | Suite | Result and evidence class | Artifact/evidence |
+|---|---|---|---|---|---|---|---|---|

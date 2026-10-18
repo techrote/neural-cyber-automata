@@ -1,34 +1,16 @@
 ---
 title: Evidence records
 kind: navigation
-summary: Dated, unchangeable records of what was built, tested or measured, against which exact version. Each record is true only for the version it names.
+summary: Pinned source reviews and validation records, separate from training and performance claims.
 owns: [evidence.index]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
 # Evidence records
 
-One file per event: `YYYY-MM-DD-short-slug.md`. Records are **never edited** after publication; a correction is a new record linking the old one. Training and benchmark runs are additionally listed in [RUNS.md](../RUNS.md).
+Records identify scope, source/runtime revision, method, result and limits. An issued record is corrected by a new linked record rather than retroactively changing measured history.
 
-## Record outline
+- [18 October source prepass](2026-10-18-source-prepass.md): source review of Cybersand ACT003, open ACT004 scope, pinned Rapier wrapper and the original research repository.
+- [18 October documentation validation](2026-10-18-prepass-validation.md): checks and independent review of the research deliverable.
 
-```markdown
----
-title: <What was checked> — <YYYY-MM-DD>
-kind: evidence
-summary: <one plain line: what this shows>
-owns: []
-verified: <YYYY-MM-DD> @ <commit>
----
-Identity: commit / build / artifact hash / device (+ driver and toolkit versions)
-Class: reviewed | built | tested | ran-on-target | measured | owner-accepted
-Training ladder (if relevant): implemented | tested-on-CPU | ran-on-GPU <device> | trained | evaluated
-Command(s) and settings: <exact>
-Result: <numbers with units and conditions; "not measured" never 0>
-Not covered: <what this does NOT show>
-Related: T-### / D-### / R-###
-```
-
-## Records
-
-None yet.
+Training and benchmark runs also require [run records](../RUNS.md). A successful documentation check establishes consistency and links, not that the research proposals work.

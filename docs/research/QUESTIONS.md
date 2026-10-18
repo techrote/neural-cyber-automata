@@ -1,35 +1,79 @@
 ---
-title: Research questions
+title: Research questions and decision evidence
 kind: research
-summary: The open questions this project's work is meant to answer, what would answer each one, and which roadmap task addresses it.
+summary: Questions whose answers can promote, narrow or reject the proposed controller and learning choices.
 owns: [research.questions]
-verified: 2026-10-13
+verified: 2026-10-18
 ---
 
 # Research questions
 
-A finding never becomes a requirement by itself; only an accepted decision citing it can. No findings exist yet.
+All questions are open. A paper result is supporting theory, not an answer for Cybersand. Define the exact success/uncertainty criterion in the experiment manifest before collecting the comparison.
 
-### R-001 — Is the K80 a practical training lane for NCAs?
+### R-001 — Is a legacy GPU lane useful?
 
-[OPEN] Why it matters: decides whether the K80s carry real work or stay spares (D-006, I-009). Answered by: the legacy environment reporting `sm_37` support (T-002) and the lane benchmark comparing K80 training speed with CPU and modern GPUs (T-007).
+[OPEN] Optional lane qualification and pipeline measurement in T-109; it is not an actor-control gate.
 
-### R-002 — Can nanites that only output intents, under strict mass conservation, learn to swarm towards a signal?
+### R-002 — Can bounded cellular intents produce a useful swarm/material behaviour?
 
-[OPEN] Why it matters: D-002 makes physics authoritative, which removes the network's freedom to simply redraw the world. If learning fails under that restriction, the design needs revisiting before anything depends on it. Answered by: T-012 on behaviour suite v1.
+[OPEN] T-110 compares with authored rules under actual permitted material/effect budgets.
 
-### R-003 — Do learned behaviours survive host-engine-like disorder?
+### R-003 — Do local learned rules tolerate update disorder, delay and damage?
 
-[OPEN] Why it matters: real engines (cybersand is the motivating example) update cells in their own orders with their own movement rules, not as a calm synchronous grid. Answered by: robustness scores under random update order, noise and damage in T-012, then a host test scene in M4.
+[OPEN] T-110 varies one declared update/message mechanism at a time.
 
-### R-004 — What does a nanite update cost on a desktop CPU?
+### R-004 — What does cellular inference cost beside the game?
 
-[OPEN] Why it matters: sets how many active cells a host scene can afford next to its own physics, which in cybersand is already the main CPU cost. Answered by: T-016 (updates per second per core, integer runtime).
+[OPEN] T-109/T-110 measure field size, active sites, rounds, memory and cost.
 
-### R-005 — How much behaviour quality is lost by integer quantisation?
+### R-005 — Does quantisation preserve the behaviour that matters?
 
-[OPEN] Why it matters: D-004 trades exactness of arithmetic for determinism. Answered by: suite v1 scores before and after quantisation in T-014.
+[OPEN] T-109 compares output/trajectory/task tolerances, not just weight size.
 
-### R-006 — How far does a toy-world behaviour transfer into a real engine?
+### R-006 — Does a surrogate policy transfer to the game?
 
-[OPEN] Why it matters: D-007 trains away from the real engine. Answered by: M4, comparing suite-style scenarios in the toy world and in a host test scene.
+[OPEN] T-102 identifies both environments and T-105/T-110 score matched target-game scenarios.
+
+### R-101 — Which compliance/assist profile preserves vigour without chatter?
+
+[OPEN] T-103 compares response, overshoot, recovery, useless correction and matched owner clips.
+
+### R-102 — Does learning improve a useful first skill?
+
+[OPEN] T-105 compares tuned baseline, imitation and small recurrent residual control under fixed abilities/budgets.
+
+### R-103 — What history or recurrence is necessary?
+
+[OPEN] T-105 compares frame/history and recurrent variants under named sensor gaps/hidden gameplay state.
+
+### R-104 — Which action representation helps each rig?
+
+[OPEN] T-105/T-106 compare wire/direct targets, residuals or gait parameters while recording actual assistance.
+
+### R-105 — Does morphology sharing generalize beyond memorized rigs?
+
+[OPEN] T-106 holds out whole topologies/actuator arrangements and compares masked-vector and graph policies.
+
+### R-106 — Can skills remain reliable through mounts, recoil and terrain change?
+
+[OPEN] T-107 tests approach/grip/use/release and explicit failure/recovery on actual supported usables.
+
+### R-107 — When does a slower model add value?
+
+[OPEN] T-108 compares task choices, responsiveness, latency, failure recovery and service cost against script/small-model sources.
+
+### R-108 — Can control survive delayed or obsolete requests?
+
+[OPEN] T-102/T-108 test simulation/wall-clock divergence, outage, late reply, takeover, reset and identity changes.
+
+### R-109 — What limits training and deployment throughput?
+
+[OPEN] T-109 separates host stepping, transport, reset, learner compute, preprocessing and inference cost.
+
+### R-110 — Does coordination improve the intended outcome?
+
+[OPEN] T-110 fixes information, density, actuation and message budgets and distinguishes explicit messages from shared-terrain effects.
+
+### R-111 — Does measured success retain actor personality and human control?
+
+[OPEN] T-103/T-105/T-108 pair task metrics with response/style clips and intervention/authority measures.
