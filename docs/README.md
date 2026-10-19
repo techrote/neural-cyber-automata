@@ -33,6 +33,7 @@ verified: 2026-10-18
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
+| How do asynchronous intent and human takeover keep local control running? | [Asynchronous control](ASYNC_CONTROL.md) |
 | How do I convert and qualify an evaluated CPU policy? | [Runtime export](RUNTIME_EXPORT.md) |
 | What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |
 | What traps matter? | [GOTCHAS.md](GOTCHAS.md) |

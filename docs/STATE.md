@@ -121,6 +121,23 @@ predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
 remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
 a separate CPU export qualification, with its directional failures retained.
 
+## Asynchronous source ownership
+
+The [asynchronous adapter](ASYNC_CONTROL.md) connects bounded mock/local-worker
+providers and typed human/script intent to the same usable skill runtime.
+Original observation/plan age, actual actor control generation and attachment
+changes are fenced independently. Local feedback continues while retired model
+work remains busy; an unacknowledged call cannot accumulate replacement calls.
+
+The [T-108 evidence](evidence/2026-10-19-t108.md) distinguishes proposal admission,
+local skill feedback and actual owner receipts. Continuously advancing tests
+exercise delay, jitter, duplicate/reordered replies, outage, takeover, reset and
+available equipment changes. Model smart plans and their motor leases retain
+original 120-tick expiry; longer explicit typed local missions are separate.
+No live service or owner feel verdict is claimed.
+The frozen actual pilot passed ten cases, recording 338 owner operations and
+790 completed native ticks in 19.169 seconds with no skips or source drift.
+
 ## Evaluated CPU export preparation
 
 The optional [runtime export lane](RUNTIME_EXPORT.md) converts the fixed trained

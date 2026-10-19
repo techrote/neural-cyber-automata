@@ -293,11 +293,23 @@ class CybersandEnv:
         return tuple(view.get(key) for key in ("run_id", "epoch", "actor_id", "model", "profile_version"))
 
     def observe(self) -> dict[str, Any]:
+        return self.observe_with_info()[0]
+
+    def observe_with_info(self) -> tuple[dict[str, Any], dict[str, Any]]:
+        """Read current state and copied idle receipts without draining them.
+
+        A realtime controller can inspect effects that happened between its
+        repeat and the next owner boundary. The following step still returns
+        those receipts; consumers must deduplicate by completed tick/identity.
+        """
         response = self.host.request("observe")
         self._validate_transition(response)
         self._view = owned_json(response["observation"])
         self._finished = bool(response["finished"])
-        return owned_json(self._view)
+        info = self._info(response)
+        info.update(terminated=bool(response["terminated"]), truncated=bool(response["truncated"]),
+                    finished=self._finished)
+        return owned_json(self._view), info
 
     def command(self, action: Mapping[str, Any], *, observation: Mapping[str, Any] | None = None,
                 lease_ticks: int | None = None, **sampled_options: Any) -> dict[str, Any]:

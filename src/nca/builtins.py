@@ -65,6 +65,7 @@ def builtin_registry() -> Registry:
     from .controllers import AuthoredController
     from .data import replay_episode
     from .skills import register_skills
+    from .adapters.skill_control import register_decisions
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -87,4 +88,5 @@ def builtin_registry() -> Registry:
     registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
                       ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
     register_skills(registry)
+    register_decisions(registry)
     return registry

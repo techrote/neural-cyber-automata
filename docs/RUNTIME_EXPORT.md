@@ -73,7 +73,7 @@ generations survive cancellation, so a new goal ID cannot revive an older view
 or a revoked grant. An actual new actor lifetime resets these counters. An ongoing invocation requires exact
 six-tick feedback spacing. A source/control or mount change takes precedence
 over a cadence error and retires the old invocation. Source grants belong to
-the [command and skill ownership contract](design/COMMAND_AND_SKILL_CONTRACT.md); this runtime receives the
+the [asynchronous ownership layer](ASYNC_CONTROL.md); this runtime receives the
 explicit source generation and preserves it across numeric decisions.
 
 The host's final admission remains authoritative. Callers retain refusal
