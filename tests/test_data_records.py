@@ -2,6 +2,10 @@
 
 import gzip
 import json
+import os
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from dataclasses import replace
@@ -169,6 +173,49 @@ class DataRecordTests(unittest.TestCase):
         failure = store.read("t104-first-capture")
         self.assertEqual(failure.status, "failed")
         self.assertEqual(failure.failures, ("TypeError",))
+
+    def test_installed_package_source_identity_requires_matching_checkout(self):
+        root = Path(__file__).resolve().parents[1]
+        revision = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            installed = Path(temporary) / "site-packages"
+            shutil.copytree(root / "src/nca", installed / "nca", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            outside = Path(temporary) / "outside"
+            outside.mkdir()
+            environment = dict(os.environ, PYTHONPATH=str(installed))
+            environment.pop("NCA_SOURCE_ROOT", None)
+            code = '''
+import json, sys
+from pathlib import Path
+from nca.data import capture
+from nca.contracts import ContractError
+assert Path(capture.__file__).resolve().is_relative_to(Path(sys.argv[1])), "expected installed-layout import"
+try:
+    revision, files, aggregate = capture.source_identity()
+except ContractError as error:
+    print(json.dumps({"error": error.code}))
+else:
+    print(json.dumps({"revision": revision, "aggregate": aggregate, "capture_hash": files["src/nca/data/capture.py"]}))
+'''
+
+            def run(cwd):
+                value = subprocess.run([sys.executable, "-c", code, str(installed)], cwd=cwd,
+                                       env=environment, capture_output=True, text=True, check=True)
+                return json.loads(value.stdout)
+
+            matched = run(root)
+            self.assertEqual(matched["revision"], revision)
+            self.assertEqual(run(outside)["error"], "source_checkout")
+            environment["NCA_SOURCE_ROOT"] = str(root)
+            self.assertEqual(run(outside), matched)
+            bridge = installed / "nca/adapters/host_bridge.gd"
+            bridge_contents = bridge.read_bytes()
+            bridge.write_bytes(bridge_contents + b"\n# Installed bridge mismatch fixture.\n")
+            self.assertEqual(run(outside)["error"], "source_mismatch")
+            bridge.write_bytes(bridge_contents)
+            with (installed / "nca/contracts.py").open("a") as stream:
+                stream.write("\n# Installed-source mismatch fixture.\n")
+            self.assertEqual(run(outside)["error"], "source_mismatch")
 
     def test_immutable_compressed_roundtrip_and_tamper_detection(self):
         data = episode()

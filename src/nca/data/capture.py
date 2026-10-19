@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import subprocess
 import time
 from collections.abc import Mapping
@@ -18,13 +19,42 @@ from .records import (ActionSource, CaptureEvent, EpisodeRecord, PolicyContext,
 
 
 def source_identity(root: str | Path | None = None) -> tuple[str, dict[str, str], str]:
-    """Pin working source bytes as well as Git HEAD, including an unpublished candidate."""
-    project = Path(root) if root is not None else Path(__file__).resolve().parents[3]
-    revision = subprocess.check_output(["git", "-C", str(project), "rev-parse", "HEAD"], text=True).strip()
-    files = sorted(set(project.glob("src/nca/**/*.py")) | set(project.glob("src/nca/**/*.gd")))
-    files.extend((project / "pyproject.toml", project / "tools/capture_replay.py"))
-    hashes = {path.relative_to(project).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-              for path in files if path.is_file()}
+    """Pin executed package sources to a matching source checkout and its HEAD.
+
+    A source-tree import uses that tree by default. An installed package needs
+    an explicit root, NCA_SOURCE_ROOT, or the current Git checkout. Its complete
+    Python/Godot source file set must match the checkout before a revision can
+    be attributed; a wheel does not inherit whichever Git HEAD happens nearby.
+    """
+    package = Path(__file__).resolve().parents[1]
+    source_tree = package.parents[1]
+    selected = root if root is not None else os.environ.get("NCA_SOURCE_ROOT")
+    if selected is None:
+        selected = source_tree if (source_tree / "src/nca").resolve() == package else Path.cwd()
+    try:
+        project = Path(subprocess.check_output(
+            ["git", "-C", str(selected), "rev-parse", "--show-toplevel"],
+            text=True, stderr=subprocess.DEVNULL).strip()).resolve()
+        revision = subprocess.check_output(["git", "-C", str(project), "rev-parse", "HEAD"],
+                                           text=True, stderr=subprocess.DEVNULL).strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise ContractError("source_checkout", "provide source_root or NCA_SOURCE_ROOT for a matching nca Git checkout") from exc
+    checkout_package = project / "src/nca"
+    if not checkout_package.is_dir() or not (project / "pyproject.toml").is_file():
+        raise ContractError("source_checkout", "selected Git checkout is not the nca source project")
+
+    def package_hashes(folder):
+        files = sorted(set(folder.rglob("*.py")) | set(folder.rglob("*.gd")))
+        return {"src/nca/" + path.relative_to(folder).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in files}
+
+    hashes = package_hashes(package)
+    if hashes != package_hashes(checkout_package):
+        raise ContractError("source_mismatch", "installed nca Python/Godot sources differ from the selected checkout")
+    for relative in ("pyproject.toml", "tools/capture_replay.py"):
+        path = project / relative
+        if path.is_file():
+            hashes[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
     return revision, hashes, sha256_json(hashes)
 
 

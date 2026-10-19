@@ -32,7 +32,15 @@ Its fabricated values and `test_fixture` marker supply no physical evidence.
 
 `nca.data.EpisodeRecorder` wraps the actual `CybersandEnv`. An episode stores the
 resolved host configuration, authored profile, runtime and build hashes, source
-file hashes, seed and scenario family. Each step stores the following separately:
+file hashes, seed and scenario family.
+
+An installed package locates its matching source checkout from `source_root`,
+`NCA_SOURCE_ROOT`, or the current Git checkout. It verifies the complete installed
+Python/Godot source file set and bytes against that checkout before attributing
+the revision. An absent checkout or mismatched installation fails explicitly.
+A source-tree import continues to use its own checkout by default.
+
+Each step stores the following separately:
 
 | Record | Meaning |
 |---|---|
