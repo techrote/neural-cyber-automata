@@ -135,6 +135,8 @@ exercise delay, jitter, duplicate/reordered replies, outage, takeover, reset and
 available equipment changes. Model smart plans and their motor leases retain
 original 120-tick expiry; longer explicit typed local missions are separate.
 No live service or owner feel verdict is claimed.
+The frozen actual pilot passed ten cases, recording 338 owner operations and
+790 completed native ticks in 19.169 seconds with no skips or source drift.
 
 ## Host authority
 
