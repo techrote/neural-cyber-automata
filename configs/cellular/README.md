@@ -112,6 +112,26 @@ blobs and checkpoints stay outside Git. A failed or capped attempt remains a
 separate artifact; the runner never extends its budget or resumes a partly
 completed episode. There is no PPO likelihood claim for these BC demonstrations.
 
+The runner publishes a validated `prepared` run manifest before opening the
+host. Run-ledger identifiers use `jolt-per-part-proprioception-goal-v1`; the
+unchanged feature schema `jolt-per-part-proprioception-goal/v1` stays in the
+resolved declaration, dataset and model specification. A recording failure
+after game work is a failed attempt; an escaped CLI error does not imply that
+the host consumed zero decisions. Surviving artifacts establish actual progress.
+
+When a corrected attempt belongs to the same commissioned screen, pass
+`--prior-budget ../prior-budget.json`. This immutable JSON receipt has schema
+`nca-cellular-prior-budget/v1` and a `receipts` array. Each entry supplies a unique
+`id`, the supporting evidence's `content_sha256`, measured `game_decisions`, and
+measured `wall_seconds`. The runner derives prior totals from these entries and
+charges them against the original 4,000-decision / 900-second ceiling. It
+refuses malformed, negative, nonfinite, duplicated or excessive usage and offers
+no option to raise a ceiling. The copied receipt and its canonical hash are
+retained with the attempt. Screen summaries separate attempt usage from the
+aggregate, including earlier failed attempts and physical preflights. A missing
+old ledger may be reconstructed only as a separately labelled postprocessing
+receipt; the original run files remain untouched.
+
 The [T-110 evidence record](../../docs/evidence/2026-10-19-t110.md) distinguishes
 source/unit checks, actual game measurements and the fixed utility decision.
 

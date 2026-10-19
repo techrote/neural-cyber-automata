@@ -4,17 +4,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import platform
 import subprocess
 import time
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import torch
 
 from nca.adapters.godot import CybersandEnv, GodotHost, PINNED_HOST_REVISION, physical_config
-from nca.contracts import ContractError, WireAction, canonical_json, sha256_json, strict_json_loads
+from nca.contracts import (ContractError, Record, WireAction, canonical_json, digest,
+                           identifier, sha256_json, strict_json_loads)
 from nca.controllers.baseline import AuthoredController, FeedbackObservation, SkillGoal
 from nca.data import ActionSource, Dataset, EpisodeRecorder, PolicyContext, write_episode
 from nca.data.capture import CaptureBudgetExceeded, source_identity
@@ -27,6 +31,43 @@ from .model import GraphController, GraphPolicy, load_policy, save_policy, weigh
 from .training import train_bc, training_sequences
 
 CONFIG_SHA256 = "e5a66f5a830b9e097a5bbb9647ade4bea42c82e26fb5718273b5bae2b992de5d"
+RUN_OBSERVATION_SCHEMA = "jolt-per-part-proprioception-goal-v1"
+
+
+@dataclass(frozen=True)
+class BudgetReceipt(Record):
+    """Measured prior work, linked to a separate immutable evidence receipt."""
+    id: str
+    content_sha256: str
+    game_decisions: int
+    wall_seconds: float
+
+    def validate(self):
+        identifier(self.id, "budget_receipt.id")
+        digest(self.content_sha256, "budget_receipt.content_sha256")
+        if not 0 <= self.game_decisions <= 4000 or not 0 <= self.wall_seconds <= 900:
+            raise ContractError("graph_budget", "prior usage must fit the commissioned ceiling")
+
+
+@dataclass(frozen=True)
+class PriorBudget(Record):
+    """Prior attempts consume the original ceiling; they never extend it."""
+    receipts: tuple[BudgetReceipt, ...] = ()
+    schema: Literal["nca-cellular-prior-budget/v1"] = "nca-cellular-prior-budget/v1"
+
+    def validate(self):
+        if len(self.receipts) > 32 or len({item.id for item in self.receipts}) != len(self.receipts):
+            raise ContractError("graph_budget", "prior receipts must be distinct and bounded")
+        if self.game_decisions > 4000 or self.wall_seconds > 900:
+            raise ContractError("graph_budget", "prior work already exceeds the commissioned ceiling")
+
+    @property
+    def game_decisions(self):
+        return sum(item.game_decisions for item in self.receipts)
+
+    @property
+    def wall_seconds(self):
+        return math.fsum(item.wall_seconds for item in self.receipts)
 
 
 def load_declaration(path):
@@ -58,16 +99,27 @@ def frozen_sources(source_root, config_path):
 
 class ScreenBudget:
     """One ceiling covers demonstrations, training, diagnostics and evaluation."""
-    def __init__(self, *, clock=time.monotonic, max_decisions=4000, max_seconds=900):
+    def __init__(self, *, clock=time.monotonic, max_decisions=4000, max_seconds=900, prior=None):
         if max_decisions != 4000 or max_seconds != 900:
             raise ContractError("graph_budget", "the commissioned screen ceilings cannot be extended")
+        self.prior = PriorBudget() if prior is None else prior
+        if not isinstance(self.prior, PriorBudget):
+            raise ContractError("graph_budget", "prior usage requires a validated immutable receipt")
         self.clock, self.started = clock, clock()
-        self.decisions = 0
+        self.decisions = self.prior.game_decisions
         self.limit = RunBudget(max_decisions, max_seconds)
 
     @property
     def elapsed(self):
+        return self.prior.wall_seconds + self.attempt_elapsed
+
+    @property
+    def attempt_elapsed(self):
         return self.clock() - self.started
+
+    @property
+    def attempt_decisions(self):
+        return self.decisions - self.prior.game_decisions
 
     def check(self):
         if self.limit.exhausted(self.decisions, self.elapsed):
@@ -105,7 +157,19 @@ class Screen:
         self.environment = {"python": platform.python_version(), "system": platform.system(),
                             "machine": platform.machine(), "torch": str(torch.__version__),
                             "numpy": np.__version__, "torch_threads": 1,
-                            "device": "cpu", "gpu_used": False}
+                            "device": "cpu", "gpu_used": False,
+                            "prior_budget": budget.prior.to_dict(),
+                            "prior_budget_sha256": budget.prior.sha256}
+
+    def prepare(self):
+        """Publish a validated ledger before a host can consume any game work."""
+        path = self.write_manifest("t110-jolt-three-part-preflight", "prepared", self.budget.elapsed,
+                                   self.budget.decisions,
+                                   {"phase": "before_actual_host", "attempt_game_decisions": 0,
+                                    "prior_game_decisions": self.budget.prior.game_decisions},
+                                   tuple(self.artifacts), ())
+        self.artifacts.append(artifact(self.output, path, "prepared_run_manifest"))
+        return path
 
     def save_json(self, relative, value, kind):
         path = self.output / relative
@@ -213,7 +277,8 @@ class Screen:
             self.write_manifest(episode_id, status, time.monotonic() - started, row["decisions"],
                                 row, tuple(local_artifacts), () if failure is None else (failure,),
                                 resolved={"declaration_sha256": CONFIG_SHA256, "episode": config,
-                                          "source_files_sha256": self.source_hash, "goal": context.to_dict()})
+                                          "source_files_sha256": self.source_hash, "goal": context.to_dict(),
+                                          "policy_feature_schema": FEATURE_SCHEMA})
         return episode
 
     def write_manifest(self, run_id, status, elapsed, decisions, metrics, refs, failures, resolved=None):
@@ -224,7 +289,7 @@ class Screen:
                          "learner_source_files_sha256": self.source_hash},
             seeds=tuple(self.config["training_seeds"]), scenario_split=self.split,
             status=status, gameplay_lane="physical_ACT004", execution_lane="stepped",
-            observation_schema=FEATURE_SCHEMA, action_schema="act004-wire-v2",
+            observation_schema=RUN_OBSERVATION_SCHEMA, action_schema="act004-wire-v2",
             suite="jolt-three-part-hop-v1", budget=self.budget.limit, decisions=decisions,
             runtime_seconds=elapsed, metrics=metrics, artifacts=refs, failures=failures)
         return RunStore(self.output / "runs").write(manifest)
@@ -296,7 +361,9 @@ class Screen:
                                   "game_decisions": self.budget.decisions}), flush=True)
 
 
-def run_screen(*, config_path, source_root, output, host_checkout, godot):
+def run_screen(*, config_path, source_root, output, host_checkout, godot, prior_budget=None):
+    prior = PriorBudget() if prior_budget is None else PriorBudget.from_json(Path(prior_budget).read_bytes())
+    budget = ScreenBudget(prior=prior)
     config = load_declaration(config_path)
     revision, files, source_hash = frozen_sources(source_root, config_path)
     if str(torch.__version__) != "2.8.0+cpu" or np.__version__ != "2.3.5":
@@ -305,12 +372,14 @@ def run_screen(*, config_path, source_root, output, host_checkout, godot):
     torch.use_deterministic_algorithms(True)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
-    budget = ScreenBudget()
     screen = Screen(config, source_root, output, revision, files, source_hash, budget)
     screen.save_json("source-manifest.json", {"revision": revision, "files": files, "sha256": source_hash}, "source_manifest")
     screen.save_json("declaration.json", config, "declaration")
+    screen.save_json("prior-budget.json", prior, "prior_budget_receipt")
+    screen.prepare()
     failure, status, gate = None, "completed", {"decision": "inconclusive", "reason": "screen_not_completed"}
     try:
+        budget.check()
         with GodotHost(host_checkout, godot, lane="act004", mode="stepped") as host:
             screen.host_identity = host.identity
             episodes = []
@@ -335,6 +404,9 @@ def run_screen(*, config_path, source_root, output, host_checkout, godot):
     summary = {"status": status, "failure": failure, "config_sha256": CONFIG_SHA256,
                "learner_revision": revision, "learner_sources_sha256": source_hash,
                "game_decisions": budget.decisions, "runtime_seconds": budget.elapsed,
+               "attempt_game_decisions": budget.attempt_decisions,
+               "attempt_runtime_seconds": budget.attempt_elapsed,
+               "prior_budget": prior.to_dict(), "prior_budget_sha256": prior.sha256,
                "rows": screen.rows, "utility_gate": gate, "frozen_checkpoints": len(screen.checkpoints),
                "training": screen.training_reports, "owner_feel_accepted": False,
                "direct_cell_write_requests": 0, "physical_topology_mutation_measured": False}
@@ -349,6 +421,8 @@ def main(argv=None):
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True, help="new external artifact directory, outside Git")
+    parser.add_argument("--prior-budget", type=Path,
+                        help="immutable prior-attempt receipts, charged against the same 4000/900 ceiling")
     parser.add_argument("--host", default=os.environ.get("NCA_HOST_CHECKOUT"))
     parser.add_argument("--godot", default=os.environ.get("NCA_GODOT"))
     args = parser.parse_args(argv)
@@ -356,9 +430,12 @@ def main(argv=None):
         parser.error("set NCA_HOST_CHECKOUT and NCA_GODOT, or pass --host and --godot")
     try:
         summary = run_screen(config_path=args.config, source_root=args.source_root, output=args.output,
-                             host_checkout=args.host, godot=args.godot)
+                             host_checkout=args.host, godot=args.godot, prior_budget=args.prior_budget)
     except (ContractError, FileExistsError) as exc:
-        print(json.dumps({"status": "refused_before_experiment", "reason": getattr(exc, "code", type(exc).__name__)}))
+        # An escaped recording failure may follow actual host work. Its phase is
+        # unknown here; only the immutable attempt artifacts establish progress.
+        print(json.dumps({"status": "failed", "reason": getattr(exc, "code", type(exc).__name__),
+                          "phase": "unknown_consult_attempt_artifacts"}))
         return 1
     print(json.dumps({"status": summary["status"], "failure": summary["failure"],
                       "game_decisions": summary["game_decisions"],

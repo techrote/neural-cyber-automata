@@ -1,6 +1,7 @@
 """Causal and lifecycle controls for the fixed graph; no synthetic physics claim."""
 
 import copy
+import io
 import itertools
 import json
 import math
@@ -10,7 +11,9 @@ import sys
 import tempfile
 import unittest
 from dataclasses import replace
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 from nca.cellular.core import (FEATURE_NAMES, GraphIdentity, JOLT_PROFILE_SHA256,
                                PART_IDS, checked_parts, make_frame, mapped_request)
@@ -506,6 +509,87 @@ class CellularLearningTests(unittest.TestCase):
             budget.check()
         with self.assertRaises(ContractError):
             ScreenBudget(max_seconds=901)
+
+    def test_prior_attempts_consume_the_original_decision_and_wall_ceiling(self):
+        from nca.cellular.screen import BudgetReceipt, PriorBudget, ScreenBudget
+        from nca.data.capture import CaptureBudgetExceeded
+        prior = PriorBudget((BudgetReceipt("earlier-attempt", "e" * 64, 3999, 890.),))
+        clock = [10.]
+        budget = ScreenBudget(clock=lambda: clock[0], prior=prior)
+        self.assertEqual((budget.decisions, budget.elapsed), (3999, 890.))
+        budget.claim_decision()
+        self.assertEqual(budget.attempt_decisions, 1)
+        with self.assertRaises(CaptureBudgetExceeded):
+            budget.claim_decision()
+        budget = ScreenBudget(clock=lambda: clock[0], prior=prior)
+        clock[0] += 10.
+        self.assertEqual(budget.attempt_elapsed, 10.)
+        with self.assertRaises(CaptureBudgetExceeded):
+            budget.check()
+        self.assertEqual(prior.game_decisions, 3999)
+        self.assertEqual(prior.wall_seconds, 890.)
+
+    def test_prior_receipts_are_strict_finite_and_cannot_extend_a_ceiling(self):
+        from nca.cellular.screen import BudgetReceipt, PriorBudget
+        valid = BudgetReceipt("earlier-attempt", "e" * 64, 17, 8.641717033)
+        self.assertEqual(PriorBudget.from_json(PriorBudget((valid,)).to_json()), PriorBudget((valid,)))
+        for changes in ({"game_decisions": True}, {"game_decisions": -1}, {"game_decisions": 4001},
+                        {"wall_seconds": True}, {"wall_seconds": -1.}, {"wall_seconds": float("nan")},
+                        {"wall_seconds": float("inf")}, {"wall_seconds": 901.}, {"content_sha256": "missing"}):
+            with self.subTest(changes=changes), self.assertRaises(ContractError):
+                BudgetReceipt.from_dict({**valid.to_dict(), **changes})
+        for receipts in ((valid, valid), (valid, BudgetReceipt("more-time", "d" * 64, 0, 900.)),
+                         (valid, BudgetReceipt("more-decisions", "d" * 64, 4000, 0.))):
+            with self.assertRaises(ContractError):
+                PriorBudget(receipts)
+        with self.assertRaises(ContractError):
+            PriorBudget.from_dict({"receipts": [], "maximum_game_decisions": 8000})
+
+    def test_run_ledger_is_published_before_host_and_retains_original_feature_schema(self):
+        from nca.cellular.core import FEATURE_SCHEMA
+        from nca.cellular.screen import CONFIG_SHA256, RUN_OBSERVATION_SCHEMA, run_screen
+        from nca.runs import RunStore
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "attempt"
+            store = RunStore(output / "runs")
+
+            def stopped_host(*args, **kwargs):
+                prepared = store.read("t110-jolt-three-part-preflight")
+                self.assertEqual(prepared.status, "prepared")
+                self.assertEqual(prepared.decisions, 0)
+                self.assertEqual(prepared.observation_schema, RUN_OBSERVATION_SCHEMA)
+                self.assertEqual(prepared.resolved_config["sensors"]["schema"], FEATURE_SCHEMA)
+                self.assertEqual(prepared.config_sha256, CONFIG_SHA256)
+                raise ContractError("synthetic_host_stop", "no physical host is started in this ledger check")
+
+            with patch("nca.cellular.screen.frozen_sources", return_value=("a" * 40, {}, "b" * 64)), \
+                    patch("nca.cellular.screen.GodotHost", side_effect=stopped_host) as host, \
+                    patch("nca.cellular.screen.torch.__version__", "2.8.0+cpu"), \
+                    patch("nca.cellular.screen.np.__version__", "2.3.5"):
+                summary = run_screen(config_path=DECLARATION, source_root=ROOT, output=output,
+                                     host_checkout="synthetic", godot="synthetic")
+            host.assert_called_once()
+            self.assertEqual(summary["status"], "failed")
+            self.assertEqual(summary["failure"], "ContractError:synthetic_host_stop")
+            self.assertEqual(summary["attempt_game_decisions"], 0)
+            finished = store.read("t110-jolt-three-part-screen")
+            self.assertEqual(finished.observation_schema, RUN_OBSERVATION_SCHEMA)
+            self.assertEqual(finished.resolved_config["sensors"]["schema"], FEATURE_SCHEMA)
+            self.assertEqual(len(store.verify()), 2)
+            with self.assertRaises(ContractError):
+                store.write(finished)
+
+    def test_cli_does_not_mislabel_escaped_recording_failure_as_preexperiment(self):
+        from nca.cellular.screen import main
+        output = io.StringIO()
+        with patch("nca.cellular.screen.run_screen", side_effect=ContractError("invalid_identifier", "recording failed")), \
+                redirect_stdout(output):
+            code = main(["--config", "synthetic", "--source-root", "synthetic", "--output", "synthetic",
+                         "--host", "synthetic", "--godot", "synthetic"])
+        receipt = json.loads(output.getvalue())
+        self.assertEqual(code, 1)
+        self.assertEqual(receipt["status"], "failed")
+        self.assertEqual(receipt["phase"], "unknown_consult_attempt_artifacts")
 
 
 @unittest.skipUnless(torch is not None and os.environ.get("NCA_HOST_CHECKOUT") and os.environ.get("NCA_GODOT"),
