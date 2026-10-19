@@ -1,0 +1,94 @@
+{
+  "schema": "nca-t106-direction-frame-result-receipt/v1",
+  "experiment": "t106-jolt-direction-frame-followup",
+  "publication_commit": "f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed",
+  "github_actions": {
+    "run_id": 39323820599,
+    "job_id": 118304403161,
+    "artifact_id": 12220749995,
+    "artifact_name": "t106-direction-frame-evidence",
+    "artifact_zip_bytes": 18749182,
+    "artifact_zip_sha256": "fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510"
+  },
+  "evidence": {
+    "summary_file_sha256": "6098e8114de26c9b17d0b6c13fee73b40697549f02311ab61b326e7173e777e5",
+    "summary_canonical_sha256": "5b721e6f6b2373a18247ab86869d1106279a152df66859fd5f8e8906452df3ff",
+    "config_sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
+    "learner_sources_sha256": "c3a50b61ecc12b2f44b6ac586f28f44db1e4f2a73f6f8af8ea3a56f0ebb051e4"
+  },
+  "completion": {
+    "status": "completed",
+    "wall_seconds": 385.96986998600005,
+    "recorded_game_requests": 4660,
+    "confirmed_physical_ticks": 27960,
+    "completed_optimizer_updates": 11760,
+    "host_start_attempts": 1,
+    "unconfirmed_game_requests": 0,
+    "unknown_tick_counts": 0,
+    "morphology_transfer_evaluations": 0,
+    "automatic_budget_extension": false
+  },
+  "prerequisite": {
+    "passed": false,
+    "selected_family": null,
+    "learned_morphology_transfer_measured": false,
+    "original_entry_result_changed": false,
+    "owner_feel_accepted": false,
+    "thresholds": {
+      "minimum_mean_success": 0.75,
+      "minimum_every_seed_success": 0.5,
+      "minimum_gain_over_initial": 0.125,
+      "positive_gain_lower95": true
+    },
+    "direction_frame_bc": {
+      "mean_success": 0.3333333333333333,
+      "minimum_seed_success": 0.25,
+      "per_seed_success": [
+        0.25,
+        0.25,
+        0.5
+      ],
+      "gain_over_initial": {
+        "mean": 0.25,
+        "lower95": 0.15208333333333332,
+        "upper95": 0.34791666666666654
+      },
+      "failed": [
+        "minimum_mean_success",
+        "minimum_every_seed_success",
+        "all_original_character_runtime_integrity_gates"
+      ]
+    },
+    "world_frame_bc": {
+      "mean_success": 0.25,
+      "minimum_seed_success": 0,
+      "per_seed_success": [
+        0.125,
+        0.625,
+        0
+      ],
+      "gain_over_initial": {
+        "mean": 0.16666666666666666,
+        "lower95": -0.07083333333333333,
+        "upper95": 0.41874999999999973
+      },
+      "failed": [
+        "minimum_mean_success",
+        "minimum_every_seed_success",
+        "positive_success_gain_lower95",
+        "all_original_character_runtime_integrity_gates"
+      ]
+    },
+    "baseline_success": 0.5,
+    "idle_success": 0
+  },
+  "runtime": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "device": "cpu",
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "torch": "2.8.0+cpu",
+    "torch_threads": 1
+  }
+}

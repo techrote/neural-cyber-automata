@@ -33,6 +33,8 @@ verified: 2026-10-18
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
+| What is prepared for morphology comparison and why is training gated? | [Morphology evidence](evidence/2026-10-19-t106.md) |
+| What did the bounded Jolt direction-frame prerequisite find? | [Direction-frame result](evidence/2026-10-19-t106-direction-frame.md) |
 | How do asynchronous intent and human takeover keep local control running? | [Asynchronous control](ASYNC_CONTROL.md) |
 | What did the bounded per-part Jolt graph experiment find? | [Cellular experiment](evidence/2026-10-19-t110-screen.md) |
 | What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |

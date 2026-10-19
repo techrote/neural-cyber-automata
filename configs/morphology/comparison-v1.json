@@ -1,0 +1,310 @@
+{
+  "schema": "nca-morphology-comparison-preparation/v1",
+  "id": "t106-padded-versus-shared-graph-v1",
+  "execution": "blocked_preparation",
+  "declared_before": "Any T106 learned-policy collection, fitting or scored transfer evaluation",
+  "dependency": {
+    "t105_source_commit": "745578947a6f1ac2159830c4ae4de5de5593f32f",
+    "entry_declaration_sha256": "6d4b567e99308d57e0dfb076e2137ea693112ab8bf4ea30af144111bb9516654",
+    "t105_summary_sha256": "5799a3fe61924d55244bc278e36d4ae0c264c6da1ad54d18a258ba4ed3aed784",
+    "prerequisite_result_sha256": "810ef64d9c95a682050e6e5420a847d1229f908bc490df499ad078e200935678",
+    "failed_prerequisite_action": "Publish immutable training_blocked before importing Torch, opening a host, loading a checkpoint or invoking a trainer",
+    "automatic_rebudget_or_gate_relaxation": false
+  },
+  "host": {
+    "revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "lane": "act004",
+    "mode": "stepped",
+    "base_hz": 60,
+    "decision_ticks": 6,
+    "lease_ticks": 12,
+    "profile_fixture_sha256": "4a2cebba31a0e540922f14cb9bdb1abe2a33e49a00b42ed6130a5589b5665c0a"
+  },
+  "capability_matching": {
+    "action_schema": "bounded-morphology-semantic/v1",
+    "outputs": [
+      "drive_x",
+      "drive_y",
+      "trim",
+      "effort",
+      "impulse",
+      "brake",
+      "rebound"
+    ],
+    "unavailable_outputs": "Zero their wire contribution and retain an explicit capability-mask label; never invent an actuator",
+    "aim": "Unit direction from the observed root part to the explicit caller target; zero when coincident",
+    "normalization": "Normalize the requested move vector to unit length; signed drive/trim in [-1,1], effort in [0,1]",
+    "jev": {
+      "vertical_drive": false,
+      "impulse": "primary:pulse",
+      "brake": null,
+      "rebound": "secondary:rebound"
+    },
+    "astra": {
+      "vertical_drive": true,
+      "impulse": "primary:pulse",
+      "brake": "secondary:brake",
+      "rebound": null
+    },
+    "monowheel": {
+      "vertical_drive": false,
+      "impulse": "secondary:hop",
+      "brake": null,
+      "rebound": null
+    },
+    "ripper": {
+      "vertical_drive": false,
+      "impulse": null,
+      "brake": "secondary:brake",
+      "rebound": null
+    },
+    "disabled_wire_channels": [
+      "auxiliary",
+      "tool",
+      "reel",
+      "release_usable",
+      "attach_usable"
+    ],
+    "same_for_every_candidate": [
+      "per-profile actual plant",
+      "capability map",
+      "assist profile",
+      "observation fields",
+      "normalization",
+      "decision and lease cadence"
+    ],
+    "claim_limit": "Capabilities match within each profile; shared button or semantic names do not imply identical abilities between profiles"
+  },
+  "observations": {
+    "schema": "act004-morphology-local/v1",
+    "maximum_parts": 8,
+    "maximum_joints": 7,
+    "node_features": 20,
+    "edge_features": 22,
+    "root_features": 33,
+    "separate_measurement_masks": true,
+    "separate_present_active_masks": true,
+    "padding": "Unavailable or detached node/edge values and validity are zero; padding does not update recurrence or contribute loss",
+    "locality": "Each graph node has own pose/motion/geometry and the explicit goal; current joint sensors cross only their incident connection",
+    "root_only": [
+      "contact and rig rays",
+      "resources and mechanics profile",
+      "previous requested action",
+      "capability masks"
+    ],
+    "shared_command": [
+      "explicit target used with each part's own position",
+      "pace",
+      "tolerance",
+      "observable deadline",
+      "source age"
+    ],
+    "excluded": [
+      "rig or part ID embeddings",
+      "reward and evaluator success",
+      "global actors",
+      "scene-wide nearest target",
+      "cell patch",
+      "passive wrench invented from aggregate motion"
+    ],
+    "geometry": "Authored rectangle sizes, masses, offsets and joint parameters are supplied numerically; IDs remain evidence metadata"
+  },
+  "candidates": {
+    "padded_recurrent": {
+      "input_features": 855,
+      "projection": 10,
+      "gru_hidden": 32,
+      "parameters": 13048,
+      "hidden_float32_values": 32,
+      "dense_macs_per_decision": 12838,
+      "information_reach": "All permitted own-part slots immediately"
+    },
+    "shared_graph": {
+      "node_hidden": 32,
+      "message_width": 16,
+      "rounds": 2,
+      "parameters": 13192,
+      "hidden_float32_values_maximum": 256,
+      "dense_macs_per_decision_maximum": 187840,
+      "readout": "Root only; no pooling",
+      "information_reach": "At most two graph hops of current input per decision; older memory can propagate through later decisions"
+    },
+    "matched_maximum_parameters": 14000,
+    "maximum_parameter_count_ratio": 1.02,
+    "matched_dense_macs_ceiling_per_decision": 200000,
+    "matched_hidden_bytes_ceiling": 1024,
+    "compute_interpretation": "Same ceilings and game-collection allocation; report actual cost. Dense MAC counts and memory use differ, so this is an architecture-package comparison, not a claim of identical FLOPs or a pure topology ablation"
+  },
+  "splits": {
+    "training_profiles": [
+      "jev",
+      "astra"
+    ],
+    "tuning_profiles": [
+      "jev",
+      "astra"
+    ],
+    "zero_shot_profiles": [
+      "monowheel",
+      "ripper"
+    ],
+    "whole_profile_holdout": "All connections, actuator arrangements, authored sizes, masses and offsets of both zero-shot profiles remain absent from optimization",
+    "training_families": [
+      "floor-left-36",
+      "floor-right-36",
+      "drop8-left-48",
+      "drop8-right-48"
+    ],
+    "tuning_families": [
+      "floor-left-42",
+      "floor-right-42"
+    ],
+    "tuning_assignments": [
+      {
+        "profile": "jev",
+        "family": "floor-left-42"
+      },
+      {
+        "profile": "astra",
+        "family": "floor-right-42"
+      }
+    ],
+    "zero_shot_families": [
+      "floor-left-30",
+      "floor-right-30",
+      "drop16-left-54",
+      "drop16-right-54"
+    ],
+    "adaptation_collection_families": [
+      "floor-left-36",
+      "floor-right-36"
+    ],
+    "adaptation_evaluation_families": [
+      "floor-left-60",
+      "floor-right-60"
+    ],
+    "placement": "Use each accepted profile's authored floor spawn, x=264 for left or x=176 for right, subtract the named drop height; target root floor position plus the named horizontal displacement",
+    "geometry_factorization": "Whole heldout profiles change both arrangement and numeric geometry; independent arbitrary geometry sweeps remain unavailable through the accepted host API",
+    "identity_memorization_control": "No learned identity embedding; numerical node-slot permutation equivariance test for the shared graph, with the padded policy's ordering dependence explicitly retained",
+    "zero_shot_opening": "Only after all six shared final checkpoint hashes freeze",
+    "adaptation": "Fresh fork of the same shared checkpoint for each heldout profile; no cross-profile adaptation state; freeze all adapted hashes before the separate adaptation evaluation"
+  },
+  "future_learning": {
+    "policy_seeds": [
+      6113,
+      6229,
+      6337
+    ],
+    "teacher_host_seeds": [
+      610601,
+      610602
+    ],
+    "method": "Matched full-episode BC initialization then bounded recurrent PPO with ordered unrolls, duration-based discount and intervention exclusion; implementation/admission is deferred by the failed prerequisite",
+    "bc_epochs": 40,
+    "ppo_decisions_per_candidate_seed": 768,
+    "ppo_updates_per_candidate_seed": 6,
+    "ppo_decisions_per_update": 128,
+    "adaptation_decisions_per_candidate_seed_and_heldout_profile": 128,
+    "reference_control": "A bounded waypoint reference must be qualified under this exact semantic action map before teacher collection; the existing T103 hop controller is not silently relabelled as this new task",
+    "checkpoint_selection": "Fixed final update for every seed, never best seed or holdout-selected epoch",
+    "existing_t105_weights": "Evidence only; no checkpoint reuse or initialization by a selected lucky seed"
+  },
+  "future_budget": {
+    "maximum_game_decisions": 13000,
+    "maximum_wall_seconds": 1800,
+    "maximum_wall_seconds_per_policy_seed": 900,
+    "decision_ceiling_by_phase": {
+      "teacher": 640,
+      "shared_training": 4608,
+      "tuning": 480,
+      "zero_shot_final": 1920,
+      "zero_shot_initial": 1920,
+      "authored_and_idle": 640,
+      "adaptation": 1536,
+      "adapted_evaluation": 960
+    },
+    "sum_phase_ceilings": 12704,
+    "episode_deadline_ticks": 240,
+    "device": "existing CPU only",
+    "paid_calls": 0,
+    "automatic_extension": false,
+    "current_training_and_transfer_decisions_authorized": 0
+  },
+  "future_metrics": {
+    "success": "Within four cells, speed <=6 cells/s and root absolute angle <=0.35 radians for twelve consecutive ticks before the observable 240-tick task deadline",
+    "report": [
+      "per-policy-seed and per-profile success",
+      "capped completion time",
+      "adaptation game decisions and wall cost",
+      "time until settled after landing",
+      "response onset and peak useful speed",
+      "ordinary trim reversals",
+      "mean absolute angle",
+      "inference p50/p95",
+      "integrity and refusal counts",
+      "matched pose clips"
+    ],
+    "comparison_gate": "Graph must gain >=0.125 mean paired zero-shot success over the padded family, with a strictly positive 95% bootstrap lower bound across the three trained policy seeds, while every seed passes runtime/integrity and per-profile character bounds fixed before any future run",
+    "every_seed_and_profile_bounds": {
+      "ordinary_trim_reversals_per_second_increase_over_reference_maximum": 0.5,
+      "mean_absolute_angle_increase_over_reference_maximum_radians": 0.1,
+      "mean_peak_useful_speed_ratio_to_reference_minimum": 0.7,
+      "mean_peak_useful_speed_ratio_to_reference_maximum": 1.5,
+      "every_scenario_inference_p95_maximum_ms": 5.0,
+      "integrity_failures": 0,
+      "failed_admissions": 0,
+      "censored_evaluations": 0
+    },
+    "uncompleted_or_missing_rows": "Inconclusive and gate closed; never silently discarded or counted as convenient successes",
+    "no_go": "Keep the simpler policy when the graph does not show a reliable benefit within the same declared allocation",
+    "owner_feel": "Separate and unjudged",
+    "unavailable": [
+      "independent arbitrary geometry or assist sweeps",
+      "arbitrary damage or support-removal setter",
+      "independent mount object replacement",
+      "Windows physical runtime and GPU qualification"
+    ]
+  },
+  "conformance_only": {
+    "profiles": [
+      "jev",
+      "astra",
+      "monowheel",
+      "ripper"
+    ],
+    "seed": 6106,
+    "episodes_per_profile": 2,
+    "decisions_per_episode": 4,
+    "decision_ticks": 6,
+    "maximum_wall_seconds": 60,
+    "learned_policy_calls": 0,
+    "optimizer_updates": 0,
+    "task_success_scoring": false,
+    "goal_direction_by_episode": [
+      40.0,
+      -40.0
+    ],
+    "fixed_semantic_requests": [
+      {
+        "drive_x": 0.35,
+        "drive_y": 0.1,
+        "trim": -0.1,
+        "effort": 0.6
+      },
+      {},
+      {
+        "drive_x": 0.2,
+        "drive_y": -0.1,
+        "effort": 0.6,
+        "impulse": true,
+        "brake": true,
+        "rebound": true
+      },
+      {}
+    ],
+    "host_episode_lifetime_ticks": 240,
+    "per_episode_owned_cutoff_ticks": 24,
+    "ending": "owner cancellation in a valid continuing state after four six-tick requests"
+  }
+}
