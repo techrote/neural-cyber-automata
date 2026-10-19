@@ -3,12 +3,12 @@ title: Cybersand behaviour implementation programme
 kind: roadmap
 summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-18
+verified: 2026-10-19
 ---
 
 # Implementation programme
 
-Prepared by T-100. This is an issue-based execution programme, not evidence of implementation or a launched training campaign. Assignment of an issue authorizes its bounded work subject to its actual dependencies. An open task does not require every other task to run.
+Prepared by T-100. D-014 commissions this issue-based execution programme. Assignment authorizes bounded work subject to actual dependencies; [current state](STATE.md), [run records](RUNS.md) and each PR establish what has been implemented and measured.
 
 D-010 defines the Cybersand mission. D-011 sets plausible gameplay emulation with deliberate flex/play. D-012/D-013 contain research recommendations whose value is established through the experiments below.
 
@@ -22,8 +22,8 @@ T-101 can start from this repository immediately after the prepass lands. T-102 
 
 | Task | Status | Scope | Depends on | Issue |
 |---|---|---|---|---|
-| T-101 | [IN-PROGRESS T-101] | Package, gameplay-profile contracts and reproducible run records | T-100 | [#11](https://github.com/techrote/neural-cyber-automata/issues/11) |
-| T-102 | [PLANNED T-102] | Persistent Cybersand host adapter and causal stepping conformance | T-101 | [#12](https://github.com/techrote/neural-cyber-automata/issues/12) |
+| T-101 | Merged [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22) | Package, gameplay-profile contracts and reproducible run records | T-100 | [#11](https://github.com/techrote/neural-cyber-automata/issues/11) |
+| T-102 | [IN-PROGRESS T-102] | Persistent Cybersand host adapter and causal stepping conformance | T-101 | [#12](https://github.com/techrote/neural-cyber-automata/issues/12) |
 | T-103 | [PLANNED T-103] | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
 | T-104 | [PLANNED T-104] | Demonstration capture, consumed-action replay and intervention datasets | T-101, T-102 | [#14](https://github.com/techrote/neural-cyber-automata/issues/14) |
 | T-105 | [PLANNED T-105] | First learned actor skill: imitation and recurrent residual control | T-102, T-103, T-104 | [#15](https://github.com/techrote/neural-cyber-automata/issues/15) |
@@ -39,7 +39,7 @@ Each issue contains an execution prompt, read-set, write-set, checks, limits and
 
 **T-101:** Can start after the prepass merge; no ACT-004 implementation dependency for the package and recorded fixtures.
 
-**T-102:** Protocol/recorded and sampled lanes may be prepared now. ACT-004 game qualification is blocked until an accepted compatible host interface exists in Cybersand #178 or its follow-up.
+**T-102:** The compatible ACT-004 host was accepted through Cybersand PR #181 at the pinned revision in [current state](STATE.md). Qualification uses that actual runtime.
 
 **T-103:** Needs one accepted ACT-004 profile and actual game adapter; host mechanics changes use a separate Cybersand task.
 

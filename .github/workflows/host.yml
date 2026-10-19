@@ -1,0 +1,31 @@
+name: Pinned host conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  actual-host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+      - name: Install pinned CPU package
+        run: |
+          python -m pip install setuptools==84.0.0 wheel==0.45.1
+          python -m pip install --no-build-isolation .
+      - name: Prepare and verify accepted game runtime
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-host" --github-env "$GITHUB_ENV"
+      - name: Require the actual host lane
+        run: |
+          test -x "$NCA_GODOT"
+          test -d "$NCA_HOST_CHECKOUT/.git"
+      - name: Actual sampled and articulated host conformance
+        run: python -m unittest discover -s tests -p "test_host*.py" -v

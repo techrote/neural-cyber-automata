@@ -31,3 +31,21 @@ The first programme checkpoint was also posted on issue #11. Contracts, immutabl
 run records and Jolt/Vector feedback controllers are under implementation and
 review. No trained policy, full issue completion or owner feel acceptance is
 claimed at this checkpoint.
+
+## 2026-10-19 00:39 UTC — First 30-minute checkpoint
+
+T-101 is merged through PR #22 at `9e6da91ff520e27bc78d11dd8196844a9fa37ff3`.
+Its 30 CPU tests, strict documentation check and both hosted operating-system
+checks passed. Windows uses the available Python 3.12.10 build.
+
+T-102 has real host conformance evidence; independent review found malformed
+reset, delayed final-state handling and blocking-output risks. Those fixes precede
+acceptance. T-103 has 32 unit checks and 18 recorded Jolt/Vector pilots (1,080
+decisions), with full per-tick receipts and matched pose replays. Final host freeze
+and replay are separate gates; Vector's later drift and an incomplete compliant
+Jolt reversal are retained.
+
+T-104 capture/replay is under implementation. The T-108 asynchronous core passes
+12 unit tests including stale replies, immediate takeover and bounded hung work.
+Learning, morphology, export and NCA experiments have no result at this checkpoint.
+Paid model calls: zero. The same checkpoint is recorded on issue #12.

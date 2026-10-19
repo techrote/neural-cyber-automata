@@ -46,10 +46,21 @@ class RecordedEvaluator:
 
 
 def builtin_registry() -> Registry:
+    # These modules use the standard library and do not launch a runtime on
+    # import. Construction of the host remains an explicit caller action.
+    from .adapters.godot import CybersandEnv, GodotHost
+    from .envs.recorded import RecordedEnv
+
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
                       ("recorded_fixture", "wire", "local-observation"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
+    registry.register("adapter", "recorded-playback", 1, RecordedEnv,
+                      ("recorded_fixture", "reset-step", "owned-observation"))
+    registry.register("adapter", "cybersand-host", 1, GodotHost,
+                      ("persistent-process", "verified-runtime", "loopback"))
+    registry.register("adapter", "cybersand-env", 1, CybersandEnv,
+                      ("reset-step", "owned-observation", "duration-receipts"))
     registry.register("policy", "idle", 1, IdlePolicy, ("recorded_fixture",))
     registry.register("evaluator", "recorded", 1, RecordedEvaluator, ("recorded_fixture",))
     return registry
