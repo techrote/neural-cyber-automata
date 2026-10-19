@@ -9,7 +9,7 @@ verified: 2026-10-19
 # CPU package operations
 
 The core package uses Python 3.11 or newer and no third-party runtime dependency.
-Python 3.12.14 is the conformance version. NumPy and PyTorch are optional learning
+Python 3.12.10 is pinned in hosted conformance; local evidence records its actual version. NumPy and PyTorch are optional learning
 dependencies; importing the core, validating a profile and running the recorded
 example do not import them or create a GPU device.
 
