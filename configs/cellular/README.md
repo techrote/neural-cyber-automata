@@ -134,5 +134,16 @@ receipt; the original run files remain untouched.
 
 The [T-110 evidence record](../../docs/evidence/2026-10-19-t110.md) distinguishes
 source/unit checks, actual game measurements and the fixed utility decision.
+The [acceptance review](../../docs/evidence/2026-10-19-t110-review.md) includes
+recovered historical source manifests and the current archive availability
+limit. `python tools/check_cellular_sources.py` verifies those manifests against
+Git without loading Torch, opening the host or repeating the experiment.
+
+The renewed programme commission separately declares
+[one independent reproduction](../../docs/evidence/2026-10-19-t110-reproduction.md)
+under [its own immutable receipt](t110-reproduction-20261019.json). It executes
+the original clean learner and unchanged experiment settings once, with a new
+4,000-decision / 900-second ceiling and complete archive publication. It does
+not recover the old runtime files or change their recorded no-go.
 
 © 2026 techrote. All rights reserved.
