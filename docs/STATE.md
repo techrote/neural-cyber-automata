@@ -121,6 +121,38 @@ predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
 remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
 a separate CPU export qualification, with its directional failures retained.
 
+## Gated morphology preparation
+
+The [morphology preparation](evidence/2026-10-19-t106.md) pins accepted Jolt,
+Vector, Monowheel and Ripper contracts with eight part slots, seven connection
+slots and separate presence, measurement and activity masks. Optional padded
+recurrent and two-round shared graph candidates have 13,048 and 13,192 parameters.
+Forty-one focused checks and independent review cover locality, padding,
+source-age limits, recurrence and confirmed owner-revocation boundaries.
+
+The immutable admission runner retains the failed predeclared T105 reliability
+prerequisite and emits zero training, candidate-game and optimizer work. Its
+fixed conditional comparison budget is preparatory; no transfer result exists.
+A separate [32-request / 192-tick scripted profile diagnostic](evidence/2026-10-19-t106-conformance.md)
+passed on all four profiles at public source `557799ce`. It retains the first
+zero-request startup failure; both attempts total 54.754654 seconds within the
+original 60-second allocation. This establishes interface conformance; learned
+transfer, adaptation, damage recovery and owner feel remain unmeasured.
+The research question remains blocked by the stated prerequisite.
+
+The separately commissioned [Jolt direction-frame BC follow-up](evidence/2026-10-19-t106-direction-frame.md)
+completed its single fixed actual-host run with **4,660 requests / 27,960 ticks** in
+385.969869986 seconds and all six declared 40-epoch fits (11,760 optimizer updates).
+Direction-frame BC improved over its own initialization by 0.25 mean success, with a
+strictly positive 95% lower bound, but reached only **33.3% mean success / 25% minimum
+seed success**. World-frame BC reached **25% mean / 0% minimum**. Both therefore failed
+the unchanged **75% mean / 50% every-seed** prerequisite; direction-frame also failed
+the complete original character/runtime gate on two of three seeds. The immutable
+result selects no family, records `mechanical_utility_prerequisite_passed=false`,
+and performs **zero morphology-transfer evaluations**. The preparation remains useful,
+but learned transfer, adaptation and damage-recovery claims stay blocked rather than
+being manufactured from an insufficient prerequisite.
+
 ## Asynchronous source ownership
 
 The [asynchronous adapter](ASYNC_CONTROL.md) connects bounded mock/local-worker

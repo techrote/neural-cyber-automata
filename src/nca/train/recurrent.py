@@ -146,7 +146,7 @@ def ordered_window(policy: RecurrentPolicy, rows: Sequence[Sequence[float]], sta
 def train_clone(policy: RecurrentPolicy, episodes: Sequence[tuple[Sequence[Sequence[float]],
                                                                Sequence[Sequence[float]]]], *,
                 seed: int, epochs: int = 40, unroll: int = 16,
-                learning_rate: float = .001) -> dict[str, Any]:
+                learning_rate: float = .001, check_budget=None, on_update=None) -> dict[str, Any]:
     if policy.kind != "bc" or not episodes or epochs < 1:
         raise ValueError("cloning needs a BC policy and nonempty training episodes")
     for observations, labels in episodes:
@@ -159,13 +159,15 @@ def train_clone(policy: RecurrentPolicy, episodes: Sequence[tuple[Sequence[Seque
     windows = [(index, start) for index, (rows, _) in enumerate(episodes)
                for start in range(0, len(rows), unroll)]
     rng = random.Random(seed)
-    epoch_losses = []
+    epoch_losses, completed_updates = [], 0
     policy.train()
     for _ in range(epochs):
         order = windows[:]
         rng.shuffle(order)
         weighted_loss, samples = 0.0, 0
         for index, start in order:
+            if check_budget is not None:
+                check_budget()
             rows, labels_for_episode = episodes[index]
             outputs, _, mask = ordered_window(policy, rows, start, unroll)
             targets = torch.tensor(labels_for_episode[start:start + unroll], dtype=torch.float32)
@@ -179,6 +181,9 @@ def train_clone(policy: RecurrentPolicy, episodes: Sequence[tuple[Sequence[Seque
             loss.backward()
             torch.nn.utils.clip_grad_norm_(policy.parameters(), .5)
             optimizer.step()
+            completed_updates += 1
+            if on_update is not None:
+                on_update(completed_updates)
             weighted_loss += float(loss.detach()) * len(targets)
             samples += len(targets)
         epoch_losses.append(weighted_loss / samples)
