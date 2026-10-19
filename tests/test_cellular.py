@@ -595,6 +595,69 @@ class CellularLearningTests(unittest.TestCase):
 @unittest.skipUnless(torch is not None and os.environ.get("NCA_HOST_CHECKOUT") and os.environ.get("NCA_GODOT"),
                      "actual pinned host plus Torch CPU required; no physical graph qualification")
 class CellularActualHostTests(unittest.TestCase):
+    def test_quiet_arrival_records_owner_cancel_before_finalizing_and_clears_memory(self):
+        from nca.adapters.godot import GodotHost
+        from nca.cellular.model import GraphController, GraphPolicy
+        from nca.cellular.screen import Screen, ScreenBudget
+        from nca.data import read_episode
+        from nca.data.capture import source_identity
+        torch.set_num_threads(1)
+        config = json.loads(DECLARATION.read_text())
+        # A stationary at-goal fixture exercises closure on the actual owner;
+        # it is neither a trained policy nor a commissioned utility episode.
+        family = {**config["training_families"][0]}
+        family["target"] = family["spawn"][:]
+        policy = GraphPolicy()
+        with torch.no_grad():
+            for parameter in policy.parameters():
+                parameter.zero_()
+            policy.readout.bias[2:] = -10
+            policy.recurrent.bias_ih.fill_(.1)
+        controllers = []
+
+        def observed_controller(*args, **kwargs):
+            control = GraphController(*args, **kwargs)
+            controllers.append(control)
+            return control
+
+        revision, files, source_hash = source_identity(ROOT)
+        with tempfile.TemporaryDirectory() as directory, \
+                GodotHost(os.environ["NCA_HOST_CHECKOUT"], os.environ["NCA_GODOT"]) as host:
+            output = Path(directory)
+            screen = Screen(config, ROOT, output, revision, files, source_hash, ScreenBudget())
+            with patch("nca.cellular.screen.GraphController", side_effect=observed_controller):
+                episode = screen.run_episode(host, family, 73, 73, "graph", "demonstration",
+                                             fault="delay", policy=policy)
+            self.assertTrue(episode.evaluation["success"])
+            self.assertLess(episode.consumed_ticks, 180)
+            self.assertEqual(episode.events[-1].kind, "cancel")
+            cancel = episode.events[-1]
+            before, after = cancel.issued_observation, cancel.next_observation
+            self.assertEqual(cancel.reason, "cellular_task_arrival")
+            self.assertEqual(cancel.tick_before, cancel.tick_after)
+            self.assertEqual(after["control_generation"], before["control_generation"] + 1)
+            self.assertNotEqual(after["observation_id"], before["observation_id"])
+            for name in ("run_id", "epoch", "actor_id", "position", "velocity", "rotation", "angular_velocity", "parts"):
+                self.assertEqual(after[name], before[name], name)
+            # Joint target is a cleared control setting, distinct from the
+            # unchanged physical joint state and connected-part topology.
+            physical_joint = lambda joint: {key: value for key, value in joint.items() if key != "target"}
+            self.assertEqual([physical_joint(joint) for joint in after["joints"]],
+                             [physical_joint(joint) for joint in before["joints"]])
+            self.assertEqual(episode.decisions, screen.budget.decisions)
+            self.assertEqual(episode.consumed_ticks, 6 * episode.decisions)
+            saved = read_episode(output / "episodes" / (episode.id + ".json.gz"))
+            self.assertEqual(saved.sha256, episode.sha256)
+            self.assertEqual(saved.events[-1].kind, "cancel")
+            trace = json.loads((output / "communications" / (episode.id + ".json")).read_bytes())
+            self.assertTrue(any(value != 0 for row in trace for node in row["hidden_before"] for value in node))
+            self.assertGreater(trace[-1]["communication"]["pending"], 0)
+            control = controllers[0]
+            self.assertEqual(control.bus.pending, [])
+            self.assertEqual(float(control.hidden.abs().sum()), 0.)
+            self.assertIsNone(control.cached)
+            self.assertEqual(control.previous, WireAction(effort=0))
+
     def test_actual_owned_parts_and_cancel_clear_controller_only(self):
         from nca.adapters.godot import CybersandEnv, GodotHost, physical_config
         from nca.cellular.model import GraphController, GraphPolicy

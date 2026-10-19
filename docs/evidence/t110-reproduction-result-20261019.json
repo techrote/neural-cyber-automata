@@ -84,5 +84,22 @@
     "scope": "one actor topology, two heldout families and three policy seeds; no general graph-method ranking",
     "owner_feel_accepted": false,
     "physical_topology_mutation_measured": false
+  },
+  "execution_instance": "github-actions/39323844679",
+  "reconciliation": {
+    "original_corrected_launch_utc": "2026-10-19T19:26:41.023947Z",
+    "original_corrected_prefix_index": "t110-reproduction-prefix-index.json",
+    "original_corrected_invocation_confirmed_decisions": 3096,
+    "github_corrected_invocation_confirmed_decisions": 3297,
+    "combined_confirmed_decisions_lower_bound": 6393,
+    "declared_original_aggregate_decision_ceiling": 4000,
+    "original_aggregate_decision_ceiling_respected": false,
+    "complete_combined_wall_seconds": null,
+    "original_termination_confirmed": false,
+    "reported_completion_aggregate_includes_original_corrected_prefix": false,
+    "budget_status": "additional concurrent execution; original aggregate budget exceeded",
+    "additional_allocation_declared_by_original_execution_thread": false,
+    "new_graph_qualification": false,
+    "scope": "completion fields preserve the GitHub receipt; aggregate_runtime_seconds and additional_corrected_invocations are local to that launcher, not the full reproduction history"
   }
 }

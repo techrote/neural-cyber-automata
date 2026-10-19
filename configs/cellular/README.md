@@ -58,6 +58,14 @@ physical parts are refused. The reset condition leaves the actual body state,
 caller goal and external task deadline intact. Source/control/mount lifecycle
 reset is also checked independently at the software boundary.
 
+The current screen records an explicit zero-tick owner cancellation when quiet
+arrival finishes before the native deadline. It clears private controller
+memory and pending messages before finalizing the invocation. Body motion and
+physical joint state remain with the host; cleared joint control targets are
+separate. Historical source `626099f9…` finalized early-arrival records without
+that cancellation event, so its next-run reset evidence must not be presented
+as same-run cancellation evidence.
+
 The declared ceiling is 4,000 game decisions and 900 seconds on CPU with one
 Torch thread; the worst planned task matrix uses 3,570 decisions. The screen
 requires a paired benefit over the no-message model, no success regression
@@ -142,8 +150,14 @@ Git without loading Torch, opening the host or repeating the experiment.
 The renewed programme commission separately declares
 [one independent reproduction](../../docs/evidence/2026-10-19-t110-reproduction.md)
 under [its own immutable receipt](t110-reproduction-20261019.json). It executes
-the original clean learner and unchanged experiment settings once, with a new
-4,000-decision / 900-second ceiling and complete archive publication. It does
-not recover the old runtime files or change their recorded no-go.
+the original clean learner and unchanged experiment settings under a separate
+4,000-decision / 900-second ceiling. The published launcher correction charges
+the initial import failure to that same ceiling. After executor loss, the new
+screen retains an [audited unfinished prefix](../../docs/evidence/t110-reproduction-prefix-index.json)
+of 112 episodes; seven controls and the final receipts are missing. Its archives
+are supplied separately by filename and hash, with delivery verification in
+the index and no public download URL asserted. It does not recover the old
+runtime files or change their recorded no-go, and no further launch follows
+that loss.
 
 © 2026 techrote. All rights reserved.

@@ -189,15 +189,20 @@ these observations provide no reason to promote communication in this screen.
 Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
 227.1865 seconds through final ledger publication. Owner feel remains unjudged.
 
-A separately commissioned faithful reproduction then completed on the frozen
-original learner with **119 rows / 3,297 decisions** and 142.008152423 aggregate
-seconds including the preserved zero-work import failure. It reproduced the same
-normal result: graph **1/6**, no-message **1/6**, authored **0/6**, with zero
-paired graph-vs-no-message success gain. The unchanged utility gate again
-returned `no-go-at-this-screen`; the complete Actions artifact and immutable
-hashes are recorded in
-[evidence/2026-10-19-t110-reproduction.md](evidence/2026-10-19-t110-reproduction.md).
-This is confirmation evidence, not a replacement of the historical screen.
+The independent local reproduction stopped producing records after 112 episodes,
+3,096 confirmed decisions and 18,576 ticks; its completion and termination are
+unconfirmed. Its audited archive is saved. A concurrently launched GitHub repeat
+later completed 119 rows / 3,297 decisions and reported the same no-go. These are
+separate executions. Their combined confirmed decisions are at least **6,393**,
+above the original aggregate **4,000** ceiling; the GitHub receipt's reported
+142.008-second total omits the interrupted local work. This deviation is retained
+in [the reconciliation and evidence](evidence/2026-10-19-t110-reproduction.md),
+with both immutable artifact identities. It does not qualify graph utility.
+
+The current runner also records actual owner cancellation on early quiet arrival
+and clears private memory/messages before closing. A dedicated actual-host
+regression passed; frozen historical and reproduction source/records are unchanged.
+Owner feel and unsupported physical topology changes remain unmeasured.
 
 ## Host authority
 
