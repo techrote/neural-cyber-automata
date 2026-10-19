@@ -1,7 +1,7 @@
 ---
 title: Fixed Jolt direction-frame prerequisite follow-up
 kind: evidence
-summary: Separate commissioned per-rig BC experiment with fresh policy seeds and sealed geometry, unchanged utility gates, exact source and checkpoint admission, and a fixed CPU allocation; no result before execution.
+summary: Separate commissioned per-rig BC experiment with fresh policy seeds and sealed geometry; the designated local run and later concurrent GitHub run both failed the unchanged prerequisite.
 owns: []
 verified: 2026-10-19
 ---
@@ -10,7 +10,7 @@ verified: 2026-10-19
 
 The renewed instruction to complete the repository authorizes this separately declared useful-skill
 follow-up. The [original T105 result and T106 entry decision](2026-10-19-t106.md) remain immutable and
-blocked. The new experiment has no measured result yet. Its purpose is to test one coordinate
+blocked. The experiment is complete. Its purpose was to test one coordinate
 interpretation within the existing Jolt cloning implementation; it does not itself answer the
 shared-morphology research question.
 
@@ -133,39 +133,56 @@ PYTHONPATH=src python tools/direction_frame.py run \
 
 ## Formal run result
 
-The single declared actual-host invocation ran on GitHub Actions run
-`39323820599` from published source `f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed`.
-It completed without an execution error in **385.969869986 seconds**, recording
-**4,660 confirmed game requests**, **27,960 physical ticks**, one host start and all
-six fixed 40-epoch fits (**11,760 optimizer updates**). There were zero unconfirmed
-requests, zero unknown tick counts, no automatic budget extension and **zero
-morphology-transfer evaluations**.
+### Designated primary execution
 
-The prerequisite result is a **no-go**. Direction-frame BC reached **0.3333333333**
-mean success with **0.25** minimum seed success. Its mean gain over its own initial
-policies was **0.25**, with a 95% interval of **[0.1520833333, 0.3479166667]**, but
-it failed the unchanged 0.75 mean / 0.50 every-seed thresholds and the aggregate
-character/runtime gate: seed 7103 failed orientation and seed 7301 failed launch
-character. World-frame BC reached **0.25** mean success with **0.0** minimum seed
-success and a gain interval crossing zero. The authored baseline scored 0.50 and
-idle scored 0.0 on the same sealed cases.
+The designated formal invocation was the original local run from public source
+`1222d2e8dc30b87bb58de2326711fc3df361ac5e`. It was already running before a
+later push-triggered GitHub workflow was introduced. The local invocation completed
+with confirmed exit 0 and a complete immutable summary: **136 rows**, **12 frozen
+initial/final checkpoints**, **4,693 attempted and recorded game requests**,
+**28,158 confirmed physical ticks**, zero unconfirmed requests, zero unknown tick
+counts, one host start and all six fixed 40-epoch fits (**11,760 optimizer
+updates**). Its internal measured wall time was **943.605670498 seconds**, within
+the unchanged 1,800-second ceiling.
 
-Accordingly the immutable evaluator records
-`mechanical_utility_prerequisite_passed=false`, `selected_family=null` and
-`learned_morphology_transfer_measured=false`. The original T105 entry result is
-unchanged. No family was promoted, no transfer run was opened, and owner feel remains
-unmeasured. This is the declared research outcome, not a reason to retune, retry or
-weaken the prerequisite.
+The primary prerequisite result is a **no-go**. Direction-frame BC reached
+**25% mean success / 12.5% minimum-seed success**; world-frame BC reached
+**29.17% mean / 0% minimum**. Both are below the unchanged **75% mean / 50%
+every-seed** reliability gate, and retained style/latency failures prevent an
+independent character/runtime pass. No family is selected and **zero
+morphology-transfer evaluations** are authorized from this result. The original
+T105 entry decision remains unchanged.
 
-The complete 433-file evidence artifact is Actions artifact `12220749995`
-(`t106-direction-frame-evidence`, **18,749,182 bytes**, ZIP SHA-256
-`fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510`).
-The exact `summary.json` file SHA-256 is
-`6098e8114de26c9b17d0b6c13fee73b40697549f02311ab61b326e7173e777e5`;
-its canonical self-hash is
-`5b721e6f6b2373a18247ab86869d1106279a152df66859fd5f8e8906452df3ff`.
-A compact immutable receipt is retained at
-[t106-direction-frame-result-20261019.json](t106-direction-frame-result-20261019.json).
+The complete primary archive is `t106-direction-frame-evidence-v1.tar.gz`,
+**18,708,060 bytes**, SHA-256
+`291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4`.
+Its archive index records `run/summary.json` SHA-256
+`574a51108903484977629804bc9be9a54d348b8bf929c594eeee169584a30f78`,
+summary-content SHA-256
+`ed1c999a935a5a308f6d63ca64676b15000e4ecee511ccb8df10a0f0fe23a5e9`,
+and an index self-hash of
+`11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443`.
+The archive contains **438 verified members**.
+
+### Concurrent alternate execution
+
+A later concurrent change added a push-triggered GitHub workflow after the primary
+local run had already begun. That separate invocation ran as Actions run
+`39323820599` from publication
+`f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed`. It is retained as valid alternate
+evidence, not as a restart, continuation or replacement of the primary run.
+
+The alternate recorded 4,660 requests / 27,960 ticks in 385.969869986 seconds.
+It also returned a no-go: direction-frame BC 33.33% mean / 25% minimum-seed
+success and world-frame BC 25% / 0%. Its complete Actions artifact is
+`12220749995`, 18,749,182 bytes, ZIP SHA-256
+`fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510`.
+The alternate result was not used to select, tune or override the designated
+primary outcome.
+
+Both independent executions therefore support the same bounded conclusion:
+the unchanged direction-frame prerequisite was **not met**. No morphology family
+is promoted, no transfer experiment is opened, and owner feel remains unmeasured.
 
 ## Preparation validation and remaining work
 
