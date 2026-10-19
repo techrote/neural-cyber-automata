@@ -34,6 +34,12 @@ def main() -> int:
     screen.add_argument("--godot", type=Path, default=os.environ.get("NCA_GODOT"))
     screen.add_argument("--render-python", required=True, help="Python with NumPy and pinned Pillow for actual pose clips")
     screen.add_argument("--output", type=Path, required=True)
+    audit = commands.add_parser("audit", help="diagnose immutable trajectory divergence without new host steps")
+    audit.add_argument("--training-root", type=Path, required=True)
+    audit.add_argument("--screen-root", type=Path, required=True)
+    audit.add_argument("--bundle", type=Path, required=True)
+    audit.add_argument("--sha256", required=True, help="original bundle file-byte SHA-256")
+    audit.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.operation == "convert":
         profile, _ = read_json(args.profile)
@@ -42,6 +48,12 @@ def main() -> int:
         receipt_path = args.output.with_suffix(".conversion.json")
         immutable_json(receipt_path, receipt)
         print(json.dumps({key: receipt[key] for key in ("artifact", "artifact_sha256", "bundle_sha256", "runtime_qualified")}))
+        return 0
+    if args.operation == "audit":
+        from nca.bench.parity_audit import audit_screen
+        result = audit_screen(root=ROOT, training_root=args.training_root, screen_root=args.screen_root,
+                              bundle_path=args.bundle, bundle_hash=args.sha256, output=args.output)
+        print(json.dumps({key: result[key] for key in ("original_status", "original_runtime_qualified", "new_host_ticks")}))
         return 0
     if not args.host or not args.godot:
         parser.error("--host and --godot or matching NCA environment variables are required")

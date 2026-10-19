@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 from typing import Any, Mapping
 
-from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads
+from nca.contracts import ContractError, canonical_json, digest, sha256_json, strict_json_loads
 from .runtime import NumpyGRU, RuntimeBundle
 from .spec import (ACTIONS, EXPECTED_SPECIFICATION, NORMALIZATION, RECURRENCE,
                    SENSORS, SCREEN_SHA256, RuntimeContext, context_for, source_files)
@@ -48,6 +48,32 @@ def verify_self_hash(value: Mapping[str, Any]):
     declared = unsigned.pop("sha256", None)
     if declared != sha256_json(unsigned):
         raise ContractError("evidence_hash", "immutable evidence self-hash differs")
+
+
+def verify_artifact_files(root: str | Path, files: Mapping[str, str]) -> None:
+    """Verify contained, canonical artifact paths against external file hashes.
+
+    A summary's self-hash identifies its claims, not the episode bytes those
+    claims describe. Conversion and screening must verify both identities.
+    """
+    root = Path(root).resolve()
+    for name, expected in files.items():
+        if (not isinstance(name, str) or not name or "\\" in name
+                or any(part in ("", ".", "..") for part in name.split("/"))):
+            raise ContractError("artifact_path", "canonical relative artifact path required")
+        location = (root / name).resolve()
+        if not location.is_relative_to(root) or location == root:
+            raise ContractError("artifact_path", "artifact must remain inside its training collection")
+        digest(expected, "artifact_sha256")
+        actual = hashlib.sha256()
+        try:
+            with location.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    actual.update(chunk)
+        except OSError as exc:
+            raise ContractError("artifact_unavailable", "a declared training artifact is unavailable") from exc
+        if actual.hexdigest() != expected:
+            raise ContractError("artifact_hash", "a declared training artifact differs from its file hash")
 
 
 def make_bundle(numeric: Mapping[str, Any], profile: Mapping[str, Any], context: RuntimeContext,
@@ -94,13 +120,19 @@ def convert(training_root: str | Path, profile: Mapping[str, Any], *, accepted_t
     manifest, manifest_file_hash = read_json(root / "manifest.json")
     summary, summary_hash = read_json(root / "summary.json")
     environment, environment_hash = read_json(root / "environment.json")
-    for record in (manifest, summary):
+    dataset, dataset_file_hash = read_json(root / "dataset.json")
+    for record in (manifest, summary, dataset):
         verify_self_hash(record)
     meta = numeric["metadata"]
     if (summary.get("status") != "completed" or summary.get("evaluation", {}).get("complete") is not True
             or summary.get("manifest_sha256") != meta.get("manifest_sha256")
             or manifest["sha256"] != meta.get("manifest_sha256")
             or meta.get("config_sha256") != config["selection"]["learner_config_sha256"]
+            or sha256_json(manifest.get("config")) != meta.get("config_sha256")
+            or manifest.get("learner_revision") != config["selection"]["learner_revision"]
+            or sha256_json(manifest.get("source_files")) != meta.get("learner_sources_sha256")
+            or manifest.get("learner_sources_sha256") != meta.get("learner_sources_sha256")
+            or dataset["sha256"] != meta.get("dataset_sha256")
             or summary.get("config_sha256") != meta.get("config_sha256")
             or summary.get("learner_sources_sha256") != meta.get("learner_sources_sha256")
             or meta.get("phase") != "final" or meta.get("kind") != "bc" or meta.get("training_seed") != 1103
@@ -112,6 +144,10 @@ def convert(training_root: str | Path, profile: Mapping[str, Any], *, accepted_t
     if (len(selected) != len(families) or {r["scenario_family"] for r in selected} != families
             or any(row["policy_sha256"] != numeric["policy_sha256"] for row in selected)):
         raise ContractError("evaluation_coverage", "selected checkpoint was not evaluated on its complete fixed suite")
+    selected_artifacts = {row["artifact"]: row["artifact_sha256"] for row in selected}
+    if len(selected_artifacts) != len(selected):
+        raise ContractError("evaluation_coverage", "distinct evaluation episodes required for each fixed family")
+    verify_artifact_files(root, selected_artifacts)
     checkpoint = root / "checkpoints/bc-seed1103-final.pt"
     checkpoint_hash = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
     entries = [row for row in summary["checkpoints"] if row["file"] == checkpoint.name]
@@ -135,6 +171,7 @@ def convert(training_root: str | Path, profile: Mapping[str, Any], *, accepted_t
                 "status": "trained_and_evaluated", "checkpoint_sha256": checkpoint_hash,
                 "numeric_source_sha256": numeric_hash, "summary_sha256": summary_hash,
                 "manifest_file_sha256": manifest_file_hash, "environment_file_sha256": environment_hash,
+                "dataset_file_sha256": dataset_file_hash,
                 "original_learner_revision": manifest["learner_revision"],
                 "accepted_t105_commit": accepted_t105_commit, "selected_evaluation_rows": len(selected),
                 "performance_conclusion": summary["evaluation"]["candidates"]["bc"]["conclusion"],

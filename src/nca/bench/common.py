@@ -12,7 +12,7 @@ import sys
 import tempfile
 from typing import Any, Mapping, Sequence
 
-from nca.contracts import ContractError, canonical_json, sha256_json
+from nca.contracts import ContractError, WireAction, canonical_json, sha256_json
 from nca.export.build import immutable_json
 
 
@@ -81,6 +81,12 @@ def write_artifact(root: Path, name: str, value: Mapping[str, Any]) -> dict[str,
 
 
 def wire_difference(left: Mapping[str, Any], right: Mapping[str, Any]) -> dict[str, Any]:
+    # A missing vector element or NaN must not disappear through zip()/max().
+    fields = set(WireAction.__dataclass_fields__)
+    if any(not isinstance(value, Mapping) or set(value) != fields for value in (left, right)):
+        raise ContractError("trajectory_action_shape", "complete original wire requests required")
+    left = WireAction.from_dict(dict(left)).to_dict()
+    right = WireAction.from_dict(dict(right)).to_dict()
     flags = ("primary", "secondary", "auxiliary", "tool", "attach_usable", "release_usable")
     continuous = [abs(float(left[key]) - float(right[key])) for key in ("trim", "effort", "reel")]
     continuous.extend(abs(float(a) - float(b)) for key in ("move", "aim")
@@ -97,13 +103,18 @@ def pose(view: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def pose_difference(left: Mapping[str, Any], right: Mapping[str, Any]) -> dict[str, Any]:
-    if (left["tick"] != right["tick"] or len(left["parts"]) != len(right["parts"])
+    if (not left["parts"] or left["tick"] != right["tick"] or len(left["parts"]) != len(right["parts"])
             or any((a["id"], a["index"]) != (b["id"], b["index"])
                    for a, b in zip(left["parts"], right["parts"]))):
         raise ContractError("trajectory_identity", "matched tick and own-part identities required")
     position = angle = 0.0
     detached = True
     for a, b in zip(left["parts"], right["parts"]):
+        for part in (a, b):
+            if (len(part["position"]) != 2
+                    or any(type(value) not in (int, float) or not math.isfinite(value)
+                           for value in (*part["position"], part["rotation"]))):
+                raise ContractError("trajectory_nonfinite", "finite two-dimensional poses required")
         position = max(position, math.dist(a["position"], b["position"]))
         angle = max(angle, abs((a["rotation"] - b["rotation"] + math.pi) % (2 * math.pi) - math.pi))
         detached &= a["detached"] == b["detached"]

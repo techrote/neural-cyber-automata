@@ -22,7 +22,7 @@ from nca.contracts import ContractError, WireAction, sha256_json
 from nca.controllers.baseline import SkillGoal
 from nca.envs import CybersandEnv, GodotHost, physical_config
 from nca.export import RuntimeBundle, ExportController, ExportDecision, context_for, dispatch
-from nca.export.build import read_json
+from nca.export.build import read_json, verify_artifact_files
 from nca.export.runtime import encode, map_action
 from nca.export.spec import SCREEN_SHA256, SOURCE_FILES
 from .common import durations, pose, pose_difference, process_memory, wire_difference, write_artifact, numpy_build
@@ -184,8 +184,33 @@ def _episode(host, case, config, controller, kind, *, ticks=None, generator=None
 def _compare_episodes(left, right, config):
     maximum_position = maximum_angle = maximum_wire = maximum_hidden = maximum_features = maximum_value = 0.0
     flags = clocks = detachments = True
-    if len(left["frames"]) != len(right["frames"]) or len(left["steps"]) != len(right["steps"]):
+    if (not left["frames"] or not left["steps"] or len(left["frames"]) != len(right["frames"])
+            or len(left["steps"]) != len(right["steps"])):
         return {"passed": False, "reason": "different_sequence_length"}
+    for episode in (left, right):
+        # zip() alone silently discards missing receipts. Every consumed tick
+        # needs its own frame and receipt before numeric parity is meaningful.
+        cursor = episode["frames"][0]["tick"]
+        frame_index = 1
+        for step in episode["steps"]:
+            if (any(not isinstance(step[key], (list, tuple)) or len(step[key]) != width
+                    or any(type(value) not in (int, float) or not math.isfinite(value) for value in step[key])
+                    for key, width in (("features", 26), ("hidden_after", 32)))
+                    or type(step["value"]) not in (int, float) or not math.isfinite(step["value"])):
+                return {"passed": False, "reason": "invalid_numeric_evidence"}
+            count = step["actual_ticks"]
+            if (type(count) is not int or count <= 0 or len(step["trace"]) != count
+                    or step["issued_tick"] != cursor):
+                return {"passed": False, "reason": "incomplete_receipt_sequence"}
+            for row in step["trace"]:
+                if (row["tick_before"] != cursor or row["tick_after"] != cursor + 1
+                        or frame_index >= len(episode["frames"])
+                        or episode["frames"][frame_index]["tick"] != cursor + 1):
+                    return {"passed": False, "reason": "incomplete_receipt_sequence"}
+                cursor += 1
+                frame_index += 1
+        if frame_index != len(episode["frames"]):
+            return {"passed": False, "reason": "incomplete_receipt_sequence"}
     for a, b in zip(left["frames"], right["frames"]):
         difference = pose_difference(a, b)
         maximum_position = max(maximum_position, difference["maximum_part_position_difference_cells"])
@@ -576,10 +601,13 @@ def run_screen(*, root: Path, training_root: Path, bundle_path: Path, bundle_has
     training_files = {"checkpoints/bc-seed1103-final.pt": evidence["checkpoint_sha256"],
                       "exports/bc-seed1103-final.weights.json": evidence["numeric_source_sha256"],
                       "manifest.json": evidence["manifest_file_sha256"], "summary.json": evidence["summary_sha256"],
-                      "environment.json": evidence["environment_file_sha256"]}
-    if any(hashlib.sha256((training_root / name).read_bytes()).hexdigest() != expected
-           for name, expected in training_files.items()):
-        raise ContractError("training_artifact_drift", "conversion inputs changed before the deployment screen")
+                      "environment.json": evidence["environment_file_sha256"],
+                      "dataset.json": evidence["dataset_file_sha256"]}
+    evaluation_files = {row["name"]: row["sha256"] for row in evidence["evaluation_artifacts"]}
+    if len(evaluation_files) != 8 or set(evaluation_files).intersection(training_files):
+        raise ContractError("evaluation_coverage", "eight distinct evaluation artifacts required")
+    training_files.update(evaluation_files)
+    verify_artifact_files(training_root, training_files)
     sources = _sources(root)
     revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, text=True,
                               capture_output=True, check=True).stdout.strip()
@@ -710,8 +738,9 @@ def run_screen(*, root: Path, training_root: Path, bundle_path: Path, bundle_has
     if _sources(root) != sources:
         report["errors"].append({"phase": "source_verification", "type": "SourceDrift", "code": "source_changed"})
         report["runtime_qualified"] = False
-    if any(hashlib.sha256((training_root / name).read_bytes()).hexdigest() != expected
-           for name, expected in training_files.items()):
+    try:
+        verify_artifact_files(training_root, training_files)
+    except ContractError:
         report["errors"].append({"phase": "training_verification", "type": "ArtifactDrift", "code": "training_artifact_changed"})
         report["runtime_qualified"] = False
     report["wall_seconds"] = time.perf_counter() - started
