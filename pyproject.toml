@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neural-cyber-automata"
+version = "0.1.0"
+description = "Reproducible actor-control experiments for Cybersand"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+learning = ["numpy==2.3.5", "torch==2.8.0"]
+
+[project.scripts]
+nca = "nca.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+nca = ["adapters/*.gd", "profiles/*.json"]

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+artifacts/
+runs/
+datasets/
+checkpoints/
+*.pt
+*.npz
+*.mp4
+*.webm

@@ -1,0 +1,37 @@
+name: CPU conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  cpu:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+      - name: Install pinned build tools and CPU package
+        run: |
+          python -m pip install setuptools==84.0.0 wheel==0.45.1
+          python -m pip install --no-build-isolation .
+      - name: Portable environment evidence
+        run: python -m nca doctor
+      - name: CPU conformance
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Documentation rules
+        run: python tools/check_docs.py --strict
+      - name: Installed command and immutable run example
+        run: |
+          nca fixture --output artifacts/conformance --run-id hosted-cpu-fixture --learner-revision "${{ github.sha }}"
+          nca runs verify artifacts/conformance

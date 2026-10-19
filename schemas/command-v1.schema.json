@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Command",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/Command",
+  "$defs": {
+    "Command": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/LifecycleStamp"
+        },
+        "profile_sha256": {
+          "type": "string"
+        },
+        "observation_id": {
+          "type": "string"
+        },
+        "observed_tick": {
+          "type": "integer"
+        },
+        "sequence": {
+          "type": "integer"
+        },
+        "lease_ticks": {
+          "type": "integer"
+        },
+        "action": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "action_mask": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "lane": {
+          "enum": [
+            "wire",
+            "direct"
+          ]
+        },
+        "schema_version": {
+          "enum": [
+            1
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "lifecycle",
+        "profile_sha256",
+        "observation_id",
+        "observed_tick",
+        "sequence",
+        "lease_ticks",
+        "action",
+        "action_mask"
+      ]
+    },
+    "LifecycleStamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "actor_id": {
+          "type": "string"
+        },
+        "epoch": {
+          "type": "integer"
+        },
+        "incarnation": {
+          "type": "integer"
+        },
+        "control_generation": {
+          "type": "integer"
+        },
+        "morphology_version": {
+          "type": "integer"
+        },
+        "mount_generation": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run_id",
+        "actor_id",
+        "epoch"
+      ]
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunManifest",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/RunManifest",
+  "$defs": {
+    "RunManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "experiment": {
+          "type": "string"
+        },
+        "learner_revision": {
+          "type": "string"
+        },
+        "host_revision": {
+          "type": "string"
+        },
+        "profile_sha256": {
+          "type": "string"
+        },
+        "resolved_config": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "seeds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "scenario_split": {
+          "$ref": "#/$defs/ScenarioSplit"
+        },
+        "status": {
+          "enum": [
+            "prepared",
+            "running",
+            "completed",
+            "failed",
+            "capped",
+            "canceled",
+            "inconclusive"
+          ]
+        },
+        "device": {
+          "type": "string"
+        },
+        "gameplay_lane": {
+          "enum": [
+            "recorded_fixture",
+            "sampled_ACT003",
+            "physical_ACT004"
+          ]
+        },
+        "execution_lane": {
+          "enum": [
+            "stepped",
+            "realtime",
+            "offline"
+          ]
+        },
+        "observation_schema": {
+          "type": "string"
+        },
+        "action_schema": {
+          "type": "string"
+        },
+        "suite": {
+          "type": "string"
+        },
+        "budget": {
+          "$ref": "#/$defs/RunBudget"
+        },
+        "decisions": {
+          "type": "integer"
+        },
+        "runtime_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          }
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parent_run_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "continuation": {
+          "enum": [
+            "fresh_episode",
+            "none"
+          ]
+        },
+        "created_utc": {
+          "type": "string"
+        },
+        "config_sha256": {
+          "type": "string"
+        },
+        "schema_version": {
+          "enum": [
+            1
+          ]
+        }
+      },
+      "required": [
+        "run_id",
+        "experiment",
+        "learner_revision",
+        "host_revision",
+        "profile_sha256",
+        "resolved_config",
+        "environment",
+        "seeds",
+        "scenario_split",
+        "status"
+      ]
+    },
+    "ScenarioSplit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "training": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tuning": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evaluation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "training",
+        "tuning",
+        "evaluation"
+      ]
+    },
+    "RunBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_decisions": {
+          "type": "integer"
+        },
+        "max_seconds": {
+          "type": "number"
+        }
+      },
+      "required": []
+    },
+    "ArtifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "uri": {
+          "type": "string"
+        },
+        "content_sha256": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "type": "integer"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "uri",
+        "content_sha256",
+        "size_bytes",
+        "kind"
+      ]
+    }
+  }
+}

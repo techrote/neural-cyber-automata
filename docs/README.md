@@ -27,6 +27,8 @@ verified: 2026-10-18
 | What remains optional? | [IDEAS.md](IDEAS.md) |
 | What compute is supported or measured? | [HARDWARE.md](HARDWARE.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
+| How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
+| What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |
 | What traps matter? | [GOTCHAS.md](GOTCHAS.md) |
 | What do the terms mean? | [GLOSSARY.md](GLOSSARY.md) |
 

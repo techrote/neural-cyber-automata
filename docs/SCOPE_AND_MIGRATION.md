@@ -8,7 +8,7 @@ verified: 2026-10-18
 
 # Scope and programme migration
 
-## Owner direction
+## T-100 — Owner direction and completed research prepass
 
 The owner requested a research/design prepass for [ACT-004 / Cybersand #178](https://github.com/techrote/cybersand/issues/178), with human, decision-model and frontier-LLM command sources, and authorized completely reorienting this repository toward training and testing intelligent behaviours for Cybersand.
 

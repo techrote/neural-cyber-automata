@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegacyCommand",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/LegacyCommand",
+  "$defs": {
+    "LegacyCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "enum": [
+            1
+          ]
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "actor_id": {
+          "type": "integer"
+        },
+        "epoch": {
+          "type": "integer"
+        },
+        "sequence": {
+          "type": "integer"
+        },
+        "observed_tick": {
+          "type": "integer"
+        },
+        "observation_id": {
+          "type": "string"
+        },
+        "lease_ticks": {
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "rig_action",
+            "actuator_action"
+          ]
+        },
+        "action": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LegacyWireAction"
+            },
+            {
+              "$ref": "#/$defs/LegacyMetalAction"
+            }
+          ]
+        },
+        "tag": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "message_type": {
+          "enum": [
+            "none",
+            "goal_hint",
+            "latent_state"
+          ]
+        },
+        "cancel": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "version",
+        "run_id",
+        "actor_id",
+        "epoch",
+        "sequence",
+        "observed_tick",
+        "observation_id",
+        "lease_ticks",
+        "kind",
+        "action",
+        "tag",
+        "message",
+        "message_type",
+        "cancel"
+      ]
+    },
+    "LegacyWireAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "movement": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "aim": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "effort": {
+          "type": "number"
+        },
+        "trim": {
+          "type": "number"
+        },
+        "reel": {
+          "type": "number"
+        },
+        "primary": {
+          "type": "boolean"
+        },
+        "secondary": {
+          "type": "boolean"
+        },
+        "auxiliary": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "movement",
+        "aim",
+        "effort",
+        "trim",
+        "reel",
+        "primary",
+        "secondary",
+        "auxiliary"
+      ]
+    },
+    "LegacyMetalAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actuators": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "tag_aim": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "actuators",
+        "tag_aim"
+      ]
+    }
+  }
+}

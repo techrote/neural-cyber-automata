@@ -14,6 +14,22 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-014 — Execute the complete current implementation programme
+
+[ACCEPTED] 2026-10-19 by owner: complete all current issues and record progress in the repository every 30 minutes.
+
+This commissions T-101 through T-110, including their bounded CPU implementation,
+testing and experiments. The earlier prepass-only wording describes T-100 and
+does not prevent this work. Each issue retains its dependency and evidence gates,
+one branch and one PR. Conditional experiments use a named behaviour, topology
+and budget recorded before execution. No paid model service or newly acquired
+compute is included. The existing Cybersand public API can be used from an
+adapter owned here; Cybersand source changes retain that project's task process.
+
+Progress checkpoints record source identities, tested results, failures and
+remaining gates. A negative experimental result is preserved; it is not replaced
+with an unsupported success claim or an enlarged unrecorded search.
+
 ### D-010 — This repository serves Cybersand behaviour training and testing
 
 [ACCEPTED] 2026-10-18 by owner; recorded by the ACT-004 research prepass, [T-100 / #10](https://github.com/techrote/neural-cyber-automata/issues/10).
