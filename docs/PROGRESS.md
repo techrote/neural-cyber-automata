@@ -177,3 +177,71 @@ local tail remain unknown. PR #35 retains both evidence sets and the deviation.
 Next: preserve final archives, perform exclusive T109 qualification, merge the
 checked lifecycle correction, publish the failed prerequisite and useful gated
 preparation, and reconcile final docs. Next checkpoint: by 21:48 UTC.
+
+## 2026-10-19 21:47 UTC — Verified merges, preserved no-go results and guarded preparation
+
+Accepted main is `bd9a692ccb425d798cc8499135375c81f96e5b56`. The cellular
+cancellation/accounting correction merged through PR #35 after all four
+workflows passed on final head `2b26ea7a`; the merged tree exactly matches
+`4fae9720b9675064c3a9fb7365abc4e8c673ed9a`. Its combined learning/host check
+passed 285 tests, including quiet-arrival cancellation and original-age jitter.
+The earlier failed CI attempt and successful retry remain separately recorded.
+
+Eight programme task scopes have accepted evidence. Morphology preparation is
+also merged through PR #30, but measured transfer in #16 remains blocked.
+PR #36 corrects the designated primary and retains the concurrent alternate;
+the cumulative-budget correction is published at `598221d1`, tree
+`bfe1ba0c765d29260011cc0a919f2f8ff59ced96`, pending its final checks.
+Issue #37 tracks the remaining guarded comparison implementation.
+
+The primary direction run still fails its unchanged prerequisite. Independent
+read-only admission verified its complete files, episodes, metrics, source and
+checkpoints in 282.603497256 seconds and returned
+`morphology_prerequisite_failed`: no Torch or morphology-capture import,
+host start, game request or optimizer update. The new preparation has 99
+passing focused tests and an immutable selection binding to primary `1222d2e8`.
+Its fixed comparison remains unexecuted; no alternate result can replace the
+designated prerequisite.
+
+The separate GitHub direction archive has now passed an independent audit:
+433 members, all 432 indexed hashes, 136 original episodes and all 52 declared
+source/input blobs. It contains 4,660 requests / 27,960 ticks / 11,760 updates.
+Together with the primary, this is **9,353 requests / 56,118 ticks / 23,520
+updates**, exceeding the original **6,000-decision allowance**. The complete
+aggregate wall time remains unavailable; the two internal timers exclude
+outer/startup overhead. Both archives retain distinct identities and outcomes.
+
+T109's sole fixed-source deployment screen at `eb953615` completed with a
+preserved **no-go**. Arithmetic, 13 negative contracts, both profile/cadence
+variants, count-based throughput and optimizer/RNG resume passed. Both paired
+trajectories exceeded the unchanged 0.05-cell tolerance. Their first pose
+failures were right tick 132 and left tick 29; common-input arithmetic passed
+all 160 recorded comparisons. A unique physical divergence cause or whole-game
+determinism is not established.
+
+The original realtime checker failed to recognize the pinned host's earlier
+`lease` refusal for the same expired packet (observed tick 7, submitted tick 31,
+12-tick lease). A reviewed prospective correction requires the exact packet,
+actual expiry age and correct host reason domain. It passed 11 benchmark tests;
+a separate zero-game audit of the original receipts passes the corrected check.
+The original screen summary and no-go remain unchanged.
+
+Throughput measured 500 decisions per configuration, one learned actor in
+each of the one/two-total-actor cases, in 79.0335 seconds total under the
+600-second ceiling. This did not complete the requested full ten-minute
+observation. A separate evaluated-bundle engineering gate passed all four
+actual-host tests: one host, five resets, seven NumPy forwards and 36 confirmed
+ticks, with no optimization and confirmed owned-host termination.
+
+The complete qualification archive is saved, SHA-256
+`aa5439c0fb4171a25fe28a46651f8fea396eb1598bcb7d765e0768f3320467cb`,
+along with the separately downloaded directional ZIP
+`fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510`.
+The additional diagnosis/conformance archive and audited companion index are
+ready for saving. T109 / #19 remains open for the unmet qualification limits.
+
+Next: publish the guarded source and corrected checker with their evidence,
+complete final-head checks and scoped merges, then reconcile the final README,
+state, roadmap and run ledger. No new formal training, morphology experiment,
+paid service or host-source modification is in progress. The next checkpoint
+is due within 30 minutes.
