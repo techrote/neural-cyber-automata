@@ -51,6 +51,12 @@ def first_skill_screen(**kwargs):
     return run_screen(**kwargs)
 
 
+def cpu_export_policy(*args, **kwargs):
+    """Construct the optional NumPy runtime only on explicit invocation."""
+    from .export import ExportController
+    return ExportController(*args, **kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -78,5 +84,7 @@ def builtin_registry() -> Registry:
                       ("act004", "same-runtime", "original-observation-age"))
     registry.register("trainer", "first-jolt-screen", 1, first_skill_screen,
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
+    registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
+                      ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
     register_skills(registry)
     return registry

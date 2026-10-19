@@ -121,6 +121,21 @@ predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
 remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
 a separate CPU export qualification, with its directional failures retained.
 
+## Evaluated CPU export preparation
+
+The optional [runtime export lane](RUNTIME_EXPORT.md) converts the fixed trained
+BC seed 1103 policy into a hash-bound NumPy GRU with declared preprocessing,
+recurrence, wire mapping and exact runtime context. It fences original source
+observations, ownership changes, deadlines and unsupported profiles. Conversion
+verifies the accepted T105 training/evaluation lineage before admitting weights.
+
+The [T-109 evidence](evidence/2026-10-19-t109.md) separates arithmetic-only
+preparation from final deployment qualification. The immutable CPU screen fixes
+parity tolerances, actual trajectory pairs, refusal and realtime takeover cases,
+inference/reset/transport measurements and one/two-actor throughput under a
+600-second cap. Final conversion and actual qualification follow this source
+freeze; no deployment or device result is implied by preparation checks.
+
 ## Host authority
 
 The refreshed Cybersand source at
