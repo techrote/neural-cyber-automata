@@ -189,7 +189,7 @@ import json, sys
 from pathlib import Path
 from nca.data import capture
 from nca.contracts import ContractError
-assert Path(capture.__file__).resolve().is_relative_to(Path(sys.argv[1])), "expected installed-layout import"
+assert Path(capture.__file__).resolve().is_relative_to(Path(sys.argv[1]).resolve()), "expected installed-layout import"
 try:
     revision, files, aggregate = capture.source_identity()
 except ContractError as error:
@@ -200,7 +200,8 @@ else:
 
             def run(cwd):
                 value = subprocess.run([sys.executable, "-c", code, str(installed)], cwd=cwd,
-                                       env=environment, capture_output=True, text=True, check=True)
+                                       env=environment, capture_output=True, text=True)
+                self.assertEqual(value.returncode, 0, value.stderr)
                 return json.loads(value.stdout)
 
             matched = run(root)
