@@ -99,6 +99,28 @@ Local skill predicates remain separate from evaluator success; the scripted
 human/model source labels do not claim an actual input session or live service.
 Independent arbitrary object replacement and owner feel remain unmeasured.
 
+## First learned Jolt skill
+
+The optional [CPU learning lane](LEARNING.md) implements behavioural cloning and
+recurrent residual PPO with original latent-action likelihoods, ordered sequence
+updates, valid duration/continuation masks and immutable checkpoints. Its
+[T-105 screen](evidence/2026-10-19-t105.md) used three policy seeds, six frozen
+final checkpoints and eight unseen paired scenarios. It completed 11,755 game
+decisions in 685.6 seconds under the predeclared 13,000-decision / 30-minute cap.
+
+Mean success was 45.83% for cloning and 50.00% for residual PPO, versus 25.00%
+for the authored reference. Both passed the declared improvement, integrity,
+character and inference gates. Every failed scenario and weaker seed remains
+recorded. The complete artifact audit found no held-out data in optimization.
+An original deterministic-evaluation likelihood label defect is preserved in
+historical records and corrected in the final source; it did not alter trained
+weights or wire outcomes. Owner feel remains unjudged.
+
+These are bounded exploratory improvements. Neither family met the independently
+predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
+remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
+a separate CPU export qualification, with its directional failures retained.
+
 ## Host authority
 
 The refreshed Cybersand source at
