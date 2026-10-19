@@ -1,0 +1,1777 @@
+{
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "kind": "actual_reset_observations_for_adapter_conformance",
+  "profiles": {
+    "astra": {
+      "definition": {
+        "aim_text": "Independent burst direction",
+        "auxiliary": "Toggle assist/coast",
+        "body_size": [
+          9.0,
+          8.0
+        ],
+        "bounds": "[P: (-4.5, -4.0), S: (9.0, 8.0)]",
+        "channels": [
+          "movement",
+          "aim",
+          "effort",
+          "trim",
+          "reel",
+          "primary",
+          "secondary",
+          "auxiliary",
+          "tool"
+        ],
+        "color": [
+          0.379999995231628,
+          0.769999980926514,
+          1.0,
+          1.0
+        ],
+        "controller_id": "local-feedback/astra/v1",
+        "controls": "WASD move; mouse aim; [ / ] effort; Q/E trim; Z/X reel.\nSpace: aimed pulse. Shift: hold brake. C: switch ground/flight.\nM: use tool. N: release held item. U: reattach nearby item. Release controls after focus/menu changes.",
+        "description": "A compact vector machine with two compliant thrust pods and independently aimed, bounded bursts.",
+        "effort_text": "Impulse effort",
+        "experimental": true,
+        "id": "astra",
+        "joints": [
+          {
+            "a": 0,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              -3.5,
+              2.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 1,
+            "damping": 3.8,
+            "id": "rotor_mount_1",
+            "limits": [
+              -0.180000007152557,
+              0.180000007152557
+            ],
+            "limits_enabled": true,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "thruster",
+            "stiffness": 22.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              3.5,
+              2.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 2,
+            "damping": 3.8,
+            "id": "rotor_mount_2",
+            "limits": [
+              -0.180000007152557,
+              0.180000007152557
+            ],
+            "limits_enabled": true,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "thruster",
+            "stiffness": 22.0,
+            "type": "rotary"
+          }
+        ],
+        "limitations": [
+          "Authored assistance and compliant rectangular parts; no finite gyro momentum accounting.",
+          "Scripted feedback is deterministic local control, not learned inference or global pathfinding."
+        ],
+        "mounts": [
+          {
+            "angle": 0.0,
+            "cooldown": 0.55,
+            "id": "usable",
+            "limits": [
+              -2.5,
+              2.5
+            ],
+            "offset": [
+              3.5,
+              1.0
+            ],
+            "part": 0,
+            "radius": 2,
+            "reach": 14.0,
+            "recoil": 13.0,
+            "type": "recoil",
+            "usable": "launcher"
+          }
+        ],
+        "movement_text": "WASD: controlled drift",
+        "name": "Astra / Vector",
+        "parameters": {},
+        "part_count": 3,
+        "parts": [
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.379999995231628,
+              0.769999980926514,
+              1.0,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "chassis",
+            "mass": 1.15,
+            "offset": [
+              0.0,
+              0.0
+            ],
+            "role": "hull",
+            "shape": "rectangle",
+            "size": [
+              5.0,
+              8.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.479200005531311,
+              0.806800007820129,
+              1.0,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "rotor_1",
+            "mass": 0.22,
+            "offset": [
+              -3.5,
+              2.0
+            ],
+            "role": "thruster",
+            "shape": "rectangle",
+            "size": [
+              2.0,
+              4.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.303999990224838,
+              0.61599999666214,
+              0.800000011920929,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "rotor_2",
+            "mass": 0.22,
+            "offset": [
+              3.5,
+              2.0
+            ],
+            "role": "thruster",
+            "shape": "rectangle",
+            "size": [
+              2.0,
+              4.0
+            ]
+          }
+        ],
+        "persona": "Astra is a speculative vector-control design persona. Fictional interface design; not a claim about any real model's behavior, preferences or capabilities.",
+        "primary": "Vector burst",
+        "profile": {
+          "accel": 230.0,
+          "air_control": 0.12,
+          "auxiliary": "mode",
+          "body_thrust": false,
+          "charge_seconds": 0.48,
+          "cooldown": 0.6,
+          "damping": 3.0,
+          "gait_amplitude": 0.5,
+          "gait_rate": 2.9,
+          "gravity": 156.0,
+          "grip": false,
+          "ground_clearance": 10.0,
+          "gyro": 26.0,
+          "gyro_kp": 10.0,
+          "jump": 68.0,
+          "movement": "flight",
+          "play": 0.055,
+          "primary": "pulse",
+          "rebound": 0.58,
+          "recharge": 0.45,
+          "rope": false,
+          "rope_range": 68.0,
+          "secondary": "brake",
+          "slew": 8.0,
+          "speed": 61.0,
+          "thrust": 205.0,
+          "tool": ""
+        },
+        "representation": "articulated-rapier",
+        "script": {
+          "altitude": 18.0,
+          "character": "independent burst and counterthrust",
+          "pace": 0.9,
+          "period": 1.8,
+          "radius": 34.0,
+          "recovery_seconds": 0.75
+        },
+        "secondary": "Hold counterthrust",
+        "set": "setV",
+        "spawn_floor_clearance": 6.0,
+        "spawn_radius": 8.02079725265503,
+        "theme": "Speculative interface personas",
+        "version": 1,
+        "visual": "jet"
+      },
+      "observation": {
+        "action": {},
+        "actor_id": 0,
+        "actor_slot": 0,
+        "anchor": [
+          0.0,
+          0.0
+        ],
+        "angular_velocity": 0.0,
+        "applied_impulse": [
+          0.0,
+          0.0
+        ],
+        "applied_torque_impulse": 0.0,
+        "blocked": false,
+        "ceiling_distance": 45.0,
+        "centre": [
+          176.0,
+          346.0
+        ],
+        "charge": 0.0,
+        "coast_mode": false,
+        "contact_normal": [
+          0.0,
+          0.0
+        ],
+        "control_generation": 0,
+        "control_mode": "wire",
+        "cooldown": 0.0,
+        "energy": 1.0,
+        "energy_used": 0.0,
+        "environment_version": 2,
+        "epoch": 2,
+        "facing": 1.0,
+        "fault": "",
+        "flight_mode": true,
+        "gait_phase": 0.0,
+        "gravity": 156.0,
+        "gripped": false,
+        "ground_distance": 96.0,
+        "grounded": false,
+        "joints": [
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 1,
+            "enabled": true,
+            "id": "rotor_mount_1",
+            "limits": [
+              -0.180000007152557,
+              0.180000007152557
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 2,
+            "enabled": true,
+            "id": "rotor_mount_2",
+            "limits": [
+              -0.180000007152557,
+              0.180000007152557
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          }
+        ],
+        "last_sequence": -1,
+        "lease_remaining": 0,
+        "mode": 1,
+        "model": "astra",
+        "movement_limited": false,
+        "observation_id": "a9c943b1ca18024b123c05040d64c4f4:2:0:0:0",
+        "observation_scope": "self, rig rays and bounded composed native cells",
+        "part_count": 3,
+        "parts": [
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "chassis",
+            "index": 0,
+            "mass": 1.14999997615814,
+            "position": [
+              176.0,
+              346.0
+            ],
+            "rotation": 0.0,
+            "size": [
+              5.0,
+              8.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "rotor_1",
+            "index": 1,
+            "mass": 0.219999998807907,
+            "position": [
+              172.5,
+              348.0
+            ],
+            "rotation": 0.0,
+            "size": [
+              2.0,
+              4.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "rotor_2",
+            "index": 2,
+            "mass": 0.219999998807907,
+            "position": [
+              179.5,
+              348.0
+            ],
+            "rotation": 0.0,
+            "size": [
+              2.0,
+              4.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "pending_input_edges": 0,
+        "position": [
+          176.0,
+          346.0
+        ],
+        "power_enabled": true,
+        "powered": true,
+        "producer": "policy",
+        "profile_version": 1,
+        "ray_queries": 7,
+        "representation": "articulated-rapier",
+        "rig_id": "astra",
+        "rope_attached": false,
+        "rope_length": 0.0,
+        "rotation": 0.0,
+        "run_id": "a9c943b1ca18024b123c05040d64c4f4",
+        "schedule": "synchronous-mask-actuation-effects-material-feedback-terrain-rapier/v1",
+        "stuck_time": 0.0,
+        "suspended": false,
+        "tension": 0.0,
+        "thrust_weights": [],
+        "thruster_levels": [
+          0.0,
+          0.0
+        ],
+        "tick": 0,
+        "tool_ready": true,
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "version": 2,
+        "wall_left": 30.0,
+        "wall_right": 30.0
+      },
+      "profile_sha256": "28b3665b5ecb695aa58e10a557af79f499f927152fe233c8abe74d4867ab71b0"
+    },
+    "jev": {
+      "definition": {
+        "aim_text": "Burst direction",
+        "auxiliary": "Counterspin/self-right",
+        "body_size": [
+          12.0,
+          7.0
+        ],
+        "bounds": "[P: (-6.0, -3.5), S: (12.0, 7.0)]",
+        "channels": [
+          "movement",
+          "aim",
+          "effort",
+          "trim",
+          "reel",
+          "primary",
+          "secondary",
+          "auxiliary",
+          "tool"
+        ],
+        "color": [
+          1.0,
+          0.449999988079071,
+          0.589999973773956,
+          1.0
+        ],
+        "controller_id": "local-feedback/jev/v1",
+        "controls": "WASD move; mouse aim; [ / ] effort; Q/E trim; Z/X reel.\nSpace: aimed pulse. Shift: hold rebound. C: self-right.\nM: use tool. N: release held item. U: reattach nearby item. Release controls after focus/menu changes.",
+        "description": "Jolt commits to aimed bursts and uses two yielding impact pads to shape energy-losing contact rebounds.",
+        "effort_text": "Burst power",
+        "experimental": true,
+        "id": "jev",
+        "joints": [
+          {
+            "a": 0,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              -3.5,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 1,
+            "damping": 3.8,
+            "id": "pad_flex_-1",
+            "limits": [
+              -0.300000011920929,
+              0.300000011920929
+            ],
+            "limits_enabled": true,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "foot",
+            "stiffness": 22.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              3.5,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 2,
+            "damping": 3.8,
+            "id": "pad_flex_1",
+            "limits": [
+              -0.300000011920929,
+              0.300000011920929
+            ],
+            "limits_enabled": true,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "foot",
+            "stiffness": 22.0,
+            "type": "rotary"
+          }
+        ],
+        "limitations": [
+          "Authored assistance and compliant rectangular parts; no finite gyro momentum accounting.",
+          "Scripted feedback is deterministic local control, not learned inference or global pathfinding."
+        ],
+        "mounts": [
+          {
+            "angle": 0.0,
+            "cooldown": 0.55,
+            "id": "usable",
+            "limits": [
+              -2.5,
+              2.5
+            ],
+            "offset": [
+              4.0,
+              0.0
+            ],
+            "part": 0,
+            "radius": 2,
+            "reach": 14.0,
+            "recoil": 2.5,
+            "type": "mounted",
+            "usable": "depositor"
+          }
+        ],
+        "movement_text": "WASD: modest steering",
+        "name": "Jev / Jolt",
+        "parameters": {},
+        "part_count": 3,
+        "parts": [
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              1.0,
+              0.449999988079071,
+              0.589999973773956,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "impact_core",
+            "mass": 1.3,
+            "offset": [
+              0.0,
+              0.0
+            ],
+            "role": "hull",
+            "shape": "rectangle",
+            "size": [
+              7.0,
+              7.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              1.0,
+              0.537999987602234,
+              0.65559995174408,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "rebound_pad_-1",
+            "mass": 0.26,
+            "offset": [
+              -5.0,
+              0.0
+            ],
+            "role": "foot",
+            "shape": "rectangle",
+            "size": [
+              2.0,
+              6.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.800000011920929,
+              0.359999984502792,
+              0.471999973058701,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "rebound_pad_1",
+            "mass": 0.26,
+            "offset": [
+              5.0,
+              0.0
+            ],
+            "role": "foot",
+            "shape": "rectangle",
+            "size": [
+              2.0,
+              6.0
+            ]
+          }
+        ],
+        "persona": "Jev is a speculative ricochet-control design persona. Fictional interface design; not a claim about any real model's behavior, preferences or capabilities.",
+        "primary": "Ricochet burst",
+        "profile": {
+          "accel": 230.0,
+          "air_control": 0.12,
+          "auxiliary": "self_right",
+          "body_thrust": false,
+          "charge_seconds": 0.48,
+          "cooldown": 0.62,
+          "damping": 3.0,
+          "gait_amplitude": 0.5,
+          "gait_rate": 2.9,
+          "gravity": 156.0,
+          "grip": false,
+          "ground_clearance": 10.0,
+          "gyro": 32.0,
+          "gyro_kp": 10.0,
+          "jump": 86.0,
+          "movement": "hop",
+          "play": 0.055,
+          "primary": "pulse",
+          "rebound": 0.65,
+          "recharge": 0.45,
+          "rope": false,
+          "rope_range": 68.0,
+          "secondary": "rebound",
+          "slew": 8.0,
+          "speed": 48.0,
+          "thrust": 205.0,
+          "tool": ""
+        },
+        "representation": "articulated-rapier",
+        "script": {
+          "altitude": 18.0,
+          "character": "committed burst, contact rebound, fast counterspin",
+          "pace": 0.9,
+          "period": 1.4,
+          "radius": 34.0,
+          "recovery_seconds": 0.75
+        },
+        "secondary": "Hold rebound response",
+        "set": "setV",
+        "spawn_floor_clearance": 5.5,
+        "spawn_radius": 8.94622182846069,
+        "theme": "Speculative interface personas",
+        "trim_text": "Body torque",
+        "version": 1,
+        "visual": "wheel"
+      },
+      "observation": {
+        "action": {},
+        "actor_id": 0,
+        "actor_slot": 0,
+        "anchor": [
+          0.0,
+          0.0
+        ],
+        "angular_velocity": 0.0,
+        "applied_impulse": [
+          0.0,
+          0.0
+        ],
+        "applied_torque_impulse": 0.0,
+        "blocked": false,
+        "ceiling_distance": 45.0,
+        "centre": [
+          176.0,
+          346.5
+        ],
+        "charge": 0.0,
+        "coast_mode": false,
+        "contact_normal": [
+          0.0,
+          0.0
+        ],
+        "control_generation": 0,
+        "control_mode": "wire",
+        "cooldown": 0.0,
+        "energy": 1.0,
+        "energy_used": 0.0,
+        "environment_version": 2,
+        "epoch": 1,
+        "facing": 1.0,
+        "fault": "",
+        "flight_mode": false,
+        "gait_phase": 0.0,
+        "gravity": 156.0,
+        "gripped": false,
+        "ground_distance": 96.0,
+        "grounded": false,
+        "joints": [
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 1,
+            "enabled": true,
+            "id": "pad_flex_-1",
+            "limits": [
+              -0.300000011920929,
+              0.300000011920929
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 2,
+            "enabled": true,
+            "id": "pad_flex_1",
+            "limits": [
+              -0.300000011920929,
+              0.300000011920929
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          }
+        ],
+        "last_sequence": -1,
+        "lease_remaining": 0,
+        "mode": 0,
+        "model": "jev",
+        "movement_limited": false,
+        "observation_id": "759c0f05e6643a58206caf9adf27ade5:1:0:0:0",
+        "observation_scope": "self, rig rays and bounded composed native cells",
+        "part_count": 3,
+        "parts": [
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "impact_core",
+            "index": 0,
+            "mass": 1.29999995231628,
+            "position": [
+              176.0,
+              346.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              7.0,
+              7.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "rebound_pad_-1",
+            "index": 1,
+            "mass": 0.259999990463257,
+            "position": [
+              171.0,
+              346.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              2.0,
+              6.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "rebound_pad_1",
+            "index": 2,
+            "mass": 0.259999990463257,
+            "position": [
+              181.0,
+              346.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              2.0,
+              6.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "pending_input_edges": 0,
+        "position": [
+          176.0,
+          346.5
+        ],
+        "power_enabled": true,
+        "powered": true,
+        "producer": "policy",
+        "profile_version": 1,
+        "ray_queries": 7,
+        "representation": "articulated-rapier",
+        "rig_id": "jev",
+        "rope_attached": false,
+        "rope_length": 0.0,
+        "rotation": 0.0,
+        "run_id": "759c0f05e6643a58206caf9adf27ade5",
+        "schedule": "synchronous-mask-actuation-effects-material-feedback-terrain-rapier/v1",
+        "stuck_time": 0.0,
+        "suspended": false,
+        "tension": 0.0,
+        "thrust_weights": [],
+        "thruster_levels": [
+          0.0,
+          0.0
+        ],
+        "tick": 0,
+        "tool_ready": true,
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "version": 2,
+        "wall_left": 30.0,
+        "wall_right": 30.0
+      },
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc"
+    },
+    "monowheel": {
+      "definition": {
+        "body_size": [
+          14.1421356201172,
+          14.1421356201172
+        ],
+        "bounds": "[P: (-7.071068, -7.071068), S: (14.14214, 14.14214)]",
+        "channels": [
+          "movement",
+          "aim",
+          "effort",
+          "trim",
+          "reel",
+          "primary",
+          "secondary",
+          "auxiliary",
+          "tool"
+        ],
+        "color": [
+          0.479999989271164,
+          0.860000014305115,
+          0.839999973773956,
+          1.0
+        ],
+        "controller_id": "local-feedback/monowheel/v1",
+        "controls": "WASD move; mouse aim; [ / ] effort; Q/E trim; Z/X reel.\nSpace: spin up. Shift: spend spin on hop. C: self-right.\nM: use tool. N: release held item. U: reattach nearby item. Release controls after focus/menu changes.",
+        "description": "An eccentric cab hangs inside a square tumbling rim; rolling and cab attitude respond on different time scales.",
+        "experimental": true,
+        "id": "monowheel",
+        "joints": [
+          {
+            "a": 0,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 1,
+            "damping": 3.8,
+            "id": "axle",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "wheel",
+            "stiffness": 22.0,
+            "type": "rotary"
+          }
+        ],
+        "limitations": [
+          "Authored assistance and compliant rectangular parts; no finite gyro momentum accounting.",
+          "Scripted feedback is deterministic local control, not learned inference or global pathfinding."
+        ],
+        "mounts": [
+          {
+            "angle": 0.0,
+            "cooldown": 0.55,
+            "id": "usable",
+            "limits": [
+              -2.5,
+              2.5
+            ],
+            "offset": [
+              4.0,
+              0.0
+            ],
+            "part": 0,
+            "radius": 2,
+            "reach": 14.0,
+            "recoil": 2.5,
+            "type": "mounted",
+            "usable": "depositor"
+          }
+        ],
+        "name": "Monowheel",
+        "part_count": 2,
+        "parts": [
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.479999989271164,
+              0.860000014305115,
+              0.839999973773956,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "weighted_cab",
+            "mass": 1.7,
+            "offset": [
+              0.0,
+              1.5
+            ],
+            "role": "hull",
+            "shape": "rectangle",
+            "size": [
+              4.0,
+              5.0
+            ]
+          },
+          {
+            "angle": 0.785398163397448,
+            "bounce": 0.04,
+            "color": [
+              0.563199996948242,
+              0.882400035858154,
+              0.865599989891052,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "tumbling_rim",
+            "mass": 0.7,
+            "offset": [
+              0.0,
+              0.0
+            ],
+            "role": "wheel",
+            "shape": "rectangle",
+            "size": [
+              10.0,
+              10.0
+            ]
+          }
+        ],
+        "profile": {
+          "accel": 230.0,
+          "air_control": 0.12,
+          "auxiliary": "self_right",
+          "body_thrust": false,
+          "charge_seconds": 0.48,
+          "cooldown": 0.55,
+          "damping": 1.8,
+          "gait_amplitude": 0.5,
+          "gait_rate": 2.9,
+          "gravity": 156.0,
+          "grip": false,
+          "ground_clearance": 10.0,
+          "gyro": 17.0,
+          "gyro_kp": 10.0,
+          "jump": 61.0,
+          "movement": "roll",
+          "play": 0.055,
+          "primary": "spin",
+          "rebound": 0.58,
+          "recharge": 0.45,
+          "rope": false,
+          "rope_range": 68.0,
+          "secondary": "hop",
+          "slew": 8.0,
+          "speed": 57.0,
+          "thrust": 205.0,
+          "tool": ""
+        },
+        "representation": "articulated-rapier",
+        "script": {
+          "altitude": 18.0,
+          "character": "decisive traversal",
+          "pace": 0.9,
+          "period": 2.1,
+          "radius": 34.0,
+          "recovery_seconds": 0.75
+        },
+        "set": "setX",
+        "spawn_floor_clearance": 9.07106781005859,
+        "spawn_radius": 12.0,
+        "theme": "Experimental mechanisms",
+        "version": 1
+      },
+      "observation": {
+        "action": {},
+        "actor_id": 0,
+        "actor_slot": 0,
+        "anchor": [
+          0.0,
+          0.0
+        ],
+        "angular_velocity": 0.0,
+        "applied_impulse": [
+          0.0,
+          0.0
+        ],
+        "applied_torque_impulse": 0.0,
+        "blocked": false,
+        "ceiling_distance": 45.0,
+        "centre": [
+          176.0,
+          344.428924560547
+        ],
+        "charge": 0.0,
+        "coast_mode": false,
+        "contact_normal": [
+          0.0,
+          0.0
+        ],
+        "control_generation": 0,
+        "control_mode": "wire",
+        "cooldown": 0.0,
+        "energy": 1.0,
+        "energy_used": 0.0,
+        "environment_version": 2,
+        "epoch": 3,
+        "facing": 1.0,
+        "fault": "",
+        "flight_mode": false,
+        "gait_phase": 0.0,
+        "gravity": 156.0,
+        "gripped": false,
+        "ground_distance": 96.0,
+        "grounded": false,
+        "joints": [
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 2.18556950315474e-08,
+            "b": 1,
+            "enabled": true,
+            "id": "axle",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          }
+        ],
+        "last_sequence": -1,
+        "lease_remaining": 0,
+        "mode": 0,
+        "model": "monowheel",
+        "movement_limited": false,
+        "observation_id": "75dd887a466349bb6c4add4a7ee17ec3:3:0:0:0",
+        "observation_scope": "self, rig rays and bounded composed native cells",
+        "part_count": 2,
+        "parts": [
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "weighted_cab",
+            "index": 0,
+            "mass": 1.70000004768372,
+            "position": [
+              176.0,
+              344.428924560547
+            ],
+            "rotation": 0.0,
+            "size": [
+              4.0,
+              5.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "tumbling_rim",
+            "index": 1,
+            "mass": 0.699999988079071,
+            "position": [
+              176.0,
+              342.928924560547
+            ],
+            "rotation": 0.785398185253143,
+            "size": [
+              10.0,
+              10.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "pending_input_edges": 0,
+        "position": [
+          176.0,
+          344.428924560547
+        ],
+        "power_enabled": true,
+        "powered": true,
+        "producer": "policy",
+        "profile_version": 1,
+        "ray_queries": 6,
+        "representation": "articulated-rapier",
+        "rig_id": "monowheel",
+        "rope_attached": false,
+        "rope_length": 0.0,
+        "rotation": 0.0,
+        "run_id": "75dd887a466349bb6c4add4a7ee17ec3",
+        "schedule": "synchronous-mask-actuation-effects-material-feedback-terrain-rapier/v1",
+        "stuck_time": 0.0,
+        "suspended": false,
+        "tension": 0.0,
+        "thrust_weights": [],
+        "thruster_levels": [
+          0.0,
+          0.0
+        ],
+        "tick": 0,
+        "tool_ready": true,
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "version": 2,
+        "wall_left": 30.0,
+        "wall_right": 30.0
+      },
+      "profile_sha256": "6da0f8baf5da2adfb7d1131a0913f0cad186e8f0c0b8354bf1fcae1d5bf9848b"
+    },
+    "ripper": {
+      "definition": {
+        "auxiliary": "Hold self-right",
+        "body_size": [
+          17.0,
+          10.0
+        ],
+        "bounds": "[P: (-8.5, -2.5), S: (17.0, 10.0)]",
+        "channels": [
+          "movement",
+          "aim",
+          "effort",
+          "trim",
+          "reel",
+          "primary",
+          "secondary",
+          "auxiliary",
+          "tool"
+        ],
+        "color": [
+          0.910000026226044,
+          0.779999971389771,
+          0.300000011920929,
+          1.0
+        ],
+        "controller_id": "local-feedback/ripper/v1",
+        "controls": "WASD move; mouse aim; [ / ] effort; Q/E trim; Z/X reel.\nSpace: cut and traction burst. Shift: hold brake. C: self-right.\nM: use tool. N: release held item. U: reattach nearby item. Release controls after focus/menu changes.",
+        "description": "A low RC drift crawler with two sprung bogies, driven track rollers and a bounded cutting front.",
+        "effort_text": "Drive power",
+        "experimental": true,
+        "id": "ripper",
+        "joints": [
+          {
+            "a": 0,
+            "anchor": [
+              -5.0,
+              4.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 1,
+            "damping": 0.85,
+            "id": "suspension_-1",
+            "limits": [
+              -1.25,
+              1.25
+            ],
+            "max_force": 360.0,
+            "motor_speed": 5.0,
+            "phase": 0.0,
+            "rest_length": 6.40312433242798,
+            "role": "slider",
+            "stiffness": 35.0,
+            "type": "spring"
+          },
+          {
+            "a": 1,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              -5.0,
+              6.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 2,
+            "damping": 3.8,
+            "id": "drive_-1",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "wheel",
+            "stiffness": 22.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "anchor": [
+              5.0,
+              4.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 3,
+            "damping": 0.85,
+            "id": "suspension_1",
+            "limits": [
+              -1.25,
+              1.25
+            ],
+            "max_force": 360.0,
+            "motor_speed": 5.0,
+            "phase": 0.0,
+            "rest_length": 6.40312433242798,
+            "role": "slider",
+            "stiffness": 35.0,
+            "type": "spring"
+          },
+          {
+            "a": 3,
+            "aim_axis": [
+              1.0,
+              0.0
+            ],
+            "anchor": [
+              5.0,
+              6.0
+            ],
+            "axis": [
+              0.0,
+              1.0
+            ],
+            "b": 4,
+            "damping": 3.8,
+            "id": "drive_1",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "max_force": 100.0,
+            "motor_speed": 7.0,
+            "phase": 0.0,
+            "rest_length": 0.0,
+            "role": "wheel",
+            "stiffness": 22.0,
+            "type": "rotary"
+          }
+        ],
+        "limitations": [
+          "Authored assistance and compliant rectangular parts; no finite gyro momentum accounting.",
+          "Scripted feedback is deterministic local control, not learned inference or global pathfinding."
+        ],
+        "mounts": [
+          {
+            "angle": 0.0,
+            "cooldown": 0.55,
+            "id": "usable",
+            "limits": [
+              -2.5,
+              2.5
+            ],
+            "offset": [
+              4.0,
+              0.0
+            ],
+            "part": 0,
+            "radius": 2,
+            "reach": 14.0,
+            "recoil": 2.5,
+            "type": "mounted",
+            "usable": "cutter"
+          }
+        ],
+        "movement_text": "A/D: track direction",
+        "name": "Ripper",
+        "parameters": {},
+        "part_count": 5,
+        "parts": [
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.910000026226044,
+              0.779999971389771,
+              0.300000011920929,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "chassis",
+            "mass": 1.6,
+            "offset": [
+              0.0,
+              0.0
+            ],
+            "role": "hull",
+            "shape": "rectangle",
+            "size": [
+              14.0,
+              5.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.92440003156662,
+              0.815199971199036,
+              0.412000000476837,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "bogie_-1",
+            "mass": 0.45,
+            "offset": [
+              -5.0,
+              4.0
+            ],
+            "role": "foot",
+            "shape": "rectangle",
+            "size": [
+              7.0,
+              2.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.728000044822693,
+              0.624000012874603,
+              0.240000009536743,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "track_roller_-1",
+            "mass": 0.32,
+            "offset": [
+              -5.0,
+              6.0
+            ],
+            "role": "wheel",
+            "shape": "rectangle",
+            "size": [
+              4.0,
+              3.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.92440003156662,
+              0.815199971199036,
+              0.412000000476837,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "bogie_1",
+            "mass": 0.45,
+            "offset": [
+              5.0,
+              4.0
+            ],
+            "role": "foot",
+            "shape": "rectangle",
+            "size": [
+              7.0,
+              2.0
+            ]
+          },
+          {
+            "angle": 0.0,
+            "bounce": 0.04,
+            "color": [
+              0.728000044822693,
+              0.624000012874603,
+              0.240000009536743,
+              1.0
+            ],
+            "friction": 0.82,
+            "id": "track_roller_1",
+            "mass": 0.32,
+            "offset": [
+              5.0,
+              6.0
+            ],
+            "role": "wheel",
+            "shape": "rectangle",
+            "size": [
+              4.0,
+              3.0
+            ]
+          }
+        ],
+        "persona": "",
+        "primary": "Hold cutting tool; press for traction burst",
+        "profile": {
+          "accel": 390.0,
+          "air_control": 0.12,
+          "auxiliary": "self_right",
+          "body_thrust": false,
+          "charge_seconds": 0.48,
+          "cooldown": 0.55,
+          "damping": 2.0,
+          "gait_amplitude": 0.5,
+          "gait_rate": 2.9,
+          "gravity": 156.0,
+          "grip": false,
+          "ground_clearance": 10.0,
+          "gyro": 18.0,
+          "gyro_kp": 10.0,
+          "jump": 45.0,
+          "movement": "ground",
+          "play": 0.08,
+          "primary": "cut",
+          "rebound": 0.58,
+          "recharge": 0.45,
+          "rope": false,
+          "rope_range": 68.0,
+          "secondary": "brake",
+          "slew": 8.0,
+          "speed": 74.0,
+          "thrust": 205.0,
+          "tool": "cutter"
+        },
+        "representation": "articulated-rapier",
+        "script": {
+          "altitude": 18.0,
+          "character": "fast low drift, traction burst, aggressive reversal",
+          "pace": 0.9,
+          "period": 2.1,
+          "radius": 47.0,
+          "recovery_seconds": 0.75
+        },
+        "secondary": "Hold track brake",
+        "set": "setB",
+        "spawn_floor_clearance": 9.5,
+        "spawn_radius": 13.3357839584351,
+        "theme": "Ground and near-ground machines",
+        "trim_text": "Independent tilt and torque",
+        "version": 1,
+        "visual": "tracks"
+      },
+      "observation": {
+        "action": {},
+        "actor_id": 0,
+        "actor_slot": 0,
+        "anchor": [
+          0.0,
+          0.0
+        ],
+        "angular_velocity": 0.0,
+        "applied_impulse": [
+          0.0,
+          0.0
+        ],
+        "applied_torque_impulse": 0.0,
+        "blocked": false,
+        "ceiling_distance": 45.0,
+        "centre": [
+          176.0,
+          342.5
+        ],
+        "charge": 0.0,
+        "coast_mode": false,
+        "contact_normal": [
+          0.0,
+          0.0
+        ],
+        "control_generation": 0,
+        "control_mode": "wire",
+        "cooldown": 0.0,
+        "energy": 1.0,
+        "energy_used": 0.0,
+        "environment_version": 2,
+        "epoch": 4,
+        "facing": 1.0,
+        "fault": "",
+        "flight_mode": false,
+        "gait_phase": 0.0,
+        "gravity": 156.0,
+        "gripped": false,
+        "ground_distance": 96.0,
+        "grounded": false,
+        "joints": [
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 1,
+            "enabled": true,
+            "id": "suspension_-1",
+            "limits": [
+              -1.25,
+              1.25
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "travel": 0.0,
+            "type": "spring"
+          },
+          {
+            "a": 1,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 2,
+            "enabled": true,
+            "id": "drive_-1",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          },
+          {
+            "a": 0,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 3,
+            "enabled": true,
+            "id": "suspension_1",
+            "limits": [
+              -1.25,
+              1.25
+            ],
+            "limits_enabled": true,
+            "speed": 0.0,
+            "target": 0.0,
+            "travel": 0.0,
+            "type": "spring"
+          },
+          {
+            "a": 3,
+            "anchor_error": 0.0,
+            "angle": 0.0,
+            "b": 4,
+            "enabled": true,
+            "id": "drive_1",
+            "limits": [
+              -3.14159274101257,
+              3.14159274101257
+            ],
+            "limits_enabled": false,
+            "speed": 0.0,
+            "target": 0.0,
+            "type": "rotary"
+          }
+        ],
+        "last_sequence": -1,
+        "lease_remaining": 0,
+        "mode": 0,
+        "model": "ripper",
+        "movement_limited": false,
+        "observation_id": "0d55395cb257954b3a1767b29d227fe2:4:0:0:0",
+        "observation_scope": "self, rig rays and bounded composed native cells",
+        "part_count": 5,
+        "parts": [
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "chassis",
+            "index": 0,
+            "mass": 1.60000002384186,
+            "position": [
+              176.0,
+              342.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              14.0,
+              5.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "bogie_-1",
+            "index": 1,
+            "mass": 0.449999988079071,
+            "position": [
+              171.0,
+              346.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              7.0,
+              2.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "track_roller_-1",
+            "index": 2,
+            "mass": 0.319999992847443,
+            "position": [
+              171.0,
+              348.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              4.0,
+              3.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "bogie_1",
+            "index": 3,
+            "mass": 0.449999988079071,
+            "position": [
+              181.0,
+              346.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              7.0,
+              2.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "angular_velocity": 0.0,
+            "detached": false,
+            "id": "track_roller_1",
+            "index": 4,
+            "mass": 0.319999992847443,
+            "position": [
+              181.0,
+              348.5
+            ],
+            "rotation": 0.0,
+            "size": [
+              4.0,
+              3.0
+            ],
+            "velocity": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "pending_input_edges": 0,
+        "position": [
+          176.0,
+          342.5
+        ],
+        "power_enabled": true,
+        "powered": true,
+        "producer": "policy",
+        "profile_version": 1,
+        "ray_queries": 9,
+        "representation": "articulated-rapier",
+        "rig_id": "ripper",
+        "rope_attached": false,
+        "rope_length": 0.0,
+        "rotation": 0.0,
+        "run_id": "0d55395cb257954b3a1767b29d227fe2",
+        "schedule": "synchronous-mask-actuation-effects-material-feedback-terrain-rapier/v1",
+        "stuck_time": 0.0,
+        "suspended": false,
+        "tension": 0.0,
+        "thrust_weights": [],
+        "thruster_levels": [
+          0.0,
+          0.0
+        ],
+        "tick": 0,
+        "tool_ready": true,
+        "velocity": [
+          0.0,
+          0.0
+        ],
+        "version": 2,
+        "wall_left": 30.0,
+        "wall_right": 30.0
+      },
+      "profile_sha256": "be59daec39c0f56ecf93aeb4e570ef29d2f5c0261c8e7b2b610481265a5777da"
+    }
+  },
+  "schema": "nca-morphology-profile-fixtures/v1",
+  "training_or_transfer_result": false
+}

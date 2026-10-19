@@ -37,7 +37,10 @@ class ContinuousDecisionTests(unittest.TestCase):
     def test_all_declared_delays_keep_advancing_and_expiry_is_source_anchored(self):
         for delay in (0, 6, 30, 120, 240):
             with self.subTest(delay=delay):
-                session, backend = self.session(delay, cancellation_ack=False)
+                # Keep the native terminal well beyond this lease assertion. The
+                # realtime host advances while the controller thread can be descheduled
+                # on shared CI; terminal arrival must not masquerade as lease behavior.
+                session, backend = self.session(delay, cancellation_ack=False, ticks=2400)
                 updates = []
                 started = session.view["tick"]
                 for _ in range(44):
@@ -86,7 +89,8 @@ class ContinuousDecisionTests(unittest.TestCase):
         self.assertTrue(all(tick["observation"]["applied_impulse"] == [0, 0] for tick in result.info["trace"]))
 
     def test_jitter_and_repeated_model_grants_keep_original_request_age(self):
-        session, backend = self.session(6, jitter_ticks=(-2, 3))
+        # As above, isolate provider jitter from unrelated realtime host expiry.
+        session, backend = self.session(6, jitter_ticks=(-2, 3), ticks=2400)
         ages = []
         for effective in (4, 9):
             for _ in range(5):

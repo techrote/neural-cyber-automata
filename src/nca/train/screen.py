@@ -82,7 +82,7 @@ def capture_task(host: GodotHost, scenario: Mapping[str, Any], *, episode_id: st
                  policy_id: str, kind: str, policy: RecurrentPolicy | None, seed: int,
                  budget: ScreenBudget, output: Path, config: Mapping[str, Any],
                  maximum_decisions: int = 40, generator: torch.Generator | None = None,
-                 training: bool = False):
+                 training: bool = False, controller_factory=None, error_serializer=None):
     """One reset, one explicit goal, every actual base receipt and its outcome."""
     budget.check()
     host_config = physical_config("jev", ticks=config["goal"]["deadline_ticks"], seed=seed)
@@ -99,8 +99,9 @@ def capture_task(host: GodotHost, scenario: Mapping[str, Any], *, episode_id: st
                                budget=RunBudget(max_decisions=40, max_seconds=120))
     task = HopTask(goal, recorder.initial, deadline_ticks=config["goal"]["deadline_ticks"],
                    quiet_ticks_required=config["goal"]["quiet_ticks"])
+    learned_factory = LearnedController if controller_factory is None else controller_factory
     controller = AuthoredController("jev") if kind == "baseline" else (
-        LearnedController(policy, generator=generator) if policy is not None else None)
+        learned_factory(policy, generator=generator) if policy is not None else None)
     transitions, reward_terms = [], []
     capped, error, bootstrap = False, None, 0.0
     try:
@@ -152,7 +153,8 @@ def capture_task(host: GodotHost, scenario: Mapping[str, Any], *, episode_id: st
             if controller is not None:
                 controller.cancel()
     except Exception as exc:
-        error = {"type": type(exc).__name__, "message": str(exc)}
+        error = ({"type": type(exc).__name__, "message": str(exc)} if error_serializer is None
+                 else error_serializer(exc))
         capped = isinstance(exc, ScreenBudgetExceeded)
         if not capped:
             task.integrity_failure = True

@@ -1,0 +1,1659 @@
+{
+  "archives": [
+    {
+      "bytes": 3765383,
+      "file": "t109-staged-export-publiceb95361-qualification.tar.gz",
+      "file_sha256": "aa5439c0fb4171a25fe28a46651f8fea396eb1598bcb7d765e0768f3320467cb",
+      "member_count": 93,
+      "member_index": {
+        "bytes": 17175,
+        "content_sha256": "56abd5ffcf355e443f265d3e200cccb237c2477e708cd09833f2ef605cff3778",
+        "file": "t109-staged-export-publiceb95361-qualification.index.json",
+        "file_sha256": "fa744841efbf9f8da50835254a6bcfc08cee45269b65a3131bab97b2b34eebaa"
+      }
+    },
+    {
+      "bytes": 204649,
+      "file": "t109-staged-export-publiceb95361-diagnosis-conformance.tar.gz",
+      "file_sha256": "902bcb7aa4a3f0ec4aede185147ccaaa64a28ac7f3503042a383ada1d89e69a4",
+      "member_count": 67,
+      "member_index": {
+        "bytes": 13137,
+        "content_sha256": "c17a0d6f604d31d4323ba7ab860df9e9a857f71a55e5aa2c90b5b2a4ed4cefb5",
+        "file": "t109-staged-export-publiceb95361-diagnosis-conformance.index.json",
+        "file_sha256": "79411a2979eb4ba1113552376213742cafd86dbac279ed27e6fa3a18b556e381"
+      }
+    }
+  ],
+  "arithmetic": {
+    "boolean_actions_exact": true,
+    "kind": "independent_sequential_numeric_reference",
+    "maximum_absolute_differences": {
+      "features": 0.0,
+      "hidden": 6.258487701416016e-07,
+      "logits": 9.5367431640625e-07,
+      "outputs": 2.1606683731079102e-07,
+      "value": 2.384185791015625e-07,
+      "wire": 2.1606683731079102e-07
+    },
+    "passed": true,
+    "policy_sha256": "8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b",
+    "resets_at": [
+      0,
+      32,
+      64,
+      96
+    ],
+    "samples": 128
+  },
+  "bundle_file_sha256": "30b40a2459eafc7bdcc271b6ddce55ec1f8442113b5edc0b21c4380e2793f3bc",
+  "candidate_evaluation_cases": 8,
+  "candidate_evaluation_successes": 3,
+  "candidate_policy_sha256": "8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b",
+  "clips": {
+    "camera": {
+      "panel_pixels": [
+        576,
+        504
+      ],
+      "world_bounds": [
+        128,
+        200,
+        320,
+        368
+      ]
+    },
+    "clip_spec_file_sha256": "70480d1f7d61922197a46b70d37fbad4fb3515290fe5bf2cb3c9d06db7a915bb",
+    "clips": [
+      {
+        "bytes": 1111037,
+        "file": "clips/floor-right-24.gif",
+        "file_sha256": "b1c60e833601fa455ac1b3af15dab09b48988ede9535b43b55b092aebb2f84a9",
+        "frames": 41,
+        "labels": [
+          "Torch reference",
+          "NumPy export"
+        ],
+        "simulation_ticks": 240,
+        "source_files": [
+          {
+            "file": "trajectories/floor-right-24-torch.json.gz",
+            "file_sha256": "d69b98c6dbe4542b4db99944ff6ad4a3428550b6617f3dbe1ac136abb2d8f69d"
+          },
+          {
+            "file": "trajectories/floor-right-24-numpy.json.gz",
+            "file_sha256": "e91bc6ac56c68de627be7c19fc85a04b2a25972564e31924764f5a220068fbda"
+          }
+        ]
+      },
+      {
+        "bytes": 1108611,
+        "file": "clips/floor-left-24.gif",
+        "file_sha256": "94c4fd8e2c02ad0839e5c6b790c8531f127fe7c9245e7f4ae1ab491b00550e41",
+        "frames": 41,
+        "labels": [
+          "Torch reference",
+          "NumPy export"
+        ],
+        "simulation_ticks": 240,
+        "source_files": [
+          {
+            "file": "trajectories/floor-left-24-torch.json.gz",
+            "file_sha256": "1ca1183b73b3a3b5482e0764d0862a8e2ed6237f391ddacf7d7526e5e180cd0d"
+          },
+          {
+            "file": "trajectories/floor-left-24-numpy.json.gz",
+            "file_sha256": "ca1a2a0742519b2a983c134748063e0ae55573087609868c586e1ab3dba07ce5"
+          }
+        ]
+      },
+      {
+        "bytes": 139019,
+        "file": "clips/decision-12-refused.gif",
+        "file_sha256": "cdf9fab161f82928560a8b6afa7694370299825e23be7320032536cf5144a572",
+        "frames": 5,
+        "labels": [
+          "Nominal NumPy request",
+          "decision-12-refused"
+        ],
+        "simulation_ticks": 24,
+        "source_files": [
+          {
+            "file": "trajectories/floor-right-24-numpy.json.gz",
+            "file_sha256": "e91bc6ac56c68de627be7c19fc85a04b2a25972564e31924764f5a220068fbda"
+          },
+          {
+            "file": "trajectories/decision-12-refused.json.gz",
+            "file_sha256": "1db70af68704c8eeac2b303f667c28729fb561e77d00687df2f61570afc55fb8"
+          }
+        ]
+      },
+      {
+        "bytes": 139595,
+        "file": "clips/astra-profile-refused.gif",
+        "file_sha256": "c88b6dcb605ae1a1644e56e71d1160541c8d7e28492941ebf7680d775b311418",
+        "frames": 5,
+        "labels": [
+          "Nominal NumPy request",
+          "astra-profile-refused"
+        ],
+        "simulation_ticks": 24,
+        "source_files": [
+          {
+            "file": "trajectories/floor-right-24-numpy.json.gz",
+            "file_sha256": "e91bc6ac56c68de627be7c19fc85a04b2a25972564e31924764f5a220068fbda"
+          },
+          {
+            "file": "trajectories/astra-profile-refused.json.gz",
+            "file_sha256": "c472e3f91e10724c29084e5616de6b226408196b6eca9d34b6c5533eba11a203"
+          }
+        ]
+      },
+      {
+        "bytes": 138753,
+        "file": "clips/fresh-episode-resume.gif",
+        "file_sha256": "eec18c9fd3e01f0eaa07c36f40de631ac8a26bed7b95579a1e6c664963b2ebc3",
+        "frames": 5,
+        "labels": [
+          "Restored boundary A",
+          "Restored boundary B"
+        ],
+        "simulation_ticks": 24,
+        "source_files": [
+          {
+            "file": "trajectories/resume-0.json.gz",
+            "file_sha256": "294823de94ab00437388d8d0bf461ce04959bd2134ce19fe42b39eef8a010dda"
+          },
+          {
+            "file": "trajectories/resume-1.json.gz",
+            "file_sha256": "b6db39bef3d7ab729f0b80422be0bc6dc7e4a16382d1de86b920f545b4dc9706"
+          }
+        ]
+      }
+    ],
+    "complete": true,
+    "engine_rendered": false,
+    "evidence_class": "actual own-part pose reconstruction",
+    "format": "nca-export-clips/v1",
+    "frame_duration_ms": 100,
+    "pillow": "12.3.0"
+  },
+  "completion": {
+    "created_utc": "2026-10-19T21:28:03.374169+00:00",
+    "launch_sha256": "6b077e7adfced389063ea058586aaabf26d94dc231980e049970f97ed4fff347",
+    "new_invocation_termination_confirmed": true,
+    "operation": "screen",
+    "original_training_termination_confirmed": false,
+    "returncode": 1,
+    "schema": "nca-one-export-invocation-termination/v1",
+    "sha256": "83987f18942c0217c7f356692663172fb837dc11d81d6b21c9933cda9e1f0b27",
+    "summary_present": true,
+    "wrapper_wall_seconds": 177.2037418689997
+  },
+  "criteria_sha256": "f499cb94ec537f5c1cc1b601cfcfa37fdaf9f5e81abe365aecb23d72ad0f1df0",
+  "deployment_variants": [
+    {
+      "case": "decision-12-refused",
+      "passed": true,
+      "reason": "runtime_context_mismatch"
+    },
+    {
+      "case": "astra-profile-refused",
+      "passed": true,
+      "reason": "profile_mismatch"
+    }
+  ],
+  "engineering_conformance": {
+    "artifacts": [
+      {
+        "bytes": 22738,
+        "content_sha256": "33febcee5426ae4a156ae5a703047a4873d9630bfcf327d91b2d74d27e1cc855",
+        "file": "host-exchanges.json.gz",
+        "file_sha256": "59a3073b3cce82fbe9c6998db05fe936e1f7616f315e18fe096ba2017f173487"
+      }
+    ],
+    "counts": {
+      "admitted_wire_packets": 5,
+      "attempted_ticks": 36,
+      "confirmed_ticks": 36,
+      "confirmed_trace_ticks": 36,
+      "controller_calls": 8,
+      "host_start_attempts": 1,
+      "host_starts_completed": 1,
+      "numeric_forward_calls": 7,
+      "rpc_attempts_cancel": 8,
+      "rpc_attempts_close": 1,
+      "rpc_attempts_observe": 2,
+      "rpc_attempts_profile": 1,
+      "rpc_attempts_reset": 5,
+      "rpc_attempts_step": 6,
+      "rpc_completed_cancel": 8,
+      "rpc_completed_close": 1,
+      "rpc_completed_observe": 2,
+      "rpc_completed_profile": 1,
+      "rpc_completed_reset": 5,
+      "rpc_completed_step": 6,
+      "wire_packets": 5
+    },
+    "errors": 0,
+    "failures": 0,
+    "formal_screen_attempts": 0,
+    "host_process_returncodes": [
+      -15
+    ],
+    "launch_identity": {
+      "bytes": 5997,
+      "content_sha256": "a03fbe85efe855248d1df2359cd95f67de8e91ace573ad9f9320497949162ee9",
+      "file": "launch.json",
+      "file_sha256": "e1e54d94c649d7cf443327d3e3d7e2ad8c17187c1ebb6f338015365e620f5aec"
+    },
+    "new_optimizer_updates": 0,
+    "original_bundle_and_summary_unchanged": true,
+    "owned_host_termination_confirmed": true,
+    "passed": true,
+    "scope": "existing evaluated-bundle engineering conformance only; no formal deployment or throughput retry",
+    "skips": 0,
+    "source_files_unchanged": true,
+    "source_revision": "38eec4add5badc20b74bb82340d6dbf9f77b53d7",
+    "summary_identity": {
+      "bytes": 7727,
+      "content_sha256": "5f3613dde507010ae2962da8ba41bc6670e124a84f185620e02ad56016f9598c",
+      "file": "summary.json",
+      "file_sha256": "bdf9c28cddeca47b089f5e217a103a558c2123bf43f8e3c6da6bdd488833971b"
+    },
+    "test_file_sha256": "c1996912d322ecc3ee2220758325f4e70a500864c13a1346421fa7204ae4ab80",
+    "tests_run": 4,
+    "wall_seconds": 8.013181231999624
+  },
+  "errors": [],
+  "export_declaration_content_sha256": "f0b3344cdeada006123aca70f4c18602dbe9b13d4caed88d7445c4dfa1219c35",
+  "fixed_candidate_evaluation_complete": true,
+  "focused_checker_tests": {
+    "module": "tests/test_export_bench.py",
+    "new_expiry_regression_groups": 3,
+    "passed": 11,
+    "scope": "source and synthetic evidence predicates; no deployment promotion",
+    "skips": 0,
+    "source_revision": "38eec4add5badc20b74bb82340d6dbf9f77b53d7",
+    "tests": 11,
+    "wall_seconds": 9.375
+  },
+  "full_ten_minute_observation_completed": false,
+  "independent_reviews": {
+    "candidate_conversion_receipts": "all eleven evaluated inputs, actual counts, publication ordering and bundle hashes checked before qualification",
+    "prospective_checker": "root and cellular source reviews found no blocker; root cleared the separate engineering gate before launch",
+    "retained_failure_diagnosis": "all four trajectory files, realtime packet and pinned host branches independently checked with zero host/inference work"
+  },
+  "inference_cost": {
+    "bundle_file_sha256": "30b40a2459eafc7bdcc271b6ddce55ec1f8442113b5edc0b21c4380e2793f3bc",
+    "episode_initialization": {
+      "count": 25,
+      "maximum_ms": 0.878524,
+      "median_ms": 0.043444,
+      "p95_ms": 0.479745,
+      "p99_ms": 0.878524,
+      "tail_method": "nearest_rank",
+      "total_seconds": 0.002856804
+    },
+    "format": "nca-export-inference-cost/v1",
+    "hidden_state_bytes": 128,
+    "inference": {
+      "count": 1000,
+      "maximum_ms": 8.225355,
+      "median_ms": 1.0164885,
+      "p95_ms": 2.111485,
+      "p99_ms": 3.845009,
+      "tail_method": "nearest_rank",
+      "total_seconds": 1.160199316
+    },
+    "inputs_file_sha256": "3804558a2c96ea2a2137cdf9cb736f0fd8485615fbbf310a166e585f9383e966",
+    "memory_method": "Linux proc status VmRSS/VmHWM",
+    "numeric_weight_bytes": 29736,
+    "numpy_build": {
+      "byte_order": "little",
+      "libraries": {
+        "blas": {
+          "name": "scipy-openblas",
+          "openblas configuration": "OpenBLAS 0.3.30  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Haswell MAX_THREADS=64",
+          "version": "0.3.30"
+        },
+        "lapack": {
+          "name": "scipy-openblas",
+          "openblas configuration": "OpenBLAS 0.3.30  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Haswell MAX_THREADS=64",
+          "version": "0.3.30"
+        }
+      },
+      "simd_extensions": {
+        "baseline": [
+          "SSE",
+          "SSE2",
+          "SSE3"
+        ],
+        "found": [
+          "SSSE3",
+          "SSE41",
+          "POPCNT",
+          "SSE42",
+          "AVX",
+          "F16C",
+          "FMA3",
+          "AVX2",
+          "AVX512F",
+          "AVX512CD",
+          "AVX512_SKX",
+          "AVX512_CLX",
+          "AVX512_CNL",
+          "AVX512_ICL",
+          "AVX512_SPR"
+        ],
+        "not found": [
+          "AVX512_KNL",
+          "AVX512_KNM"
+        ]
+      },
+      "thread_environment": {
+        "MKL_NUM_THREADS": null,
+        "OMP_NUM_THREADS": null,
+        "OPENBLAS_NUM_THREADS": null
+      },
+      "unset_thread_environment": "library default; not an asserted one-thread NumPy pool",
+      "version": "2.3.5"
+    },
+    "outputs_sha256": "e24cf2e127476be12e16760fe389ed595b9e2c87bad98300840bb4e6c877bb58",
+    "process_memory": {
+      "peak_rss_bytes": 35708928,
+      "rss_bytes": 35708928
+    },
+    "runtime_context": {
+      "action_sha256": "344f97c7c218602053b81fab9ee6e5349ddccf81e10fef6404e53190b841b0ee",
+      "actor": "jev",
+      "architecture": "x86_64",
+      "assist_sha256": "ad6b08648c798816cc96ca0b511688a7f537448b9306b61545e8d136d1c2fcd7",
+      "base_hz": 60,
+      "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+      "decision_ticks": 6,
+      "godot_binary_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+      "helper_lease_ticks": 12,
+      "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+      "lane": "act004",
+      "native_artifact_sha256": "5bdc55e7f355004fc8a6468234b0d018d3919339ebfe47faca9997de3af17847",
+      "normalization_sha256": "f61b399ef324d7e976063a7d25cb29b04a608633bbdaf624e9a1eb7c0ddd2bf7",
+      "numpy": "2.3.5",
+      "platform": "Linux",
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "profile_version": 1,
+      "python": "3.12.14",
+      "rapier_artifact_sha256": "147ab5673b9687ccb7a3b12fec07ea55cc674ad8a75f529d1085bf7d61fbd831",
+      "sensor_sha256": "567b7288e15b65cd380a9d972164e259cfca55112d6cb827b1c90615fefe4636"
+    },
+    "scope": "full local-view validation, preprocessing, recurrence, action mapping and source stamp",
+    "torch_imported": false,
+    "transport_included": false,
+    "weight_load_included": false
+  },
+  "launch": {
+    "automatic_retry": false,
+    "candidate_policy_sha256": "8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b",
+    "created_utc": "2026-10-19T21:25:06.161864+00:00",
+    "declaration_content_sha256": "f0b3344cdeada006123aca70f4c18602dbe9b13d4caed88d7445c4dfa1219c35",
+    "declaration_file_sha256": "87f89febcb5bae198f87b494e53ffcb1800737b9c9dfee3949a7a21762b49696",
+    "export_criteria_sha256": "f499cb94ec537f5c1cc1b601cfcfa37fdaf9f5e81abe365aecb23d72ad0f1df0",
+    "new_optimizer_updates": 0,
+    "operation": "screen",
+    "original_training_termination_confirmed": false,
+    "physical_screen_attempts_authorized": 1,
+    "published_revision": "eb9536152743db7477ba3aa4ce7b8b4ab7db00f2",
+    "schema": "nca-one-export-invocation/v1",
+    "scoped_sources_sha256": "5208d94da57d6b8fc1efe552be7ce5089032277dfe1fd280cc49aedeb47dc287",
+    "sha256": "6b077e7adfced389063ea058586aaabf26d94dc231980e049970f97ed4fff347",
+    "training_status": "interrupted_no_summary"
+  },
+  "learner_cost": {
+    "bc_cost_file_sha256": "fcb8ce2b8921d79b6a5a1caec05d43392a1c3f258d512a2f4326f82ff267ebdf",
+    "bc_seed1103": {
+      "burn_in": "complete_episode_prefix_no_grad",
+      "epoch_losses": [
+        0.37086619143100347,
+        0.32164915388121323,
+        0.2864934656111633,
+        0.23998274623471147,
+        0.22135874734205357,
+        0.2149247731136925,
+        0.20686771534383297,
+        0.19985871325959179,
+        0.19098207529853373,
+        0.1807116171454682,
+        0.17065946759984774,
+        0.16411989129641477,
+        0.15849144202383125,
+        0.15147162439192044,
+        0.14954370098078953,
+        0.1460984915494919,
+        0.14249826224849504,
+        0.13921269237556877,
+        0.13922156036338384,
+        0.1370082147200318,
+        0.13435123420375236,
+        0.12931998939636877,
+        0.1277946287218262,
+        0.1229352706385886,
+        0.11803049387081581,
+        0.1175767479573979,
+        0.11722964854801403,
+        0.1104655999909429,
+        0.10658778810106656,
+        0.1041252834503265,
+        0.10024303815820639,
+        0.09355965744265739,
+        0.08921903272652451,
+        0.08686530098099919,
+        0.0796908279935665,
+        0.07665901448139373,
+        0.07442265372065937,
+        0.07153955175924827,
+        0.06853118212893605,
+        0.07890248407664545
+      ],
+      "epochs": 40,
+      "positive_weight": [
+        10.0,
+        5.476190567016602,
+        10.0
+      ],
+      "samples_per_epoch": 680,
+      "seed": 1103,
+      "unroll": 16,
+      "wall_seconds": 45.723878296000294
+    },
+    "optimizer_updates": 1744,
+    "original_run_total_cost_known": false,
+    "ppo_rollout_updates": 21,
+    "ppo_update_duration": {
+      "count": 21,
+      "maximum_ms": 6437.363055,
+      "median_ms": 1621.303558,
+      "p95_ms": 3956.118632,
+      "p99_ms": 6437.363055,
+      "tail_method": "nearest_rank",
+      "total_seconds": 44.102089763
+    },
+    "scope": "retained completed update costs only; original interrupted-run totals unknown",
+    "source_receipt_content_sha256": "5b10bb6881dea3dfd395e85b3d83e7ec6865e5e8d5198fcdb494c26f630c0d32",
+    "source_receipt_file": "interruption-index.json",
+    "source_receipt_file_sha256": "9b8dd6bd7a142c70ce0a47d0cec73091ebbbe702f5a4862fb948916de771d10e",
+    "source_training_status": "interrupted_no_summary"
+  },
+  "manifest": {
+    "bytes": 69774,
+    "content_sha256": "b102a99598daf91beefd808e4e8498eee517ae8e6a15aa5333dd8bfca7e49bd9",
+    "file": "manifest.json",
+    "file_sha256": "8bd30bbd6ceea1a670a951771ff449d8973e1c03672e010a4b8d8f69924f7a15"
+  },
+  "measured_source_files_sha256": "5208d94da57d6b8fc1efe552be7ce5089032277dfe1fd280cc49aedeb47dc287",
+  "measured_source_revision": "eb9536152743db7477ba3aa4ce7b8b4ab7db00f2",
+  "measured_source_tree": "4e8e80b6b3e376f286955d0ae1c9fb4cbc53d019",
+  "negative_contracts": {
+    "cases": [
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "bundle_version",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "bundle_version",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "profile_hash",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "sensor_hash",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "action_hash",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "assist_hash",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "base_hz_30",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "decision_ticks_12",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "helper_lease_ticks_18",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "runtime_context_mismatch",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "nonfinite_weights",
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "passive_ticks": 6,
+        "reason": "nonfinite_weights",
+        "requested_packets": 0,
+        "scope": "contract variant refusal followed by actual owner cancel and passive interval",
+        "zero_active_impulses": true
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "old_actor_epoch",
+        "current_tick": 0,
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "reason": "retired_actor",
+        "requested_packets_after_refusal": 0,
+        "scope": "actual reset, control revocation or completed clock observations",
+        "source_tick": 0
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "old_control_generation",
+        "current_tick": 6,
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 2,
+        "passed": true,
+        "reason": "owner_or_mount_changed",
+        "requested_packets_after_refusal": 0,
+        "scope": "actual reset, control revocation or completed clock observations",
+        "source_tick": 0
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "stale_observation",
+        "current_tick": 12,
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "reason": "source_expired",
+        "requested_packets_after_refusal": 0,
+        "scope": "actual reset, control revocation or completed clock observations",
+        "source_tick": 0
+      },
+      {
+        "cancel_preserves_pose_and_motion": true,
+        "case": "reordered_observation",
+        "current_tick": 6,
+        "fallback": {
+          "aim": [
+            0.0,
+            0.0
+          ],
+          "attach_usable": false,
+          "auxiliary": false,
+          "effort": 0.0,
+          "move": [
+            0.0,
+            0.0
+          ],
+          "primary": false,
+          "reel": 0.0,
+          "release_usable": false,
+          "secondary": false,
+          "tool": false,
+          "trim": 0.0
+        },
+        "owner_cancel_generation": 1,
+        "passed": true,
+        "reason": "decision_cadence",
+        "requested_packets_after_refusal": 0,
+        "scope": "actual reset, control revocation or completed clock observations",
+        "source_tick": 0
+      }
+    ],
+    "passed": true
+  },
+  "offline_parity": {
+    "cases": [
+      {
+        "case": "floor-right-24",
+        "common_input_arithmetic": {
+          "numpy": {
+            "arithmetic_passed": true,
+            "boolean_actions_exact": true,
+            "maximum_absolute_differences": {
+              "features": 0.0,
+              "hidden": 9.5367431640625e-07,
+              "logits": 1.9073486328125e-06,
+              "outputs": 1.6391277313232422e-07,
+              "recorded_features": 0.0,
+              "recorded_hidden": 0.0,
+              "recorded_value": 0.0,
+              "recorded_wire": 0.0,
+              "value": 2.384185791015625e-07,
+              "wire": 1.6391277313232422e-07
+            },
+            "recorded_boolean_actions_exact": true,
+            "recorded_reconstruction_passed": true,
+            "samples": 40,
+            "scope": "identical stored features and hidden input; original local observation and requested history"
+          },
+          "torch": {
+            "arithmetic_passed": true,
+            "boolean_actions_exact": true,
+            "maximum_absolute_differences": {
+              "features": 0.0,
+              "hidden": 6.854534149169922e-07,
+              "logits": 9.5367431640625e-07,
+              "outputs": 1.1920928955078125e-07,
+              "recorded_features": 0.0,
+              "recorded_hidden": 0.0,
+              "recorded_value": 0.0,
+              "recorded_wire": 0.0,
+              "value": 2.980232238769531e-07,
+              "wire": 1.1920928955078125e-07
+            },
+            "recorded_boolean_actions_exact": true,
+            "recorded_reconstruction_passed": true,
+            "samples": 40,
+            "scope": "identical stored features and hidden input; original local observation and requested history"
+          }
+        },
+        "comparison": {
+          "boolean_requests_exact": false,
+          "cancellation_exact": true,
+          "detachments_exact": true,
+          "maximum_features_difference_on_own_trajectory": 1.0,
+          "maximum_hidden_difference_on_own_trajectory": 1.9980959296226501,
+          "maximum_part_angle_difference_radians": 0.2190191317349668,
+          "maximum_part_position_difference_cells": 6.93927216582448,
+          "maximum_requested_continuous_difference": 0.7726961374282837,
+          "maximum_value_difference_on_own_trajectory": 0.3747366815805435,
+          "passed": false,
+          "receipt_clocks_and_admission_exact": true,
+          "same_world_determinism_claim": false
+        },
+        "first_action_difference": {
+          "boolean_actions_exact": true,
+          "issued_tick": 0,
+          "maximum_continuous_difference": 3.725290298461914e-08
+        },
+        "first_pose_difference": {
+          "detached_exact": true,
+          "maximum_part_angle_difference_radians": 1.1641532182693481e-10,
+          "maximum_part_position_difference_cells": 0.0,
+          "tick": 1
+        },
+        "first_pose_tolerance_failure": {
+          "detached_exact": true,
+          "maximum_part_angle_difference_radians": 0.0018208771944050461,
+          "maximum_part_position_difference_cells": 0.15222302950938,
+          "tick": 132
+        },
+        "initial_pose_exact": true
+      },
+      {
+        "case": "floor-left-24",
+        "common_input_arithmetic": {
+          "numpy": {
+            "arithmetic_passed": true,
+            "boolean_actions_exact": true,
+            "maximum_absolute_differences": {
+              "features": 0.0,
+              "hidden": 4.172325134277344e-07,
+              "logits": 1.9073486328125e-06,
+              "outputs": 1.1920928955078125e-07,
+              "recorded_features": 0.0,
+              "recorded_hidden": 0.0,
+              "recorded_value": 0.0,
+              "recorded_wire": 0.0,
+              "value": 1.7881393432617188e-07,
+              "wire": 1.1920928955078125e-07
+            },
+            "recorded_boolean_actions_exact": true,
+            "recorded_reconstruction_passed": true,
+            "samples": 40,
+            "scope": "identical stored features and hidden input; original local observation and requested history"
+          },
+          "torch": {
+            "arithmetic_passed": true,
+            "boolean_actions_exact": true,
+            "maximum_absolute_differences": {
+              "features": 0.0,
+              "hidden": 3.2782554626464844e-07,
+              "logits": 9.5367431640625e-07,
+              "outputs": 1.4901161193847656e-07,
+              "recorded_features": 0.0,
+              "recorded_hidden": 0.0,
+              "recorded_value": 0.0,
+              "recorded_wire": 0.0,
+              "value": 2.980232238769531e-07,
+              "wire": 1.4901161193847656e-07
+            },
+            "recorded_boolean_actions_exact": true,
+            "recorded_reconstruction_passed": true,
+            "samples": 40,
+            "scope": "identical stored features and hidden input; original local observation and requested history"
+          }
+        },
+        "comparison": {
+          "boolean_requests_exact": true,
+          "cancellation_exact": true,
+          "detachments_exact": true,
+          "maximum_features_difference_on_own_trajectory": 0.0609644129872325,
+          "maximum_hidden_difference_on_own_trajectory": 0.06566077470779419,
+          "maximum_part_angle_difference_radians": 0.06346976757049516,
+          "maximum_part_position_difference_cells": 0.9111797048801404,
+          "maximum_requested_continuous_difference": 0.047280462669833684,
+          "maximum_value_difference_on_own_trajectory": 0.03317287564277649,
+          "passed": false,
+          "receipt_clocks_and_admission_exact": true,
+          "same_world_determinism_claim": false
+        },
+        "first_action_difference": {
+          "boolean_actions_exact": true,
+          "issued_tick": 0,
+          "maximum_continuous_difference": 1.1175870895385742e-07
+        },
+        "first_pose_difference": {
+          "detached_exact": true,
+          "maximum_part_angle_difference_radians": 1.1641532182693481e-10,
+          "maximum_part_position_difference_cells": 0.0,
+          "tick": 1
+        },
+        "first_pose_tolerance_failure": {
+          "detached_exact": true,
+          "maximum_part_angle_difference_radians": 0.013624489307404009,
+          "maximum_part_position_difference_cells": 0.07278298590526844,
+          "tick": 29
+        },
+        "initial_pose_exact": true
+      }
+    ],
+    "causal_limit": "common-input arithmetic cannot establish contact sensitivity or host repeatability",
+    "identity": {
+      "bytes": 12029,
+      "content_sha256": "f8b431cd7c54fb03a0e1d05e9839993393e7a482881b0639679318bcfdc9c3ec",
+      "file": "parity-audit.json",
+      "file_sha256": "fae90c46ddedb448e0cfe850b424d5601d76ab83669066feabd478a24aded292"
+    },
+    "new_host_ticks": 0,
+    "new_optimizer_updates": 0,
+    "source_revision": "eb9536152743db7477ba3aa4ce7b8b4ab7db00f2"
+  },
+  "original_artifacts": [
+    {
+      "bytes": 69774,
+      "content_sha256": "7fd4f6f84372ca7f664cf6d064c395a9a313640eaba34646e9dc413dc6c474a8",
+      "file": "manifest.json",
+      "file_sha256": "8bd30bbd6ceea1a670a951771ff449d8973e1c03672e010a4b8d8f69924f7a15"
+    },
+    {
+      "bytes": 25083,
+      "content_sha256": "55d050fe5f1eb8e06e4987d91b19aa073ee05ccf60750d15e38231da73f69b53",
+      "file": "arithmetic.json",
+      "file_sha256": "5d6f343965099d55f7a6d65b121d58bfd325f42ad4657554207b8cfd66b90439"
+    },
+    {
+      "bytes": 180730,
+      "content_sha256": "e550accbea16d8955c401429ddd6ec715df35c2a81c704054b3fe6a8c90c201a",
+      "file": "trajectories/floor-right-24-torch.json.gz",
+      "file_sha256": "d69b98c6dbe4542b4db99944ff6ad4a3428550b6617f3dbe1ac136abb2d8f69d"
+    },
+    {
+      "bytes": 179504,
+      "content_sha256": "358697621cb42d6d860be0a328ee5cc6349dc7ede42e21b9e5aa004bf4925ef5",
+      "file": "trajectories/floor-right-24-numpy.json.gz",
+      "file_sha256": "e91bc6ac56c68de627be7c19fc85a04b2a25972564e31924764f5a220068fbda"
+    },
+    {
+      "bytes": 170239,
+      "content_sha256": "d289e576863b4202cb98e3e15c053a56bad3ce16e36bc3afadca493093ee7764",
+      "file": "trajectories/floor-left-24-torch.json.gz",
+      "file_sha256": "1ca1183b73b3a3b5482e0764d0862a8e2ed6237f391ddacf7d7526e5e180cd0d"
+    },
+    {
+      "bytes": 170143,
+      "content_sha256": "f1e3883330ba88fef9ce2fc37a2c67686dbcab1b2e82879b67bdda47e279f266",
+      "file": "trajectories/floor-left-24-numpy.json.gz",
+      "file_sha256": "ca1a2a0742519b2a983c134748063e0ae55573087609868c586e1ab3dba07ce5"
+    },
+    {
+      "bytes": 305973,
+      "content_sha256": "8a37606ae3ca4cb12c3901037f5b47c3360407946f3f6998208c7dc5835d792f",
+      "file": "inference-inputs.json",
+      "file_sha256": "3804558a2c96ea2a2137cdf9cb736f0fd8485615fbbf310a166e585f9383e966"
+    },
+    {
+      "bytes": 6331,
+      "content_sha256": "4e2ebea5147350725121ab2fe8cbe12217135d2bdb09583df41b83bb6e049ac9",
+      "file": "negative-contracts.json",
+      "file_sha256": "44a56291db464a169c4a40b44a70ac6b3bbb08de4e083268ac4da1267777c21a"
+    },
+    {
+      "bytes": 14826,
+      "content_sha256": "647777b1e2117d64dc454fb3e69d3bb327bdf191f7cd89d93b5d69dd2ac7adfa",
+      "file": "trajectories/decision-12-refused.json.gz",
+      "file_sha256": "1db70af68704c8eeac2b303f667c28729fb561e77d00687df2f61570afc55fb8"
+    },
+    {
+      "bytes": 12488,
+      "content_sha256": "d27aa43839894ebd923f5e961d773921b396e46655668dde936f4170807e2888",
+      "file": "trajectories/astra-profile-refused.json.gz",
+      "file_sha256": "c472e3f91e10724c29084e5616de6b226408196b6eca9d34b6c5533eba11a203"
+    },
+    {
+      "bytes": 3182,
+      "content_sha256": "33110d56dfe0f8487c4b0f2b4d0bc13f94ed6d2f69e32642386e2498d24e5c52",
+      "file": "throughput.json",
+      "file_sha256": "ae8ff78f416f588a853fcd10638cf164150ed472f6ec79aac359a05cb324079f"
+    },
+    {
+      "bytes": 21307,
+      "content_sha256": "403348fac0c862e08367f6bd0597010ef7e7138357243e2d23fc88287f84fe7c",
+      "file": "trajectories/resume-0.json.gz",
+      "file_sha256": "294823de94ab00437388d8d0bf461ce04959bd2134ce19fe42b39eef8a010dda"
+    },
+    {
+      "bytes": 21303,
+      "content_sha256": "a9315d3c1ab709281e83adfcf536a90aa529f0e8fad2b76bd553dd674fa4f0fd",
+      "file": "trajectories/resume-1.json.gz",
+      "file_sha256": "b6db39bef3d7ab729f0b80422be0bc6dc7e4a16382d1de86b920f545b4dc9706"
+    },
+    {
+      "bytes": 2467,
+      "content_sha256": "28fb9655b93fa106f5481d233c692ff662852dbcb18e1055480b05af4825c797",
+      "file": "resume.json",
+      "file_sha256": "0cbfe8733e39499e01722f1c7a70578c582be0e53a2b993087346fce99125c97"
+    },
+    {
+      "bytes": 26308,
+      "content_sha256": "d4864c244a1c87a0bd2975050d05ac4ec03c333c545e96cc56665b29dff1ba06",
+      "file": "realtime.json.gz",
+      "file_sha256": "59afd24f73dc29e0c3bf7ce735249def052a82d0efe410a8243e1ca292d6da1c"
+    },
+    {
+      "bytes": 2840,
+      "content_sha256": "fbf795ede899c5ef6d9012733fc6882e094d108bdb4828c6454fd95c0c0e028f",
+      "file": "inference-cost.json",
+      "file_sha256": "171812df6468d1b975d4353735391b20b762063342a30d552b2feff84e475b35"
+    },
+    {
+      "bytes": 1752,
+      "content_sha256": "82738c2c65faac78e53334fa426fe3189b50b8c563d29dda1e3eaa86cec937a6",
+      "file": "learner-cost.json",
+      "file_sha256": "0225a76c7c3d55b95207d28229717f02c12150a1b77e95577793952b98d95d55"
+    },
+    {
+      "bytes": 1190,
+      "content_sha256": "ba9171e333f37e8477769e7746cf847a13c5ebc9288cdaf0765761669f1434e3",
+      "file": "clip-spec.json",
+      "file_sha256": "70480d1f7d61922197a46b70d37fbad4fb3515290fe5bf2cb3c9d06db7a915bb"
+    },
+    {
+      "bytes": 2846,
+      "content_sha256": "84d18d71aedad6000de8e672c3775fca7ab750795ba30cd08765232a1df21f65",
+      "file": "clips.json",
+      "file_sha256": "da0eaa141b15f96f7fdeab65d9ed0c2a669a1b5229df2193de75ab0e252257a6"
+    }
+  ],
+  "original_realtime": {
+    "checks": {
+      "bounded_calls_and_time": true,
+      "controller_source_age_refused": true,
+      "host_advances_during_delay": true,
+      "old_twelve_tick_motor_lease_refused": false,
+      "owner_cancel_preserves_existing_motion": true,
+      "source_takeover_retires_old_invocation": true
+    },
+    "passed": false,
+    "policy_calls": 4,
+    "source_fallback": "source_expired",
+    "takeover_reason": "owner_or_mount_changed",
+    "takeover_sent_packets": 0,
+    "wall_seconds": 5.676129191000655
+  },
+  "original_status": "no_go",
+  "original_training_status": "interrupted_no_summary",
+  "original_training_termination_confirmed": false,
+  "outstanding": [
+    "closed-loop trajectory qualification within unchanged tolerances",
+    "requested full-duration ten-minute throughput observation",
+    "owner feel acceptance",
+    "any additional platform or multiple learned-actor qualification"
+  ],
+  "prospective_realtime_correction": {
+    "changed_files": [
+      "src/nca/bench/deployment.py"
+    ],
+    "diagnosis_identity": {
+      "bytes": 10688,
+      "content_sha256": "290f836d8233c300d8338a24541144980d8c4c7f4d4837436f28767b6a8a7112",
+      "file": "receipt-diagnosis.json",
+      "file_sha256": "9146f121e6801b45878abcfbbd514444b0c12ddce5d2f27b05095e9eb1d62fba"
+    },
+    "new_host_ticks": 0,
+    "new_optimizer_updates": 0,
+    "new_policy_inference_calls": 0,
+    "qualification_effect": "none; original failure, immutable summary and bundle qualification flag remain unchanged",
+    "realtime": {
+      "corrected_same_receipt_checks": {
+        "bounded_calls_and_time": true,
+        "controller_source_age_refused": true,
+        "host_advances_during_delay": true,
+        "old_twelve_tick_motor_lease_refused": true,
+        "owner_cancel_preserves_existing_motion": true,
+        "source_takeover_retires_old_invocation": true
+      },
+      "corrected_same_receipt_predicate_passed": true,
+      "diagnosis": "proven checker reason-domain mismatch; exact old packet was refused before actuation",
+      "host_source": {
+        "file": "godot/scripts/physical_actor_session.gd",
+        "file_sha256": "ea6bee1fa84b03b6a1d03d4e98cd88f238321d981b4217db99347181f3113fb3",
+        "observation_history_window_ticks": 18,
+        "revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+        "validation_order": [
+          "history_window_or_lease_range",
+          "packet_lease_expiry"
+        ]
+      },
+      "matched_refusals": [
+        {
+          "admission": {
+            "accepted": false,
+            "reason": "lease"
+          },
+          "lease_deadline_tick": 19,
+          "pinned_host_observation_window_ticks": 18,
+          "requested": {
+            "action": {
+              "aim": [
+                0.751630410198281,
+                -0.659584510480017
+              ],
+              "attach_usable": false,
+              "auxiliary": false,
+              "effort": 0.720299243927002,
+              "move": [
+                0.130245074629784,
+                0.0
+              ],
+              "primary": false,
+              "reel": 0.0,
+              "release_usable": false,
+              "secondary": false,
+              "tool": false,
+              "trim": 0.0101820090785623
+            },
+            "actor_id": 0.0,
+            "epoch": 1.0,
+            "kind": "physical_wire_action",
+            "lease_ticks": 12.0,
+            "observation_id": "e4cd8572463b3e13de6209dde857f266:1:0:0:7",
+            "observed_tick": 7.0,
+            "run_id": "e4cd8572463b3e13de6209dde857f266",
+            "sequence": 1.0,
+            "version": 2.0
+          },
+          "source_age_ticks": 24,
+          "tick_after": 32,
+          "tick_before": 31
+        }
+      ],
+      "observed_after_delay_tick": 37,
+      "original_checks": {
+        "bounded_calls_and_time": true,
+        "controller_source_age_refused": true,
+        "host_advances_during_delay": true,
+        "old_twelve_tick_motor_lease_refused": false,
+        "owner_cancel_preserves_existing_motion": true,
+        "source_takeover_retires_old_invocation": true
+      },
+      "original_matching_refusals": [],
+      "original_passed": false,
+      "scope": "offline corrected predicate on original receipt; no corrected physical screen",
+      "source_tick": 7
+    },
+    "source_files_sha256": "43ed27e01d67cde46e9c586ecdde2019d82f6dfe2e9c061798080eef0e3bf96d",
+    "source_revision": "38eec4add5badc20b74bb82340d6dbf9f77b53d7",
+    "trajectory_request_onsets": [
+      {
+        "case": "floor-right-24",
+        "first_boolean_request_difference": {
+          "changed_fields": [
+            "secondary"
+          ],
+          "issued_tick": 156
+        },
+        "first_continuous_request_tolerance_failure": {
+          "boolean_actions_exact": true,
+          "issued_tick": 108,
+          "maximum_continuous_difference": 9.357929229736328e-05
+        },
+        "initial_features_exact": true,
+        "initial_hidden_input_exact": true,
+        "recorded_recurrence_continuous": true
+      },
+      {
+        "case": "floor-left-24",
+        "first_boolean_request_difference": null,
+        "first_continuous_request_tolerance_failure": {
+          "boolean_actions_exact": true,
+          "issued_tick": 30,
+          "maximum_continuous_difference": 0.025554895401000977
+        },
+        "initial_features_exact": true,
+        "initial_hidden_input_exact": true,
+        "recorded_recurrence_continuous": true
+      }
+    ]
+  },
+  "qualification_effect": "Measured no-go remains immutable; prospective checker fix and engineering tests do not qualify the policy.",
+  "resume": {
+    "action_draws": [
+      [
+        -0.2550477385520935,
+        -0.3835662007331848,
+        -0.989065408706665
+      ],
+      [
+        1.9071159362792969,
+        -0.6453031301498413,
+        -0.43847936391830444
+      ],
+      [
+        -1.0035693645477295,
+        1.1801522970199585,
+        -0.787683367729187
+      ],
+      [
+        -0.8079456686973572,
+        1.501668095588684,
+        2.343858242034912
+      ],
+      [
+        -0.5072154998779297,
+        0.3052902817726135,
+        -0.4735165536403656
+      ],
+      [
+        0.5030357837677002,
+        0.3371866047382355,
+        1.9557491540908813
+      ],
+      [
+        1.2161304950714111,
+        -0.4168490469455719,
+        -0.08573509752750397
+      ],
+      [
+        -0.022397948428988457,
+        0.3962462544441223,
+        -2.602109670639038
+      ]
+    ],
+    "checkpoint_file": "residual-seed1103-u07.pt",
+    "checkpoint_file_sha256": "f1d40e28af6cd9d406d0cd1a58e25abab9c08740a0f24c87e257db6c993d8fda",
+    "checkpoint_next_episode_boundary": true,
+    "checks": {
+      "checkpoint_file_unchanged": true,
+      "fresh_actual_episode_outputs_and_pose": true,
+      "fresh_hidden_zero": true,
+      "next_action_rng_draws_exact": true,
+      "next_global_rng_draws_exact": true,
+      "next_scenario_rng_draws_exact": true,
+      "optimizer_exact": true,
+      "weights_exact": true,
+      "weights_unchanged_after_rollout": true
+    },
+    "comparison": {
+      "boolean_requests_exact": true,
+      "cancellation_exact": true,
+      "detachments_exact": true,
+      "maximum_features_difference_on_own_trajectory": 0.0,
+      "maximum_hidden_difference_on_own_trajectory": 0.0,
+      "maximum_part_angle_difference_radians": 0.0,
+      "maximum_part_position_difference_cells": 0.0,
+      "maximum_requested_continuous_difference": 0.0,
+      "maximum_value_difference_on_own_trajectory": 0.0,
+      "passed": true,
+      "receipt_clocks_and_admission_exact": true,
+      "same_world_determinism_claim": false
+    },
+    "completed_updates": 8,
+    "global_draws": [
+      0.2616690397262573,
+      0.15048199892044067,
+      0.8072565793991089,
+      0.6384983658790588,
+      0.3065587282180786,
+      0.2954779267311096,
+      0.11795610189437866,
+      0.8053286671638489
+    ],
+    "mid_episode_host_restore": false,
+    "new_optimizer_updates": 0,
+    "next_episode_counter": 84,
+    "next_host_seed": 210384,
+    "optimizer_parameters_with_state": 11,
+    "optimizer_state_sha256": [
+      "f82bc766a568a949d1714eee89d6eb7ef0f373903dbd8990e0e43f7e9b28fcbd",
+      "f82bc766a568a949d1714eee89d6eb7ef0f373903dbd8990e0e43f7e9b28fcbd"
+    ],
+    "passed": true,
+    "policy_sha256": "e042e2b3c4f7e63650382e4d5d34b231973b6f46f08bb8fbbc64830896da6b34",
+    "resumed_scenario": {
+      "demo_seeds": [
+        11062,
+        11063,
+        11064
+      ],
+      "id": "floor-right-36",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ]
+    },
+    "rng_draws": 8,
+    "scenario_draws": [
+      "floor-right-36",
+      "floor-right-24",
+      "floor-right-60",
+      "floor-left-60",
+      "floor-left-36",
+      "floor-left-60",
+      "floor-right-60",
+      "floor-right-24"
+    ],
+    "scope": "two actual fresh game episodes from the same restored trained optimizer/RNG boundary",
+    "training_scenario_count": 8
+  },
+  "runtime_qualified": false,
+  "schema": "nca-staged-export-no-go-evidence-index/v1",
+  "screen_wall_seconds": 128.91203938699982,
+  "sha256": "a14a4d6806eead6372b1284c45facc6d87919e4cfeb989e34c9d71367ee3f22b",
+  "summary": {
+    "bytes": 277365,
+    "content_sha256": "4f7c36979a11a37304c20d3bd95332c3529b9ff79ed991f45cd63033843b0553",
+    "file": "summary.json",
+    "file_sha256": "f2625739e7d05e86d2de6d955209452173ff2d0c72acbd64dae4cee2add2f62d"
+  },
+  "throughput": {
+    "companion_scope": "second configuration contains one learned actor and one authored demo",
+    "configurations": [
+      {
+        "actual_ticks": 3000,
+        "completed": true,
+        "configuration": {
+          "learned_controlled_actors": 1,
+          "total_actors": 1
+        },
+        "controller_process_memory_including_torch_reference": {
+          "peak_rss_bytes": 253980672,
+          "rss_bytes": 253980672
+        },
+        "decisions": 500,
+        "end_to_end_decisions_per_second": 10.998836491623358,
+        "end_to_end_host_ticks_per_second": 65.99301894974015,
+        "episodes": 13,
+        "host_process_memory": {
+          "peak_rss_bytes": 210694144,
+          "rss_bytes": 194600960
+        },
+        "inference": {
+          "count": 500,
+          "maximum_ms": 357.091024,
+          "median_ms": 2.240602,
+          "p95_ms": 9.438829,
+          "p99_ms": 31.278749,
+          "tail_method": "nearest_rank",
+          "total_seconds": 2.241590198
+        },
+        "owned_actor_parts": 3,
+        "reset": {
+          "count": 13,
+          "maximum_ms": 500.292238,
+          "median_ms": 167.416427,
+          "p95_ms": 500.292238,
+          "p99_ms": 500.292238,
+          "tail_method": "nearest_rank",
+          "total_seconds": 2.338877951
+        },
+        "resolved_config": {
+          "actors": [
+            {
+              "model": "jev",
+              "position": [
+                176.0,
+                346.5
+              ],
+              "producer": "policy"
+            }
+          ],
+          "local_patch_radius": 6,
+          "max_ticks": 240,
+          "seed": 73,
+          "version": 2
+        },
+        "step_transport_and_host": {
+          "count": 500,
+          "maximum_ms": 705.773164,
+          "median_ms": 58.148659,
+          "p95_ms": 132.699967,
+          "p99_ms": 462.783816,
+          "tail_method": "nearest_rank",
+          "total_seconds": 36.109561606
+        },
+        "trace_stream_sha256": "12bb23f0cf7f1bc9813b7cab1d549fd79c3409a107185d7cb99637e3bdf2d191",
+        "wall_seconds_including_reset_capture_and_cancel": 45.459353849
+      },
+      {
+        "actual_ticks": 3000,
+        "completed": true,
+        "configuration": {
+          "companion_model": "monowheel",
+          "companion_producer": "demo",
+          "learned_controlled_actors": 1,
+          "total_actors": 2
+        },
+        "controller_process_memory_including_torch_reference": {
+          "peak_rss_bytes": 253980672,
+          "rss_bytes": 253980672
+        },
+        "decisions": 500,
+        "end_to_end_decisions_per_second": 15.607439461659279,
+        "end_to_end_host_ticks_per_second": 93.64463676995567,
+        "episodes": 13,
+        "host_process_memory": {
+          "peak_rss_bytes": 211300352,
+          "rss_bytes": 195039232
+        },
+        "inference": {
+          "count": 500,
+          "maximum_ms": 36.795301,
+          "median_ms": 1.675351,
+          "p95_ms": 7.634434,
+          "p99_ms": 12.547101,
+          "tail_method": "nearest_rank",
+          "total_seconds": 1.38042624
+        },
+        "owned_actor_parts": 3,
+        "reset": {
+          "count": 13,
+          "maximum_ms": 259.010129,
+          "median_ms": 74.125289,
+          "p95_ms": 259.010129,
+          "p99_ms": 259.010129,
+          "tail_method": "nearest_rank",
+          "total_seconds": 1.178141184
+        },
+        "resolved_config": {
+          "actors": [
+            {
+              "model": "jev",
+              "position": [
+                176.0,
+                346.5
+              ],
+              "producer": "policy"
+            },
+            {
+              "model": "monowheel",
+              "producer": "demo"
+            }
+          ],
+          "local_patch_radius": 6,
+          "max_ticks": 240,
+          "seed": 73,
+          "version": 2
+        },
+        "step_transport_and_host": {
+          "count": 500,
+          "maximum_ms": 1041.927506,
+          "median_ms": 44.48753,
+          "p95_ms": 76.214633,
+          "p99_ms": 105.552048,
+          "tail_method": "nearest_rank",
+          "total_seconds": 25.463801021
+        },
+        "trace_stream_sha256": "a7b61deedaf799ee0715b5b8f3be75defd9079e4bbe73fe3ce392a2f7e0a0698",
+        "wall_seconds_including_reset_capture_and_cancel": 32.036004447
+      }
+    ],
+    "maximum_wall_seconds": 600.0,
+    "multiple_learned_controlled_actors": "unmeasured",
+    "observe_rpc": {
+      "count": 100,
+      "maximum_ms": 14.472229,
+      "median_ms": 7.3184015,
+      "p95_ms": 11.311884,
+      "p99_ms": 13.056446,
+      "tail_method": "nearest_rank",
+      "total_seconds": 0.757969127
+    },
+    "passed": true,
+    "reset_rpc": {
+      "count": 10,
+      "maximum_ms": 88.101642,
+      "median_ms": 67.949597,
+      "p95_ms": 88.101642,
+      "p99_ms": 88.101642,
+      "tail_method": "nearest_rank",
+      "total_seconds": 0.679491386
+    },
+    "wall_seconds": 79.03353789600078
+  },
+  "trajectories": {
+    "cases": [
+      {
+        "boolean_requests_exact": false,
+        "cancellation_exact": true,
+        "case": "floor-right-24",
+        "detachments_exact": true,
+        "maximum_features_difference_on_own_trajectory": 1.0,
+        "maximum_hidden_difference_on_own_trajectory": 1.9980959296226501,
+        "maximum_part_angle_difference_radians": 0.2190191317349668,
+        "maximum_part_position_difference_cells": 6.93927216582448,
+        "maximum_requested_continuous_difference": 0.7726961374282837,
+        "maximum_value_difference_on_own_trajectory": 0.3747366815805435,
+        "passed": false,
+        "receipt_clocks_and_admission_exact": true,
+        "same_world_determinism_claim": false
+      },
+      {
+        "boolean_requests_exact": true,
+        "cancellation_exact": true,
+        "case": "floor-left-24",
+        "detachments_exact": true,
+        "maximum_features_difference_on_own_trajectory": 0.0609644129872325,
+        "maximum_hidden_difference_on_own_trajectory": 0.06566077470779419,
+        "maximum_part_angle_difference_radians": 0.06346976757049516,
+        "maximum_part_position_difference_cells": 0.9111797048801404,
+        "maximum_requested_continuous_difference": 0.047280462669833684,
+        "maximum_value_difference_on_own_trajectory": 0.03317287564277649,
+        "passed": false,
+        "receipt_clocks_and_admission_exact": true,
+        "same_world_determinism_claim": false
+      }
+    ],
+    "passed": false
+  }
+}

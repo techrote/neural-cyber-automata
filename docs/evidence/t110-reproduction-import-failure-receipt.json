@@ -1,0 +1,12 @@
+{
+  "additional_attempts": 0,
+  "completed_utc": "2026-10-19T19:15:57.777023Z",
+  "launch_receipt_sha256": "0bc209d85834264b7fe539335ad7b148b60f97a2e8fe66b3a56771808dbc87b1",
+  "learner_clean_after_execution": true,
+  "process_exit_code": 1,
+  "process_wall_seconds": 3.311061632000019,
+  "reproduction_id": "t110-jolt-three-part-reproduction-20261019",
+  "schema": "nca-t110-reproduction-completion/v1",
+  "stderr_sha256": "fde9a7cf206442134280d074335a8994285c5d716b02b5547b8b1cc052576166",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

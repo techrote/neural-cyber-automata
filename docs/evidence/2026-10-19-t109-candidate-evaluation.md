@@ -1,7 +1,7 @@
 ---
 title: T109 fixed candidate evaluation and export declaration
 kind: evidence
-summary: Complete separately bounded BC1103 evaluation, preserved interrupted training origin, and unchanged prospective deployment qualification.
+summary: Complete separately bounded BC1103 evaluation and conversion, preserved interrupted training origin, and linked failed deployment qualification.
 owns: []
 verified: 2026-10-19
 ---
@@ -77,6 +77,8 @@ the fresh source files remained unchanged. The earlier audited input archive
 is a separate preserved dependency, SHA-256
 `f796b533eacce85b661162349f67641d6127b73545152d75fed75e1772ac934c`.
 These archives remain outside Git; their digests are not public download URLs.
+The complete candidate archive and its member index have verified delivery
+receipts, as does the earlier audited interrupted-input archive.
 
 | Identity | SHA-256 |
 | --- | --- |
@@ -114,3 +116,54 @@ no automatic retry. The historical reported trajectory failure remains a
 failure with unavailable original raw evidence. A new failed criterion must
 remain a no-go under its own immutable receipt. At this declaration, conversion
 and deployment qualification have not run.
+
+## Conversion under the published second declaration
+
+The second declaration was published at
+`eb9536152743db7477ba3aa4ce7b8b4ab7db00f2`, tree
+`4e8e80b6b3e376f286955d0ae1c9fb4cbc53d019`. All 51 scoped source files
+remained byte-identical to the earlier evaluation freeze. The sole offline
+conversion completed with exit code zero at 21:08:44 UTC, in
+61.870140223 seconds including strict input re-admission. It used no host
+actions or optimizer updates and bound all 549 admitted training/evaluation
+input files.
+
+The resulting immutable bundle contains 224,501 bytes and preserves the exact
+fixed policy content. Its training status remains `interrupted_no_summary`
+with original termination unconfirmed; its separate candidate evaluation is
+complete. The conversion receipt records `runtime_qualified: false`.
+
+A fresh NumPy-only process reloaded the actual bundle under its exact runtime
+context. All 18 runtime source modules matched, Torch was absent, and the
+numeric policy identity matched the evaluated checkpoint. Its numeric weights
+use 29,736 bytes; its 32-element FP32 recurrent state uses 128 bytes. This
+admission check made zero inference calls and zero host starts. It supplies no
+trajectory or throughput qualification.
+
+An independent read-only receipt review recomputed all eleven declared
+evaluation file hashes and the manifest, summary and worker self-hashes.
+Decompressed episode event/tick totals matched the complete 271-decision,
+1,626-tick accounting, with no unresolved reservations. The reviewer also
+checked the public second declaration's timestamp before conversion launch,
+the bundle's file and content hashes, the conversion receipt, and the
+launch/termination/admission self-hashes. No blocker was found. That review
+performed no host work, inference or optimization.
+
+| Conversion identity | SHA-256 |
+| --- | --- |
+| Bundle file bytes | `30b40a2459eafc7bdcc271b6ddce55ec1f8442113b5edc0b21c4380e2793f3bc` |
+| Unsigned bundle content | `1a9c30d267cbc9eeb6c6e44645c8ba56b25939fa6833dfcca6194a9e9f55a4e7` |
+| Conversion receipt file | `d253553558dbcfb76c9facf888b63db81284cabd3453b62741a4a3fcc8b61d0b` |
+| NumPy-only admission record content | `87ab027eb7b6bfddfb382c485e5aacafce3c3de709f02fe4cba15c636e615047` |
+| Conversion archive, 305,185 bytes | `e20bab16f69317652c560030d8b8e526563e507453c12df9db8295f3dcdf773c` |
+| Conversion archive member index file | `f7edc5eb7dac46beb5c4f64bd314e7b35892ee14d6e197495735218065888bfe` |
+
+The conversion archive preserves the artifact, complete receipt set, source,
+declarations and invocation programs in 65 byte-verified members. It has a
+confirmed delivery receipt and remains immutable and separate from the later
+qualification archive. The [single physical deployment screen](2026-10-19-t109-deployment-no-go.md)
+subsequently completed with a fixed no-go: both trajectory pairs exceeded the
+unchanged tolerances. Its original realtime reporting mismatch, prospective
+checker correction and separate passing engineering tests are recorded there.
+The count-based throughput interval lasted 79.033537896 seconds; a full
+ten-minute observation remains outstanding. The bundle remains unqualified.

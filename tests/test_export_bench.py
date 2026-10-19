@@ -13,7 +13,7 @@ HAS_LEARNER = importlib.util.find_spec("nca.controllers.learned") is not None
 if HAS_NUMPY:
     from nca.contracts import ContractError, WireAction
     from nca.bench.common import pose_difference, wire_difference
-    from nca.bench.deployment import _arithmetic, _compare_episodes
+    from nca.bench.deployment import _arithmetic, _compare_episodes, _expired_twelve_tick_refusals
     from nca.bench.parity_audit import _common_inputs, divergence_points
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +21,61 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @unittest.skipUnless(HAS_NUMPY, "optional NumPy export dependency unavailable")
 class ExportBenchTests(unittest.TestCase):
+    def expiry_fixture(self, age, reason):
+        from nca.adapters.protocol import make_physical_command
+        source = {"version": 2, "run_id": "expiry-test", "epoch": 1, "actor_id": 0,
+                  "control_generation": 0, "tick": 7, "last_sequence": 0,
+                  "observation_id": "expiry-test:1:0:0:7"}
+        packet = make_physical_command(source, 1, WireAction(trim=.01018200907856226).to_dict(), 12)
+        requested = deepcopy(packet)
+        # Actual owner receipts carry JSON-rounded floats, including integers.
+        for key in ("version", "actor_id", "epoch", "sequence", "observed_tick", "lease_ticks"):
+            requested[key] = float(requested[key])
+        requested["action"]["trim"] = .0101820090785623
+        receipt = {"tick_before": 7 + age, "tick_after": 8 + age,
+                   "requested": [requested], "admission": [{"accepted": False, "reason": reason}]}
+        return source, packet, [receipt]
+
+    def test_realtime_expiry_matches_each_pinned_host_reason_at_its_actual_age(self):
+        for age, reason in ((12, "expired_observation"), (18, "expired_observation"),
+                            (19, "lease"), (24, "lease")):
+            with self.subTest(age=age, reason=reason):
+                matches = _expired_twelve_tick_refusals(*self.expiry_fixture(age, reason))
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(matches[0]["source_age_ticks"], age)
+                self.assertEqual(matches[0]["lease_deadline_tick"], 19)
+
+    def test_realtime_refusal_reason_alone_cannot_prove_expiry(self):
+        for age, reason in ((11, "lease"), (11, "expired_observation"), (12, "lease"),
+                            (18, "lease"), (19, "expired_observation"), (24, "sequence")):
+            with self.subTest(age=age, reason=reason):
+                self.assertEqual(_expired_twelve_tick_refusals(*self.expiry_fixture(age, reason)), [])
+        mutations = (lambda row: row["requested"][0].update(sequence=2),
+                     lambda row: row["requested"][0].update(observed_tick=8),
+                     lambda row: row["requested"][0].update(lease_ticks=0),
+                     lambda row: row["requested"][0].update(actor_id=False),
+                     lambda row: row["requested"][0]["action"].update(trim=.2),
+                     lambda row: row["admission"][0].update(accepted=True))
+        for mutate in mutations:
+            source, packet, receipts = self.expiry_fixture(24, "lease")
+            mutate(receipts[0])
+            self.assertEqual(_expired_twelve_tick_refusals(source, packet, receipts), [])
+
+    def test_realtime_expiry_requires_original_valid_packet_and_complete_receipts(self):
+        for mutate in (lambda source, packet, rows: packet.update(lease_ticks=0),
+                       lambda source, packet, rows: packet.update(lease_ticks=18),
+                       lambda source, packet, rows: packet.update(sequence=0),
+                       lambda source, packet, rows: packet.update(observed_tick=6),
+                       lambda source, packet, rows: packet.update(observation_id="unissued"),
+                       lambda source, packet, rows: packet.update(action={}),
+                       lambda source, packet, rows: source.update(tick=True),
+                       lambda source, packet, rows: rows[0].update(tick_after=33),
+                       lambda source, packet, rows: rows[0]["admission"].clear()):
+            source, packet, receipts = self.expiry_fixture(24, "lease")
+            mutate(source, packet, receipts)
+            with self.assertRaises(ContractError):
+                _expired_twelve_tick_refusals(source, packet, receipts)
+
     def fixture(self):
         config = json.loads((ROOT / "configs/export/cpu-bc-v1.json").read_text())
         frame = {"tick": 0, "parts": [{"id": "core", "index": 0, "position": [0., 0.],

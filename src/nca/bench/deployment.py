@@ -339,6 +339,70 @@ def _variant(host, bundle, config, *, model="jev", decision_ticks=6):
             "scope": "changed actual model or external cadence; no changed protected mechanics"}
 
 
+def _expired_twelve_tick_refusals(source, packet, receipts):
+    """Prove expiry of this valid packet under the pinned ACT004 owner.
+
+    The owner checks its eighteen-tick observation-history window before the
+    packet's twelve-tick lease. An older packet therefore reports ``lease``;
+    a packet aged twelve through eighteen ticks reports ``expired_observation``.
+    Neither reason alone establishes that the requested expiry case occurred.
+    """
+    integer_fields = ("version", "actor_id", "epoch", "sequence", "observed_tick", "lease_ticks")
+    identity_fields = ("version", "kind", "run_id", "actor_id", "epoch", "sequence",
+                       "observed_tick", "observation_id", "lease_ticks")
+    if (not isinstance(source, Mapping) or not isinstance(packet, Mapping)
+            or set(packet) != set(identity_fields) | {"action"}
+            or any(type(packet[name]) is not int for name in integer_fields)
+            or packet["version"] != 2 or packet["kind"] != "physical_wire_action"
+            or packet["lease_ticks"] != 12 or not 0 <= packet["actor_id"] < 8
+            or packet["epoch"] < 0 or packet["observed_tick"] < 0
+            or not 0 <= packet["sequence"] <= 9_007_199_254_740_991
+            or any(type(source.get(name)) is not int for name in
+                   ("version", "epoch", "actor_id", "control_generation", "tick", "last_sequence"))
+            or source["version"] != 2 or source["control_generation"] < 0
+            or source["last_sequence"] < -1 or packet["sequence"] <= source["last_sequence"]
+            or not isinstance(packet["run_id"], str) or not packet["run_id"]
+            or any(packet[name] != source.get(name) for name in
+                   ("run_id", "epoch", "actor_id", "observation_id"))
+            or packet["observed_tick"] != source["tick"]
+            or packet["observation_id"] != ":".join(str(source[name]) for name in
+                   ("run_id", "epoch", "actor_id", "control_generation", "tick"))):
+        raise ContractError("realtime_expiry_evidence", "valid original twelve-tick packet and issued source required")
+    # Complete shape, strict booleans, finite numbers and normalized bounds.
+    wire_difference(packet["action"], packet["action"])
+    if not isinstance(receipts, list):
+        raise ContractError("realtime_expiry_evidence", "complete original receipt sequence required")
+    matches = []
+    for row in receipts:
+        if (not isinstance(row, Mapping) or type(row.get("tick_before")) is not int
+                or type(row.get("tick_after")) is not int or row["tick_before"] < 0
+                or row["tick_after"] != row["tick_before"] + 1
+                or not isinstance(row.get("requested"), list) or not isinstance(row.get("admission"), list)
+                or len(row["requested"]) != len(row["admission"])):
+            raise ContractError("realtime_expiry_evidence", "complete causal request/admission receipts required")
+        for requested, admission in zip(row["requested"], row["admission"]):
+            if (not isinstance(requested, Mapping) or set(requested) != set(packet)
+                    or not isinstance(admission, Mapping)
+                    or any(type(requested[name]) not in (int, float) for name in integer_fields)
+                    or any(requested[name] != packet[name] for name in identity_fields)):
+                continue
+            # Godot's receipt JSON rounds finite wire floats during serialization.
+            # This tight comparison only correlates the original packet; it does
+            # not change the independent arithmetic or trajectory tolerances.
+            difference = wire_difference(requested["action"], packet["action"])
+            if not difference["boolean_actions_exact"] or difference["maximum_continuous_difference"] > 1e-12:
+                continue
+            age = row["tick_before"] - packet["observed_tick"]
+            expected_reason = ("lease" if age > 18 else "expired_observation") if age >= 12 else None
+            if (expected_reason is not None and admission.get("accepted") is False
+                    and admission.get("reason") == expected_reason):
+                matches.append({"requested": requested, "admission": admission,
+                                "tick_before": row["tick_before"], "tick_after": row["tick_after"],
+                                "source_age_ticks": age, "lease_deadline_tick": packet["observed_tick"] + 12,
+                                "pinned_host_observation_window_ticks": 18})
+    return matches
+
+
 def _realtime(host_path, godot_path, bundle, config):
     started = time.perf_counter()
     limit = config["realtime"]
@@ -359,11 +423,7 @@ def _realtime(host_path, godot_path, bundle, config):
         time.sleep(limit["delay_seconds"])
         view, _, _, _, info = env.step_packet(packet)
         receipts = info["idle_trace"] + info["trace"]
-        refusals = [{"requested": requested, "admission": admission, "tick_before": row["tick_before"]}
-                    for row in receipts for requested, admission in zip(row["requested"], row["admission"])
-                    if (admission.get("accepted") is False and admission.get("reason") == "expired_observation"
-                        and all(requested.get(key) == packet.get(key) for key in
-                                ("run_id", "epoch", "actor_id", "observation_id", "sequence", "observed_tick", "lease_ticks")))]
+        refusals = _expired_twelve_tick_refusals(first, packet, receipts)
         result = controller.step(first, goal, current_tick=view["tick"])
         calls += 1
         before_response = host.request("observe")

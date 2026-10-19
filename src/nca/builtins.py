@@ -57,6 +57,18 @@ def cpu_export_policy(*args, **kwargs):
     return ExportController(*args, **kwargs)
 
 
+def padded_morphology_policy(**kwargs):
+    """Construct the optional untrained padded candidate explicitly."""
+    from .controllers.morphology.models import MaskedRecurrentPolicy
+    return MaskedRecurrentPolicy(**kwargs)
+
+
+def graph_morphology_policy(**kwargs):
+    """Construct the optional untrained local graph candidate explicitly."""
+    from .controllers.morphology.models import SharedGraphPolicy
+    return SharedGraphPolicy(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -65,6 +77,7 @@ def builtin_registry() -> Registry:
     from .controllers import AuthoredController
     from .data import replay_episode
     from .skills import register_skills
+    from .cellular import register as register_cellular
     from .adapters.skill_control import register_decisions
 
     registry = Registry()
@@ -87,6 +100,11 @@ def builtin_registry() -> Registry:
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
     registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
                       ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
+    registry.register("policy", "morphology-padded-recurrent", 1, padded_morphology_policy,
+                      ("optional-cpu", "gated-preparation", "masked", "recurrent"))
+    registry.register("policy", "morphology-shared-graph", 1, graph_morphology_policy,
+                      ("optional-cpu", "gated-preparation", "local-messages", "recurrent"))
     register_skills(registry)
+    register_cellular(registry)
     register_decisions(registry)
     return registry

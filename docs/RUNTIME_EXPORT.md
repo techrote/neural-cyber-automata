@@ -15,8 +15,11 @@ bundle carries the trained weights and their evaluated lineage; a separate
 immutable screen receipt determines whether the declared deployment passed.
 Conversion alone leaves `runtime_qualified` false.
 
-The implementation and frozen deployment criteria are present. The final
-qualification result is tracked in [T109 evidence](evidence/2026-10-19-t109.md).
+The [staged deployment screen](evidence/2026-10-19-t109-deployment-no-go.md)
+completed with `runtime_qualified: false`: trajectory limits failed and the full
+ten-minute throughput observation remains outstanding (79.033537896 seconds
+were measured). The prospective realtime checker correction and passing
+engineering tests do not change that no-go; [T109 evidence](evidence/2026-10-19-t109.md) preserves its lineage.
 Unmeasured runtime combinations are rejected rather than inheriting a measured
 lane's status. This first export does not execute inside Godot and does not
 qualify a residual policy, accelerator, Windows runtime or legacy device.
@@ -82,7 +85,7 @@ An arithmetic match does not authorize a delayed or foreign request.
 
 ## Use the runtime
 
-Prerequisites are the pinned [host installation](HOST_ADAPTER.md), the qualified
+Prerequisites are the pinned [host installation](HOST_ADAPTER.md), the pinned
 Python/NumPy environment, a complete numeric bundle and its external hash
 receipt. Numeric inference does not require Torch. The following excerpt runs a
 bounded stepped episode with an explicit caller goal:

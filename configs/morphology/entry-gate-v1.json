@@ -1,0 +1,44 @@
+{
+  "schema": "nca-morphology-entry-gate/v1",
+  "id": "t106-useful-per-rig-prerequisite-v1",
+  "declared_before": "T105 sealed evaluation opens",
+  "authorization": "T106 prerequisite utility criterion approved before T105 results",
+  "candidate_source_commit": "745578947a6f1ac2159830c4ae4de5de5593f32f",
+  "candidate_config_sha256": "8e40c1f65a2fe32597ecc97d10bd6f4414f96762bdc198f5063a56acad68616c",
+  "candidate_families_in_priority_order": ["bc", "residual"],
+  "training_seeds": [1103, 2207, 3301],
+  "scenarios": "All eight predeclared T105 evaluation families, equally weighted",
+  "checkpoint_selection": "Fixed final checkpoint for every seed; no best-seed selection",
+  "comparator": "The same family and policy seed's initial checkpoint on the identical eight scenarios",
+  "minimum_mean_success": 0.75,
+  "minimum_every_seed_success": 0.5,
+  "minimum_mean_success_gain_over_initial": 0.125,
+  "require_success_gain_lower95_strictly_positive": true,
+  "uncertainty": {
+    "unit": "Independently trained policy seed",
+    "method": "All 27 length-three resamples with replacement of the three paired per-seed success gains",
+    "interval": "Linearly interpolated 2.5 and 97.5 percentiles of the sorted 27 means"
+  },
+  "required_for_every_seed": {
+    "complete_paired_scenarios": true,
+    "integrity_failures": 0,
+    "failed_admissions": 0,
+    "ownership_or_lifetime_fence_regressions": 0,
+    "censored_evaluations": 0,
+    "ordinary_trim_reversals_per_second_increase_over_authored_maximum": 0.5,
+    "mean_absolute_angle_increase_over_authored_maximum_radians": 0.1,
+    "mean_peak_toward_speed_ratio_to_authored_minimum": 0.7,
+    "mean_peak_toward_speed_ratio_to_authored_maximum": 1.5,
+    "purposeful_launch_fraction_loss_to_authored_maximum": 0.125,
+    "every_scenario_inference_p95_maximum_ms": 5.0
+  },
+  "selection_rule": "The first whole candidate family in declared priority order satisfying every requirement may satisfy the mechanical per-rig utility prerequisite",
+  "missing_or_failed_evidence": "Prerequisite remains closed; do not omit rows, relax thresholds, add seeds or extend training",
+  "scope_limits": [
+    "This prerequisite does not change the T105 improvement-over-authored-controller decision",
+    "A passing prerequisite does not establish owner feel approval or morphology transfer",
+    "Additional actor profiles must independently be accepted before a morphology experiment",
+    "A later morphology experiment needs its own fixed split, capability matching and budget declaration",
+    "Absent host morphology and arbitrary geometric perturbation controls remain unavailable rather than simulated"
+  ]
+}
