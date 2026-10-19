@@ -58,6 +58,26 @@ def _source(kind: str, policy_id: str, policy_sha: str) -> ActionSource:
                         policy_id, policy_sha)
 
 
+def recorded_policy_sample(decision, policy_sha: str) -> PolicySample | None:
+    """Preserve sampling identity without giving deterministic requests a score."""
+    if decision is None or decision.replaced:
+        return None
+    if decision.latent is None:
+        return PolicySample("wire_request", decision.action.to_dict(), policy_sha)
+    stochastic = decision.sampling_mode == "stochastic_draw"
+    if decision.sampling_mode not in ("stochastic_draw", "deterministic_mean") or (
+            stochastic != (decision.log_probability is not None)):
+        raise ValueError("residual sampling mode and behaviour likelihood disagree")
+    return PolicySample(
+        "latent_residual", {"latent": list(decision.latent), "bounded_residual": list(decision.residual),
+                            "baseline_request": decision.baseline.to_dict(),
+                            "combined_request": decision.action.to_dict(),
+                            "sampling_mode": decision.sampling_mode,
+                            "log_probability_space": "bounded_residual" if stochastic else None},
+        policy_sha, decision.log_probability,
+        "scaled-tanh-diagonal-normal/v1" if stochastic else "deterministic-scaled-tanh-mean/v1")
+
+
 def capture_task(host: GodotHost, scenario: Mapping[str, Any], *, episode_id: str, split: str,
                  policy_id: str, kind: str, policy: RecurrentPolicy | None, seed: int,
                  budget: ScreenBudget, output: Path, config: Mapping[str, Any],
@@ -96,16 +116,7 @@ def capture_task(host: GodotHost, scenario: Mapping[str, Any], *, episode_id: st
                 decision = controller.step(recorder.view, goal, deterministic=not training)
                 action = decision.action
             inference_ns = time.perf_counter_ns() - begin
-            sample = None
-            if decision is not None and decision.latent is not None:
-                sample = PolicySample(
-                    "latent_residual", {"latent": list(decision.latent), "bounded_residual": list(decision.residual),
-                                        "baseline_request": decision.baseline.to_dict(),
-                                        "combined_request": action.to_dict(),
-                                        "log_probability_space": "bounded_residual"},
-                    policy_sha, decision.log_probability, "scaled-tanh-diagonal-normal/v1")
-            elif decision is not None and not decision.replaced:
-                sample = PolicySample("wire_request", action.to_dict(), policy_sha)
+            sample = recorded_policy_sample(decision, policy_sha)
             budget.consume()
             after, _, terminated, truncated, info = recorder.step(action.to_dict(), sample=sample,
                                                                   replaced=decision.replaced if decision else False)

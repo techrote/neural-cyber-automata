@@ -91,8 +91,7 @@ def freeze_manifest(output: str | Path, config: Mapping[str, Any], dependency_co
             len(value) != 40 or any(char not in "0123456789abcdef" for char in value)
             for value in dependency_commits.values()):
         raise ValueError("accepted T102/T103/T104 merge commits must be supplied before a formal run")
-    project = Path(root) if root else Path(__file__).resolve().parents[3]
-    revision, sources, source_hash = source_identity(project)
+    revision, sources, source_hash = source_identity(root)
     for relative, expected in (("src/nca/controllers/baseline.py", config["baseline_source_sha256"]),
                                ("src/nca/adapters/host_bridge.gd", config["bridge_sha256"])):
         if sources.get(relative) != expected:

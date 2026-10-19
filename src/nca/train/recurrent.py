@@ -68,6 +68,8 @@ def attributed_actor_sample(event: CaptureEvent) -> tuple[tuple[float, ...], flo
     sample = event.require_on_policy()
     if sample.space != "latent_residual" or sample.distribution != "scaled-tanh-diagonal-normal/v1":
         raise ValueError("PPO sample does not match its declared residual distribution")
+    if sample.values.get("sampling_mode") != "stochastic_draw":
+        raise ValueError("PPO requires an explicit original stochastic draw, not a deterministic mean or unknown sampling mode")
     if sample.values.get("log_probability_space") != "bounded_residual":
         raise ValueError("PPO likelihood space is ambiguous")
     latent = tuple(sample.values.get("latent", ()))

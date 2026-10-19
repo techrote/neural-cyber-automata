@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import hashlib
 import math
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Literal, Mapping, Sequence
 
 import torch
 from torch import Tensor, nn
@@ -190,6 +190,7 @@ class LearnedDecision:
     baseline: WireAction | None = None
     replaced: bool = False
     phase: str = "learned"
+    sampling_mode: Literal["deterministic_wire", "stochastic_draw", "deterministic_mean", "reference_replacement"] = "deterministic_wire"
 
 
 class LearnedController:
@@ -286,16 +287,21 @@ class LearnedController:
             # This deterministic reference replacement has no residual sample
             # and is explicitly ineligible for an on-policy actor update.
             decision = LearnedDecision(reference.action, encoded, before, float(value[0]),
-                                       baseline=reference.action, replaced=True, phase=reference.phase)
+                                       baseline=reference.action, replaced=True, phase=reference.phase,
+                                       sampling_mode="reference_replacement")
         else:
             latent = output if deterministic else output + self.policy.log_std.clamp(-5, .5).exp() * torch.randn(
                 output.shape, generator=self.generator, dtype=output.dtype)
             residual = latent.tanh() * torch.tensor(RESIDUAL_SCALES, dtype=latent.dtype)
-            score = residual_log_probability(latent, output, self.policy.log_std)
+            # A chosen mean is a deterministic request, not a draw from the
+            # Normal residual law. Its density at that point cannot be reused
+            # as the behaviour-policy likelihood of an on-policy sample.
+            score = None if deterministic else float(residual_log_probability(latent, output, self.policy.log_std)[0])
             action = combine_residual(reference.action, residual[0].tolist())
             decision = LearnedDecision(action, encoded, before, float(value[0]), tuple(latent[0].tolist()),
-                                       tuple(residual[0].tolist()), float(score[0]), reference.action,
-                                       phase=reference.phase)
+                                       tuple(residual[0].tolist()), score, reference.action,
+                                       phase=reference.phase,
+                                       sampling_mode="deterministic_mean" if deterministic else "stochastic_draw")
         self.previous = decision.action
         return decision
 

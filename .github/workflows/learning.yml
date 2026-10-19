@@ -24,7 +24,5 @@ jobs:
           python -m pip install --no-build-isolation .
       - name: Require the declared CPU runtime
         run: python -c "import torch, numpy; assert torch.__version__ == '2.8.0+cpu'; assert numpy.__version__ == '2.3.5'; assert not torch.cuda.is_available()"
-      - name: Learning contracts and tiny numerical fixtures
-        run: python -m unittest discover -s tests -p "test_learning.py" -v
-      - name: Validate predeclared experiment without running it
-        run: python tools/first_skill.py prepare
+      - name: Contracts and tiny numerical fixtures with optional learning enabled
+        run: python -m unittest discover -s tests -p "test_*.py" -v

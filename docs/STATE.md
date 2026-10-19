@@ -84,15 +84,42 @@ the +20-cell invocation remained unsuccessful. No optimization occurred. The
 recorded script transfers are not human or live-model demonstrations, and replay
 qualifies copied local trajectories on the same build, not whole-world identity.
 
-## First learned-skill experiment
+## Authored usable skills and composition
 
-The [optional CPU learner](LEARNING.md) implements direct recurrent behavioural
-cloning and recurrent residual PPO, preserving sampled request likelihood,
-actual-duration discounting, separate bootstrap/continuation masks and source
-ownership. Twenty-eight focused numerical and lifecycle tests pass. The bounded
-three-seed Jolt screen is frozen in the [T-105 declaration](evidence/2026-10-19-t105.md).
-Formal training and heldout evaluation are pending; implementation does not yet
-establish learned task performance. Core imports remain independent of PyTorch.
+The [usable runtime](USABLE_SKILLS.md) provides typed approach, aim/use, recovery,
+grip, carry and release over the accepted Vector launcher and Hammerhead cutter.
+Pouncer charge-hold is the separate disarming example. Twenty-nine focused tests
+pass, including thirteen actual-host integrations. The five-case
+[T-107 pilot](evidence/2026-10-19-t107.md) exercised native clearance refusal with
+recoil, declared recovery, physical pickup/carry/use/release, a retained failed
+late pickup, persistent applied effects and charge cancellation without launch.
+
+Owner control and observed attachment generations are independently fenced.
+Local skill predicates remain separate from evaluator success; the scripted
+human/model source labels do not claim an actual input session or live service.
+Independent arbitrary object replacement and owner feel remain unmeasured.
+
+## First learned Jolt skill
+
+The optional [CPU learning lane](LEARNING.md) implements behavioural cloning and
+recurrent residual PPO with original latent-action likelihoods, ordered sequence
+updates, valid duration/continuation masks and immutable checkpoints. Its
+[T-105 screen](evidence/2026-10-19-t105.md) used three policy seeds, six frozen
+final checkpoints and eight unseen paired scenarios. It completed 11,755 game
+decisions in 685.6 seconds under the predeclared 13,000-decision / 30-minute cap.
+
+Mean success was 45.83% for cloning and 50.00% for residual PPO, versus 25.00%
+for the authored reference. Both passed the declared improvement, integrity,
+character and inference gates. Every failed scenario and weaker seed remains
+recorded. The complete artifact audit found no held-out data in optimization.
+An original deterministic-evaluation likelihood label defect is preserved in
+historical records and corrected in the final source; it did not alter trained
+weights or wire outcomes. Owner feel remains unjudged.
+
+These are bounded exploratory improvements. Neither family met the independently
+predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
+remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
+a separate CPU export qualification, with its directional failures retained.
 
 ## Host authority
 

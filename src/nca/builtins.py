@@ -58,6 +58,7 @@ def builtin_registry() -> Registry:
     from .envs.recorded import RecordedEnv
     from .controllers import AuthoredController
     from .data import replay_episode
+    from .skills import register_skills
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -77,4 +78,5 @@ def builtin_registry() -> Registry:
                       ("act004", "same-runtime", "original-observation-age"))
     registry.register("trainer", "first-jolt-screen", 1, first_skill_screen,
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
+    register_skills(registry)
     return registry

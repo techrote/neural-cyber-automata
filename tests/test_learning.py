@@ -21,7 +21,7 @@ if TORCH_AVAILABLE:
                                     read_config, write_checkpoint)
     from nca.train.recurrent import (RolloutSequence, Transition, attributed_actor_sample,
                                     generalized_advantages, ordered_window, ppo_update, train_clone)
-    from nca.train.screen import policy_seed_interval
+    from nca.train.screen import policy_seed_interval, recorded_policy_sample
     from nca.train.task import HopTask
 
 
@@ -48,7 +48,8 @@ def attributed_event(**overrides):
               "actor_id": 0, "sequence": 0, "observed_tick": 0, "observation_id": view()["observation_id"],
               "lease_ticks": 12, "action": action}
     source = ActionSource("learner", "learned", "test-policy", "a" * 64)
-    sample = PolicySample("latent_residual", {"latent": [.3, -.2, .1], "log_probability_space": "bounded_residual"},
+    sample = PolicySample("latent_residual", {"latent": [.3, -.2, .1], "log_probability_space": "bounded_residual",
+                                             "sampling_mode": "stochastic_draw"},
                           "a" * 64, -.3, "scaled-tanh-diagonal-normal/v1")
     tick = TickRecord(0, 1, 1, 10, 11, (packet,), ({"accepted": True, "reason": ""},), packet,
                       "learner", action, {"linear_impulse": [.1, 0.]},
@@ -116,6 +117,35 @@ class LearnedBoundaryTests(unittest.TestCase):
         self.assertTrue(first.primary)
         self.assertEqual(first.aim, baseline.aim)
 
+    def test_deterministic_residual_preserves_mean_wire_but_has_no_stochastic_likelihood(self):
+        model = RecurrentPolicy("residual")
+        generator = torch.Generator().manual_seed(73)
+        before = generator.get_state().clone()
+        mean = LearnedController(model, generator=generator).step(view(), self.goal, deterministic=True)
+        self.assertEqual(mean.sampling_mode, "deterministic_mean")
+        self.assertIsNone(mean.log_probability)
+        self.assertTrue(torch.equal(before, generator.get_state()))
+        with torch.no_grad():
+            raw, _, _ = model(torch.tensor([mean.features]), model.zero_hidden())
+        expected = (raw.tanh() * torch.tensor(RESIDUAL_SCALES))[0].tolist()
+        self.assertEqual(mean.action, combine_residual(mean.baseline, expected))
+        captured_mean = recorded_policy_sample(mean, "a" * 64)
+        self.assertEqual(captured_mean.distribution, "deterministic-scaled-tanh-mean/v1")
+        self.assertIsNone(captured_mean.log_probability)
+        self.assertFalse(attributed_event(sample=captured_mean).on_policy_eligible)
+        with self.assertRaises(ContractError):
+            attributed_actor_sample(attributed_event(sample=captured_mean))
+        with self.assertRaises(ValueError):
+            recorded_policy_sample(replace(mean, log_probability=-1.), "a" * 64)
+        drawn = LearnedController(model, generator=generator).step(view(), self.goal, deterministic=False)
+        self.assertEqual(drawn.sampling_mode, "stochastic_draw")
+        self.assertIsNotNone(drawn.log_probability)
+        self.assertFalse(torch.equal(before, generator.get_state()))
+        captured_draw = recorded_policy_sample(drawn, "a" * 64)
+        self.assertTrue(attributed_event(sample=captured_draw).on_policy_eligible)
+        self.assertEqual(attributed_actor_sample(attributed_event(sample=captured_draw)),
+                         (drawn.latent, drawn.log_probability))
+
     def test_recurrent_reset_matches_fresh_inference_and_rejects_repeated_ticks(self):
         model = RecurrentPolicy("bc")
         controller = LearnedController(model)
@@ -173,6 +203,11 @@ class LearnedBoundaryTests(unittest.TestCase):
         ambiguous = attributed_event(sample=replace(attributed_event().sample, values={"latent": [.1, .2, .3]}))
         with self.assertRaises(ValueError):
             attributed_actor_sample(ambiguous)
+        for mode in (None, "deterministic_mean", "unknown"):
+            original = attributed_event().sample
+            mislabeled = replace(original, values={**original.values, "sampling_mode": mode})
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                attributed_actor_sample(attributed_event(sample=mislabeled))
 
     def test_complete_prefix_burn_in_matches_sequential_history_with_padding(self):
         model = RecurrentPolicy("residual")
