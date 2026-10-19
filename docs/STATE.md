@@ -26,7 +26,7 @@ a versioned extension registry and immutable reproducible run records.
 | Command-line conformance | Three additional tests for immutable records, optional-import isolation and invalid input |
 | Linux/Windows package workflow | Both operating systems and the documentation check passed on the exact final T-101 head |
 | Physical host adapter | T-102 implementation and actual Linux conformance described below |
-| Authored gameplay controllers | Separate T-103 increment |
+| Authored gameplay controllers | Jolt/Vector feedback skills and matched actual-host screen below |
 | Trained weights or scored learning runs | No accepted training result in T-101 |
 | Runtime export, model service and device qualification | No accepted result in T-101 |
 
@@ -52,6 +52,21 @@ These tests qualify the adapter on the selected host and CPU runtime. The actual
 host has no separate passive-wrench decomposition, arbitrary body replacement,
 support-removal or assist-mutation API. Those capabilities remain unavailable.
 Windows physical runtime, desktop pacing and owner feel remain unmeasured.
+
+## Authored skill reference
+
+The [authored controllers](CONTROLLERS.md) implement Jolt directed hops, Vector
+burst traversal and their declared recovery mappings. The accepted-adapter
+screen ran 18 matched episodes across firm/balanced/compliant tuning and
+step/pulse/reversal fixtures. All six step variants reached their target;
+compliant Jolt missed the reversal deadline, and Vector drifted after completing
+arrival. These limitations and all exact source/artifact hashes are in the
+[T-103 evidence](evidence/2026-10-19-t103.md).
+
+Thirty-three focused controller/measurement checks pass. Forced perturbation
+fixtures are published but explicitly refuse unsupported host operations;
+arbitrary disturbance, support removal, payload replacement and joint override
+remain physically unmeasured. Owner feel approval is not recorded.
 
 ## Host authority
 

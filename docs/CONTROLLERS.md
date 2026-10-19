@@ -32,7 +32,7 @@ goal = SkillGoal("hop-1", "directed_hop",
                  target=(view["position"][0] + 48, view["position"][1]))
 while True:
     frame = controller.step(FeedbackObservation.from_host(view), goal)
-    if frame.status in {"succeeded", "failed", "canceled"}:
+    if frame.status in {"succeeded", "timed_out", "canceled"}:
         env.cancel()
         break
     view, reward, terminated, truncated, info = env.step(frame.action.to_dict())
