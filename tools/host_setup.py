@@ -22,6 +22,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from nca.adapters.godot import PINNED_HOST_REVISION, inspect_host  # noqa: E402
 
+# Canonical official release asset, with the identical size and SHA-256 pinned
+# in the host lock. The downloads landing endpoint refuses some CI clients.
+GODOT_LINUX_RELEASE = (
+    "https://github.com/godotengine/godot-builds/releases/download/4.7-stable/"
+    "Godot_v4.7-stable_linux.x86_64.zip"
+)
+
 
 def run(arguments: list[str], *, env: dict[str, str] | None = None) -> None:
     subprocess.run(arguments, check=True, env=env, timeout=300)
@@ -62,7 +69,7 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
         if not archive.exists():
             temporary = archive.with_suffix(".download")
             try:
-                with urllib.request.urlopen(lock["editor"]["origin_url"], timeout=120) as source, temporary.open("wb") as output:
+                with urllib.request.urlopen(GODOT_LINUX_RELEASE, timeout=120) as source, temporary.open("wb") as output:
                     remaining = int(lock["editor"]["size"])
                     while remaining > 0:
                         block = source.read(min(1024 * 1024, remaining))
