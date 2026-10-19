@@ -1,0 +1,44 @@
+name: T109 qualification support bundle
+
+on:
+  push:
+    branches: [impl/t109-runtime-export]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'Prepare T109 qualification support bundle')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Prepare pinned physical runtime
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-host" --github-env "$GITHUB_ENV"
+      - name: Download exact CPU learning wheels
+        run: |
+          mkdir -p "$RUNNER_TEMP/wheels"
+          python -m pip download --no-deps torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu -d "$RUNNER_TEMP/wheels"
+          python -m pip download --no-deps numpy==2.3.5 -d "$RUNNER_TEMP/wheels"
+      - name: Pack public checkout and pinned runtime
+        run: |
+          tar -czf "$RUNNER_TEMP/t109-public-source.tgz" .git src configs tools pyproject.toml
+          tar -C "$RUNNER_TEMP" -czf "$RUNNER_TEMP/t109-pinned-host.tgz" nca-host
+          sha256sum "$RUNNER_TEMP/t109-public-source.tgz" "$RUNNER_TEMP/t109-pinned-host.tgz" "$RUNNER_TEMP"/wheels/* | tee "$RUNNER_TEMP/support-sha256.txt"
+      - name: Upload support bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: t109-qualification-support
+          path: |
+            ${{ runner.temp }}/t109-public-source.tgz
+            ${{ runner.temp }}/t109-pinned-host.tgz
+            ${{ runner.temp }}/wheels
+            ${{ runner.temp }}/support-sha256.txt
+          retention-days: 7

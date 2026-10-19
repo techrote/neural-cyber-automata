@@ -1,0 +1,33 @@
+{
+  "schema": "nca-export-screen/v1",
+  "id": "jolt-bc1103-numpy-cpu-export-v1",
+  "selection": {
+    "kind": "bc",
+    "training_seed": 1103,
+    "phase": "final",
+    "rule": "fixed before inspecting T105 outcomes; no checkpoint or family selection by evaluation performance",
+    "learner_revision": "745578947a6f1ac2159830c4ae4de5de5593f32f",
+    "learner_config_sha256": "8e40c1f65a2fe32597ecc97d10bd6f4414f96762bdc198f5063a56acad68616c"
+  },
+  "runtime": {"python": "3.12.14", "numpy": "2.3.5", "torch_reference": "2.8.0+cpu", "torch_threads": 1, "device": "cpu", "platform": "Linux", "architecture": "x86_64", "dtype": "float32", "deployment": "external Python CPU controller loop"},
+  "host": {"revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497", "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938", "actor": "jev", "base_hz": 60, "decision_ticks": 6, "helper_lease_ticks": 12, "plan_lifetime_ticks": 120},
+  "arithmetic": {"observations": 128, "seed": 73109, "resets_at": [0, 32, 64, 96], "feature_absolute_tolerance": 1e-7, "hidden_logit_value_absolute_tolerance": 2e-5, "continuous_action_absolute_tolerance": 2e-5, "boolean_actions_exact": true},
+  "trajectory": {
+    "seed": 73,
+    "ticks": 240,
+    "cases": [
+      {"id": "floor-right-24", "spawn": [176.0, 346.5], "target": [200.0, 346.5]},
+      {"id": "floor-left-24", "spawn": [264.0, 346.5], "target": [240.0, 346.5]}
+    ],
+    "goal": {"pace": 0.8, "tolerance": 4.0, "timeout_seconds": 4.0},
+    "maximum_part_position_difference_cells": 0.05,
+    "maximum_part_angle_difference_radians": 0.05,
+    "exact_receipt_clock_cancellation": true,
+    "clip": "matched own-part pose reconstruction from actual receipts; same camera and timebase, not engine-rendered footage"
+  },
+  "negative_cases": ["bundle_version", "profile_hash", "sensor_hash", "action_hash", "assist_hash", "base_hz_30", "decision_ticks_12", "helper_lease_ticks_18", "old_actor_epoch", "old_control_generation", "stale_observation", "nonfinite_weights", "reordered_observation"],
+  "realtime": {"delay_seconds": 0.35, "maximum_seconds": 12.0, "maximum_policy_calls": 4, "required": ["host_advances_during_delay", "old_twelve_tick_motor_lease_refused", "owner_cancel_preserves_existing_motion", "source_takeover_retires_old_invocation"]},
+  "throughput": {"maximum_wall_seconds": 600.0, "decisions_per_configuration": 500, "actor_configurations": [{"total_actors": 1, "learned_controlled_actors": 1}, {"total_actors": 2, "learned_controlled_actors": 1, "companion_model": "monowheel", "companion_producer": "demo"}], "reset_samples": 10, "observe_transport_samples": 100, "inference_samples": 1000, "inference_input": "sequential replay of actual local decision observations, resetting recurrence at each recorded episode boundary", "memory": ["controller_process_peak_rss", "host_process_rss", "numeric_weight_bytes", "hidden_state_bytes"]},
+  "resume": {"checkpoint": "residual-seed1103-u07.pt", "scope": "restore actual optimizer and RNG at a fresh episode, compare next draws and sequential policy outputs without updating weights", "rng_draws": 8, "fresh_episode_ticks": 24, "mid_episode_host_restore": false},
+  "limits": {"training_updates": 0, "paid_model_calls": 0, "quantization": false, "residual_runtime_export": false, "hardware_lanes": ["Linux x86_64 CPU"], "owner_feel_accepted": false, "tolerance_tuning_after_results": false, "whole_game_determinism_claim": false}
+}

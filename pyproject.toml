@@ -10,6 +10,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
+export = ["numpy==2.3.5"]
 learning = ["numpy==2.3.5", "torch==2.8.0"]
 evidence = ["pillow==12.3.0"]
 
