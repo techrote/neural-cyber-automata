@@ -68,6 +68,22 @@ fixtures are published but explicitly refuse unsupported host operations;
 arbitrary disturbance, support removal, payload replacement and joint override
 remain physically unmeasured. Owner feel approval is not recorded.
 
+## Demonstration and replay boundary
+
+The [data API](../configs/datasets/README.md) captures every consumed base tick,
+the original source observation, dispatch-time view, source/policy identity,
+requested/admitted action, actual impulse/motion, intervention and lifecycle
+boundary. Unknown, refused, mixed or corrected consumption cannot acquire an
+ordinary on-policy likelihood. Per-episode files publish immutably and family
+splits reject contamination.
+
+The [T-104 evidence](evidence/2026-10-19-t104.md) contains three actual capture
+pipelines with 296 base receipts, compatible-host replay and separately recorded
+skill outcomes. The +48-cell Jolt invocation succeeded by its local estimate;
+the +20-cell invocation remained unsuccessful. No optimization occurred. The
+recorded script transfers are not human or live-model demonstrations, and replay
+qualifies copied local trajectories on the same build, not whole-world identity.
+
 ## Host authority
 
 The refreshed Cybersand source at

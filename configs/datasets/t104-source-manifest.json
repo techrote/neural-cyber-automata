@@ -1,0 +1,17 @@
+{
+  "base": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+  "files": {
+    "src/nca/data/__init__.py": "1db5b3cc1397ad0784d0d13d2e6f6a1168a00cc3ba6e1c393da895a5bcd43d62",
+    "src/nca/data/capture.py": "d0dff01d28d8f2750b24b62badd5e99b4be8d8fe3a842c87a538ba4126277791",
+    "src/nca/data/records.py": "c368b23f69daa543621bf85ee125274aaf2d84f3d4db13c5e524d2323bf7d020",
+    "src/nca/data/replay.py": "2856943f54bfa5ceefae484c1eb4415ea3723c489ee440f7c233c2193b6d217d",
+    "src/nca/data/storage.py": "da194eef8f5b0249f7cc78ec2a36beccc39ebe0af29c9419aaff74746fa21abd",
+    "tests/test_data_host.py": "f2200ff1115f8ae7c8bf23cd7b44056f2359a25a70b31d1c910a0540b4eb34f1",
+    "tests/test_data_records.py": "987f1f5547cd4eca11fbaded3eec57e5d4445baaa056a3329fe967c5cef56415",
+    "tools/capture_replay.py": "95edafb9f48de1258db523d32d91e767d2405a36e8c43abd74833a7017387621"
+  },
+  "prior_difference": "Removed only a trailing blank line in capture.py and storage.py before final-head checks; original episode sources remain immutable.",
+  "prior_scoped_sha256": "adbec78bb97eab76cbd77ba783a36f673415ed88b36961a282ae0218c4f9ad41",
+  "scope": "T104 candidate code and focused tests; scoped source freeze after captured bytes, before final committed candidate acceptance",
+  "sha256": "458a309597252f4a111e299f3c85d0ead94c3f9803ce1680a05cd8e71bb21bd6"
+}

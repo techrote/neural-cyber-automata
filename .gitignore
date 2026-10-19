@@ -13,3 +13,7 @@ checkpoints/
 *.npz
 *.mp4
 *.webm
+
+# Versioned declarations and small immutable receipts, never dataset payloads.
+!configs/datasets/
+!configs/datasets/runs/

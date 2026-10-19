@@ -30,6 +30,7 @@ verified: 2026-10-18
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |
 | How do I use authored skills and repeat matched response fixtures? | [Controllers](CONTROLLERS.md) |
+| How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |
 | What traps matter? | [GOTCHAS.md](GOTCHAS.md) |
 | What do the terms mean? | [GLOSSARY.md](GLOSSARY.md) |

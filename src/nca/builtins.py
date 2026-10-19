@@ -51,6 +51,7 @@ def builtin_registry() -> Registry:
     from .adapters.godot import CybersandEnv, GodotHost
     from .envs.recorded import RecordedEnv
     from .controllers import AuthoredController
+    from .data import replay_episode
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -66,4 +67,6 @@ def builtin_registry() -> Registry:
     registry.register("policy", "authored-feedback", 1, AuthoredController,
                       ("local-observation", "wire", "bounded-feedback", "cancellation"))
     registry.register("evaluator", "recorded", 1, RecordedEvaluator, ("recorded_fixture",))
+    registry.register("evaluator", "consumed-replay", 1, replay_episode,
+                      ("act004", "same-runtime", "original-observation-age"))
     return registry

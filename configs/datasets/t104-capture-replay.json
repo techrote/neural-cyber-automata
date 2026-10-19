@@ -1,0 +1,174 @@
+{
+  "artifact_base": "t104-artifacts/",
+  "artifact_collection": "t104-2026-10-19",
+  "development_failures": [
+    {
+      "consumed_ticks": 6,
+      "decisions": 1,
+      "episode": {
+        "content_sha256": "7262dddd6ef8e608f53a66bbd28ea61e69d66d5e208e7b2a401cd917b974418b",
+        "path": "development/first-capture.json.gz",
+        "size_bytes": 10587
+      },
+      "reason": "TypeError serializing immutable nested packet at duplicate submission; fixed by explicit transport copy",
+      "run": {
+        "content_sha256": "8c8b27ed6f66cf2798108787cefe77f12c5ad10036f11d2f519c2da9961a4b7b",
+        "path": "development/runs/t104-first-capture.json",
+        "size_bytes": 7745
+      },
+      "schema_status": "pre-final development candidate; raw artifact preserved, not an eligible v1 dataset",
+      "status": "failed"
+    }
+  ],
+  "environment": "cybersand-act004-stepped-v1",
+  "episodes": [
+    {
+      "config_sha256": "88767f2e10d6ca486977050fec943df1e2e0d47c6bd3b8dc18a2c5d6ac4528a2",
+      "consumed_ticks": 32,
+      "decisions": 7,
+      "episode": {
+        "content_sha256": "84dab36c371bd2579e1547185d3c03db87878990b4b1fcb30496b4b7fe7651e3",
+        "path": "t104-control-boundaries.json.gz",
+        "size_bytes": 28389
+      },
+      "evaluation": {
+        "owner_feel_accepted": false,
+        "task_quality": null
+      },
+      "id": "t104-control-boundaries",
+      "imitation_samples": 5,
+      "learner_revision": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+      "learner_sources_sha256": "5c21bf748619362e1aae3e4b9622693207662f53287e4f447df4f1eaa237a383",
+      "on_policy_samples": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "record_sha256": "b2016e5f4516cbc6d59e5d978d516037978da2b96c94d395a533bb6411d5ab70",
+      "replay": {
+        "content_sha256": "c4859018c86a5d0fd7429ce3bce9409a438be0e68fd5bad2ff7f1507aed2b3ff",
+        "path": "t104-control-boundaries.json.gz.replay.json",
+        "size_bytes": 15555
+      },
+      "replay_maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 0.0,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "replay_passed": true,
+      "run": {
+        "content_sha256": "85a05f7c0f57da5c47a600d41806b2d518a38639a2be74dbae60d996a3692fc3",
+        "path": "runs/t104-control-boundaries.json",
+        "size_bytes": 8037
+      },
+      "scenario_family": "control-boundaries",
+      "seed": 7,
+      "split": "evaluation"
+    },
+    {
+      "config_sha256": "0bf1cf0d09a24dfaffeeaffb639cbd1413ff6a3fe0afa4a0bfbdcd281dba13d3",
+      "consumed_ticks": 132,
+      "decisions": 22,
+      "episode": {
+        "content_sha256": "fe2228d8f594dcffc4d16a29d0bd2e9f1c8a601c14606b93eb054caca8dd6f5a",
+        "path": "t104-jolt-20-unsuccessful.json.gz",
+        "size_bytes": 90251
+      },
+      "evaluation": {
+        "controller_status_estimate": "running",
+        "distance_to_goal": 14.92557266931819,
+        "goal_id": "jolt-demo",
+        "owner_feel_accepted": false,
+        "speed": 46.072190151912906
+      },
+      "id": "t104-jolt-20-unsuccessful",
+      "imitation_samples": 22,
+      "learner_revision": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+      "learner_sources_sha256": "73168e7d60e57269078ff6f238d156a6ccbdd39760c1da3cf736372d345448ce",
+      "on_policy_samples": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "record_sha256": "06fab6e73806e5cb3efe2b11abcc8358b2c6c1d1b07d969757033ff88c8245b0",
+      "replay": {
+        "content_sha256": "746c8a8cc7d85ad514eac9a08ffae6d04fcadb3e3bb69b6bf5e272322a0e2bfc",
+        "path": "t104-jolt-20-unsuccessful.json.gz.replay.json",
+        "size_bytes": 24620
+      },
+      "replay_maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 1.021405182655144e-14,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "replay_passed": true,
+      "run": {
+        "content_sha256": "7b85ca7161bd15499b3d9ed2f6d4044733e5dcddff938b39706703ec0da4ddf5",
+        "path": "runs/t104-jolt-20-unsuccessful.json",
+        "size_bytes": 8047
+      },
+      "scenario_family": "jolt-demo",
+      "seed": 7,
+      "split": "evaluation"
+    },
+    {
+      "config_sha256": "4dce15b31176f9506ee34deb2c5b01e348b7dcad460c4d80ad671474378f7ccf",
+      "consumed_ticks": 132,
+      "decisions": 22,
+      "episode": {
+        "content_sha256": "41564a89322638fd7d02a0b1c66c2efc28a79adc64cdffd5652376378fd0c17a",
+        "path": "t104-jolt-48.json.gz",
+        "size_bytes": 87369
+      },
+      "evaluation": {
+        "controller_status_estimate": "succeeded",
+        "distance_to_goal": 2.9602290576475974,
+        "goal_id": "jolt-demo",
+        "owner_feel_accepted": false,
+        "speed": 0.037949196994399095
+      },
+      "id": "t104-jolt-48",
+      "imitation_samples": 22,
+      "learner_revision": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+      "learner_sources_sha256": "5c21bf748619362e1aae3e4b9622693207662f53287e4f447df4f1eaa237a383",
+      "on_policy_samples": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "record_sha256": "d79b54e6b9ad175c0c235e8cd637c693187c2a1ac3240519d32e441818a5c72a",
+      "replay": {
+        "content_sha256": "e6e78830fe484ffeefaa55c38fb641dfb68f3febf74f3269f0993412cd0684ee",
+        "path": "t104-jolt-48.json.gz.replay.json",
+        "size_bytes": 24607
+      },
+      "replay_maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 9.992007221626409e-15,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "replay_passed": true,
+      "run": {
+        "content_sha256": "cb0e4748fb84a056ef081cd47d5ec92d2ce9a493c2a465b9cbcbc0620356ed6a",
+        "path": "runs/t104-jolt-48.json",
+        "size_bytes": 8013
+      },
+      "scenario_family": "jolt-demo",
+      "seed": 1703,
+      "split": "evaluation"
+    }
+  ],
+  "id": "t104-capture-replay-v1",
+  "owner_feel_accepted": false,
+  "policy_schema": "act004-local-proprioception-rays/v1",
+  "publication": "external archive; complete episodes excluded from Git under C-005",
+  "scenario_split": {
+    "evaluation": [
+      "control-boundaries",
+      "jolt-demo"
+    ],
+    "training": [],
+    "tuning": [],
+    "version": 1
+  },
+  "schema_version": 1,
+  "total_consumed_ticks": 296,
+  "trained_policy": false
+}
