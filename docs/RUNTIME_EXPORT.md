@@ -221,9 +221,10 @@ python tools/export_policy.py evaluate-candidate \
 
 The learner checkout must be the unchanged original revision recorded in the
 declaration. The command requires the exact immutable snapshot; it does not
-create a missing original summary. Failed or censored evaluation outcomes
-cannot be converted. A complete eight-family result remains a single-candidate
-evaluation and does not establish a three-seed method comparison.
+create a missing original summary. A failed or censored evaluation invocation
+cannot be converted. Unsuccessful uncensored task cases remain valid members
+of a complete invocation. A complete eight-family result remains a
+single-candidate evaluation and does not establish a three-seed method comparison.
 
 Before conversion, publish a second declaration with schema
 `nca-fixed-candidate-export-declaration/v1`, naming the exact completed
@@ -233,6 +234,25 @@ committed source. Then use `convert-candidate` with `--training-root`,
 `--evaluation-root`, `--declaration`, `--accepted-t105-commit` and `--output`.
 The resulting bundle uses the same `screen` command and the unchanged CPU
 criteria above. A failed screen remains unqualified.
+
+The declared continuation completed its eight-family evaluation from public
+revision `4510347e02d08093f1b86bef4583f0282b7cf903`; the actual receipts and
+the second declaration are linked in the
+[candidate evaluation evidence](evidence/2026-10-19-t109-candidate-evaluation.md).
+After publishing that second declaration, its conversion command is:
+
+```bash
+python tools/export_policy.py convert-candidate \
+  --training-root artifacts/t105-interrupted-snapshot \
+  --evaluation-root artifacts/t105-interrupted-snapshot/candidate-evaluation-v1 \
+  --declaration configs/export/bc1103-staged-export-v1.json \
+  --accepted-t105-commit "$T105_ACCEPTED_COMMIT" \
+  --output artifacts/t109-staged/bc-seed1103-cpu.json
+```
+
+The scoped Python source map must still match the evaluation freeze. Keep the
+interrupted training receipt and the completed candidate summary as distinct
+inputs. This command alone never sets deployment qualification to true.
 
 ## Diagnose a preserved parity failure
 

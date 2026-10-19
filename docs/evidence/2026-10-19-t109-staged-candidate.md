@@ -130,5 +130,7 @@ interrupted-run totals unknown. The screen still makes zero optimizer updates.
 There is one declared export attempt. Any failed fixed criterion remains a
 no-go result. The [offline parity auditor](../RUNTIME_EXPORT.md#diagnose-a-preserved-parity-failure)
 may examine preserved inputs without new host steps; it cannot promote a
-failed screen. No supplemental evaluation, conversion or new deployment
-qualification result is recorded by this prospective declaration.
+failed screen. The subsequently completed
+[single candidate evaluation and second export declaration](2026-10-19-t109-candidate-evaluation.md)
+record their distinct source and evidence identities. Conversion and deployment
+qualification remain separate from that complete candidate evaluation.
