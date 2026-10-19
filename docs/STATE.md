@@ -84,6 +84,16 @@ the +20-cell invocation remained unsuccessful. No optimization occurred. The
 recorded script transfers are not human or live-model demonstrations, and replay
 qualifies copied local trajectories on the same build, not whole-world identity.
 
+## First learned-skill experiment
+
+The [optional CPU learner](LEARNING.md) implements direct recurrent behavioural
+cloning and recurrent residual PPO, preserving sampled request likelihood,
+actual-duration discounting, separate bootstrap/continuation masks and source
+ownership. Twenty-eight focused numerical and lifecycle tests pass. The bounded
+three-seed Jolt screen is frozen in the [T-105 declaration](evidence/2026-10-19-t105.md).
+Formal training and heldout evaluation are pending; implementation does not yet
+establish learned task performance. Core imports remain independent of PyTorch.
+
 ## Host authority
 
 The refreshed Cybersand source at
