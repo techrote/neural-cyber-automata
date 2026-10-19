@@ -82,6 +82,38 @@ transport invocation then passed the complete suite. This is source/host
 conformance, not another learning screen or a change to either experiment's
 training budget.
 
-The independent screen has not been executed at the declaration stage.
+## Preserved import failure and declared launch correction
+
+The first CLI invocation started at `2026-10-19T19:15:54.420510Z` and exited
+before importing the learner, constructing a host, creating the screen output
+directory or consuming any game work. Its outer wrapper resolved the virtual
+environment's Python symlink to the base interpreter. That interpreter raised
+`ModuleNotFoundError: No module named 'torch'`. The
+[byte-exact completion receipt](t110-reproduction-import-failure-receipt.json)
+records exit code 1 and **3.311061632000019 seconds**. The launch receipt,
+empty stdout and original traceback remain retained under the new reproduction
+identity. There were zero episodes, game decisions, ticks, training updates or
+checkpoints; this failure produces no physical or learning result.
+
+The [pre-runtime correction declaration](../../configs/cellular/t110-launch-correction-20261019.json)
+explicitly authorizes one corrected CLI invocation. The
+[corrected launcher](../../tools/cellular_reproduction_launch.py) preserves the
+virtual-environment entry point instead of dereferencing its symlink. A
+read-only import check through that entry point confirmed Python 3.12.14,
+Torch 2.8.0+cpu and NumPy 2.3.5 with no CUDA; it started no host or training.
+
+This amendment preserves the failed invocation and passes its exact elapsed
+time through the original runner's
+[prior-budget mechanism](../../configs/cellular/t110-reproduction-prior-budget-20261019.json).
+The aggregate ceiling remains 4,000 game decisions and 900 seconds, leaving
+896.688938368 seconds for the corrected screen. Both CLI invocations are
+explicitly accounted. No sample, source, runtime, checkpoint-selection or
+evaluation change accompanies the wrapper correction, and there is no further
+retry. The correction, receipt, prior budget and launcher must be publicly
+retrievable before that invocation starts.
+
+The independent physical screen has not been executed at this correction's
+declaration stage. The historical no-go remains preserved, with its original
+raw archive still unavailable.
 
 © 2026 techrote. All rights reserved.

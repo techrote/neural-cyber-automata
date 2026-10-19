@@ -1,0 +1,73 @@
+{
+  "authorization": "Completion-scope coordination explicitly authorizes one corrected launch after the zero-work wrapper import failure; publish this amendment before execution.",
+  "budget": {
+    "accounting": "Pass the immutable failed-invocation receipt through the original runner prior-budget mechanism; no budget reset.",
+    "additional_retry_allowed": false,
+    "automatic_extension": false,
+    "failed_cli_invocations": 1,
+    "maximum_corrected_cli_invocations": 1,
+    "maximum_total_cli_invocations": 2,
+    "maximum_total_game_decisions": 4000,
+    "maximum_total_wall_seconds": 900,
+    "prior_budget_file_sha256": "6364ba2133310b571eb828f3d02947e1b7d4e2b29ace73a72a190f60ce8ae4e3",
+    "prior_budget_path": "configs/cellular/t110-reproduction-prior-budget-20261019.json",
+    "prior_game_decisions": 0,
+    "prior_wall_seconds": 3.311061632000019,
+    "remaining_game_decisions": 4000,
+    "remaining_wall_seconds": 896.688938368,
+    "tuning_allowed": false
+  },
+  "correction": {
+    "change": "Preserve the supplied virtual-environment executable path with Path.absolute(); do not dereference its symlink with Path.resolve().",
+    "configuration_changes": [],
+    "entry_point": "tools/cellular_reproduction_launch.py",
+    "learner_changes": [],
+    "read_only_verification": {
+      "cuda_available": false,
+      "host_started": false,
+      "numpy": "2.3.5",
+      "python": "3.12.14",
+      "torch": "2.8.0+cpu",
+      "training_updates": 0,
+      "virtual_environment_active": true
+    },
+    "runtime_changes": []
+  },
+  "declared_utc": "2026-10-19T19:22:32.680053Z",
+  "failed_invocation": {
+    "cause": "The outer wrapper resolved the virtual-environment Python symlink to its base interpreter, bypassing the environment packages.",
+    "checkpoints": 0,
+    "episodes": 0,
+    "failure": "ModuleNotFoundError: No module named 'torch'",
+    "game_decisions": 0,
+    "launch_receipt_sha256": "0bc209d85834264b7fe539335ad7b148b60f97a2e8fe66b3a56771808dbc87b1",
+    "native_ticks": 0,
+    "number": 1,
+    "phase": "import before run_screen, output directory creation, host construction or training",
+    "process_exit_code": 1,
+    "process_wall_seconds": 3.311061632000019,
+    "raw_evidence_preserved": true,
+    "receipt_path": "docs/evidence/t110-reproduction-import-failure-receipt.json",
+    "receipt_sha256": "1db208d57245eaa2271acf13eb34fe5e2a39f18554b31f69b5cd3b9cf0555fca",
+    "stderr_sha256": "fde9a7cf206442134280d074335a8994285c5d716b02b5547b8b1cc052576166",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "training_updates": 0
+  },
+  "frozen_scope": {
+    "configuration_sha256": "e5a66f5a830b9e097a5bbb9647ade4bea42c82e26fb5718273b5bae2b992de5d",
+    "learner_revision": "626099f98bf37f961c45796914b31926dc05f29d",
+    "learner_sources_sha256": "ab0783530cecb26250605ac3be9cf22b0a7e62d1f39b1fc627a5ae1b526076f5",
+    "learner_tree": "5d46e52b32122bbb2b4127f150541a420b93e66e",
+    "scope": "All source, runtime pins, seeds, 119-episode matrix, checkpoint selection, training updates, criteria and evidence limits remain those of the original reproduction declaration."
+  },
+  "historical_result": "The historical no-go and unavailable original raw archive remain unchanged; all new bytes remain separately identified.",
+  "id": "t110-reproduction-20261019-launch-correction",
+  "original_declaration": {
+    "file_sha256": "9cec333181dcdd169f24d29c51e9ed0f861a7967e9255197ca97347ec303b642",
+    "path": "configs/cellular/t110-reproduction-20261019.json",
+    "publication_commit": "9facc2f50ecc759ce1170587d325a5b215e0edc3"
+  },
+  "publication_gate": "Publish this correction, failed completion receipt, prior-budget file and corrected launcher before the single corrected CLI invocation; retain the actual result without another retry.",
+  "reproduction_id": "t110-jolt-three-part-reproduction-20261019",
+  "schema": "nca-t110-pre-runtime-launch-correction/v1"
+}
