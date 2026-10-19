@@ -243,6 +243,12 @@ class Screen:
                 previous = request
                 if (terminated or truncated) and not task.done:
                     raise ContractError("graph_terminal", "the actual owner ended before the declared outcome")
+            if not env._finished:
+                # Quiet arrival ends the controller invocation before the
+                # native deadline. Record the actual owner's revocation now;
+                # finalizing a data record alone does not revoke its request.
+                arrived = task.success_tick is not None and not task.integrity_failure
+                recorder.cancel("cellular_task_arrival" if arrived else "cellular_task_stop")
         except BaseException as exc:
             failure = type(exc).__name__ + (":" + exc.code if isinstance(exc, ContractError) else "")
             status = "capped" if isinstance(exc, CaptureBudgetExceeded) else "canceled" if isinstance(exc, KeyboardInterrupt) else "failed"
@@ -255,6 +261,10 @@ class Screen:
                     pass
             raise
         finally:
+            if learned is not None:
+                learned.cancel()
+            if reference is not None:
+                reference.cancel("cellular_screen_closed")
             metrics = task.metrics() if task is not None else {"success": False, "integrity_failure": True,
                                                               "reason": "missing_initial_state"}
             episode = (recorder.finish(status=status, reason=failure or metrics["reason"], evaluation=metrics)
