@@ -140,18 +140,24 @@ original 60-second allocation. This establishes interface conformance; learned
 transfer, adaptation, damage recovery and owner feel remain unmeasured.
 The research question remains blocked by the stated prerequisite.
 
-The separately commissioned [Jolt direction-frame BC follow-up](evidence/2026-10-19-t106-direction-frame.md)
-completed its single fixed actual-host run with **4,660 requests / 27,960 ticks** in
-385.969869986 seconds and all six declared 40-epoch fits (11,760 optimizer updates).
-Direction-frame BC improved over its own initialization by 0.25 mean success, with a
-strictly positive 95% lower bound, but reached only **33.3% mean success / 25% minimum
-seed success**. World-frame BC reached **25% mean / 0% minimum**. Both therefore failed
-the unchanged **75% mean / 50% every-seed** prerequisite; direction-frame also failed
-the complete original character/runtime gate on two of three seeds. The immutable
-result selects no family, records `mechanical_utility_prerequisite_passed=false`,
-and performs **zero morphology-transfer evaluations**. The preparation remains useful,
-but learned transfer, adaptation and damage-recovery claims stay blocked rather than
-being manufactured from an insufficient prerequisite.
+A separately commissioned [Jolt direction-frame BC follow-up](evidence/2026-10-19-t106-direction-frame.md)
+completed its designated primary local invocation at public `1222d2e8`: 4,693 requests / 28,158 ticks,
+11,760 BC optimizer steps, all 136 episodes and all twelve initial/final checkpoints, in 943.606 seconds.
+Direction-frame and world-frame mean success were 0.25 and 0.291667, with minimum seed success 0.125
+and 0.0. Both failed the unchanged 75% mean / 50% minimum-seed gate; other character/runtime failures
+remain in the [immutable result](evidence/t106-direction-frame-result.json). The separate concurrently
+started GitHub invocation is accounted for outside these primary totals and was not used for selection.
+The [combined provenance record](evidence/t106-direction-frame-result-20261019.json) retains both:
+9,353 confirmed requests / 56,118 ticks / 23,520 optimizer steps exceeded the original 6,000-request
+allocation. The concurrent execution is an aggregate budget deviation.
+No morphology qualification, training, transfer or adaptation follows this no-go.
+
+The [conditional capture and learning source](evidence/2026-10-19-t106-learning.md) retains the original
+comparison allocations and complete source/checkpoint admission. The guarded orchestrator, semantic
+waypoint reference and full comparison summary pass 99 focused software checks without a physical
+morphology experiment. An immutable primary designation prevents a concurrent repeat from replacing
+the failed prerequisite. A passing separately commissioned prerequisite and a qualified semantic
+waypoint reference would still be required before any transfer claim.
 
 ## Asynchronous source ownership
 
