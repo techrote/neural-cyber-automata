@@ -195,3 +195,52 @@ any new training. No gate relaxation, paid service or host source mutation occur
 Next: preserve complete archives, audit the fresh outputs, freeze export input hashes
 before conversion, run exclusive throughput qualification, and review/check/merge
 only the scopes supported by evidence. The next checkpoint is due within 30 minutes.
+
+## 2026-10-19 19:50 UTC — Preserved interruptions and continued qualification work
+
+The [programme checkpoint PR](https://github.com/techrote/neural-cyber-automata/pull/33)
+publishes the resumed progress file and reconciles the seven accepted implementation
+tasks. Its first head `f193ea0d` passed all applicable hosted workflows. Accepted main
+remains `adde5a881744c1c6cf585ecd7985c746fef604dc`; #16, #19 and #20 remain open.
+
+The execution connection failed around 19:38 UTC. The recovered executor exposes a
+different process environment. The old runs stopped writing artifacts; their original
+session handles now return unknown-process errors, and neither run produced a final
+summary or completion receipt. Their original exit codes and termination remain
+unconfirmed. Neither run was restarted, extended or relabelled as completed.
+
+The T105 reproduction retained 21 of 24 PPO update ledgers and 32 checkpoint files,
+with no held-out opening marker. The selected BC1103 completed its fixed training
+before the interruption. Its immutable in-progress archive has SHA-256
+`0b0326a1563681db1ce40e746cc855e36d8c600be07311bcbcdf793ebff730b6`.
+The full retained prefix is being indexed. A separate strict candidate-only evaluation
+path is under implementation, with the same fixed checkpoint and original eight
+scenarios, at most 320 decisions / 1,920 ticks / 300 seconds and no optimization.
+It requires a new public declaration and complete fresh evaluation evidence. Existing
+full-screen conversion continues to reject incomplete original-screen evidence.
+
+The corrected T110 invocation at public `1aede292` retained 356 screen files, including
+all six frozen candidates and all 90 declared held-out rows. Remaining untrained rows
+and the completion records are missing. Its immutable interrupted-prefix ZIP contains
+372 entries and has SHA-256
+`48dd01b9c084dfe435ffa69f655aebaf9c3bca3b4c5f50d6166278acabede178`.
+That archive is saved, explicitly incomplete, and includes the original import failure.
+The audit distinguishes observed work from the unconfirmed interruption boundary;
+the cross-task held-out-outcome seal remains in force for T105 training/selection.
+
+Morphology conformance evidence, its aggregate-budget ledger row and a Windows
+checkout correction are published at
+`cc5509fd5bcdafaf9d4eab2c558ed63ccaca49bd`. Windows CRLF conversion changed the
+byte-hashed failed-startup receipt; a narrow LF checkout rule preserves the original
+bytes without weakening admission. This is separate from the unknown first Godot
+startup cause. The complete conformance archive remains saved and byte-verified.
+
+The separate directional-input prerequisite implementation has 15 new contract tests
+and 85 passing learning/morphology regressions. Its fixed declaration retains the
+original reliability thresholds, fresh scenario split and 6,000-decision / 1,800-second
+cap. Independent review and public-source admission precede its sole formal run.
+No learned transfer, export compatibility or complete reproduction is claimed here.
+
+Next: save and audit both interrupted prefixes, publish the reviewed prerequisite and
+fixed-candidate evaluation declarations, complete the supported measurements, then
+review final heads and verify scoped merges. The next checkpoint is due within 30 minutes.
