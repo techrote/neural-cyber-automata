@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Observation",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/Observation",
+  "$defs": {
+    "Observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "tick": {
+          "type": "integer"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/LifecycleStamp"
+        },
+        "profile_sha256": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "valid": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "view": {
+          "enum": [
+            "local",
+            "global"
+          ]
+        },
+        "schema_version": {
+          "enum": [
+            1
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tick",
+        "lifecycle",
+        "profile_sha256",
+        "values",
+        "valid"
+      ]
+    },
+    "LifecycleStamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "actor_id": {
+          "type": "string"
+        },
+        "epoch": {
+          "type": "integer"
+        },
+        "incarnation": {
+          "type": "integer"
+        },
+        "control_generation": {
+          "type": "integer"
+        },
+        "morphology_version": {
+          "type": "integer"
+        },
+        "mount_generation": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run_id",
+        "actor_id",
+        "epoch"
+      ]
+    }
+  }
+}

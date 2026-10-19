@@ -1,0 +1,387 @@
+{
+  "id": "gemini-metal-v1",
+  "version": 1,
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "representation": "sampled_ACT003",
+  "parts": [
+    {
+      "id": "body",
+      "collider": "host_authored",
+      "frame": "actor_local"
+    }
+  ],
+  "joints": [],
+  "sensors": [
+    {
+      "id": "requested_u0",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_u1",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_u2",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_u3",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_u0",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_u1",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_u2",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_u3",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_fx",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_fy",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "requested_torque",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_fx",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_fy",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "applied_torque",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "passive_fx",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "passive_fy",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "passive_torque",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "delta_vx",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "delta_vy",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "delta_omega",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "mass",
+      "unit": "game_mass",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "inertia",
+      "unit": "game_inertia",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "resource_scale",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "energy_used",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "contact_scale",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "consumed_dt",
+      "unit": "seconds",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "centre_delta_x",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "centre_delta_y",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "rotation_delta",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "flags",
+      "unit": "bitmask",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "profile_index",
+      "unit": "index",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "energy",
+      "unit": "host_declared",
+      "frame": "host_declared",
+      "lower": -1000000000000.0,
+      "upper": 1000000000000.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    }
+  ],
+  "channels": [
+    {
+      "id": "left_thruster",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": 0.0,
+      "upper": 1.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    },
+    {
+      "id": "right_thruster",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": 0.0,
+      "upper": 1.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    },
+    {
+      "id": "reserved_2",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": 0.0,
+      "upper": 0.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    },
+    {
+      "id": "reserved_3",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": 0.0,
+      "upper": 0.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    }
+  ],
+  "channel_mask": [
+    true,
+    true,
+    false,
+    false
+  ],
+  "assist": {
+    "kind": "none",
+    "effort_limit": 0.0,
+    "damping": 0.0,
+    "deadzone": 0.0,
+    "hysteresis": 0.0,
+    "ramp_seconds": 0.0,
+    "cancellation": "clear_pending_keep_mechanics",
+    "reset": "reconstruct_episode"
+  },
+  "capabilities": {
+    "actuation_lane": "direct",
+    "decision_placement": "local",
+    "perception": "local",
+    "coordination": "independent",
+    "training_privilege": "none"
+  },
+  "schema_version": 1,
+  "part_cap": 8,
+  "base_hz": 60,
+  "decision_ticks": 6,
+  "default_lease_ticks": 12,
+  "maximum_lease_ticks": 18
+}

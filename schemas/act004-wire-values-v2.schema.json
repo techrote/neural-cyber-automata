@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WireAction",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/WireAction",
+  "$defs": {
+    "WireAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "move": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "aim": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "effort": {
+          "type": "number"
+        },
+        "trim": {
+          "type": "number"
+        },
+        "reel": {
+          "type": "number"
+        },
+        "primary": {
+          "type": "boolean"
+        },
+        "secondary": {
+          "type": "boolean"
+        },
+        "auxiliary": {
+          "type": "boolean"
+        },
+        "tool": {
+          "type": "boolean"
+        },
+        "release_usable": {
+          "type": "boolean"
+        },
+        "attach_usable": {
+          "type": "boolean"
+        }
+      },
+      "required": []
+    }
+  }
+}

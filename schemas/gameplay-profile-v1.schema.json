@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameplayProfile",
+  "description": "Structural contract. The Python decoder also validates bounds, topology, masks, identity and hashes.",
+  "$ref": "#/$defs/GameplayProfile",
+  "$defs": {
+    "GameplayProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "host_revision": {
+          "type": "string"
+        },
+        "representation": {
+          "enum": [
+            "recorded_fixture",
+            "sampled_ACT003",
+            "physical_ACT004"
+          ]
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Part"
+          }
+        },
+        "joints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Joint"
+          }
+        },
+        "sensors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Sensor"
+          }
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Channel"
+          }
+        },
+        "channel_mask": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "assist": {
+          "$ref": "#/$defs/Assist"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/ControlCapabilities"
+        },
+        "schema_version": {
+          "enum": [
+            1
+          ]
+        },
+        "part_cap": {
+          "type": "integer"
+        },
+        "base_hz": {
+          "type": "integer"
+        },
+        "decision_ticks": {
+          "type": "integer"
+        },
+        "default_lease_ticks": {
+          "type": "integer"
+        },
+        "maximum_lease_ticks": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "host_revision",
+        "representation",
+        "parts",
+        "joints",
+        "sensors",
+        "channels",
+        "channel_mask"
+      ]
+    },
+    "Part": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "collider": {
+          "enum": [
+            "box",
+            "circle",
+            "capsule",
+            "convex",
+            "host_authored"
+          ]
+        },
+        "frame": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "collider"
+      ]
+    },
+    "Joint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "string"
+        },
+        "child": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "rotary",
+            "slide",
+            "spring",
+            "emulated"
+          ]
+        },
+        "lower": {
+          "type": "number"
+        },
+        "upper": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "play": {
+          "type": "number"
+        },
+        "compliance": {
+          "type": "number"
+        },
+        "damping": {
+          "type": "number"
+        },
+        "emulation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "parent",
+        "child",
+        "kind",
+        "lower",
+        "upper",
+        "unit"
+      ]
+    },
+    "Sensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "frame": {
+          "type": "string"
+        },
+        "lower": {
+          "type": "number"
+        },
+        "upper": {
+          "type": "number"
+        },
+        "privilege": {
+          "enum": [
+            "local",
+            "global"
+          ]
+        },
+        "cadence_ticks": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "unit",
+        "frame",
+        "lower",
+        "upper"
+      ]
+    },
+    "Channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "part": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "frame": {
+          "type": "string"
+        },
+        "lower": {
+          "type": "number"
+        },
+        "upper": {
+          "type": "number"
+        },
+        "neutral": {
+          "type": "number"
+        },
+        "response_seconds": {
+          "type": "number"
+        },
+        "slew_per_second": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "held_behavior": {
+          "enum": [
+            "hold_target",
+            "pulse",
+            "edge"
+          ]
+        },
+        "released_behavior": {
+          "enum": [
+            "neutral",
+            "coast",
+            "host_authored"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "part"
+      ]
+    },
+    "Assist": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "none",
+            "bounded_gyro",
+            "host_authored"
+          ]
+        },
+        "effort_limit": {
+          "type": "number"
+        },
+        "damping": {
+          "type": "number"
+        },
+        "deadzone": {
+          "type": "number"
+        },
+        "hysteresis": {
+          "type": "number"
+        },
+        "ramp_seconds": {
+          "type": "number"
+        },
+        "cancellation": {
+          "enum": [
+            "clear_pending_keep_mechanics"
+          ]
+        },
+        "reset": {
+          "enum": [
+            "reconstruct_episode"
+          ]
+        }
+      },
+      "required": []
+    },
+    "ControlCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actuation_lane": {
+          "enum": [
+            "wire",
+            "direct"
+          ]
+        },
+        "decision_placement": {
+          "enum": [
+            "local",
+            "central"
+          ]
+        },
+        "perception": {
+          "enum": [
+            "local",
+            "global"
+          ]
+        },
+        "coordination": {
+          "enum": [
+            "independent",
+            "messages",
+            "shared_state"
+          ]
+        },
+        "training_privilege": {
+          "enum": [
+            "none",
+            "privileged_teacher",
+            "privileged_critic"
+          ]
+        }
+      },
+      "required": []
+    }
+  }
+}

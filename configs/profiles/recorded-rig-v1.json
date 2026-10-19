@@ -1,0 +1,108 @@
+{
+  "id": "recorded-rig-v1",
+  "version": 1,
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "representation": "recorded_fixture",
+  "parts": [
+    {
+      "id": "body",
+      "collider": "box",
+      "frame": "actor_local"
+    },
+    {
+      "id": "foot",
+      "collider": "capsule",
+      "frame": "actor_local"
+    }
+  ],
+  "joints": [
+    {
+      "id": "leg",
+      "parent": "body",
+      "child": "foot",
+      "kind": "slide",
+      "lower": -1.0,
+      "upper": 1.0,
+      "unit": "game_cells",
+      "play": 0.05,
+      "compliance": 0.1,
+      "damping": 0.3,
+      "emulation": "host_authored"
+    }
+  ],
+  "sensors": [
+    {
+      "id": "velocity",
+      "unit": "cells_per_second",
+      "frame": "actor_local",
+      "lower": -100.0,
+      "upper": 100.0,
+      "privilege": "local",
+      "cadence_ticks": 6
+    },
+    {
+      "id": "global_target",
+      "unit": "game_cells",
+      "frame": "world",
+      "lower": -1000.0,
+      "upper": 1000.0,
+      "privilege": "global",
+      "cadence_ticks": 6
+    }
+  ],
+  "channels": [
+    {
+      "id": "drive",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": -1.0,
+      "upper": 1.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    },
+    {
+      "id": "reserved",
+      "part": "body",
+      "unit": "normalized",
+      "frame": "actor_local",
+      "lower": 0.0,
+      "upper": 0.0,
+      "neutral": 0.0,
+      "response_seconds": 0.0,
+      "slew_per_second": null,
+      "held_behavior": "hold_target",
+      "released_behavior": "neutral"
+    }
+  ],
+  "channel_mask": [
+    true,
+    false
+  ],
+  "assist": {
+    "kind": "bounded_gyro",
+    "effort_limit": 2.0,
+    "damping": 0.4,
+    "deadzone": 0.05,
+    "hysteresis": 0.1,
+    "ramp_seconds": 0.05,
+    "cancellation": "clear_pending_keep_mechanics",
+    "reset": "reconstruct_episode"
+  },
+  "capabilities": {
+    "actuation_lane": "wire",
+    "decision_placement": "local",
+    "perception": "local",
+    "coordination": "independent",
+    "training_privilege": "none"
+  },
+  "schema_version": 1,
+  "part_cap": 8,
+  "base_hz": 60,
+  "decision_ticks": 6,
+  "default_lease_ticks": 12,
+  "maximum_lease_ticks": 18
+}
