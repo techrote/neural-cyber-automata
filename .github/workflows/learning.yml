@@ -22,7 +22,36 @@ jobs:
           python -m pip install setuptools==84.0.0 wheel==0.45.1 numpy==2.3.5
           python -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
           python -m pip install --no-build-isolation .
-      - name: Require the declared CPU runtime
-        run: python -c "import torch, numpy; assert torch.__version__ == '2.8.0+cpu'; assert numpy.__version__ == '2.3.5'; assert not torch.cuda.is_available()"
-      - name: Contracts and tiny numerical fixtures with optional learning enabled
-        run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Prepare and verify accepted game runtime
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-host" --github-env "$GITHUB_ENV"
+      - name: Require the declared CPU and actual host runtime
+        run: |
+          python -c "import torch, numpy; assert torch.__version__ == '2.8.0+cpu'; assert numpy.__version__ == '2.3.5'; assert not torch.cuda.is_available()"
+          test -x "$NCA_GODOT"
+          test -d "$NCA_HOST_CHECKOUT/.git"
+      - name: Core, learning and actual-host conformance
+        run: |
+          python - <<'PY'
+          import unittest
+
+          required = {
+              "test_cellular.CellularActualHostTests.test_actual_owned_parts_and_cancel_clear_controller_only",
+          }
+
+          def test_ids(suite):
+              for item in suite:
+                  if isinstance(item, unittest.TestSuite):
+                      yield from test_ids(item)
+                  else:
+                      yield item.id()
+
+          suite = unittest.defaultTestLoader.discover("tests", pattern="test_*.py")
+          missing = required - set(test_ids(suite))
+          if missing:
+              raise SystemExit(f"Required combined conformance cases are absent: {sorted(missing)}")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          skipped = required & {test.id() for test, _ in result.skipped}
+          if skipped:
+              raise SystemExit(f"Required combined conformance cases skipped: {sorted(skipped)}")
+          raise SystemExit(0 if result.wasSuccessful() else 1)
+          PY

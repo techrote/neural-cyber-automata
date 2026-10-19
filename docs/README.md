@@ -34,6 +34,7 @@ verified: 2026-10-18
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
 | How do asynchronous intent and human takeover keep local control running? | [Asynchronous control](ASYNC_CONTROL.md) |
+| What did the bounded per-part Jolt graph experiment find? | [Cellular experiment](evidence/2026-10-19-t110-screen.md) |
 | What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |
 | What traps matter? | [GOTCHAS.md](GOTCHAS.md) |
 | What do the terms mean? | [GLOSSARY.md](GLOSSARY.md) |

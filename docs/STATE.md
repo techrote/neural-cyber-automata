@@ -138,6 +138,35 @@ No live service or owner feel verdict is claimed.
 The frozen actual pilot passed ten cases, recording 338 owner operations and
 790 completed native ticks in 19.169 seconds with no skips or source drift.
 
+## Conditional per-part graph result
+
+The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed
+119 episodes with six preselected trained checkpoints, normal and delayed/lost/
+partitioned/reset communication, and saved untrained controls. The three-part
+star has private recurrence, one neighbor round and root-only action readout.
+The equal-size no-message candidate shares the same local features and action
+limits. All original declarations, failed attempts and audit corrections remain
+in the [evidence index](evidence/2026-10-19-t110.md).
+
+The predeclared result is no-go: graph and no-message each succeeded in one of
+six normal holdout trials, with zero paired success gain; the graph was slightly
+slower under the capped-completion metric. Each untrained method succeeded in
+three of six. The trained successes did not require a purposeful hop, a retained
+limitation of the frozen quiet-arrival task. Other declared gates passed, but
+these observations provide no reason to promote communication in this screen.
+Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
+227.1865 seconds through final ledger publication. Owner feel remains unjudged.
+
+A separately commissioned faithful reproduction then completed on the frozen
+original learner with **119 rows / 3,297 decisions** and 142.008152423 aggregate
+seconds including the preserved zero-work import failure. It reproduced the same
+normal result: graph **1/6**, no-message **1/6**, authored **0/6**, with zero
+paired graph-vs-no-message success gain. The unchanged utility gate again
+returned `no-go-at-this-screen`; the complete Actions artifact and immutable
+hashes are recorded in
+[evidence/2026-10-19-t110-reproduction.md](evidence/2026-10-19-t110-reproduction.md).
+This is confirmation evidence, not a replacement of the historical screen.
+
 ## Host authority
 
 The refreshed Cybersand source at
