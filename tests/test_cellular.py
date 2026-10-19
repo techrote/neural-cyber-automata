@@ -517,9 +517,9 @@ class CellularActualHostTests(unittest.TestCase):
         torch.set_num_threads(1)
         torch.manual_seed(73)
         with GodotHost(os.environ["NCA_HOST_CHECKOUT"], os.environ["NCA_GODOT"]) as host:
-            self.assertEqual(sha256_json(host.request("profile")["profile"]), JOLT_PROFILE_SHA256)
             env = CybersandEnv(host, physical_config("jev", ticks=24, seed=73))
             issued, _ = env.reset()
+            self.assertEqual(sha256_json(host.request("profile")["profile"]), JOLT_PROFILE_SHA256)
             control = GraphController(GraphPolicy(), profile_sha256=JOLT_PROFILE_SHA256, fault=FaultSpec("delay"))
             request = control.step(issued, goal())
             observed, _, _, _, info = env.step(request.action.to_dict())
