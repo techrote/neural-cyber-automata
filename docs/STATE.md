@@ -99,19 +99,63 @@ Local skill predicates remain separate from evaluator success; the scripted
 human/model source labels do not claim an actual input session or live service.
 Independent arbitrary object replacement and owner feel remain unmeasured.
 
-## Conditional per-part graph preparation
+## First learned Jolt skill
 
-The [cellular guide](../configs/cellular/README.md) defines a fixed three-part
-Jolt graph for support-gated directed hops. Each node has private recurrence
-and one local message round per decision. The equal-size no-message control
-shares the same local inputs and action limits. The immutable declaration
-freezes three seeds, two learned methods, split families, uncertainty gates
-and a 4,000-decision / 900-second CPU cap.
+The optional [CPU learning lane](LEARNING.md) implements behavioural cloning and
+recurrent residual PPO with original latent-action likelihoods, ordered sequence
+updates, valid duration/continuation masks and immutable checkpoints. Its
+[T-105 screen](evidence/2026-10-19-t105.md) used three policy seeds, six frozen
+final checkpoints and eight unseen paired scenarios. It completed 11,755 game
+decisions in 685.6 seconds under the predeclared 13,000-decision / 30-minute cap.
 
-The [T-110 evidence](evidence/2026-10-19-t110.md) records source preparation
-checks and information, lifecycle and budget limits. Actual-host smoke and
-the bounded experiment follow a committed source freeze; no game-efficacy
-result or owner feel acceptance is established by this preparation.
+Mean success was 45.83% for cloning and 50.00% for residual PPO, versus 25.00%
+for the authored reference. Both passed the declared improvement, integrity,
+character and inference gates. Every failed scenario and weaker seed remains
+recorded. The complete artifact audit found no held-out data in optimization.
+An original deterministic-evaluation likelihood label defect is preserved in
+historical records and corrected in the final source; it did not alter trained
+weights or wire outcomes. Owner feel remains unjudged.
+
+These are bounded exploratory improvements. Neither family met the independently
+predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
+remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
+a separate CPU export qualification, with its directional failures retained.
+
+## Asynchronous source ownership
+
+The [asynchronous adapter](ASYNC_CONTROL.md) connects bounded mock/local-worker
+providers and typed human/script intent to the same usable skill runtime.
+Original observation/plan age, actual actor control generation and attachment
+changes are fenced independently. Local feedback continues while retired model
+work remains busy; an unacknowledged call cannot accumulate replacement calls.
+
+The [T-108 evidence](evidence/2026-10-19-t108.md) distinguishes proposal admission,
+local skill feedback and actual owner receipts. Continuously advancing tests
+exercise delay, jitter, duplicate/reordered replies, outage, takeover, reset and
+available equipment changes. Model smart plans and their motor leases retain
+original 120-tick expiry; longer explicit typed local missions are separate.
+No live service or owner feel verdict is claimed.
+The frozen actual pilot passed ten cases, recording 338 owner operations and
+790 completed native ticks in 19.169 seconds with no skips or source drift.
+
+## Conditional per-part graph result
+
+The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed
+119 episodes with six preselected trained checkpoints, normal and delayed/lost/
+partitioned/reset communication, and saved untrained controls. The three-part
+star has private recurrence, one neighbor round and root-only action readout.
+The equal-size no-message candidate shares the same local features and action
+limits. All original declarations, failed attempts and audit corrections remain
+in the [evidence index](evidence/2026-10-19-t110.md).
+
+The predeclared result is no-go: graph and no-message each succeeded in one of
+six normal holdout trials, with zero paired success gain; the graph was slightly
+slower under the capped-completion metric. Each untrained method succeeded in
+three of six. The trained successes did not require a purposeful hop, a retained
+limitation of the frozen quiet-arrival task. Other declared gates passed, but
+these observations provide no reason to promote communication in this screen.
+Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
+227.1865 seconds through final ledger publication. Owner feel remains unjudged.
 
 ## Host authority
 

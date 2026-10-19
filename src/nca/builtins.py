@@ -45,6 +45,12 @@ class RecordedEvaluator:
                 "evidence_class": "recorded protocol fixture"}
 
 
+def first_skill_screen(**kwargs):
+    """Load optional training dependencies only on explicit invocation."""
+    from .train.screen import run_screen
+    return run_screen(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -54,6 +60,7 @@ def builtin_registry() -> Registry:
     from .data import replay_episode
     from .skills import register_skills
     from .cellular import register as register_cellular
+    from .adapters.skill_control import register_decisions
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -71,6 +78,9 @@ def builtin_registry() -> Registry:
     registry.register("evaluator", "recorded", 1, RecordedEvaluator, ("recorded_fixture",))
     registry.register("evaluator", "consumed-replay", 1, replay_episode,
                       ("act004", "same-runtime", "original-observation-age"))
+    registry.register("trainer", "first-jolt-screen", 1, first_skill_screen,
+                      ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
     register_skills(registry)
     register_cellular(registry)
+    register_decisions(registry)
     return registry
