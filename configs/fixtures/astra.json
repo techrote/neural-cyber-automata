@@ -1,0 +1,249 @@
+{
+  "schema": "nca.feel-fixtures/v1",
+  "actor": "astra",
+  "fixtures": [
+    {
+      "definition": {
+        "id": "step/v1",
+        "actor": "astra",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "cf105cc7da19f08a79a5ededdcd27918463cdf76b68b914b7bb8972edfc100d4"
+    },
+    {
+      "definition": {
+        "id": "pulse/v1",
+        "actor": "astra",
+        "duration_ticks": 240,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 30,
+            "kind": "cancel",
+            "parameters": []
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "d23ab7c99d16c881288832cc87fbbbc5fab97a8d84bf123811375efafe387ab1"
+    },
+    {
+      "definition": {
+        "id": "reversal/v1",
+        "actor": "astra",
+        "duration_ticks": 480,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "goal",
+            "parameters": [
+              -32.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "3aa5322fc36a98806f42fa0911f2888ede60a008ca75a8475edc653c8d225645"
+    },
+    {
+      "definition": {
+        "id": "neutral-disturbance/v1",
+        "actor": "astra",
+        "duration_ticks": 300,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "cancel",
+            "parameters": []
+          },
+          {
+            "tick": 60,
+            "kind": "angular_disturbance",
+            "parameters": [
+              1.2
+            ]
+          },
+          {
+            "tick": 120,
+            "kind": "goal",
+            "parameters": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "e7c3576998a1d8de3e7580ebbaa48a720f64dcdbc181303d66d8fdb4c6396cb5"
+    },
+    {
+      "definition": {
+        "id": "support-loss/v1",
+        "actor": "astra",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 60,
+            "kind": "remove_support",
+            "parameters": []
+          },
+          {
+            "tick": 180,
+            "kind": "restore_support",
+            "parameters": []
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "359397fce2cbbb2a3540b92acd9d81d7b7aa81bf4df663e133bb2a209646162c"
+    },
+    {
+      "definition": {
+        "id": "soft-stop/v1",
+        "actor": "astra",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "soft_stop",
+            "parameters": [
+              -0.3,
+              0.3
+            ]
+          },
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "goal",
+            "parameters": [
+              -24.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "70661f7da9d66cd90f6d3543f8ffc133e97c2f776e4312d252300025ab38738c"
+    },
+    {
+      "definition": {
+        "id": "recoil-payload/v1",
+        "actor": "astra",
+        "duration_ticks": 420,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 90,
+            "kind": "payload_change",
+            "parameters": [
+              1.5
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "recoil",
+            "parameters": [
+              -14.0,
+              -5.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "2d9a15cec1329bf9c2b17de2f421af77451b69df4ba818e6a1fe0e0f6d2a4aa2"
+    },
+    {
+      "definition": {
+        "id": "recovery/v1",
+        "actor": "astra",
+        "duration_ticks": 300,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "angular_disturbance",
+            "parameters": [
+              4.5
+            ]
+          },
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "b417aa2073f797217d452460b5b14e8f7c521629d943e3a4abe7307bda5af0b6"
+    }
+  ],
+  "evidence": "scenario definitions, not execution receipts",
+  "unsupported_perturbation": "explicit refusal; never substitute a successful no-op"
+}

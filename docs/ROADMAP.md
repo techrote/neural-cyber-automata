@@ -23,8 +23,8 @@ T-101 can start from this repository immediately after the prepass lands. T-102 
 | Task | Status | Scope | Depends on | Issue |
 |---|---|---|---|---|
 | T-101 | Merged [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22) | Package, gameplay-profile contracts and reproducible run records | T-100 | [#11](https://github.com/techrote/neural-cyber-automata/issues/11) |
-| T-102 | [IN-PROGRESS T-102] | Persistent Cybersand host adapter and causal stepping conformance | T-101 | [#12](https://github.com/techrote/neural-cyber-automata/issues/12) |
-| T-103 | [PLANNED T-103] | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
+| T-102 | Merged [PR #23](https://github.com/techrote/neural-cyber-automata/pull/23) | Persistent Cybersand host adapter and causal stepping conformance | T-101 | [#12](https://github.com/techrote/neural-cyber-automata/issues/12) |
+| T-103 | [IN-PROGRESS T-103] | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
 | T-104 | [PLANNED T-104] | Demonstration capture, consumed-action replay and intervention datasets | T-101, T-102 | [#14](https://github.com/techrote/neural-cyber-automata/issues/14) |
 | T-105 | [PLANNED T-105] | First learned actor skill: imitation and recurrent residual control | T-102, T-103, T-104 | [#15](https://github.com/techrote/neural-cyber-automata/issues/15) |
 | T-106 | [PLANNED T-106] | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |

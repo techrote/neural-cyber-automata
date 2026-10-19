@@ -1,0 +1,249 @@
+{
+  "schema": "nca.feel-fixtures/v1",
+  "actor": "jev",
+  "fixtures": [
+    {
+      "definition": {
+        "id": "step/v1",
+        "actor": "jev",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "a0bf27952e4bffcc8d2c869f6e12c19ce3b8b464ba3532950c7f1b484ebe5de2"
+    },
+    {
+      "definition": {
+        "id": "pulse/v1",
+        "actor": "jev",
+        "duration_ticks": 240,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 30,
+            "kind": "cancel",
+            "parameters": []
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "e9e1d0446383b6efd118f0b735596e82a1d7c63c99b409cbe38ca906fd7a7950"
+    },
+    {
+      "definition": {
+        "id": "reversal/v1",
+        "actor": "jev",
+        "duration_ticks": 480,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "goal",
+            "parameters": [
+              -32.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "881b72826c35412d65c9e006e1c705e9fd3b91d94f6de38ec092ebb4a54b1c01"
+    },
+    {
+      "definition": {
+        "id": "neutral-disturbance/v1",
+        "actor": "jev",
+        "duration_ticks": 300,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "cancel",
+            "parameters": []
+          },
+          {
+            "tick": 60,
+            "kind": "angular_disturbance",
+            "parameters": [
+              1.2
+            ]
+          },
+          {
+            "tick": 120,
+            "kind": "goal",
+            "parameters": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "8d23ead1cbe4c793d1be7d454665d037938771bcfc149477aa34e738a04be322"
+    },
+    {
+      "definition": {
+        "id": "support-loss/v1",
+        "actor": "jev",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 60,
+            "kind": "remove_support",
+            "parameters": []
+          },
+          {
+            "tick": 180,
+            "kind": "restore_support",
+            "parameters": []
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "aeb37fc5a072d7fe6f0047d8287e1ce469387c4fce016a107d395fc2c15463ec"
+    },
+    {
+      "definition": {
+        "id": "soft-stop/v1",
+        "actor": "jev",
+        "duration_ticks": 360,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "soft_stop",
+            "parameters": [
+              -0.3,
+              0.3
+            ]
+          },
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "goal",
+            "parameters": [
+              -24.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "1bad449c73256a8bba3a610fd4e0f90f0df081dc3ff16b5b3d904431802af2f8"
+    },
+    {
+      "definition": {
+        "id": "recoil-payload/v1",
+        "actor": "jev",
+        "duration_ticks": 420,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              48.0,
+              0.0
+            ]
+          },
+          {
+            "tick": 90,
+            "kind": "payload_change",
+            "parameters": [
+              1.5
+            ]
+          },
+          {
+            "tick": 180,
+            "kind": "recoil",
+            "parameters": [
+              -14.0,
+              -5.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "42db37c08c35d3aaa289bafd5cb21ed0d04db197643ee5e3a34d7af88cdff749"
+    },
+    {
+      "definition": {
+        "id": "recovery/v1",
+        "actor": "jev",
+        "duration_ticks": 300,
+        "events": [
+          {
+            "tick": 0,
+            "kind": "angular_disturbance",
+            "parameters": [
+              4.5
+            ]
+          },
+          {
+            "tick": 0,
+            "kind": "goal",
+            "parameters": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "seed": 1703,
+        "base_hz": 60,
+        "decision_ticks": 6
+      },
+      "sha256": "51716d94a3480347c05d0e0133b7314f7852df07aeedc73db47bcaf0aaf7324a"
+    }
+  ],
+  "evidence": "scenario definitions, not execution receipts",
+  "unsupported_perturbation": "explicit refusal; never substitute a successful no-op"
+}

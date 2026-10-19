@@ -11,6 +11,7 @@ dependencies = []
 
 [project.optional-dependencies]
 learning = ["numpy==2.3.5", "torch==2.8.0"]
+evidence = ["pillow==12.3.0"]
 
 [project.scripts]
 nca = "nca.cli:main"
