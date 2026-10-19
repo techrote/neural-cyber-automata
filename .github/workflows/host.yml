@@ -27,5 +27,5 @@ jobs:
         run: |
           test -x "$NCA_GODOT"
           test -d "$NCA_HOST_CHECKOUT/.git"
-      - name: Actual sampled and articulated host conformance
-        run: python -m unittest discover -s tests -p "test_host*.py" -v
+      - name: Core and actual sampled/articulated host conformance
+        run: python -m unittest discover -s tests -p "test_*.py" -v

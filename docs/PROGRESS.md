@@ -49,3 +49,24 @@ T-104 capture/replay is under implementation. The T-108 asynchronous core passes
 12 unit tests including stale replies, immediate takeover and bounded hung work.
 Learning, morphology, export and NCA experiments have no result at this checkpoint.
 Paid model calls: zero. The same checkpoint is recorded on issue #12.
+
+## 2026-10-19 01:08 UTC — implementation checkpoint
+
+T-101, T-102 and T-103 are accepted through PRs #22, #23 and #24. Their final
+heads passed all applicable hosted checks, and merged trees were verified. The
+accepted-adapter authored screen reproduced 18 earlier final poses and goal
+arrival ticks over 1,080 decisions; the reversal failure and Vector drift remain
+visible. Immutable traces and matched pose-replay clips are preserved outside Git.
+
+T-104 is independently reviewed and staged: eleven synthetic and five actual
+host checks, three compatible capture/replays with 296 base receipts, 49
+imitation-eligible rows and no PPO rows. A frozen committed-candidate repeat is
+next. T-105 has a predeclared three-seed, 13,000-decision/30-minute screen; tests
+are correcting learned-controller lifecycle fences before optimization.
+
+T-107 has actual mounted-effect, recoil, detach and compound-task probes under
+test. T-108's independent review found owner-control-generation and malformed
+provider-envelope paths being corrected before actual delay qualification.
+T-110 is declaring one per-part graph experiment. T-106 and T-109 remain gated
+on a useful trained/evaluated candidate. No trained result, paid model call,
+purchased compute or Cybersand source change is claimed at this checkpoint.

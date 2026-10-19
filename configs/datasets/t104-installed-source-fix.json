@@ -1,0 +1,27 @@
+{
+  "failure_job": "https://github.com/techrote/neural-cyber-automata/actions/runs/39184388392/job/117843624803",
+  "files": {
+    "src/nca/data/capture.py": "437dd099171f5803c6776b821e0d1ab53749d902feae08c2f54159c21ec82b0b",
+    "tests/test_data_records.py": "560438c728633a0b12f4ad725c67a6d5404074eb41f3f774b3ee03d057ff0f90"
+  },
+  "parent": "21f2ea2e0d7b68ae7942394cd633bd1a7ae34f9c",
+  "preserved_manifests": [
+    "t104-source-manifest.json",
+    "t104-final-acceptance.json"
+  ],
+  "prior_capture_revision": "8532be6ab9b148e1c74874563b524ecb6016b656",
+  "schema": "nca-t104-installed-source-fix/v1",
+  "status": "patched candidate bytes before final publication",
+  "verification": {
+    "actual_host_data_tests": 5,
+    "actual_host_seconds": 1.945,
+    "data_record_tests": 12,
+    "installed_layout_cases": [
+      "matching checkout",
+      "missing checkout refusal",
+      "explicit environment source root",
+      "Python source drift refusal",
+      "Godot source drift refusal"
+    ]
+  }
+}
