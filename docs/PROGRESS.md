@@ -244,3 +244,43 @@ No learned transfer, export compatibility or complete reproduction is claimed he
 Next: save and audit both interrupted prefixes, publish the reviewed prerequisite and
 fixed-candidate evaluation declarations, complete the supported measurements, then
 review final heads and verify scoped merges. The next checkpoint is due within 30 minutes.
+
+## 2026-10-19 20:52 UTC — Reviewed follow-ups published; audited prefixes saved
+
+The [repository checkpoint](https://github.com/techrote/neural-cyber-automata/pull/33#issuecomment-6277067532)
+records the current state and the missed interval after the 19:53 publication. The
+root publication call remained yielded while component work awaited continuation.
+This entry records the actual time; it does not backdate progress or infer missing
+run completion. Seven implementation tasks remain accepted on main `adde5a88`.
+T106 / #16, T109 / #19 and T110 / #20 remain open.
+
+The reviewed direction-frame prerequisite is published at
+`1222d2e8dc30b87bb58de2326711fc3df361ac5e`, exact tree
+`fb32973085e1fbd61cec2bf0e762a5e30a26fa6c`. Its 85 focused learning/morphology
+tests passed before publication. The sole formal run had not started at the
+checkpoint; release follows a clean checkout of that public revision. Conditional
+morphology learning primitives are developed separately and remain outside its
+frozen source. Actual transfer and its four-case teacher qualification remain gated.
+
+T109's new fixed-BC1103 evaluation is reviewed and ready for publication. It admits
+the interrupted origin explicitly, verifies 538 input identities, 24 teacher records
+and 680 samples, and preserves the original complete-screen converter. The selected
+numeric policy is `8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b`.
+One fresh evaluation may use the original eight cases within 320 decisions / 1,920
+ticks / 300 seconds, without optimization. No supplemental evaluation or export
+qualification had started. Original export tolerances and the separate requirement
+for complete evaluation evidence remain unchanged.
+
+T110's retained-prefix audit verified 112 episodes, 3,096 confirmed decisions and
+18,576 ticks. Seven untrained controls and original completion records are missing;
+termination and any unrecorded tail remain unconfirmed. The current runner's
+prospective early-arrival cancellation fix passed 39 focused tests with the actual
+host. The frozen reproduction source and all 356 raw screen files remain unchanged.
+
+The final audited archives and companion indexes were saved for owner delivery:
+T105 has SHA-256 `f796b533eacce85b661162349f67641d6127b73545152d75fed75e1772ac934c`;
+T110 has SHA-256 `38905e57031da728558f10cd30569a3886f123a53330432510b445337d9c8986`.
+These are retained incomplete prefixes, not completed reproductions or public
+downloads. Next: execute the published bounded follow-ups, publish the cellular fix,
+review final-head checks, and reconcile supported acceptance. Next checkpoint: by
+21:22 UTC.
