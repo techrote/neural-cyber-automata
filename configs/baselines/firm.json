@@ -1,0 +1,32 @@
+{
+  "schema": "nca.authored-baseline-config/v1",
+  "tuning": {
+    "id": "firm/v1",
+    "shaping": {
+      "quiet_below": 0.01,
+      "activate_above": 0.025,
+      "acceleration_rate": 12.0,
+      "braking_rate": 16.0,
+      "play_width": 0.0
+    },
+    "base_hz": 60,
+    "attitude_kp": 0.7,
+    "attitude_kd": 0.15,
+    "velocity_feedback": 0.45,
+    "support_dwell": 0.025,
+    "anticipation_seconds": 0.1,
+    "pulse_period": 0.85,
+    "recovery_enter_angle": 1.05,
+    "recovery_exit_angle": 0.32,
+    "recovery_enter_speed": 4.0,
+    "recovery_exit_speed": 0.8,
+    "recovery_dwell": 0.2,
+    "stopping_acceleration": 100.0
+  },
+  "sha256": "408db8314cfb2ae9ac7ce81ff6539aac42a4960aa95c324382bb93a8ac12ecdd",
+  "scope": "request feedback only; host mechanics remain shared and unchanged",
+  "compatible_models": [
+    "jev",
+    "astra"
+  ]
+}
