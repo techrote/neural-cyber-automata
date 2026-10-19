@@ -74,3 +74,11 @@ its SHA-256 and a compact repository outcome record, including failures and
 the deterministic-evaluation metadata limitation. Owner feel and other
 runtime lanes remain unmeasured. This declaration records no reproduction
 or deployment result.
+
+## Recorded continuation
+
+The single attempt was interrupted before a final learner summary was
+recovered. Its retained prefix and unknown original termination are preserved
+in the [interruption record and separate candidate declaration](2026-10-19-t109-staged-candidate.md).
+That later declaration commissions a distinct fixed-candidate evaluation;
+it does not change the source, limits or incomplete status of this attempt.

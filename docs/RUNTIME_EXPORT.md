@@ -200,6 +200,40 @@ simulation timebase. They do not render the terrain or native effects and are
 labelled accordingly. Neither those clips nor sequential floating-point parity
 establish whole-game determinism or owner acceptance of game feel.
 
+## Separately evaluated candidate from an interrupted prerequisite
+
+The separately commissioned [BC1103 continuation](evidence/2026-10-19-t109-staged-candidate.md)
+has a strict additional input contract. Its original three-seed run remains
+`interrupted_no_summary` with unconfirmed termination. The ordinary `convert`
+command continues to require a complete T105 experiment.
+
+After the candidate declaration and evaluator source are published, its one
+bounded evaluation can be invoked with:
+
+```bash
+python tools/export_policy.py evaluate-candidate \
+  --training-root artifacts/t105-interrupted-snapshot \
+  --learner-source "$ORIGINAL_T105_CHECKOUT" \
+  --declaration configs/export/bc1103-interrupted-evaluation-v1.json \
+  --host "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
+  --output artifacts/t105-interrupted-snapshot/candidate-evaluation-v1
+```
+
+The learner checkout must be the unchanged original revision recorded in the
+declaration. The command requires the exact immutable snapshot; it does not
+create a missing original summary. Failed or censored evaluation outcomes
+cannot be converted. A complete eight-family result remains a single-candidate
+evaluation and does not establish a three-seed method comparison.
+
+Before conversion, publish a second declaration with schema
+`nca-fixed-candidate-export-declaration/v1`, naming the exact completed
+candidate evaluation manifest, summary and artifact file identities. The
+converter verifies that declaration against the actual receipts and the
+committed source. Then use `convert-candidate` with `--training-root`,
+`--evaluation-root`, `--declaration`, `--accepted-t105-commit` and `--output`.
+The resulting bundle uses the same `screen` command and the unchanged CPU
+criteria above. A failed screen remains unqualified.
+
 ## Diagnose a preserved parity failure
 
 Keep a failed screen and its original bundle unchanged. The read-only auditor

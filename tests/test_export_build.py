@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class ExportArtifactTests(unittest.TestCase):
     def test_conversion_checks_manifest_contents_as_well_as_claimed_hash_fields(self):
         screen = json.loads((ROOT / "configs/export/cpu-bc-v1.json").read_text())
-        for mutation in (None, "config", "revision", "sources", "dataset"):
+        for mutation in (None, "config", "revision", "sources", "dataset", "incomplete"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 training = json.loads((ROOT / "configs/first-skill/jolt-screen-v1.json").read_text())
@@ -51,6 +51,9 @@ class ExportArtifactTests(unittest.TestCase):
                                         "scenario_family": family["id"], "policy_sha256": "c"*64,
                                         "artifact": f"episodes/{family['id']}.json.gz", "artifact_sha256": "d"*64}
                                        for family in training["evaluation_families"]]}
+                if mutation == "incomplete":
+                    summary["status"] = "capped"
+                    summary["evaluation"]["complete"] = False
                 summary["sha256"] = sha256_json(summary)
                 records = {"manifest.json": manifest, "summary.json": summary, "dataset.json": dataset,
                            "environment.json": {}, "exports/bc-seed1103-final.weights.json": {

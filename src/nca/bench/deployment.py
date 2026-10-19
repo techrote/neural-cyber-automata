@@ -181,7 +181,9 @@ def _episode(host, case, config, controller, kind, *, ticks=None, generator=None
             "stop_reason": "host_terminal" if steps[-1]["terminated"] or steps[-1]["truncated"] else "measurement_cap"}
 
 
-def _compare_episodes(left, right, config):
+def _compare_episodes(left, right, config, *, feature_width=26):
+    if type(feature_width) is not int or feature_width not in (26, 32):
+        raise ContractError("trajectory_feature_spec", "declared BC26 or residual32 feature width required")
     maximum_position = maximum_angle = maximum_wire = maximum_hidden = maximum_features = maximum_value = 0.0
     flags = clocks = detachments = True
     if (not left["frames"] or not left["steps"] or len(left["frames"]) != len(right["frames"])
@@ -195,7 +197,7 @@ def _compare_episodes(left, right, config):
         for step in episode["steps"]:
             if (any(not isinstance(step[key], (list, tuple)) or len(step[key]) != width
                     or any(type(value) not in (int, float) or not math.isfinite(value) for value in step[key])
-                    for key, width in (("features", 26), ("hidden_after", 32)))
+                    for key, width in (("features", feature_width), ("hidden_after", 32)))
                     or type(step["value"]) not in (int, float) or not math.isfinite(step["value"])):
                 return {"passed": False, "reason": "invalid_numeric_evidence"}
             count = step["actual_ticks"]
@@ -501,12 +503,12 @@ def _resume(host, training_root, bundle, config):
     path = training_root / "checkpoints" / config["resume"]["checkpoint"]
     metadata = bundle.value["training_evaluation"]
     training_manifest, manifest_hash = read_json(training_root / "manifest.json")
-    summary, summary_hash = read_json(training_root / "summary.json")
+    summary, summary_hash = read_json(training_root / metadata.get("training_receipt_file", "summary.json"))
     checkpoint_hash = hashlib.sha256(path.read_bytes()).hexdigest()
     matching = [row for row in summary["checkpoints"] if row["file"] == path.name]
-    if (manifest_hash != metadata["manifest_file_sha256"] or summary_hash != metadata["summary_sha256"]
+    if (manifest_hash != metadata["manifest_file_sha256"] or summary_hash != metadata.get("training_receipt_sha256", metadata["summary_sha256"])
             or len(matching) != 1 or matching[0]["sha256"] != checkpoint_hash):
-        raise ContractError("resume_lineage", "actual saved boundary differs from the complete evaluated training record")
+        raise ContractError("resume_lineage", "actual saved boundary differs from its verified training receipt")
     families = training_manifest["config"]["training_families"]
     kwargs = {"expected_config_sha256": metadata["config_sha256"],
               "expected_sources_sha256": metadata["learner_sources_sha256"]}
@@ -551,7 +553,7 @@ def _resume(host, training_root, bundle, config):
     episodes = [_episode(host, resumed_case, config, controller, "torch-resume",
                          ticks=config["resume"]["fresh_episode_ticks"], generator=gen, seed=next_host_seed)
                 for controller, gen in zip(controllers, generators)]
-    comparison = _compare_episodes(episodes[0], episodes[1], config)
+    comparison = _compare_episodes(episodes[0], episodes[1], config, feature_width=first[0].input_size)
     checks = {"weights_exact": policies_equal, "optimizer_exact": optimizer_hashes[0] == optimizer_hashes[1],
               "next_action_rng_draws_exact": action_draws[0] == action_draws[1],
               "next_scenario_rng_draws_exact": scenario_draws[0] == scenario_draws[1],
@@ -598,15 +600,19 @@ def run_screen(*, root: Path, training_root: Path, bundle_path: Path, bundle_has
     if payload["training_evaluation"]["accepted_t105_commit"] != accepted_t105_commit:
         raise ContractError("dependency_gate", "bundle and reviewed dependency commit differ")
     evidence = payload["training_evaluation"]
-    training_files = {"checkpoints/bc-seed1103-final.pt": evidence["checkpoint_sha256"],
-                      "exports/bc-seed1103-final.weights.json": evidence["numeric_source_sha256"],
-                      "manifest.json": evidence["manifest_file_sha256"], "summary.json": evidence["summary_sha256"],
-                      "environment.json": evidence["environment_file_sha256"],
-                      "dataset.json": evidence["dataset_file_sha256"]}
-    evaluation_files = {row["name"]: row["sha256"] for row in evidence["evaluation_artifacts"]}
-    if len(evaluation_files) != 8 or set(evaluation_files).intersection(training_files):
-        raise ContractError("evaluation_coverage", "eight distinct evaluation artifacts required")
-    training_files.update(evaluation_files)
+    if evidence.get("evidence_kind") == "staged_fixed_candidate/v1":
+        from nca.export.candidate import verify_staged_bundle
+        training_files = verify_staged_bundle(training_root, bundle)
+    else:
+        training_files = {"checkpoints/bc-seed1103-final.pt": evidence["checkpoint_sha256"],
+                          "exports/bc-seed1103-final.weights.json": evidence["numeric_source_sha256"],
+                          "manifest.json": evidence["manifest_file_sha256"], "summary.json": evidence["summary_sha256"],
+                          "environment.json": evidence["environment_file_sha256"],
+                          "dataset.json": evidence["dataset_file_sha256"]}
+        evaluation_files = {row["name"]: row["sha256"] for row in evidence["evaluation_artifacts"]}
+        if len(evaluation_files) != 8 or set(evaluation_files).intersection(training_files):
+            raise ContractError("evaluation_coverage", "eight distinct evaluation artifacts required")
+        training_files.update(evaluation_files)
     verify_artifact_files(training_root, training_files)
     sources = _sources(root)
     revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, text=True,
@@ -694,16 +700,22 @@ def run_screen(*, root: Path, training_root: Path, bundle_path: Path, bundle_has
                           "content_sha256": sha256_json(report["inference_cost"]),
                           "bytes": (output / "inference-cost.json").stat().st_size})
         phase = "learning_cost_attribution"
-        training_summary, summary_file_hash = read_json(training_root / "summary.json")
+        training_receipt = evidence.get("training_receipt_file", "summary.json")
+        training_summary, summary_file_hash = read_json(training_root / training_receipt)
         bc_cost, bc_cost_hash = read_json(training_root / "learning/bc-seed1103.json")
         updates = training_summary["ppo_updates"]
-        report["learner_cost"] = {"source_summary_file_sha256": summary_file_hash,
-                                  "source_summary_content_sha256": training_summary["sha256"],
+        report["learner_cost"] = {"source_receipt_file_sha256": summary_file_hash,
+                                  "source_receipt_content_sha256": training_summary["sha256"],
+                                  "source_receipt_file": training_receipt,
+                                  "source_training_status": training_summary["status"],
+                                  "original_run_total_cost_known": training_receipt == "summary.json",
                                   "ppo_rollout_updates": len(updates),
                                   "optimizer_updates": sum(row["updates"] for row in updates),
                                   "ppo_update_duration": durations([round(row["learner_seconds"]*1e9) for row in updates]),
                                   "bc_seed1103": bc_cost, "bc_cost_file_sha256": bc_cost_hash,
-                                  "scope": "reused immutable T105 measured CPU costs; zero new optimizer updates"}
+                                  "scope": ("retained completed update costs only; original interrupted-run totals unknown"
+                                            if training_receipt != "summary.json" else
+                                            "reused immutable T105 measured CPU costs; zero new optimizer updates")}
         artifacts.append(write_artifact(output, "learner-cost.json", report["learner_cost"]))
         phase = "matched_pose_clips"
         clip_spec = {"format": "nca-export-pose-pairs/v1", "pairs": pairs,

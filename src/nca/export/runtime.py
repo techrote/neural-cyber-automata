@@ -192,6 +192,21 @@ class RuntimeBundle:
                 or evidence.get("training_seed") != 1103 or evidence.get("training_privilege") != "none"
                 or evidence.get("profile_sha256") != context.profile_sha256):
             raise ContractError("training_evidence", "fixed evaluated BC1103 evidence required")
+        evidence_kind = evidence.get("evidence_kind")
+        if evidence_kind not in (None, "staged_fixed_candidate/v1"):
+            raise ContractError("training_evidence", "unknown evidence admission contract")
+        if evidence_kind == "staged_fixed_candidate/v1":
+            if (evidence.get("training_status") != "interrupted_no_summary"
+                    or evidence.get("training_receipt_file") != "interruption-index.json"
+                    or evidence.get("training_receipt_schema") != "nca-interrupted-training-artifact-index/v1"
+                    or evidence.get("original_termination_confirmed") is not False
+                    or evidence.get("selected_evaluation_rows") != 8
+                    or not isinstance(evidence.get("staged_artifact_files"), Mapping)
+                    or not isinstance(evidence.get("candidate_evaluation_root"), str)):
+                raise ContractError("training_evidence", "explicit interrupted origin and separate completed evaluation required")
+            for key in ("training_receipt_sha256", "candidate_evaluation_manifest_sha256",
+                        "candidate_evaluation_summary_sha256"):
+                digest(evidence.get(key), key)
         self._value, self.sha256, self.context = payload, declared, context
         self.part_ids = tuple(part["id"] for part in payload["profile"]["parts"])
         self.network = NumpyGRU(payload["weights"])

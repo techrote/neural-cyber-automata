@@ -92,6 +92,16 @@ class ExportBenchTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "trajectory_action_shape"):
             wire_difference({}, WireAction().to_dict())
 
+    def test_resume_requires_its_declared_residual_feature_width(self):
+        config, episode = self.fixture()
+        episode["steps"][0]["features"] = [0.]*32
+        self.assertFalse(_compare_episodes(episode, episode, config)["passed"])
+        self.assertTrue(_compare_episodes(episode, episode, config, feature_width=32)["passed"])
+        episode["steps"][0]["features"].pop()
+        self.assertFalse(_compare_episodes(episode, episode, config, feature_width=32)["passed"])
+        with self.assertRaisesRegex(ContractError, "trajectory_feature_spec"):
+            _compare_episodes(episode, episode, config, feature_width=31)
+
     def test_divergence_diagnostic_preserves_original_failure_and_onset(self):
         config, episode = self.fixture()
         other = deepcopy(episode)
