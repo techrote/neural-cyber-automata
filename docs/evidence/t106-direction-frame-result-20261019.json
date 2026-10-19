@@ -18,7 +18,9 @@
       "sha256": "291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4",
       "summary_file_sha256": "574a51108903484977629804bc9be9a54d348b8bf929c594eeee169584a30f78",
       "summary_content_sha256": "ed1c999a935a5a308f6d63ca64676b15000e4ecee511ccb8df10a0f0fe23a5e9",
-      "index_sha256": "11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443"
+      "index_sha256": "11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443",
+      "index_hash_kind": "canonical-content",
+      "index_file_sha256": "130a945f2b0c6b3d0e98ead3eec4db59ee036be9dfce26e24bf0da6dbb1d9e50"
     },
     "completion": {
       "rows": 136,
@@ -154,6 +156,17 @@
     "both_executions_no_go": true,
     "primary_replaced_by_alternate": false,
     "original_t105_entry_result_changed": false,
-    "morphology_family_promoted": false
+    "morphology_family_promoted": false,
+    "combined_confirmed_game_requests": 9353,
+    "combined_confirmed_physical_ticks": 56118,
+    "combined_completed_optimizer_updates": 23520,
+    "combined_observed_host_starts": 2,
+    "original_maximum_total_decisions": 6000,
+    "original_aggregate_decision_ceiling_respected": false,
+    "additional_allocation_declared_by_original_execution_thread": false,
+    "sum_of_reported_internal_wall_seconds": 1329.5755404840002,
+    "complete_aggregate_wall_seconds": null,
+    "wall_time_scope": "sum of separate internal execution timers; startup and outer-process overhead are not a complete aggregate receipt",
+    "budget_status": "additional concurrent execution; original aggregate decision budget exceeded"
   }
 }

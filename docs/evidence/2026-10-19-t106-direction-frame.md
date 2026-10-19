@@ -169,8 +169,8 @@ The archive contains **438 verified members**.
 A later concurrent change added a push-triggered GitHub workflow after the primary
 local run had already begun. That separate invocation ran as Actions run
 `39323820599` from publication
-`f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed`. It is retained as valid alternate
-evidence, not as a restart, continuation or replacement of the primary run.
+`f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed`. It is retained as a separate observed
+execution, not as a restart, continuation or replacement of the primary run.
 
 The alternate recorded 4,660 requests / 27,960 ticks in 385.969869986 seconds.
 It also returned a no-go: direction-frame BC 33.33% mean / 25% minimum-seed
@@ -180,7 +180,17 @@ success and world-frame BC 25% / 0%. Its complete Actions artifact is
 The alternate result was not used to select, tune or override the designated
 primary outcome.
 
-Both independent executions therefore support the same bounded conclusion:
+The two executions consumed **9,353 confirmed requests and 56,118 ticks**, with
+**23,520 completed optimizer steps and two host starts**. The request total
+exceeds the original **6,000-decision allowance**. No additional allocation was
+declared by the original execution thread before the concurrent run. The two
+internal timers total 1,329.575540484 seconds, but omit separately scoped startup
+and outer-process overhead; they do not establish complete aggregate wall-budget
+compliance. Each original per-invocation receipt remains unchanged. The extra
+execution is a budget deviation, not evidence that the original allocation was
+respected or a basis for selecting a different prerequisite.
+
+Both retained executions record the same bounded conclusion:
 the unchanged direction-frame prerequisite was **not met**. No morphology family
 is promoted, no transfer experiment is opened, and owner feel remains unmeasured.
 
