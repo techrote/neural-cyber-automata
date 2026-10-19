@@ -1,0 +1,147 @@
+{
+  "captures": [
+    {
+      "artifacts": [
+        {
+          "bytes": 28059,
+          "path": "t104-final/boundaries.json.gz",
+          "sha256": "f45ff489d6f786d1fce1116afc595ba5374de9d0bda3a25478c139705cfdfddc"
+        },
+        {
+          "bytes": 15553,
+          "path": "t104-final/boundaries.json.gz.replay.json",
+          "sha256": "091c2ba9b15f2703439c3279eff1764a3424873aee8fec89cb631a57affba367"
+        },
+        {
+          "bytes": 8009,
+          "path": "t104-final/runs/t104-final-boundaries.json",
+          "sha256": "8d4767ccd71b87051cae362b636c631c20cf56177256bc6d211fb8a3baf9d9bd"
+        }
+      ],
+      "canonical_episode_sha256": "1c930622d554b6b0b4abfb0ede0b601b12d0d20448b97b442ee7830d0b7985f0",
+      "config_sha256": "88767f2e10d6ca486977050fec943df1e2e0d47c6bd3b8dc18a2c5d6ac4528a2",
+      "decisions": 7,
+      "episode_id": "t104-final-boundaries",
+      "imitation_rows": 5,
+      "learner_revision": "8532be6ab9b148e1c74874563b524ecb6016b656",
+      "learner_sources_sha256": "212bff58a219609ff5bb171fbdb80a8332db64a9d97af4123fe7f28ccde17d92",
+      "maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 0.0,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "numeric_comparisons": 968,
+      "on_policy_rows": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "replay_passed": true,
+      "task_evaluation": {
+        "owner_feel_accepted": false,
+        "task_quality": null
+      },
+      "ticks": 32
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 87044,
+          "path": "t104-final/jolt48.json.gz",
+          "sha256": "69d83e13cc96d023a1ec216e6296f357fe9fa826c235482ac5bd315d140ff279"
+        },
+        {
+          "bytes": 24612,
+          "path": "t104-final/jolt48.json.gz.replay.json",
+          "sha256": "62e15635b4aa6701522adb19f34df1e90fcead63bc7a6f61f0924cfbc3a8f6f6"
+        },
+        {
+          "bytes": 8006,
+          "path": "t104-final/runs/t104-final-jolt48.json",
+          "sha256": "abe2bbb41b9c405d407475cbd37a27eb552d326df95226d63fc2cf6f639dc33f"
+        }
+      ],
+      "canonical_episode_sha256": "4afdaec93011f70f55f3711490fe80ef8330717ab0fda3ff7615bb63d51f4641",
+      "config_sha256": "4dce15b31176f9506ee34deb2c5b01e348b7dcad460c4d80ad671474378f7ccf",
+      "decisions": 22,
+      "episode_id": "t104-final-jolt48",
+      "imitation_rows": 22,
+      "learner_revision": "8532be6ab9b148e1c74874563b524ecb6016b656",
+      "learner_sources_sha256": "212bff58a219609ff5bb171fbdb80a8332db64a9d97af4123fe7f28ccde17d92",
+      "maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 9.992007221626409e-15,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "numeric_comparisons": 3720,
+      "on_policy_rows": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "replay_passed": true,
+      "task_evaluation": {
+        "controller_status_estimate": "succeeded",
+        "distance_to_goal": 2.9602290576475974,
+        "goal_id": "jolt-demo",
+        "owner_feel_accepted": false,
+        "speed": 0.037949196994399095
+      },
+      "ticks": 132
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 89897,
+          "path": "t104-final/jolt20.json.gz",
+          "sha256": "ee230b3f4070a49a05fe18805e98512c09b61d07489136d4f66af8ef5e1bbdf9"
+        },
+        {
+          "bytes": 24612,
+          "path": "t104-final/jolt20.json.gz.replay.json",
+          "sha256": "425e626b0e0a6385681ecc18d41b18832a9e058c8d6c5a2357585e95ff8f8027"
+        },
+        {
+          "bytes": 8001,
+          "path": "t104-final/runs/t104-final-jolt20.json",
+          "sha256": "c8ecba73a9af98eb9a6f768b1d56babfcf9e2042ca1af98222763bde37a95cee"
+        }
+      ],
+      "canonical_episode_sha256": "74c84c109cfc71b29e12f5d425ebde26c2ea43de7a0a3af1c139cea3f1208b13",
+      "config_sha256": "0bf1cf0d09a24dfaffeeaffb639cbd1413ff6a3fe0afa4a0bfbdcd281dba13d3",
+      "decisions": 22,
+      "episode_id": "t104-final-jolt20",
+      "imitation_rows": 22,
+      "learner_revision": "8532be6ab9b148e1c74874563b524ecb6016b656",
+      "learner_sources_sha256": "212bff58a219609ff5bb171fbdb80a8332db64a9d97af4123fe7f28ccde17d92",
+      "maximum_errors": {
+        "angular_velocity": 0.0,
+        "applied": 1.021405182655144e-14,
+        "position": 0.0,
+        "rotation": 0.0,
+        "velocity": 0.0
+      },
+      "numeric_comparisons": 3720,
+      "on_policy_rows": 0,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+      "replay_passed": true,
+      "task_evaluation": {
+        "controller_status_estimate": "running",
+        "distance_to_goal": 14.92557266931819,
+        "goal_id": "jolt-demo",
+        "owner_feel_accepted": false,
+        "speed": 46.072190151912906
+      },
+      "ticks": 132
+    }
+  ],
+  "learner_revision": "8532be6ab9b148e1c74874563b524ecb6016b656",
+  "schema": "nca-t104-final-acceptance/v1",
+  "source_status": "isolated committed candidate",
+  "tests": {
+    "actual_host": 20,
+    "result": "passed",
+    "total": 102,
+    "unittest_seconds": 9.127
+  },
+  "total_comparisons": 8408,
+  "total_ticks": 296
+}

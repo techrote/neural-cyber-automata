@@ -17,6 +17,10 @@ retain the completed capture pipelines and the first failed development attempt.
 The [evidence record](../../docs/evidence/2026-10-19-t104.md) states the measured
 scope and the separate skill outcomes.
 
+The [final acceptance manifest](t104-final-acceptance.json) repeats all three
+pipelines on one isolated committed candidate and indexes the `t104-final`
+artifact collection. Both candidate and final evidence remain identifiable.
+
 All published scenario families are in the **evaluation** partition.
 Training and tuning partitions are empty. These artifacts exercise capture,
 replay and data preparation; they do not constitute a trained policy or a broad
