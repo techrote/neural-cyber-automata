@@ -157,6 +157,16 @@ these observations provide no reason to promote communication in this screen.
 Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
 227.1865 seconds through final ledger publication. Owner feel remains unjudged.
 
+A separately commissioned faithful reproduction then completed on the frozen
+original learner with **119 rows / 3,297 decisions** and 142.008152423 aggregate
+seconds including the preserved zero-work import failure. It reproduced the same
+normal result: graph **1/6**, no-message **1/6**, authored **0/6**, with zero
+paired graph-vs-no-message success gain. The unchanged utility gate again
+returned `no-go-at-this-screen`; the complete Actions artifact and immutable
+hashes are recorded in
+[evidence/2026-10-19-t110-reproduction.md](evidence/2026-10-19-t110-reproduction.md).
+This is confirmation evidence, not a replacement of the historical screen.
+
 ## Host authority
 
 The refreshed Cybersand source at

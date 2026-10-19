@@ -112,8 +112,43 @@ evaluation change accompanies the wrapper correction, and there is no further
 retry. The correction, receipt, prior budget and launcher must be publicly
 retrievable before that invocation starts.
 
-The independent physical screen has not been executed at this correction's
-declaration stage. The historical no-go remains preserved, with its original
-raw archive still unavailable.
+## Corrected reproduction result
+
+The single permitted corrected invocation was published at `be3ea792695116caf886cf475a0479fcae778d77` and
+ran as GitHub Actions run `39323844679`. It launched at
+`2026-10-19T20:59:54.021436Z` and completed at
+`2026-10-19T21:02:14.025106Z` with exit code 0. The frozen learner checkout
+remained clean. The outer process used 139.980692305 seconds; the screen itself
+recorded 138.697095888 seconds. Together with the preserved 3.311061632000019
+second import failure, the screen ledger reports 142.00815242300004 aggregate
+seconds, still inside the unchanged 900-second ceiling.
+
+The completed screen retained all **119** declared rows, six frozen checkpoints
+and **3,297 game decisions**. It made zero direct-cell-write requests and
+recorded no execution failure. The exact compact result receipt is
+[t110-reproduction-result-20261019.json](t110-reproduction-result-20261019.json).
+
+The unchanged utility gate returned **`no-go-at-this-screen`**. Graph and
+no-message each succeeded in **1/6** normal holdout trials; the authored
+reference succeeded in **0/6**. Their paired normal success gain was exactly
+zero (mean and 95% interval `0.0`). The graph's capped-completion gain was
+slightly negative (mean **-0.03333333333333336 s**, 95% interval
+**[-0.0783333333333334, 0.0]**). Angle, inference, integrity, reference-success
+and stress checks passed; only `normal_benefit` failed. This confirms the
+frozen screen's no-go rather than providing evidence to promote graph
+communication.
+
+The complete 387-file Actions artifact is
+`t110-corrected-reproduction-evidence` (artifact `12220438092`, ZIP
+**16,054,974 bytes**, SHA-256
+`9e8c20698c842e7cc649d96aba468987e38b46a1dad9244dbf22a5a0e503b607`).
+Its exact `screen/screen-summary.json` SHA-256 is
+`cea07abb3b8fea267077dbf54c12055dbc53a05e17149cba3863c5a29f98cd88`.
+No retry, retuning or checkpoint reselection followed. Owner feel and physical
+topology mutation remain unmeasured.
+
+The historical no-go remains preserved separately; this reproduction confirms
+the same bounded conclusion with a new evidence identity rather than rewriting
+the historical run.
 
 © 2026 techrote. All rights reserved.

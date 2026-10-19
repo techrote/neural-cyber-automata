@@ -1,0 +1,88 @@
+{
+  "schema": "nca-t110-reproduction-result-receipt/v1",
+  "reproduction_id": "t110-jolt-three-part-reproduction-20261019",
+  "publication_commit": "be3ea792695116caf886cf475a0479fcae778d77",
+  "github_actions": {
+    "run_id": 39323844679,
+    "job_id": 118304483934,
+    "artifact_id": 12220438092,
+    "artifact_name": "t110-corrected-reproduction-evidence",
+    "artifact_zip_bytes": 16054974,
+    "artifact_zip_sha256": "9e8c20698c842e7cc649d96aba468987e38b46a1dad9244dbf22a5a0e503b607"
+  },
+  "immutable_files": {
+    "screen_summary_path": "screen/screen-summary.json",
+    "screen_summary_sha256": "cea07abb3b8fea267077dbf54c12055dbc53a05e17149cba3863c5a29f98cd88",
+    "completion_receipt_sha256": "0c85057fa163e1488d6a08d76e2b46f4ae9602222406b2884b669247c07ff9b9",
+    "launch_receipt_sha256": "0be009ec3978ba37ed87834abee33062c1751f3743c1edacdab5ad43caf2e1be"
+  },
+  "source": {
+    "learner_revision": "626099f98bf37f961c45796914b31926dc05f29d",
+    "learner_tree": "5d46e52b32122bbb2b4127f150541a420b93e66e",
+    "learner_sources_sha256": "ab0783530cecb26250605ac3be9cf22b0a7e62d1f39b1fc627a5ae1b526076f5",
+    "config_sha256": "e5a66f5a830b9e097a5bbb9647ade4bea42c82e26fb5718273b5bae2b992de5d",
+    "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497"
+  },
+  "completion": {
+    "launch_utc": "2026-10-19T20:59:54.021436Z",
+    "completed_utc": "2026-10-19T21:02:14.025106Z",
+    "process_exit_code": 0,
+    "process_wall_seconds": 139.980692305,
+    "learner_clean_after_execution": true,
+    "additional_corrected_invocations": 0,
+    "screen_status": "completed",
+    "failure": null,
+    "rows": 119,
+    "game_decisions": 3297,
+    "attempt_runtime_seconds": 138.697095888,
+    "aggregate_runtime_seconds": 142.00815242300004,
+    "prior_failed_launch_wall_seconds": 3.311061632000019,
+    "frozen_checkpoints": 6,
+    "direct_cell_write_requests": 0
+  },
+  "utility_gate": {
+    "decision": "no-go-at-this-screen",
+    "checks": {
+      "angle": true,
+      "inference": true,
+      "integrity": true,
+      "normal_benefit": false,
+      "reference_success": true,
+      "stress": true
+    },
+    "normal_success": {
+      "authored": {
+        "successes": 0,
+        "trials": 6,
+        "rate": 0
+      },
+      "graph": {
+        "successes": 1,
+        "trials": 6,
+        "rate": 0.16666666666666666
+      },
+      "no_message": {
+        "successes": 1,
+        "trials": 6,
+        "rate": 0.16666666666666666
+      }
+    },
+    "success_gain": {
+      "lower95": 0,
+      "mean": 0,
+      "upper95": 0,
+      "resamples": 27,
+      "unit": "paired-policy-seed-mean"
+    },
+    "completion_gain_seconds": {
+      "lower95": -0.0783333333333334,
+      "mean": -0.03333333333333336,
+      "upper95": 0,
+      "resamples": 27,
+      "unit": "paired-policy-seed-mean"
+    },
+    "scope": "one actor topology, two heldout families and three policy seeds; no general graph-method ranking",
+    "owner_feel_accepted": false,
+    "physical_topology_mutation_measured": false
+  }
+}
