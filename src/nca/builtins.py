@@ -53,6 +53,7 @@ def builtin_registry() -> Registry:
     from .controllers import AuthoredController
     from .data import replay_episode
     from .skills import register_skills
+    from .cellular import register as register_cellular
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -71,4 +72,5 @@ def builtin_registry() -> Registry:
     registry.register("evaluator", "consumed-replay", 1, replay_episode,
                       ("act004", "same-runtime", "original-observation-age"))
     register_skills(registry)
+    register_cellular(registry)
     return registry

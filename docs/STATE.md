@@ -99,6 +99,20 @@ Local skill predicates remain separate from evaluator success; the scripted
 human/model source labels do not claim an actual input session or live service.
 Independent arbitrary object replacement and owner feel remain unmeasured.
 
+## Conditional per-part graph preparation
+
+The [cellular guide](../configs/cellular/README.md) defines a fixed three-part
+Jolt graph for support-gated directed hops. Each node has private recurrence
+and one local message round per decision. The equal-size no-message control
+shares the same local inputs and action limits. The immutable declaration
+freezes three seeds, two learned methods, split families, uncertainty gates
+and a 4,000-decision / 900-second CPU cap.
+
+The [T-110 evidence](evidence/2026-10-19-t110.md) records source preparation
+checks and information, lifecycle and budget limits. Actual-host smoke and
+the bounded experiment follow a committed source freeze; no game-efficacy
+result or owner feel acceptance is established by this preparation.
+
 ## Host authority
 
 The refreshed Cybersand source at
