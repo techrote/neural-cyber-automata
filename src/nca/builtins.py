@@ -59,6 +59,7 @@ def builtin_registry() -> Registry:
     from .controllers import AuthoredController
     from .data import replay_episode
     from .skills import register_skills
+    from .adapters.skill_control import register_decisions
 
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
@@ -79,4 +80,5 @@ def builtin_registry() -> Registry:
     registry.register("trainer", "first-jolt-screen", 1, first_skill_screen,
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
     register_skills(registry)
+    register_decisions(registry)
     return registry

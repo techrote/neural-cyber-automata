@@ -111,3 +111,19 @@ Five implementation issues are merged and their accepted trees verified: #11, #1
 **Export / #19 and cellular experiment / #20:** Export arithmetic/reset fixtures pass; the pinned BC candidate will undergo bounded actual-loop qualification after #15 acceptance. Cellular source preparation passes 33 focused checks with one unmeasured host case; the immutable three-part Jolt declaration is unchanged and its isolated source publication precedes the bounded actual experiment.
 
 All four execution slots remain occupied. No paid service calls, purchased compute or Cybersand source changes occurred. Owner feel and unsupported physical/hardware lanes remain unmeasured. The repository progress file will carry this same checkpoint in the next scoped publication.
+
+## Programme checkpoint — 2026-10-19 07:45:46 UTC
+
+Accepted main is `7ff42f1d5d68b8ce03763dc8e8cc81f094325e5e`, tree `85ba95d6f54e39927f0e0298adf98d90876ac4d6`. T105 / #15 merged through PR26 after all five final-head checks passed on `ff7433958932fcb8711574cb0027d4c31025b16e`. Six issues are now accepted: #11, #12, #13, #14, #15 and #17. The complete audited learning results and immutable artifact index are on main.
+
+**Checkpoint gap:** The prior repository checkpoint was 02:06:18 UTC. A pending repository publication/merge operation interrupted the requested 30-minute cadence. This entry records the gap at the actual current time; no retrospective checkpoint is invented.
+
+**T108 / #18:** 19 router and 10 actual continuously advancing host cases pass. Independent review cleared original-source plan expiry, terminal-effect censoring, failed-cancel fencing and refusal of new grants after host termination. Scoped source is ready for isolated publication and its complete immutable pilot.
+
+**T110 / #20:** The original failed 16-decision capture is preserved, with no optimization, checkpoints or holdout. Including the passing smoke, physical usage is 17 decisions / 8.641717033 seconds. Four reviewed recording/preflight/budget fixes are ready; immutable prior-budget receipts consume the original 4000-decision/900-second cap. The corrected formal run is waiting for its published source freeze.
+
+**T109 / #19:** The fixed BC1103 NumPy export/runtime implementation is independently reviewed. Nineteen focused tests pass; four actual evaluated-bundle tests await the committed final conversion. Arithmetic-only preparation matches the trained checkpoint within all fixed tolerances. No deployment throughput claim is made before the bounded actual-loop screen.
+
+**T106 / #16:** Thirty-seven focused morphology-preparation tests pass after independent lifecycle review. Padded and graph candidates, exact four-profile contracts, immutable failed-gate admission and a separate 32-request interface diagnostic are implemented. The original 75% mean / 50% minimum-seed prerequisite still fails. No morphology optimization, learned-policy game call or transfer claim occurred.
+
+Next actions are the three isolated publications, bounded final experiments/diagnostics, final-head checks and verified merges. No paid service calls, purchased compute or Cybersand source changes occurred. Owner feel and unavailable physical/device lanes remain unmeasured.
