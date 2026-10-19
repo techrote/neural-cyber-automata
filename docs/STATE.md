@@ -84,6 +84,21 @@ the +20-cell invocation remained unsuccessful. No optimization occurred. The
 recorded script transfers are not human or live-model demonstrations, and replay
 qualifies copied local trajectories on the same build, not whole-world identity.
 
+## Authored usable skills and composition
+
+The [usable runtime](USABLE_SKILLS.md) provides typed approach, aim/use, recovery,
+grip, carry and release over the accepted Vector launcher and Hammerhead cutter.
+Pouncer charge-hold is the separate disarming example. Twenty-nine focused tests
+pass, including thirteen actual-host integrations. The five-case
+[T-107 pilot](evidence/2026-10-19-t107.md) exercised native clearance refusal with
+recoil, declared recovery, physical pickup/carry/use/release, a retained failed
+late pickup, persistent applied effects and charge cancellation without launch.
+
+Owner control and observed attachment generations are independently fenced.
+Local skill predicates remain separate from evaluator success; the scripted
+human/model source labels do not claim an actual input session or live service.
+Independent arbitrary object replacement and owner feel remain unmeasured.
+
 ## Host authority
 
 The refreshed Cybersand source at
