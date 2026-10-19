@@ -127,3 +127,71 @@ Accepted main is `7ff42f1d5d68b8ce03763dc8e8cc81f094325e5e`, tree `85ba95d6f54e3
 **T106 / #16:** Thirty-seven focused morphology-preparation tests pass after independent lifecycle review. Padded and graph candidates, exact four-profile contracts, immutable failed-gate admission and a separate 32-request interface diagnostic are implemented. The original 75% mean / 50% minimum-seed prerequisite still fails. No morphology optimization, learned-policy game call or transfer claim occurred.
 
 Next actions are the three isolated publications, bounded final experiments/diagnostics, final-head checks and verified merges. No paid service calls, purchased compute or Cybersand source changes occurred. Owner feel and unavailable physical/device lanes remain unmeasured.
+
+## 2026-10-19 18:57 UTC — Resumption checkpoint imported from PR29
+
+The [resumption comment](https://github.com/techrote/neural-cyber-automata/pull/29#issuecomment-6274887192)
+was published at 18:57:41 UTC and describes the 18:46 reconciliation. Accepted main
+is `adde5a881744c1c6cf585ecd7985c746fef604dc`, including T108 through PR31. Seven
+implementation issues are accepted; #16, #19 and #20 remain open. No intervening
+checkpoint is invented between the previous progress-file entry and this continuation.
+
+Separate worktrees resumed PR28 at `3178b9fa9bd2609de9be650cb3374dc1d1c57d34`,
+PR29 at `e5ecff028df67296116d6ce9a93b33fd685bd47c` and PR30 at
+`fb69b7bca6914556e16083371b78e044760ea136`. The original cellular no-go, failed
+export trajectory tolerance and unmet morphology entry gate remain visible.
+
+## 2026-10-19 19:09 UTC — Reviewed code and public reproduction declarations
+
+The [19:09 checkpoint](https://github.com/techrote/neural-cyber-automata/pull/29#issuecomment-6275118243)
+records byte-for-byte reconstruction of T110's 38-file frozen source map, all 38
+scoped Torch/actual-host tests passing without skips, and a CI correction requiring
+the combined learned-host case. Public source `9facc2f50ecc759ce1170587d325a5b215e0edc3`
+declares one faithful reproduction with unchanged seeds, criteria and original source.
+
+T109 now validates actual evaluation/dataset bytes, source/config lineage and
+complete finite trajectory evidence. A read-only auditor separates common-input
+arithmetic from closed-loop divergence. Public source
+`33a4aa2ead8e2137c933225b8f9727deef40d45a` declares a fresh original-source T105
+reproduction to recover evaluated export inputs. Historical raw archives were not
+found in repository releases or the available saved-file searches; their historical
+results/hashes are retained, and the new runs receive distinct identities.
+
+T106 source `487fa04e4afea90051ef6a42667273a1ac83db45` integrates accepted main,
+fixes receipt/lifetime validation and distinguishes cancelled motor targets from
+physical joint state. Its first diagnostic failed during startup before any request;
+the exact cause was not retained. Its blocked admission records zero learning work.
+At this checkpoint no new reproduction training or learned transfer had begun.
+
+## 2026-10-19 19:23 UTC — Bounded execution and conformance recovery
+
+Accepted main remains `adde5a881744c1c6cf585ecd7985c746fef604dc`. The corrected
+[combined hosted gate](https://github.com/techrote/neural-cyber-automata/actions/runs/39308475927)
+passed all 228 tests on T110 public source `9facc2f`, including the actual learned-host
+case. CPU, pinned-host and strict documentation workflows also passed. T109 source
+`33a4aa2` passed its applicable hosted workflows; evaluated-bundle qualification remains separate.
+
+The fresh T105 reproduction launched at 19:12:46 UTC from original learner
+`745578947a6f1ac2159830c4ae4de5de5593f32f`. Its 24 demonstrations are collected;
+seed 1103 is in the fixed residual training stage. No held-out result is available
+at this checkpoint. The unchanged aggregate cap is 13,000 decisions / 1,800 seconds.
+
+T110's sole reproduction launch failed at Python import before host startup,
+training or rollout. Resolving the virtual-environment executable symlink lost its
+package context. The failed 3.311061632-second invocation is retained. A separately
+published launcher correction is being prepared; it must charge that elapsed time
+against the original 900-second cap and preserve all sample, seed and tuning limits.
+
+The T106 [declared continuation](https://github.com/techrote/neural-cyber-automata/commit/557799ce4cf95d9d3ebcf862549cb363b5783a93)
+passed all eight profile episodes, 32 attempted/completed requests and 192 ticks.
+Its 36.551695 seconds plus the preserved 18.202958-second failed startup total
+54.754654 seconds within the original 60-second allocation. There were no errors,
+unconfirmed requests, learned-policy calls or optimizer updates. Summary hash:
+`3311fdfa3080659c8e49f0b5e64f528a2f4d2c8e3eace5979bd458e21af2d70f`.
+This qualifies the scripted interface only. The original transfer gate remains unmet;
+a separate bounded directional-input prerequisite experiment is being prepared before
+any new training. No gate relaxation, paid service or host source mutation occurred.
+
+Next: preserve complete archives, audit the fresh outputs, freeze export input hashes
+before conversion, run exclusive throughput qualification, and review/check/merge
+only the scopes supported by evidence. The next checkpoint is due within 30 minutes.
