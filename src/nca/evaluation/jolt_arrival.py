@@ -40,6 +40,7 @@ DECLARATION_SHA256 = "269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc273
 FAMILIES = ("authored-balanced-v1", "jolt-arrival-v1")
 RECOVERY_FAMILIES = (*FAMILIES, "jolt-recovery-v1")
 RECOVERY_V2_FAMILIES = (*FAMILIES, "jolt-recovery-v2")
+RECOVERY_V3_FAMILIES = (*FAMILIES, "jolt-recovery-v3")
 PRESERVED_SOURCES = {
     "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
     "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
@@ -63,7 +64,8 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
         # and the explicit allocation. It cannot repurpose opened cases or
         # silently loosen mechanics, task outcomes or execution semantics.
         declared_families = {"nca-jolt-recovery-diagnostic/v1": RECOVERY_FAMILIES,
-                             "nca-jolt-recovery-diagnostic/v2": RECOVERY_V2_FAMILIES}
+                             "nca-jolt-recovery-diagnostic/v2": RECOVERY_V2_FAMILIES,
+                             "nca-jolt-recovery-diagnostic/v3": RECOVERY_V3_FAMILIES}
         if (type(value.get("schema")) is not str or value["schema"] not in declared_families
                 or value.get("families") != list(declared_families[value["schema"]])):
             raise ContractError("arrival_declaration", "the separately declared three-family recovery diagnostic is required")
@@ -94,6 +96,28 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
                 "maximum_arrival_angle": .32, "require_support": True}
                 or value["goal"].get("require_support") is not True):
             raise ContractError("arrival_declaration", "the original task success predicate is required")
+        if value["schema"] == "nca-jolt-recovery-diagnostic/v3":
+            from nca.evaluation.jolt_recovery_acceptance import acceptance_specification
+            # V3 is a new, complete allocation. Check its unchanged teacher
+            # rule before starting a process, not only when auditing outcomes.
+            if sha256_json(value.get("teacher_acceptance")) != sha256_json(
+                    acceptance_specification(RECOVERY_V3_FAMILIES[2])):
+                raise ContractError("arrival_declaration", "v3 must retain the prospectively fixed teacher acceptance")
+            if (any(limits[key] != cap for key, cap in maximums.items())
+                    or type(limits.get("maximum_attempts")) is not int or limits["maximum_attempts"] != 1
+                    or type(limits.get("learned_policy_calls")) is not int or limits["learned_policy_calls"] != 0):
+                raise ContractError("arrival_declaration", "v3 requires its complete new one-attempt numeric allocation")
+            preserved = {
+                "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+                "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+                "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+                "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+            }
+            if any(value["preserved_sources"].get(path) != digest for path, digest in preserved.items()):
+                raise ContractError("arrival_declaration", "v3 must preserve the arrival, recovery v1/v2 and supervisor sources")
+            if (physics.get("host_revision") != "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497"
+                    or physics.get("profile_sha256") != "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc"):
+                raise ContractError("arrival_declaration", "v3 must preserve the accepted physical host and profile")
     return value
 
 
@@ -109,6 +133,9 @@ def _controller(family):
     if family == RECOVERY_V2_FAMILIES[2]:
         from nca.controllers.jolt_recovery_v2 import JoltRecoveryControllerV2
         return JoltRecoveryControllerV2()
+    if family == RECOVERY_V3_FAMILIES[2]:
+        from nca.controllers.jolt_recovery_v3 import JoltRecoveryControllerV3
+        return JoltRecoveryControllerV3()
     raise ContractError("arrival_family", "undeclared authored controller")
 
 
@@ -556,7 +583,7 @@ def _capture(host, budget, case, family, output, original, declaration, root):
                 "after_physical_decisions": len(phases), "requested_packet": None,
                 "owner_requests_before": budget.counts["host_requests"],
                 "step_requests_before": budget.counts["step_requests"]}
-            if family in (RECOVERY_FAMILIES[2], RECOVERY_V2_FAMILIES[2]):
+            if family in (RECOVERY_FAMILIES[2], RECOVERY_V2_FAMILIES[2], RECOVERY_V3_FAMILIES[2]):
                 lease_ticks = frame_record["diagnostic_state"].get("action_lease_ticks")
                 if (type(lease_ticks) is not int or not 6 <= lease_ticks <= 12
                         or view["tick"] + lease_ticks > 240):

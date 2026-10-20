@@ -120,6 +120,65 @@ boundary without consuming physics. The correction does not establish teacher
 qualification, preserved vigor, or success in any unobserved case. Those claims
 require their separately declared complete physical comparison.
 
+## Contact-transition movement in recovery v3
+
+[`JoltRecoveryControllerV3`](../src/nca/controllers/jolt_recovery_v3.py), registered
+as `authored-jolt-recovery@3`, implements the bounded movement correction in
+[#64](https://github.com/techrote/neural-cyber-automata/issues/64). V1, v2, the
+original reference, the arrival reference and the minimal supervisor retain
+their published source bytes. No host actuator, physical profile, gyro limit,
+caller deadline or task success predicate changes.
+
+The retained v2 replay shows a supported initial anticipation at tick 12 followed
+by fresh raw support loss at tick 18. Its body moves only 0.022405 cells and has
+speed 0.967788 cells/s; waiting for another full unsupported stall window delays
+the first pulse until tick 42. V3 gives that observed contact change an explicit
+one-interval lifecycle. It may complete the original anticipation exactly six
+ticks later when the preceding sample was supported, the current sample is
+unsupported with a measured floor within 16 cells, displacement is at most
+0.40 cells and speed is at most six cells/s. The observation must be current at
+the caller's clock. It checks the current energy, cooldown, ceiling, room and
+original deadline again. Unknown support, motion outside that envelope, a gap
+or lost authority discards the pending witness. This is a newly observed
+support-change condition, without a retained support latch or renewed lease.
+
+The first pulse keeps the original initial aim/effort calculation. A subsequent
+pulse keeps the same fresh recovery-window and cooldown-acknowledgment rules,
+but divides its impulse differently. It chooses a bounded lift component,
+then analytically solves the horizontal velocity that fits flight, reaction
+and stopping distance. The calculation subtracts signed existing horizontal
+velocity, so an opposing velocity must be overcome before it can request a
+pulse. It refuses a vector whose resulting modeled velocity still points away
+from the target. Total effort stays within the caller's budget; the recovery
+minimum is 0.40, the horizontal aim cap remains 0.82, upward result remains at
+least 20 cells/s, and ceiling and time bounds still apply. This trades the old
+steep, full-effort second arc for a shorter arc with more horizontal impulse
+where the current room permits it. The calculation is an admission heuristic;
+it cannot establish actual landing progress through unknown contact forces.
+
+Ordinary ground control also responds earlier to the caller's arrival envelope.
+A currently supported, slow, upright sample within tolerance requests a neutral
+hold immediately. Twelve sampled quiet ticks still mark an advisory only;
+`status="running"`, the original lease and caller-validated completion remain
+unchanged. A supported sample within tolerance with horizontal speed above six
+cells/s requests a bounded counter-traction input instead of continuing toward
+the target's exact center. Disturbance resumes ordinary correction.
+
+After both permitted primary edges, a fresh supported no-progress window can
+authorize at most twelve ticks of stronger ordinary traction. New motion, loss
+or uncertainty of support, arrival, a sample gap or lost authority ends it. The
+history is then cleared, requiring another complete observed-demand window
+before it can start again. This operation never grants a third primary edge or
+moves ordinary control into the supervisor.
+
+[`test_jolt_recovery_v3.py`](../tests/test_jolt_recovery_v3.py) uses the retained
+four-sample anticipation prefix, a retained second-pulse source and synthetic
+authority/geometry boundaries. It keeps the tick-223 aliasing regression and
+checks pulse resources, the two-edge cap, signed velocity, bounded traction and
+advisory holding. These tests establish software decisions, not counterfactual
+physical outcomes. The independently declared diagnostic owns teacher arrival,
+airborne character, landing progress and acceptance claims.
+
 ## Minimal physical recovery supervisor
 
 [`PhysicalRecoverySupervisor`](../src/nca/controllers/recovery_supervisor.py)

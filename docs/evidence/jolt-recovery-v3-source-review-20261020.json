@@ -1,0 +1,147 @@
+{
+  "analytic_envelope_admissions_checked": 4076,
+  "analytic_envelope_states_checked": 20736,
+  "budget": {
+    "automatic_budget_extension": false,
+    "automatic_retry": false,
+    "checkpoint_executions": 0,
+    "learned_policy_calls": 0,
+    "maximum_attempts": 1,
+    "maximum_decisions": 3840,
+    "maximum_episode_decisions": 40,
+    "maximum_episode_ticks": 240,
+    "maximum_episodes": 96,
+    "maximum_host_requests": 4226,
+    "maximum_host_starts": 1,
+    "maximum_requested_ticks": 23040,
+    "maximum_wall_seconds": 900,
+    "optimizer_updates": 0
+  },
+  "candidate_specification_sha256": "e180844789194c1a928c673599aed48a987db617e26be96e7043dc7ee6c72a2e",
+  "case_count": 32,
+  "case_inventory_sha256": "b48eeeffa3b07f0a12a8cc2736fd0ed80f500e95b00bb69f9e46fb2c3fabd06d",
+  "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+  "limits": [
+    "Exact published commit/tree and completed software checks must be bound before run admission.",
+    "These opened development observations and arithmetic checks cannot establish physical arrival, rescue, vigor or owner feel."
+  ],
+  "new_owner_requests": 0,
+  "new_physical_host_starts": 0,
+  "new_physical_ticks": 0,
+  "opened_evaluation_origin_count": 8,
+  "optimizer_updates": 0,
+  "retained_initial_prefixes": [
+    {
+      "case_id": "demo-floor-right-24-0",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "d28e614c249a43d03063f885c5abc68b551958a2749bc9903abe530ffbf29c9a",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "941c2bc086ef03eb4473d7c5e9da3766f17277e36c483ea745e1cfc85c34fe2e",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "b6d21044c70a5d1ec7c20a941286ff71eba3b0f9ad129123d4257edcde26ec18",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "d9a4f710647143a211316609d31ff277f4bf0dea2c9d6ccc11d5a440e45773a2",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "14fe5ae14232b1233733d2d452ac2925e0830b1b5fd47fc8bb74e44eca2a8e29",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "8e4adfe4e46bf0747cfe40b139b7a15bf8a1e4570b1e37be79104d315c64e1ea",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "981635b58861bf08caa3f00428b03e0b3606d7f60970292d4c1287323b43aa78",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "31df36a43f3cf4397a627345eec673d96a189f4a80bfa387437d3eb18cdfc947",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "046a23b0b47ab517c2dfe9e57734a66165147c407a3172a518e029a2c1db2a91",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "d1efb48390a1ef3fc3a40dbd5ded36743749d2c613226875f3b07054df2ba2a9",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "b6bfa9ad9b106f2206f9d4d19b3ffdd0c3c1c88dab97e66b44cfab6ac7167fce",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "20483ea689d67383cb80f673795777ef97c4e0ac2c487fd51e318d2aecb83593",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "67b301c0d97f5e2df8efa393fe6c34a7e5d54e05e7e7459459d79c9fa1a90032",
+      "original_first_primary_source_tick": 42
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "new_first_primary_source_tick": 18,
+      "original_artifact_sha256": "b4ac191e90c6921ee1af52d482d4ba97bf4b11643e813b62794bd2c187d207e9",
+      "original_first_primary_source_tick": 42
+    }
+  ],
+  "review_findings_resolved_before_freeze": [
+    "Initial recovery solve ignored opposing vx and could knowingly request negative resulting toward velocity; signed compensation and positive-result admission now verified.",
+    "Inherited generic pulse specification described old recovery aim; v3 now declares both first and second pulse formulas."
+  ],
+  "schema": "nca-jolt-recovery-003-prospective-independent-review/v1",
+  "scope": "Independent retained-prefix replay, analytic envelope checks and fixed allocation/source/acceptance inspection; no physical outcome prediction.",
+  "source_file_sha256": {
+    "configs/baselines/jolt-recovery-diagnostic-v3.json": "16ebe1cb655895017b275d35bc692b94ada95f8bfd4c2b29d371a61ab4577296",
+    "src/nca/builtins.py": "038373dee0a19109d0abefd78824827c89b828477ddb115239233ebc91115bdc",
+    "src/nca/controllers/__init__.py": "87d3345a1f0280286163406299ad5c524940eabd391b6cb5198beb39952fc0ad",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+    "src/nca/evaluation/jolt_arrival.py": "21616fa2d649eff04bbc89d2220cd39d5999a305e203f41499bd0759412165aa",
+    "src/nca/evaluation/jolt_recovery_acceptance.py": "1676b09bf5b6e48e7d15f9f33f8e7586b78d1a95a06eb50dce396a0ff3b1b783",
+    "tests/test_jolt_recovery_v3.py": "6afc0889aaa9af4eeb103545a019b5a0d9c7d11ef05d54946cf7536a04e49901",
+    "tests/test_jolt_recovery_v3_diagnostic.py": "6a5742d78e6775f98796d5a57974b6c5168a54030b72d581278746b36a6aa1a0",
+    "tools/jolt_arrival.py": "f8658db347b196a56c9278284c19d0984e26b079817d78d9ecb303851ffa4fcf"
+  },
+  "unchanged_acceptance_sha256_without_identity": "1d20379d7a724c87b7d16845c1f5043e253ec7640a3b208a008240665383afa2",
+  "unchanged_preserved_sources": {
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec"
+  }
+}

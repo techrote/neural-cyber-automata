@@ -18,6 +18,8 @@ from nca.contracts import ContractError, sha256_json, strict_json_loads
 REFERENCE = "jolt-arrival-v1"
 CANDIDATE = "jolt-recovery-v1"
 CANDIDATE_V2 = "jolt-recovery-v2"
+CANDIDATE_V3 = "jolt-recovery-v3"
+_CANDIDATE_VERSIONS = {CANDIDATE: "v1", CANDIDATE_V2: "v2", CANDIDATE_V3: "v3"}
 HISTORICAL_FAILURES = (
     "demo-floor-left-60-1", "demo-floor-left-60-2",
     "reference-floor-left-63", "reference-drop28-left-57",
@@ -35,9 +37,9 @@ RECOVERY_REASONS = {
 
 
 def acceptance_specification(candidate_family=CANDIDATE):
-    _require(candidate_family in (CANDIDATE, CANDIDATE_V2), "unknown recovery candidate version")
+    _require(candidate_family in _CANDIDATE_VERSIONS, "unknown recovery candidate version")
     return {
-        "schema": "nca-jolt-recovery-acceptance/" + ("v1" if candidate_family == CANDIDATE else "v2"),
+        "schema": "nca-jolt-recovery-acceptance/" + _CANDIDATE_VERSIONS[candidate_family],
         "reference": REFERENCE, "candidate": candidate_family,
         "paired_cases": 32,
         "minimum_extra_arrivals": 1,
@@ -74,7 +76,7 @@ def _number(value):
 
 def assess_teacher(rows, *, pulse_authority_verified, candidate_family=CANDIDATE):
     """Compute the published rule from complete receipt-verified result rows."""
-    _require(candidate_family in (CANDIDATE, CANDIDATE_V2), "unknown recovery candidate version")
+    _require(candidate_family in _CANDIDATE_VERSIONS, "unknown recovery candidate version")
     paired = {}
     for family in (REFERENCE, candidate_family):
         selected = [row for row in rows if row["family"] == family]
@@ -140,7 +142,7 @@ def assess_teacher(rows, *, pulse_authority_verified, candidate_family=CANDIDATE
         "fresh_physical_pulse_authority": pulse_authority_verified is True,
     }
     return {
-        "schema": "nca-jolt-recovery-behavior-review/" + ("v1" if candidate_family == CANDIDATE else "v2"),
+        "schema": "nca-jolt-recovery-behavior-review/" + _CANDIDATE_VERSIONS[candidate_family],
         "teacher_accepted": all(checks.values()), "checks": checks,
         "measurements": measurements, "toward_speed_ratio": ratio,
         "historical_rescues": rescued, "regressions": regressions,
@@ -159,6 +161,9 @@ def _candidate_controller(candidate_family):
     if candidate_family == CANDIDATE_V2:
         from nca.controllers.jolt_recovery_v2 import JoltRecoveryControllerV2
         return JoltRecoveryControllerV2()
+    if candidate_family == CANDIDATE_V3:
+        from nca.controllers.jolt_recovery_v3 import JoltRecoveryControllerV3
+        return JoltRecoveryControllerV3()
     raise ContractError("jolt_recovery_acceptance", "unknown recovery candidate version")
 
 
