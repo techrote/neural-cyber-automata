@@ -1,7 +1,7 @@
 ---
 title: Implementation progress checkpoints
 kind: evidence
-summary: Timestamped checkpoints for the commissioned ten-issue implementation programme.
+summary: Timestamped checkpoints for the commissioned behaviour and IK implementation programmes.
 owns: [evidence.programme-progress]
 verified: 2026-10-20
 ---
@@ -203,3 +203,37 @@ allocation needs its own public source/declaration freeze and independent review
 it cannot resume the failed v1 attempt or spend its unused budget. V1's lower
 observed prefix vigor remains a risk. All learning and morphology gates remain
 unchanged and blocked pending complete evidence and useful teacher behavior.
+
+## 2026-10-20 18:37 UTC — IK contracts implemented and independently reviewed
+
+The owner began the [CUDA IK chain / #49](https://github.com/techrote/neural-cyber-automata/issues/49).
+The first bounded increment, #50, owns the registered `runner-right-sole@1`
+descriptor, immutable observation/target/result records, nominal geometry and
+the prospective numeric acceptance declaration. Work started from `14b85d08`
+and reconciled with accepted Jolt PR #59 at
+`7fee91b18dd0a6bba7089870fb34c515cf2e9f5a`; unrelated source and evidence remain intact.
+
+Independent geometry review reconstructed both local anchors and rotary zeros
+from pinned Cybersand `f2e34cf9`, selected the sole point `(0,1)` and established
+the two-dimensional feasible target generator. Contract review exercised
+issued-root conversion, all lifecycle fields, explicit policy/grant identity,
+exclusive source age/lease, cancellation/replay and result/proof refusal.
+Absolute geometric goals remain distinct from bounded deltas and host tracking.
+
+The installed dependency-free wheel passed the local 580-case CPU suite:
+376 passed and 204 optional learner/physical-host cases were explicitly skipped.
+After the final declaration update, all 36 focused IK tests pass. Strict
+documentation checks pass all 65 files without errors or warnings. These are
+software fixture results; no inverse training, CUDA or physical IK run occurred.
+
+Acceptance review closed a trivial-fixture gap before publication: static
+starts must need a reach, sweeps need displacement and reversals, response
+trials need attributed motion, and paired stationary-reference controls must
+fail often enough to demonstrate useful tracking. The 90-tick static deadline
+includes completion of the full 18-tick dwell. Numeric, learned, exported and
+physical gates retain separate verdicts and denominators.
+
+The [contract guide](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and
+[host handoff](IK_HOST_HANDOFF.md) describe the implemented and missing pieces.
+Next is the scoped PR, required final-head checks and verified merge. Existing
+morphology, Jolt recovery and evidence gates remain unchanged.

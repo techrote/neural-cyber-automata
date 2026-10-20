@@ -88,6 +88,35 @@ Routine CI checks contracts, reset, sample handling and small fixtures. Long tra
 
 Promotion requires matched capabilities and declared information/timing, no critical lifecycle failures, useful task performance, measured runtime cost and separately recorded owner feel judgement. Do not demand perfect joints, a gyro momentum ledger or exact energy conservation.
 
+## CUDA IK programme
+
+D-016 commissions [IK-CUDA-000 / #49](https://github.com/techrote/neural-cyber-automata/issues/49).
+The first pilot targets Runner's right sole using two rotary coordinates and an
+observed root frame. Its [contracts](IK_LAYER.md), [prospective acceptance](IK_ACCEPTANCE.md)
+and [separate host requirements](IK_HOST_HANDOFF.md) distinguish nominal geometry,
+actual CUDA learning, exact CPU export and physical tracking evidence.
+
+| Issue | Deliverable | Dependency | Evidence state |
+|---|---|---|---|
+| [#50](https://github.com/techrote/neural-cyber-automata/issues/50) | Registered rig/effector/target/result contracts | Entry | Nominal profile and software fixtures |
+| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | Unimplemented; hardware unqualified |
+| [#52](https://github.com/techrote/neural-cyber-automata/issues/52) | Batched FK and independent numerical IK | #50 | Unimplemented |
+| [#53](https://github.com/techrote/neural-cyber-automata/issues/53) | Branch-aware data/curriculum and sealed family splits | #52 | Unimplemented |
+| [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | Unmeasured |
+| [#55](https://github.com/techrote/neural-cyber-automata/issues/55) | Host joint-target handoff and NCA adapter | #50, accepted separate Cybersand capability | Specification only |
+| [#56](https://github.com/techrote/neural-cyber-automata/issues/56) | Exact CPU runtime export | #54 | Unimplemented |
+| [#57](https://github.com/techrote/neural-cyber-automata/issues/57) | Physical qualification and runbook for the exported bundle | #55, #56 | Unmeasured |
+
+After #50, CUDA infrastructure, reference geometry and host-interface preparation
+can proceed independently. Export precedes final physics scoring so the scored
+artifact is the delivered artifact. A host-capability gap does not prevent
+nominal learning preparation; it prevents claims of actual tracking.
+
+The independent fixed-chain task does not relax or inherit #16's failed
+locomotion/morphology prerequisite. Journal #43 and recovery #48 are related
+work, not unconditional blockers. Each issue retains a distinct branch/PR,
+independent review, exact-head checks and bounded experiment declaration.
+
 ## Preserved legacy programme
 
 All following tasks are deferred historical scopes. Their original IDs are retained and their original descriptions remain at [bootstrap 20d0634](https://github.com/techrote/neural-cyber-automata/blob/20d063423fda1e037f328fb32c40c00c73b121a5/docs/ROADMAP.md). Replacements do not mark the old work completed.
