@@ -1,0 +1,81 @@
+{
+  "schema": "nca-prerequisite-reproduction/v1",
+  "id": "t105-artifact-reproduction-20261019-v1",
+  "owning_task": "T-109",
+  "authorization": "D-014 and the renewed instruction to complete the implementation programme on 2026-10-19",
+  "purpose": "Create a new fully recorded instance of the original bounded T105 experiment after its large artifact collection could not be recovered; then qualify the prospectively fixed BC1103 export candidate.",
+  "historical_artifacts": {
+    "availability": "unavailable in this continuation after repository and exact/recent artifact-store searches; absence from every possible store is not established",
+    "training_run_id": "jolt-hop-cpu-screen-v1",
+    "training_summary_file_sha256": "71795cd042e3bd61c26dd3326cd9b3fa7250bc23664c6045dc47a89287b39272",
+    "training_summary_content_sha256": "5799a3fe61924d55244bc278e36d4ae0c264c6da1ad54d18a258ba4ed3aed784",
+    "bc1103_checkpoint_file_sha256": "e6724d87e8c08ee9d7aea3f04a392c908a577668e5aa92606e8c6f80d36cf8a9",
+    "bc1103_policy_sha256": "6f6b7b6c90dc9be52c672b5545680d4b763053910e2bc0ab95a64b3a5d1b7830",
+    "export_result": "reported trajectory-tolerance failure; original immutable screen receipts unavailable for numerical or causal verification",
+    "export_failure_preserved": true
+  },
+  "learner": {
+    "revision": "745578947a6f1ac2159830c4ae4de5de5593f32f",
+    "source_files_sha256": "bbb731f68316ef799710d3a0fc73f1a541b6c65292fea2b28a60d4bdf805ed8b",
+    "config": "configs/first-skill/jolt-screen-v1.json",
+    "config_content_sha256": "8e40c1f65a2fe32597ecc97d10bd6f4414f96762bdc198f5063a56acad68616c",
+    "accepted_dependency_commits": {
+      "t102": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+      "t103": "82702fa2875ad4863bc7faec860c5b86b6c50ce1",
+      "t104": "b5f665244d117fe55de7a4bd65721835684646f8"
+    },
+    "source_mutations": false,
+    "config_mutations": false,
+    "known_metadata_limit": "Original deterministic residual evaluation records retain a density at the mean; these records cannot be reused as stochastic PPO actor samples. The original training loop optimizes only training-family stochastic collection."
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "torch": "2.8.0+cpu",
+    "numpy": "2.3.5",
+    "pillow": "12.3.0",
+    "torch_threads": 1,
+    "device": "cpu",
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "godot_binary_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "native_artifact_sha256": "5bdc55e7f355004fc8a6468234b0d018d3919339ebfe47faca9997de3af17847",
+    "rapier_artifact_sha256": "147ab5673b9687ccb7a3b12fec07ea55cc674ad8a75f529d1085bf7d61fbd831"
+  },
+  "budget": {
+    "training_attempts": 1,
+    "maximum_total_decisions": 13000,
+    "maximum_wall_seconds": 1800,
+    "maximum_seed_wall_seconds": 900,
+    "training_seeds": [1103, 2207, 3301],
+    "learned_configurations": ["bc", "residual"],
+    "bc_epochs": 40,
+    "ppo_decisions_per_seed": 2048,
+    "ppo_updates_per_seed": 8,
+    "automatic_retry_or_budget_extension": false,
+    "gpu_or_paid_service": false
+  },
+  "prospective_export": {
+    "candidate": "bc-seed1103-final",
+    "selection_rule": "fixed in this declaration before any reproduced rollout or evaluation; no replacement seed, checkpoint or family selection",
+    "accepted_t105_dependency_commit": "7ff42f1d5d68b8ce03763dc8e8cc81f094325e5e",
+    "criteria": "configs/export/cpu-bc-v1.json",
+    "criteria_content_sha256": "f499cb94ec537f5c1cc1b601cfcfa37fdaf9f5e81abe365aecb23d72ad0f1df0",
+    "criteria_mutations": false,
+    "formal_export_attempts": 1,
+    "throughput_maximum_wall_seconds": 600,
+    "resume_checkpoint": "residual-seed1103-u07.pt",
+    "entry": "completed and audited reproduction with all fixed evaluation families; freeze the new manifest, summary, checkpoint and numeric-export hashes in a second record before conversion and screening",
+    "failure_handling": "retain a failed screen and audit its exact common inputs and divergence onset; no threshold changes or automatic rerun"
+  },
+  "publication": {
+    "new_artifacts_have_new_identities": true,
+    "historical_hash_comparison_is_diagnostic_only": true,
+    "mismatched_historical_policy_hash_does_not_trigger_retry": true,
+    "preserve_all_outcomes_and_known_metadata_limit": true,
+    "archive_complete_run_with_sha256": true,
+    "archive_large_files_outside_git": true,
+    "owner_feel_and_other_runtime_lanes": "unmeasured"
+  }
+}

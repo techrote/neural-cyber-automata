@@ -170,6 +170,25 @@ No live service or owner feel verdict is claimed.
 The frozen actual pilot passed ten cases, recording 338 owner operations and
 790 completed native ticks in 19.169 seconds with no skips or source drift.
 
+## Evaluated CPU export and deployment no-go
+
+The optional [runtime export lane](RUNTIME_EXPORT.md) converts the fixed trained
+BC seed 1103 policy into a hash-bound NumPy GRU with declared preprocessing,
+recurrence, wire mapping and exact runtime context. It fences original source
+observations, ownership changes, deadlines and unsupported profiles. Conversion
+verifies the accepted T105 training/evaluation lineage before admitting weights.
+
+The [single fixed-candidate screen](evidence/2026-10-19-t109-deployment-no-go.md)
+completed with an immutable no-go on published source `eb953615`. Both physical
+trajectory pairs exceeded the unchanged tolerances. The fixed-count throughput
+phase measured 79.033537896 seconds; the requested full ten-minute observation
+remains outstanding. A proven realtime reason-filter defect has a prospective
+checker correction and a separate same-receipt audit. Eleven focused checker
+tests and four actual evaluated-bundle integration tests passed, the latter
+using one host and 36 ticks. These engineering results do not qualify the
+deployment. The original interrupted training termination remains unconfirmed,
+and the complete original failure and distinct follow-up evidence are preserved.
+
 ## Conditional per-part graph result
 
 The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed

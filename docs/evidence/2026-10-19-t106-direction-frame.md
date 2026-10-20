@@ -3,7 +3,7 @@ title: Fixed Jolt direction-frame prerequisite follow-up
 kind: evidence
 summary: Separate commissioned per-rig BC experiment with fresh policy seeds and sealed geometry; the designated local run and later concurrent GitHub run both failed the unchanged prerequisite.
 owns: []
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Jolt direction-frame prerequisite follow-up
@@ -163,6 +163,23 @@ summary-content SHA-256
 and an index self-hash of
 `11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443`.
 The archive contains **438 verified members**.
+
+A 20 October read-only recovery audit found the available TAR copy truncated at
+18,451,815 bytes. Its observed hash differs from the original container identity
+above; that damaged copy is not a valid complete archive. Every one of the
+438 originally indexed member files survives and matches its original byte
+length and SHA-256. The original index and summary identities also match.
+
+The separate transport archive `t106-primary-evidence-recovered-20261020.tar.gz`
+contains those unchanged 438 files, the unchanged original index and a new
+transport-recovery receipt: 440 members, 18,730,255 bytes, SHA-256
+`c6a857e7fdc036939b47a8861d48bb0bae2cc57935fd878cb2c082c193b31fb1`.
+The [compact recovery record](t106-primary-archive-recovery-20261020.json)
+preserves both container identities and the complete member audit. This is
+packaging recovery only, with zero host starts, game requests or optimizer
+updates. It does not change the primary selection, failed result, original
+budget accounting or any morphology admission gate.
+
 
 ### Concurrent alternate execution
 
