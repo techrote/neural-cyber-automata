@@ -1,0 +1,20 @@
+{
+  "archive": {
+    "bytes": 34469879,
+    "filename": "nca-jolt-recovery-v3-diagnostic-20261020.tar.gz",
+    "sha256": "398e81ffc465150b9407cba64b43ed1ba0070aeb9d61180e96650aa1bedef7e8"
+  },
+  "complete_compressed_stream_verified": true,
+  "every_member_hash_and_size_verified": true,
+  "fresh_persisted_readback_verified": true,
+  "interpretation": "Archive transport integrity only; the original failed final-output inventory and negative teacher result remain unchanged.",
+  "members": 229,
+  "new_host_starts": 0,
+  "new_owner_requests": 0,
+  "new_physical_ticks": 0,
+  "original_archive_bytes_unchanged": true,
+  "original_final_inventory_verified": false,
+  "original_invocation_completed": false,
+  "schema": "nca-jolt-recovery-v3-delivery-audit/v1",
+  "teacher_accepted": false
+}

@@ -1,0 +1,2230 @@
+{
+  "declaration_sha256": "d7cc13335b453a755e9b7d950ac52d982aff553c025cbe0fbd47b81b5b0729eb",
+  "derived": true,
+  "episodes": [
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-24-0.json.gz",
+      "artifact_sha256": "d28e614c249a43d03063f885c5abc68b551958a2749bc9903abe530ffbf29c9a",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "71db63619db0a872c6ec5c2ef4b9a1f44cd1a70c4b9688133a41f808b21112fb",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-24-0",
+      "decisions": 25,
+      "final_distance_cells": 2.2503598709472126,
+      "final_position": [
+        198.222183227539,
+        347.879669189453
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        3.56057500839233,
+        0.881241321563721
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 150,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.24361945258246653,
+            -0.9698708998229709
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            185.593109130859,
+            346.948150634766
+          ],
+          "landing_tick": 82,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "a2eaf84214f7974be1d21c9b4cc8290c52bebdff5e1269c3d1855de41c1b90db",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 9.518859863280994
+        }
+      ],
+      "quiet_intervals": [
+        [
+          139,
+          150
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-24-1.json.gz",
+      "artifact_sha256": "941c2bc086ef03eb4473d7c5e9da3766f17277e36c483ea745e1cfc85c34fe2e",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "cc90b929a08e976417e06c2f6597c1a10eab74308c28d593ec81230cd59f71b3",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-24-1",
+      "decisions": 25,
+      "final_distance_cells": 2.2503598709472126,
+      "final_position": [
+        198.222183227539,
+        347.879669189453
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        3.56057500839233,
+        0.881241321563721
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 150,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.24361945258246653,
+            -0.9698708998229709
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            185.593109130859,
+            346.948150634766
+          ],
+          "landing_tick": 82,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "a3e272c961ed01e1b4e2d9a63737e0f667bfd54e6a9f039c5b47246448dcb390",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 9.518859863280994
+        }
+      ],
+      "quiet_intervals": [
+        [
+          139,
+          150
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-24-2.json.gz",
+      "artifact_sha256": "b6d21044c70a5d1ec7c20a941286ff71eba3b0f9ad129123d4257edcde26ec18",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "5f1f2dbad6b9beebccfe5c52911e7b75bc41d46b6c0ac5353c9c543e6a157500",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-24-2",
+      "decisions": 25,
+      "final_distance_cells": 2.253392883772673,
+      "final_position": [
+        198.222137451172,
+        347.884552001953
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        3.60538077354431,
+        0.710300505161285
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 150,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.24361945258246653,
+            -0.9698708998229709
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            185.593109130859,
+            346.948150634766
+          ],
+          "landing_tick": 82,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "5e171bfeb68b5a7a8e3239cc8680f90a9ff828cc3a0dcf9631df708272f2ba7a",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 9.518859863280994
+        }
+      ],
+      "quiet_intervals": [
+        [
+          139,
+          150
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-24-0.json.gz",
+      "artifact_sha256": "e7e615a5c6551d0e93a8b01ba8c1036b03ddc5134fa44e2d3179f61c9551c60b",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-24-0",
+      "decisions": 17,
+      "final_distance_cells": 2.4671467335135633,
+      "final_position": [
+        241.442169189453,
+        348.501739501953
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -3.42742037773132,
+        -0.0243380479514599
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 102,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.36692606608073297,
+            -0.9302501072456362
+          ],
+          "effort": 0.7068043409217567,
+          "landing_position": [
+            248.334548950195,
+            347.512786865234
+          ],
+          "landing_tick": 54,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "32ea0e08aae3004eadd497a4a8e7c66418822ca1159f7d0a31a295694c2a5c4e",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 15.681015014648978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          86,
+          86
+        ],
+        [
+          91,
+          102
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-24-1.json.gz",
+      "artifact_sha256": "7e620b7816ba6033322e311b8cd02a0668aa41069b9e4e756ac1e59696375125",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-24-1",
+      "decisions": 17,
+      "final_distance_cells": 2.4671467335135633,
+      "final_position": [
+        241.442169189453,
+        348.501739501953
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -3.42742037773132,
+        -0.0243380479514599
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 102,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.36692606608073297,
+            -0.9302501072456362
+          ],
+          "effort": 0.7068043409217567,
+          "landing_position": [
+            248.334548950195,
+            347.512786865234
+          ],
+          "landing_tick": 54,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "b1534ee599ec129b2ade05164e65e2858b1d824e389768e9e82601b0aa2404bb",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 15.681015014648978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          86,
+          86
+        ],
+        [
+          91,
+          102
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-24-2.json.gz",
+      "artifact_sha256": "9f1909cbe4a65583e87b9cf0603a29d003f118cd0bddaeef49dc06b7229dc043",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-24-2",
+      "decisions": 17,
+      "final_distance_cells": 2.4671467335135633,
+      "final_position": [
+        241.442169189453,
+        348.501739501953
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -3.42742037773132,
+        -0.0243380479514599
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 102,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.36692606608073297,
+            -0.9302501072456362
+          ],
+          "effort": 0.7068043409217567,
+          "landing_position": [
+            248.334548950195,
+            347.512786865234
+          ],
+          "landing_tick": 54,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "f5f28cc0237c17b94d956619104c1fb011bef2dd9599025516e1cd165fedc586",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 15.681015014648978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          86,
+          86
+        ],
+        [
+          91,
+          102
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-36-0.json.gz",
+      "artifact_sha256": "d9a4f710647143a211316609d31ff277f4bf0dea2c9d6ccc11d5a440e45773a2",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "0b06dea63bff8651f20c2b2831053c7060a98df57381f42afc449255b1238e06",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-36-0",
+      "decisions": 24,
+      "final_distance_cells": 3.751158154105727,
+      "final_position": [
+        208.805877685547,
+        348.466918945312
+      ],
+      "final_quiet_ticks": 13,
+      "final_supported": true,
+      "final_velocity": [
+        0.0343389399349689,
+        -0.129201084375381
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 13,
+      "physical_ticks": 144,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.3769527859157999,
+            -0.9262324747007725
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            192.894348144531,
+            346.79443359375
+          ],
+          "landing_tick": 83,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "7485a61858ba84e3f9328c6f3ab43a503894c5cac44bde09d82b5b4c9fc5f00d",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 16.820098876952983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          132,
+          144
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-36-1.json.gz",
+      "artifact_sha256": "14fe5ae14232b1233733d2d452ac2925e0830b1b5fd47fc8bb74e44eca2a8e29",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "49661c9b38b6a1f3833d0fbd8d91e40ac6ed688b104d9962dd3c2b1cd473b8d1",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-36-1",
+      "decisions": 40,
+      "final_distance_cells": 2.9461421922440065,
+      "final_position": [
+        209.813552856445,
+        348.474639892578
+      ],
+      "final_quiet_ticks": 17,
+      "final_supported": true,
+      "final_velocity": [
+        0.393349170684814,
+        -0.065470777451992
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 17,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.3769527859157999,
+            -0.9262324747007725
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            192.894348144531,
+            346.79443359375
+          ],
+          "landing_tick": 83,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "102bd0ee3180e7edc7246109f77dcd961537387d49a8d3d419a82ced680d0ae8",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 16.820098876952983
+        },
+        {
+          "aim": [
+            0.05,
+            -0.998749217771909
+          ],
+          "effort": 0.7412059979956899,
+          "landing_position": [
+            205.718627929688,
+            345.836151123047
+          ],
+          "landing_tick": 182,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "67c58c5908a4bea088856315b3fe683f12bdf492647ab49175b260dd604fb6f6",
+          "source_position": [
+            207.015426635742,
+            348.463012695312
+          ],
+          "source_supported": true,
+          "source_tick": 156,
+          "source_velocity": [
+            -0.085899330675602,
+            -0.334477156400681
+          ],
+          "toward_landing_progress_cells": -1.296798706053977
+        }
+      ],
+      "quiet_intervals": [
+        [
+          219,
+          222
+        ],
+        [
+          224,
+          240
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-36-2.json.gz",
+      "artifact_sha256": "8e4adfe4e46bf0747cfe40b139b7a15bf8a1e4570b1e37be79104d315c64e1ea",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "df63f928cae198dad11dc3e165c3015ed958f07af916bd5cf1b2a119175d3a8f",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-36-2",
+      "decisions": 39,
+      "final_distance_cells": 2.7781500423932757,
+      "final_position": [
+        210.032958984375,
+        348.461853027344
+      ],
+      "final_quiet_ticks": 15,
+      "final_supported": true,
+      "final_velocity": [
+        2.27669429779053,
+        1.15003967285156
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 15,
+      "physical_ticks": 234,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.3769527859157999,
+            -0.9262324747007725
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            192.894348144531,
+            346.79443359375
+          ],
+          "landing_tick": 83,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "758eaceb46feecc57b1fe09a3673558b6c18a800c31cb1b4e89174ff8f893cd4",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 16.820098876952983
+        },
+        {
+          "aim": [
+            0.05,
+            -0.998749217771909
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            205.513427734375,
+            346.101531982422
+          ],
+          "landing_tick": 178,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "bb81d9e37fc207e8b78b90b82b3467c29af8b609e673a41aa7ebab877ccfd6f5",
+          "source_position": [
+            205.891540527344,
+            348.467437744141
+          ],
+          "source_supported": true,
+          "source_tick": 150,
+          "source_velocity": [
+            -0.175917387008667,
+            -0.266960322856903
+          ],
+          "toward_landing_progress_cells": -0.3781127929690058
+        }
+      ],
+      "quiet_intervals": [
+        [
+          220,
+          234
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-36-0.json.gz",
+      "artifact_sha256": "8693ceb5b204be0198e09cf66a4495babdfdde98b693781cee1550ca1822ce2f",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-36-0",
+      "decisions": 19,
+      "final_distance_cells": 2.3976692424353145,
+      "final_position": [
+        229.319747924805,
+        348.501770019531
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -2.97176694869995,
+        -1.11572759919909e-07
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 114,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.5669260660807329,
+            -0.8237686784517996
+          ],
+          "effort": 0.722258415505292,
+          "landing_position": [
+            241.84748840332,
+            347.650146484375
+          ],
+          "landing_tick": 50,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "678146d9e5565483902ea7c258830ccbf04c90db975c1c6242aaefc61809988e",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 22.168075561523978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          103,
+          114
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-36-1.json.gz",
+      "artifact_sha256": "ac64b0b241963fb8a154633ff365e27d2378405341f364368652dceab7996f02",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-36-1",
+      "decisions": 19,
+      "final_distance_cells": 2.3976692424353145,
+      "final_position": [
+        229.319747924805,
+        348.501770019531
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -2.97176694869995,
+        -1.11572759919909e-07
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 114,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.5669260660807329,
+            -0.8237686784517996
+          ],
+          "effort": 0.722258415505292,
+          "landing_position": [
+            241.84748840332,
+            347.650146484375
+          ],
+          "landing_tick": 50,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "3f6cbdaa419dbb3563c2e82755e41e6992f066415b7be6447eaa68e1731da83f",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 22.168075561523978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          103,
+          114
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-36-2.json.gz",
+      "artifact_sha256": "872db9c8987fc24077f25c86b416be49c3b6947f8b73500f2ecace4d9ecf05ed",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-36-2",
+      "decisions": 19,
+      "final_distance_cells": 2.3976692424353145,
+      "final_position": [
+        229.319747924805,
+        348.501770019531
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -2.97176694869995,
+        -1.11572759919909e-07
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 114,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.5669260660807329,
+            -0.8237686784517996
+          ],
+          "effort": 0.722258415505292,
+          "landing_position": [
+            241.84748840332,
+            347.650146484375
+          ],
+          "landing_tick": 50,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "dfbfe857d0b9aa9c408a360ef7d2a49340ceda467aa57b8d7210358881c8ca71",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 22.168075561523978
+        }
+      ],
+      "quiet_intervals": [
+        [
+          103,
+          114
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-48-0.json.gz",
+      "artifact_sha256": "981635b58861bf08caa3f00428b03e0b3606d7f60970292d4c1287323b43aa78",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "894d6548d33b7e7d8bbeb9fd5bc8e880af8b07baecc20b10c9c8d960991d0671",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-48-0",
+      "decisions": 40,
+      "final_distance_cells": 4.507827290320965,
+      "final_position": [
+        219.947738647461,
+        348.474761962891
+      ],
+      "final_quiet_ticks": 0,
+      "final_supported": true,
+      "final_velocity": [
+        6.35173225402832,
+        -2.72736740112305
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 0,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.5102861192491333,
+            -0.8600046956276804
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            196.783752441406,
+            346.821441650391
+          ],
+          "landing_tick": 81,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "ff81c9cdeea72fa3901d9e35bc822a307437761c0d7854ac2a243f50bac09386",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 20.709503173827983
+        },
+        {
+          "aim": [
+            0.07061784532335544,
+            -0.9975034435639241
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            217.27897644043,
+            347.153961181641
+          ],
+          "landing_tick": 212,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "1da14565f129aa5aff2c220896bc38f468361ecc3561404b50ee62753518c28f",
+          "source_position": [
+            215.644393920898,
+            348.463165283203
+          ],
+          "source_supported": true,
+          "source_tick": 168,
+          "source_velocity": [
+            0.376617312431335,
+            0.332374632358551
+          ],
+          "toward_landing_progress_cells": 1.634582519531989
+        }
+      ],
+      "quiet_intervals": [],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-48-1.json.gz",
+      "artifact_sha256": "31df36a43f3cf4397a627345eec673d96a189f4a80bfa387437d3eb18cdfc947",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "97f022435633ae88c8144f95ffda163ae895eb55df183bd45d03619d1c5201fc",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-48-1",
+      "decisions": 28,
+      "final_distance_cells": 2.79055118367084,
+      "final_position": [
+        222.049926757812,
+        348.49609375
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        4.65945816040039,
+        -0.851367771625519
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 168,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.5102861192491333,
+            -0.8600046956276804
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            196.783752441406,
+            346.821441650391
+          ],
+          "landing_tick": 81,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "2a70d1c7f9da81eb0d9ee85e69dd8b278fbee8b19c4962dd826c12495a16b444",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 20.709503173827983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          154,
+          155
+        ],
+        [
+          157,
+          168
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-48-2.json.gz",
+      "artifact_sha256": "046a23b0b47ab517c2dfe9e57734a66165147c407a3172a518e029a2c1db2a91",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "10004b34a20b6d1c0e14107ab596abc3d313628e89a161f422a35e549f7611ac",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-48-2",
+      "decisions": 39,
+      "final_distance_cells": 2.067515841958176,
+      "final_position": [
+        222.719512939453,
+        348.123260498047
+      ],
+      "final_quiet_ticks": 17,
+      "final_supported": true,
+      "final_velocity": [
+        4.02163648605347,
+        -2.52622771263123
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 17,
+      "physical_ticks": 234,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.5102861192491333,
+            -0.8600046956276804
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            196.78092956543,
+            346.820129394531
+          ],
+          "landing_tick": 81,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "44b285450b4a3283a6057311f805cd0ab7ffa6ee94f10d8759e0d9e0fe049a7d",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 20.70668029785199
+        },
+        {
+          "aim": [
+            0.13710242377386678,
+            -0.9905568764060603
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            213.868789672852,
+            346.820678710938
+          ],
+          "landing_tick": 179,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "d760e1c7c2aeb06f43f455920e9e5b9e87f40ebac6097c100b4ea2c2d4a6e277",
+          "source_position": [
+            209.660781860352,
+            348.468811035156
+          ],
+          "source_supported": true,
+          "source_tick": 144,
+          "source_velocity": [
+            -0.0837444588541985,
+            -0.465590387582779
+          ],
+          "toward_landing_progress_cells": 4.2080078125
+        }
+      ],
+      "quiet_intervals": [
+        [
+          218,
+          234
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-48-0.json.gz",
+      "artifact_sha256": "44af4cd31e540730fe7973f7cd72384fc69990ab62fcf16c93cb63ad3f2010ea",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-48-0",
+      "decisions": 18,
+      "final_distance_cells": 2.7606635442179637,
+      "final_position": [
+        217.90705871582,
+        348.49609375
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -2.58839988708496,
+        -0.20599140226841
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 108,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.766926066080733,
+            -0.6417354666573535
+          ],
+          "effort": 0.7622998437916678,
+          "landing_position": [
+            239.047134399414,
+            347.095947265625
+          ],
+          "landing_tick": 42,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "b0dc5ee710faad131bd051d8404322485a4e2882f89ca76d0bfe4726c2feaa01",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 24.96842956542997
+        }
+      ],
+      "quiet_intervals": [
+        [
+          97,
+          108
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-48-1.json.gz",
+      "artifact_sha256": "651279dc904e9e858a1020eba70764eca4161c91456ca51d7c6f88bec27654f2",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-48-1",
+      "decisions": 18,
+      "final_distance_cells": 2.7606635442179637,
+      "final_position": [
+        217.90705871582,
+        348.49609375
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -2.58839988708496,
+        -0.20599140226841
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 108,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.766926066080733,
+            -0.6417354666573535
+          ],
+          "effort": 0.7622998437916678,
+          "landing_position": [
+            239.047134399414,
+            347.095947265625
+          ],
+          "landing_tick": 42,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "88a6ece6a22cf6396e427db9e93adb94ae22249036b01d519958797e8fe39708",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 24.96842956542997
+        }
+      ],
+      "quiet_intervals": [
+        [
+          97,
+          108
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-48-2.json.gz",
+      "artifact_sha256": "85bc5ac248cd27dc39580db0c35731e67c35320537a39e5edf833a8a7f7132d9",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-48-2",
+      "decisions": 18,
+      "final_distance_cells": 2.722440147991567,
+      "final_position": [
+        217.852478027344,
+        348.494995117188
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -1.70053505897522,
+        -0.436104297637939
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 108,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.766926066080733,
+            -0.6417354666573535
+          ],
+          "effort": 0.7622998437916678,
+          "landing_position": [
+            239.047134399414,
+            347.095947265625
+          ],
+          "landing_tick": 42,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "5df7484819a9817d052d64c79ae0a70737344f50dc033a7552a1e8a00d483358",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 24.96842956542997
+        }
+      ],
+      "quiet_intervals": [
+        [
+          97,
+          108
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-60-0.json.gz",
+      "artifact_sha256": "d1efb48390a1ef3fc3a40dbd5ded36743749d2c613226875f3b07054df2ba2a9",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "806971a30de7d11e944997d4006dc806ad3c58772b3e6bc7362c1c286608c676",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-60-0",
+      "decisions": 40,
+      "final_distance_cells": 3.037025115670438,
+      "final_position": [
+        233.703872680664,
+        348.48779296875
+      ],
+      "final_quiet_ticks": 2,
+      "final_supported": true,
+      "final_velocity": [
+        4.33571767807007,
+        1.09808671474457
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 3,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.6436194525824666,
+            -0.7653456737040107
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            198.694534301758,
+            346.669006347656
+          ],
+          "landing_tick": 77,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "ad962e9a1c2d4bf5e50601a10dc92438a9d40564cefd28cff31f761476ab9ca7",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 22.62028503418
+        },
+        {
+          "aim": [
+            0.18990393744574433,
+            -0.981802675970382
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            221.026916503906,
+            346.723022460938
+          ],
+          "landing_tick": 183,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "8c6087428e5928a8d76629d379794bde40720203a4071381845925711da56deb",
+          "source_position": [
+            216.908645629883,
+            348.466735839844
+          ],
+          "source_supported": true,
+          "source_tick": 150,
+          "source_velocity": [
+            -0.650007367134094,
+            -0.560306310653687
+          ],
+          "toward_landing_progress_cells": 4.118270874022983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          231,
+          231
+        ],
+        [
+          235,
+          237
+        ],
+        [
+          239,
+          240
+        ]
+      ],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-60-1.json.gz",
+      "artifact_sha256": "b6bfa9ad9b106f2206f9d4d19b3ffdd0c3c1c88dab97e66b44cfab6ac7167fce",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "b83c2d99f8b6fc5f2fe3e4c5894741f09431cce754e9497bc9cca2fc548ac497",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-60-1",
+      "decisions": 40,
+      "final_distance_cells": 3.037025115670438,
+      "final_position": [
+        233.703872680664,
+        348.48779296875
+      ],
+      "final_quiet_ticks": 2,
+      "final_supported": true,
+      "final_velocity": [
+        4.33571767807007,
+        1.09808671474457
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 3,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.6436194525824666,
+            -0.7653456737040107
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            198.694534301758,
+            346.669006347656
+          ],
+          "landing_tick": 77,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "f2e206ef67031b4b212ac68e94a2fc15ab320b772139e2dc5302f3293f373368",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 22.62028503418
+        },
+        {
+          "aim": [
+            0.18990393744574433,
+            -0.981802675970382
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            221.026916503906,
+            346.723022460938
+          ],
+          "landing_tick": 183,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "047b8380f6573f0c82abcd842a778230db4993cae8a0d43f329259ff8b4d6b2e",
+          "source_position": [
+            216.908645629883,
+            348.466735839844
+          ],
+          "source_supported": true,
+          "source_tick": 150,
+          "source_velocity": [
+            -0.650007367134094,
+            -0.560306310653687
+          ],
+          "toward_landing_progress_cells": 4.118270874022983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          231,
+          231
+        ],
+        [
+          235,
+          237
+        ],
+        [
+          239,
+          240
+        ]
+      ],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-right-60-2.json.gz",
+      "artifact_sha256": "20483ea689d67383cb80f673795777ef97c4e0ac2c487fd51e318d2aecb83593",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "0fd5b5a91c6e8af286c4846d15025dc867680f6d271f5a73b7db8584df0c1191",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "demo-floor-right-60-2",
+      "decisions": 40,
+      "final_distance_cells": 3.037025115670438,
+      "final_position": [
+        233.703872680664,
+        348.48779296875
+      ],
+      "final_quiet_ticks": 2,
+      "final_supported": true,
+      "final_velocity": [
+        4.33571767807007,
+        1.09808671474457
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 3,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.6436194525824666,
+            -0.7653456737040107
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            198.694534301758,
+            346.669006347656
+          ],
+          "landing_tick": 77,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "be1567582f03242ad7d60e94a0a20349bf21d81157392aceff97e4350c0f582d",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 22.62028503418
+        },
+        {
+          "aim": [
+            0.18990393744574433,
+            -0.981802675970382
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            221.026916503906,
+            346.723022460938
+          ],
+          "landing_tick": 183,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "15a0601ee59803118628ba4b9ffb8d3d38c20b4869579548af91b7fe33d7da7d",
+          "source_position": [
+            216.908645629883,
+            348.466735839844
+          ],
+          "source_supported": true,
+          "source_tick": 150,
+          "source_velocity": [
+            -0.650007367134094,
+            -0.560306310653687
+          ],
+          "toward_landing_progress_cells": 4.118270874022983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          231,
+          231
+        ],
+        [
+          235,
+          237
+        ],
+        [
+          239,
+          240
+        ]
+      ],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-60-0.json.gz",
+      "artifact_sha256": "c3b8febae580731bfbd4b9dfc97ad5ab1be82887633bd1807c19bc4e6c015a1a",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-60-0",
+      "decisions": 25,
+      "final_distance_cells": 3.5412554128769895,
+      "final_position": [
+        206.948196411133,
+        348.461791992188
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -0.0243755243718624,
+        -2.11004948616028
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 150,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            237.871017456055,
+            347.228759765625
+          ],
+          "landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "6664ad57bafda900c0ace4fd1cfb9bdee61f1d0e0ea6dbafaeeeb52581fb7d2a",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 26.144546508788977
+        }
+      ],
+      "quiet_intervals": [
+        [
+          139,
+          150
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-60-1.json.gz",
+      "artifact_sha256": "3febf3f665cd80ae8b643e19e7882adcd49dcb0e7002792606ea4513ff9db862",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-60-1",
+      "decisions": 40,
+      "final_distance_cells": 6.0820822264958965,
+      "final_position": [
+        209.754241943359,
+        348.469879150391
+      ],
+      "final_quiet_ticks": 0,
+      "final_supported": true,
+      "final_velocity": [
+        0.286800980567932,
+        -0.26148048043251
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 0,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            237.871017456055,
+            347.228759765625
+          ],
+          "landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "fecd30a485b0bbeb1902c8bbee1bb39c264c792dd6c642ef78d1671256a4d1ce",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 26.144546508788977
+        },
+        {
+          "aim": [
+            -0.05,
+            -0.998749217771909
+          ],
+          "effort": 0.7491223614499635,
+          "landing_position": [
+            209.573226928711,
+            346.875549316406
+          ],
+          "landing_tick": 182,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "39e5a80603ae79173db5c312c62107d273bbe639873afc221ee75ad62bdc9d82",
+          "source_position": [
+            209.072067260742,
+            348.48681640625
+          ],
+          "source_supported": true,
+          "source_tick": 156,
+          "source_velocity": [
+            0.761558353900909,
+            -0.987989366054535
+          ],
+          "toward_landing_progress_cells": -0.5011596679690058
+        }
+      ],
+      "quiet_intervals": [],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-demo-floor-left-60-2.json.gz",
+      "artifact_sha256": "21363448de432e92001b36656f4d17b7b2ab65e0e5362a8a7efeffba1e8eda41",
+      "canceled_initial_anticipations": [],
+      "case_id": "demo-floor-left-60-2",
+      "decisions": 26,
+      "final_distance_cells": 3.5559908068294,
+      "final_position": [
+        206.957443237305,
+        348.474487304688
+      ],
+      "final_quiet_ticks": 16,
+      "final_supported": true,
+      "final_velocity": [
+        -0.409314036369324,
+        0.411203533411026
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 16,
+      "physical_ticks": 156,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            237.871017456055,
+            347.228759765625
+          ],
+          "landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "aa16c386be936acc014f8cbd9946bcd259b618d3e26a2635b29885b077da3f24",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 26.144546508788977
+        }
+      ],
+      "quiet_intervals": [
+        [
+          141,
+          156
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-floor-right-27.json.gz",
+      "artifact_sha256": "67b301c0d97f5e2df8efa393fe6c34a7e5d54e05e7e7459459d79c9fa1a90032",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "e18c95ed46c045005322b2f2dac5684006581e3b5a031d5353cae4547e636425",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "reference-floor-right-27",
+      "decisions": 32,
+      "final_distance_cells": 3.9517891278731905,
+      "final_position": [
+        199.57292175293,
+        348.467681884766
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -0.233061835169792,
+        -0.279219776391983
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 192,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.27695278591579986,
+            -0.9608835279957073
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            186.881423950195,
+            346.879058837891
+          ],
+          "landing_tick": 82,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "4e588a8f521e60b0a6ddb32eb1994830ae3d0eb30563dcbe3bff47592f8d7816",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 10.807174682616989
+        }
+      ],
+      "quiet_intervals": [
+        [
+          181,
+          192
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-floor-left-27.json.gz",
+      "artifact_sha256": "e0d30a35459536c5ca8796bf11f4d1ec0f564bb426cca1bd10777868e0074d76",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-floor-left-27",
+      "decisions": 20,
+      "final_distance_cells": 2.3534262324116972,
+      "final_position": [
+        238.29704284668,
+        348.463745117188
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -3.34341764450073,
+        -0.0333130657672882
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 120,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.41692606608073296,
+            -0.9089404025690817
+          ],
+          "effort": 0.7094922213184306,
+          "landing_position": [
+            246.624420166016,
+            347.368347167969
+          ],
+          "landing_tick": 53,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "eef8dde0fa2079561c93c1fbb15633b7e1eb78cda6ae7529fdb46c923ea61ea1",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 17.391143798827983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          105,
+          105
+        ],
+        [
+          109,
+          120
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-floor-right-63.json.gz",
+      "artifact_sha256": "b4ac191e90c6921ee1af52d482d4ba97bf4b11643e813b62794bd2c187d207e9",
+      "canceled_initial_anticipations": [
+        {
+          "anticipation_tick": 12,
+          "changed_ground_distance": 2.0055731311598,
+          "changed_observation_sha256": "8d05da63d23cdabf73e93bc31b504388a235d3eef2c5877c5d471add5a8ad952",
+          "changed_speed": 0.9677882980226836,
+          "changed_support_tick": 18,
+          "position_displacement_cells": 0.02240483388212523
+        }
+      ],
+      "case_id": "reference-floor-right-63",
+      "decisions": 28,
+      "final_distance_cells": 2.4253071104774495,
+      "final_position": [
+        237.630325317383,
+        348.501525878906
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        4.08860349655151,
+        7.43818384663086e-09
+      ],
+      "first_toward_motion_seconds": 0.7166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 168,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.6769527859157999,
+            -0.7360264435744392
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            200.270660400391,
+            346.657318115234
+          ],
+          "landing_tick": 76,
+          "reason": "unsupported_edge_stall",
+          "source_observation_sha256": "cd2cc07eded38e10be2a24dba7a03cf72d295e6d0373bf3ef9f21fbd904f4287",
+          "source_position": [
+            176.074249267578,
+            346.473815917969
+          ],
+          "source_supported": false,
+          "source_tick": 42,
+          "source_velocity": [
+            -0.163401186466217,
+            0.888982057571411
+          ],
+          "toward_landing_progress_cells": 24.196411132812983
+        }
+      ],
+      "quiet_intervals": [
+        [
+          157,
+          168
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-reference-floor-left-63.json.gz",
+      "artifact_sha256": "650f45582b3891a9fff93e7e76fb24edd333813d864fc34191f70a520c04370b",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-floor-left-63",
+      "decisions": 40,
+      "final_distance_cells": 7.427631524678808,
+      "final_position": [
+        208.154067993164,
+        348.497253417969
+      ],
+      "final_quiet_ticks": 0,
+      "final_supported": true,
+      "final_velocity": [
+        -3.11953210830688,
+        0.383525192737579
+      ],
+      "first_toward_motion_seconds": 0.21666666666666667,
+      "longest_quiet_ticks": 0,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            237.871017456055,
+            347.228759765625
+          ],
+          "landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "183ca584d155c9256fa55e335806f8147190f475e87551eca7e9ac98ccb24ad2",
+          "source_position": [
+            264.015563964844,
+            348.501007080078
+          ],
+          "source_supported": true,
+          "source_tick": 12,
+          "source_velocity": [
+            -1.07191181182861,
+            -2.97527353865235e-08
+          ],
+          "toward_landing_progress_cells": 26.144546508788977
+        },
+        {
+          "aim": [
+            -0.08900519476996654,
+            -0.9960311618137057
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            212.461929321289,
+            345.873168945312
+          ],
+          "landing_tick": 178,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "ef57045d3776514bb9fd81005b5e52c10ad04fe219ecb4983c685fa14a35458a",
+          "source_position": [
+            211.010467529297,
+            348.462280273438
+          ],
+          "source_supported": true,
+          "source_tick": 150,
+          "source_velocity": [
+            1.03888475894928,
+            0.478088736534119
+          ],
+          "toward_landing_progress_cells": -1.451461791992017
+        }
+      ],
+      "quiet_intervals": [],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": false,
+      "artifact": "episodes/jolt-recovery-v2-reference-drop12-right-45.json.gz",
+      "artifact_sha256": "18ac32c7848bd63e1ad60e7b94e9522f8ba6dcac06fe74e3829ba541c0b9c9d2",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-drop12-right-45",
+      "decisions": 40,
+      "final_distance_cells": 7.302367179029586,
+      "final_position": [
+        213.966461181641,
+        348.463134765625
+      ],
+      "final_quiet_ticks": 0,
+      "final_supported": true,
+      "final_velocity": [
+        2.93760657310486,
+        0.499107867479324
+      ],
+      "first_toward_motion_seconds": 0.6166666666666667,
+      "longest_quiet_ticks": 0,
+      "physical_ticks": 240,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.7210807800293002,
+            -0.6928510003401424
+          ],
+          "effort": 0.7500809696646592,
+          "landing_position": [
+            193.005355834961,
+            346.399597167969
+          ],
+          "landing_tick": 81,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "59d569073e76ac43fdfae00263584cf5acd961d03e178bd63b33dce9c68a175e",
+          "source_position": [
+            175.735153198242,
+            348.499176025391
+          ],
+          "source_supported": true,
+          "source_tick": 36,
+          "source_velocity": [
+            0.821515440940857,
+            -0.336353898048401
+          ],
+          "toward_landing_progress_cells": 17.270202636719006
+        },
+        {
+          "aim": [
+            0.1525539822048668,
+            -0.9882951393756003
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            207.189071655273,
+            346.450042724609
+          ],
+          "landing_tick": 175,
+          "reason": "supported_no_progress",
+          "source_observation_sha256": "a77a598f1d5ead7129fe8c574677735a425007752dfb7d849aaf0f51e488f84f",
+          "source_position": [
+            205.270141601562,
+            348.500396728516
+          ],
+          "source_supported": true,
+          "source_tick": 144,
+          "source_velocity": [
+            -0.539166510105133,
+            0.00741179333999753
+          ],
+          "toward_landing_progress_cells": 1.9189300537110228
+        }
+      ],
+      "quiet_intervals": [],
+      "reason": "task_deadline"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-drop12-left-45.json.gz",
+      "artifact_sha256": "fbfadd6c2a7de0c4e83b2605dd141d2bad3e115761b91f84974f6f0d5fa4b2f1",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-drop12-left-45",
+      "decisions": 24,
+      "final_distance_cells": 2.597821411460739,
+      "final_position": [
+        220.658538818359,
+        348.499481201172
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        -3.74769735336304,
+        0.0631936192512512
+      ],
+      "first_toward_motion_seconds": 0.5833333333333334,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 144,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.7246073404948002,
+            -0.6891619563651584
+          ],
+          "effort": 0.7384672563165655,
+          "landing_position": [
+            240.601257324219,
+            347.161773681641
+          ],
+          "landing_tick": 73,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "8d5464ad89ce3a0f7a0b745bce09289a930c92c8fa443d5883b44ad392df3063",
+          "source_position": [
+            264.476440429688,
+            348.501708984375
+          ],
+          "source_supported": true,
+          "source_tick": 42,
+          "source_velocity": [
+            -2.17644429206848,
+            1.48763676932617e-08
+          ],
+          "toward_landing_progress_cells": 23.875183105469006
+        }
+      ],
+      "quiet_intervals": [
+        [
+          133,
+          144
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-drop28-right-57.json.gz",
+      "artifact_sha256": "850d2910043409f88f686ae10234aa650c3ac4fbfab9aeaa63ff559ce5a3b0fb",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-drop28-right-57",
+      "decisions": 30,
+      "final_distance_cells": 2.392600328965084,
+      "final_position": [
+        231.689483642578,
+        348.501770019531
+      ],
+      "final_quiet_ticks": 12,
+      "final_supported": true,
+      "final_velocity": [
+        3.43985104560852,
+        2.97527353865235e-08
+      ],
+      "first_toward_motion_seconds": 0.8166666666666667,
+      "longest_quiet_ticks": 12,
+      "physical_ticks": 180,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            188.877227783203,
+            345.898773193359
+          ],
+          "landing_tick": 71,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "9c8396ff7140dde05eba158b034acb67607379ef2aa2be51f6923e1576c84239",
+          "source_position": [
+            176.00862121582,
+            348.453247070312
+          ],
+          "source_supported": true,
+          "source_tick": 48,
+          "source_velocity": [
+            0.569267690181732,
+            0.500853002071381
+          ],
+          "toward_landing_progress_cells": 12.868606567383011
+        }
+      ],
+      "quiet_intervals": [
+        [
+          165,
+          165
+        ],
+        [
+          169,
+          180
+        ]
+      ],
+      "reason": "arrival"
+    },
+    {
+      "arrived": true,
+      "artifact": "episodes/jolt-recovery-v2-reference-drop28-left-57.json.gz",
+      "artifact_sha256": "16b78f62de24aa86d6600464da58e76686814661a61ebbde2f6e789d53a8ce88",
+      "canceled_initial_anticipations": [],
+      "case_id": "reference-drop28-left-57",
+      "decisions": 28,
+      "final_distance_cells": 3.505467644439161,
+      "final_position": [
+        209.901870727539,
+        348.466583251953
+      ],
+      "final_quiet_ticks": 16,
+      "final_supported": true,
+      "final_velocity": [
+        0.313853114843369,
+        -0.576952993869781
+      ],
+      "first_toward_motion_seconds": 0.8,
+      "longest_quiet_ticks": 16,
+      "physical_ticks": 168,
+      "pulse_diagnostics": [
+        {
+          "aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "effort": 0.8,
+          "landing_position": [
+            236.757568359375,
+            347.288146972656
+          ],
+          "landing_tick": 84,
+          "reason": "initial_supported_launch",
+          "source_observation_sha256": "7dc2da530aac4fa55d1926e00c2c09a118b30c15f13033b3af7a1329d224191c",
+          "source_position": [
+            265.178894042969,
+            348.398223876953
+          ],
+          "source_supported": true,
+          "source_tick": 54,
+          "source_velocity": [
+            -2.27591180801392,
+            -2.41987252235413
+          ],
+          "toward_landing_progress_cells": 28.421325683593977
+        }
+      ],
+      "quiet_intervals": [
+        [
+          153,
+          168
+        ]
+      ],
+      "reason": "arrival"
+    }
+  ],
+  "frozen_source_files_verified": 93,
+  "inputs": {
+    "manifest.json": "229cadf95fe084d902e56272ff732b51386eef61d10ba07d76296d85c58b309d",
+    "summary.json": "3ce71ed0bb9748111b3d820597c8f29afad268978c4426f18d588af99d9c4347"
+  },
+  "limits": [
+    "Retained policy replay reproduces decisions only; changed-source replay cannot predict changed physical outcomes.",
+    "Native actuator receipts do not identify passive/contact wrench causes.",
+    "The prior independently accepted complete-journal audit is retained; this audit verifies original episode hashes and source/decision/native timing, not the whole journal again."
+  ],
+  "new_host_starts": 0,
+  "new_owner_requests": 0,
+  "new_physical_ticks": 0,
+  "schema": "nca-jolt-recovery-003-retained-replay/v1",
+  "source_files_sha256": "9f8cbc56e8c8fa6a4753f228460f06d52cc42f19ea695fec32890f37563da92a",
+  "source_revision": "8da294ae4a263dd95c34b181abb795b906060c2d",
+  "summary": {
+    "arrivals": 25,
+    "canceled_initial_anticipation_cases": 14,
+    "candidate_episodes": 32,
+    "exactly_replayed_decisions": 900,
+    "requested_primary_edges": 42,
+    "second_primary_edges": 10
+  }
+}

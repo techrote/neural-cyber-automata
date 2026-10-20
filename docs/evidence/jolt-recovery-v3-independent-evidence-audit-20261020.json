@@ -1,0 +1,2166 @@
+{
+  "artifact_bytes": 107602607,
+  "artifact_count": 198,
+  "artifact_identities": {
+    "episodes/authored-balanced-v1-demo-floor-left-24-0.json.gz": {
+      "bytes": 43404,
+      "sha256": "4d4ff130b5195f3996cb7481ee3f861a91c288fdb0da42960a804ad65a82bf09"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-24-1.json.gz": {
+      "bytes": 43377,
+      "sha256": "e822d11a8a3123f8f3e9cb6b91bcee762599d5b80afc0606522dc850ee670b1c"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-24-2.json.gz": {
+      "bytes": 43384,
+      "sha256": "cf1d9536d84917b2e83d4fd417002fb9142d33a23afd4fb631ea4674befd4a7c"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-36-0.json.gz": {
+      "bytes": 63811,
+      "sha256": "715f75ea6697e8219aec1040800b9fd7baaa19e2e965737a6c02d5b0f34371c7"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-36-1.json.gz": {
+      "bytes": 63821,
+      "sha256": "98ae785bb4ee3e1bdb88c260610fb4b6e1b639d2b73c45c8464922a0a3777aeb"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-36-2.json.gz": {
+      "bytes": 63813,
+      "sha256": "15e0dbc96601ee9c8d8ef2fa501e63e87883a548baf8e1d00d6adf93d2100bc1"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-48-0.json.gz": {
+      "bytes": 166469,
+      "sha256": "5211753de2d0d545b16a72d9f0fc4129d35d8efa91c2d2a690afcd5d301bf12a"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-48-1.json.gz": {
+      "bytes": 166375,
+      "sha256": "071872a05318af1ce314676b5cd10e3397de14040e34c759455e4bc27d5b2b4b"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-48-2.json.gz": {
+      "bytes": 166331,
+      "sha256": "e540b17be69d83b4b61e745b301387cc215818caa03cfcabb09ebfc97f427a3a"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-60-0.json.gz": {
+      "bytes": 166909,
+      "sha256": "45a2bcc99aca46e8b11e7c695365730d174564ecd080dd7164b2429f57aeb4a2"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-60-1.json.gz": {
+      "bytes": 135373,
+      "sha256": "649a381fee617edf6eccb7d1eca5e6da8c70610a70cb34948748f5ffd1c01804"
+    },
+    "episodes/authored-balanced-v1-demo-floor-left-60-2.json.gz": {
+      "bytes": 139906,
+      "sha256": "c7c6907d3773b48f46fa505a28f99fec071f8a565fbf31c8ccb21a5333ae4258"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-24-0.json.gz": {
+      "bytes": 162861,
+      "sha256": "70a434a1c6ca97f2d88bab967ed7cde8e14a583e1f84ea5438803a81926cb071"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-24-1.json.gz": {
+      "bytes": 162855,
+      "sha256": "ba850351e3993d22ecf201ea05d313be6a2f04cd92687ead2c503f2f01823116"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-24-2.json.gz": {
+      "bytes": 164070,
+      "sha256": "a7a47bc60a3163195cff38ffaf59e0aa74cfe2f800b3f05d98cd7b25623a1a79"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-36-0.json.gz": {
+      "bytes": 75490,
+      "sha256": "ca399222c572d25c8bd144a44191c1988afe5a7ae987b03832a4305f7716a16a"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-36-1.json.gz": {
+      "bytes": 62800,
+      "sha256": "8ef77adaa55f11565f096c072d6ab6377d49b01fb86aa54272991086b2566018"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-36-2.json.gz": {
+      "bytes": 168379,
+      "sha256": "a63fdb057fe91d4cba10c8e78e8e85a16ef8147ce6e6fba8ee42ac3fcafe7ac5"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-48-0.json.gz": {
+      "bytes": 75058,
+      "sha256": "ba26d3c9a736d7e27c69a7e390be3f95df7313cc385fadb36243b6ea28c3d248"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-48-1.json.gz": {
+      "bytes": 67515,
+      "sha256": "1577ad55b174a8e5035d3302c89672b7a9524235426e69722cfe168311b278f9"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-48-2.json.gz": {
+      "bytes": 79593,
+      "sha256": "14149017e02b0fb2777a43d9d867dffa602c82b90f05a00cf396c9beeccf7441"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-60-0.json.gz": {
+      "bytes": 167245,
+      "sha256": "8aa8e71f5964ff48e84a1cd56f2a16070d9f525414e3ca4a5f90b9476a2fe64e"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-60-1.json.gz": {
+      "bytes": 167243,
+      "sha256": "cf817a2879d084840d368362c23506b87eb8427aaf034c6c5ea650f735588cd3"
+    },
+    "episodes/authored-balanced-v1-demo-floor-right-60-2.json.gz": {
+      "bytes": 167275,
+      "sha256": "67d466552de484938439eb417a336bbb8cb83101c7628c7c2d34c7eeb3941c2f"
+    },
+    "episodes/authored-balanced-v1-reference-drop12-left-45.json.gz": {
+      "bytes": 92693,
+      "sha256": "bdedc18155e9ad67b4a8c6e95974eb161a73b918432137159a38798f010e3120"
+    },
+    "episodes/authored-balanced-v1-reference-drop12-right-45.json.gz": {
+      "bytes": 107521,
+      "sha256": "53f766346fcf9dad92a532c906330828c45c8e9ff18e7c6998a35c7ecde23ccd"
+    },
+    "episodes/authored-balanced-v1-reference-drop28-left-57.json.gz": {
+      "bytes": 162918,
+      "sha256": "df17c015e477c47d5ddeacb86a44f8d1bb01598be9f30acb2e55170eb35c80ff"
+    },
+    "episodes/authored-balanced-v1-reference-drop28-right-57.json.gz": {
+      "bytes": 88867,
+      "sha256": "18d6ad208d93ab02ecdd7e08b3825d0ae47affd0d24845528be01145de1b324a"
+    },
+    "episodes/authored-balanced-v1-reference-floor-left-27.json.gz": {
+      "bytes": 51303,
+      "sha256": "ffbc0bf244d3ae0d714eab21d1fb29450a10615e2e89136256e012821e363292"
+    },
+    "episodes/authored-balanced-v1-reference-floor-left-63.json.gz": {
+      "bytes": 171113,
+      "sha256": "4a248acdbd3d665f01bc84a00162dcfd3dbd752acf3ec23e690514d06054173f"
+    },
+    "episodes/authored-balanced-v1-reference-floor-right-27.json.gz": {
+      "bytes": 170509,
+      "sha256": "760f2bd09c6a0d5a8544248b5788ec746d33a5a0945c6e35fd7a73237a0a4a0f"
+    },
+    "episodes/authored-balanced-v1-reference-floor-right-63.json.gz": {
+      "bytes": 169661,
+      "sha256": "65d9d931a21009b0f252fa3372a1a184b835a52d3f7b744dc735cdb345c00f6b"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-24-0.json.gz": {
+      "bytes": 58715,
+      "sha256": "8e811a0e958e1efe5a085976dee3c39b21bc59b873c788c6a127cb238802dca3"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-24-1.json.gz": {
+      "bytes": 58721,
+      "sha256": "508327ff42a53ecde9a332facec1622d7a3829cd0f5538ca46380680c40ab32f"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-24-2.json.gz": {
+      "bytes": 58755,
+      "sha256": "4823e16b63858530762c5b6bbe870fe27510fe25b92775c802b03dfe17bca85c"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-36-0.json.gz": {
+      "bytes": 71037,
+      "sha256": "3aa46872a16af88ffbcea6e2ac618f5e72be8057cb28be3abe93d75915484b83"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-36-1.json.gz": {
+      "bytes": 70990,
+      "sha256": "c27768d7d291771d60fd5aceca33a3fb6442846383311737d3ae58e0441a2387"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-36-2.json.gz": {
+      "bytes": 71028,
+      "sha256": "d9b9f8da22077baa0828a056b66e501ec8a16783176448579c88160589ec5490"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-48-0.json.gz": {
+      "bytes": 88152,
+      "sha256": "849f4d77ee3ac939443cf57fd2cdfb129950e24d595c6771e84442f539bca2f7"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-48-1.json.gz": {
+      "bytes": 88158,
+      "sha256": "0d2dedbba82daf5a1c1cb482ff87d1e4978c5056d5d6c742a95707614e35513e"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-48-2.json.gz": {
+      "bytes": 88217,
+      "sha256": "3c3f1e2fa1b8ef66ff606ba5c29d1e1c52b307678f260786f690e63496165ddf"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-60-0.json.gz": {
+      "bytes": 97260,
+      "sha256": "bc10d731df41afaa12819171360ea9828f93356cb8538da69e92da67a43d383a"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-60-1.json.gz": {
+      "bytes": 159462,
+      "sha256": "dcf6f0204b64f4a9d625dc73a82e9abdf4deee8730c9863a8bd9c685e0a7552c"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-left-60-2.json.gz": {
+      "bytes": 160770,
+      "sha256": "f8e68be3c10ca742f78af5485c0716d9ecca5e3cdd855bd80a4f13f97ecac8c8"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-24-0.json.gz": {
+      "bytes": 81983,
+      "sha256": "47f9f513dffd0af0338b097ee62970b1655a1f52cd21a800921d566f70b6e1dc"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-24-1.json.gz": {
+      "bytes": 81946,
+      "sha256": "0d97ceb243d7b31cde05140549c74902ef0282cd76f2e1048eee679847f11d29"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-24-2.json.gz": {
+      "bytes": 78293,
+      "sha256": "5c4d80024f3183e7185739d20992a19669fc0e6723ab343964af84d00117dfe1"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-36-0.json.gz": {
+      "bytes": 62404,
+      "sha256": "23c38748bcc0fa67a2aad789bda3cec00ef848c416fb7b7981ab7e896addde17"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-36-1.json.gz": {
+      "bytes": 71708,
+      "sha256": "49b4ab54500aabf9a4106752313806b70ecf91ad3a96251015b008790e72378d"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-36-2.json.gz": {
+      "bytes": 67152,
+      "sha256": "ae0b37ad9166d62a5bab92e92e5d4a74572936c78347a8a289a9f33769081d87"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-48-0.json.gz": {
+      "bytes": 75436,
+      "sha256": "5ae092680ec97db3ae9e1f0265ae16df943c3bcc466b74b165be23a6d96c8f73"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-48-1.json.gz": {
+      "bytes": 74739,
+      "sha256": "ce77f3fecc258a6b7791ec8abc8baa41d3193312f3a4873fe001d1f9fbbc5ca9"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-48-2.json.gz": {
+      "bytes": 78169,
+      "sha256": "8f1d1c1f2aa5efb6dfc1ff42a8634d182a7b66a4aaa4276aa6e166bdc0908b3b"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-60-0.json.gz": {
+      "bytes": 92875,
+      "sha256": "ace9d7693fd654301d98f7dd638080b4bd0fcfcf749153f9f3861729537658c5"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-60-1.json.gz": {
+      "bytes": 92810,
+      "sha256": "151c3c38f1754b75b9d50892ae596c952adef9e8944d7404e818f68237844f6e"
+    },
+    "episodes/jolt-arrival-v1-demo-floor-right-60-2.json.gz": {
+      "bytes": 92838,
+      "sha256": "4302ddad50a31f42980cd519f29544e69f37412773dad844690cfdaac3175e7f"
+    },
+    "episodes/jolt-arrival-v1-reference-drop12-left-45.json.gz": {
+      "bytes": 100230,
+      "sha256": "55c4b7f8bed9d8ad8324da6c5ec69db925468dc2d50115819a724663d58b2477"
+    },
+    "episodes/jolt-arrival-v1-reference-drop12-right-45.json.gz": {
+      "bytes": 155232,
+      "sha256": "d9aa607f5e83eb68dd8d575b8359c9bcef7a91607a05f8ee2f7e14d9a086e687"
+    },
+    "episodes/jolt-arrival-v1-reference-drop28-left-57.json.gz": {
+      "bytes": 159033,
+      "sha256": "9020b62d22cc8fc43b6988ff73104039c8bc0f4672e748dbc13f41b23e460c2d"
+    },
+    "episodes/jolt-arrival-v1-reference-drop28-right-57.json.gz": {
+      "bytes": 127023,
+      "sha256": "567adc212b1c08032079b4b95d575142285e8a39f23c70dc72b14a855e3e697c"
+    },
+    "episodes/jolt-arrival-v1-reference-floor-left-27.json.gz": {
+      "bytes": 67837,
+      "sha256": "23bf86f058e283ffcec07177b87a25b44d9dcc43eab6ce4147a42dacd316dd88"
+    },
+    "episodes/jolt-arrival-v1-reference-floor-left-63.json.gz": {
+      "bytes": 159426,
+      "sha256": "40c98ded70e47ca6a23c51732938f54c92a9e8a815c90a56c726f3822086d880"
+    },
+    "episodes/jolt-arrival-v1-reference-floor-right-27.json.gz": {
+      "bytes": 71062,
+      "sha256": "3edd8cc9910e030c8aa7a34025e02c4ead47ded9c97486c9647e1e421031215f"
+    },
+    "episodes/jolt-arrival-v1-reference-floor-right-63.json.gz": {
+      "bytes": 89848,
+      "sha256": "c3fe057360872cbf32765103aaefff739427c7cd116fd6f980d8171a4b1edbdd"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-24-0.json.gz": {
+      "bytes": 72852,
+      "sha256": "455265eb0adaa5796d8d30c84a09a5269df5d7b1d49c3b60f3ce9f7d86c19e25"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-24-1.json.gz": {
+      "bytes": 72898,
+      "sha256": "3c5a37b4123edf5ae8eafdac617032183a62b7e8451e6e676f2821207aa4ab05"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-24-2.json.gz": {
+      "bytes": 72906,
+      "sha256": "5db49f79378890b6b405d0dec2510d0a61d51e92b4812b81cf4381f1bc19765e"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-36-0.json.gz": {
+      "bytes": 79634,
+      "sha256": "89506b253e8539037ead92cec9b2dad86becfcb036f9b128e6f29c9b0994dd60"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-36-1.json.gz": {
+      "bytes": 79602,
+      "sha256": "dd4b8f1ea8f65e923dbc8c279a84a91234928f36a007ef1d5270061c6c500743"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-36-2.json.gz": {
+      "bytes": 79615,
+      "sha256": "e42ad65a579d17de71a4c55c9579fdd7b02a4950e0bf17eeb5a5e75d5e0c0808"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-48-0.json.gz": {
+      "bytes": 80897,
+      "sha256": "6e39113d7b092a9fdbf598dc0c4d9091b163634f0b07680475429fe98609e14b"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-48-1.json.gz": {
+      "bytes": 80939,
+      "sha256": "3c40264825c62aea3d727a77297437292e64c724ff389c6074ccd4b031cb7e26"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-48-2.json.gz": {
+      "bytes": 80974,
+      "sha256": "ea24145a12085786a8bfb250c1c6f129ec6a07c01044d888d25d84305cd5a2df"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-60-0.json.gz": {
+      "bytes": 105149,
+      "sha256": "489401d688b9fd9f733bf4a22309500d8e189f8263749b3f626b12de1ced47da"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-60-1.json.gz": {
+      "bytes": 159612,
+      "sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-left-60-2.json.gz": {
+      "bytes": 108465,
+      "sha256": "6384a23082443c51fe65e15c28ec30791fae65614758873cfdb2b1b0cbdaf3c3"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-24-0.json.gz": {
+      "bytes": 77417,
+      "sha256": "d34fb925f2f7c301f7a0eec96bd61b4f4b9516b2bb6b86913a8613d47714fa49"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-24-1.json.gz": {
+      "bytes": 77403,
+      "sha256": "6422ad2352c680e6ced0064a016ccf07d58abd0b235ffb80a8bc186ec1b3ab3e"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-24-2.json.gz": {
+      "bytes": 76985,
+      "sha256": "e25888f766105ef1018a8f6dc723aa9889d324296b81fb9fd4ac702af4a71d7e"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-36-0.json.gz": {
+      "bytes": 84507,
+      "sha256": "275fbced0bdd04c2a722976d3fc43484302146fdcc70bd26fb76d15f6bfd1534"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-36-1.json.gz": {
+      "bytes": 164639,
+      "sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-36-2.json.gz": {
+      "bytes": 122846,
+      "sha256": "45fa6a2fbfbead6f1c9c3ca786ddb4a02b70fd0c24afa286b408559b4df767b4"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-48-0.json.gz": {
+      "bytes": 104600,
+      "sha256": "637f3588c1086cecdfeb02e0f566771f6cf3d7c1cf7146ee9483048fd27f4e5e"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-48-1.json.gz": {
+      "bytes": 97184,
+      "sha256": "66361e6e36144af3cdabd2cb2c5e9e0ca7c8de26423ba441bc39e98c833ab1d1"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-48-2.json.gz": {
+      "bytes": 123986,
+      "sha256": "476643ed90d8e35d035eb2b89961d0ffe71e70776d61de3e154248034d1f7aaf"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-60-0.json.gz": {
+      "bytes": 96135,
+      "sha256": "d3ffa5d11b87ca6c2e6b67d3f29c4d7cf413d92bb2e5220db701778b92f82e80"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-60-1.json.gz": {
+      "bytes": 96153,
+      "sha256": "96f6b5ab56d8fbd998276d5819c1dd8ffeeff03dce068a33fc04625cc947ac1b"
+    },
+    "episodes/jolt-recovery-v3-demo-floor-right-60-2.json.gz": {
+      "bytes": 96158,
+      "sha256": "66411ea25642bc2f3240a4264caa6499ee8468d6e0875e1a1a3c63224ad02dbe"
+    },
+    "episodes/jolt-recovery-v3-reference-drop12-left-45.json.gz": {
+      "bytes": 101740,
+      "sha256": "c26b9865872cda2ff147152f7db014d3644577c2536e1982346f517de24f3bc9"
+    },
+    "episodes/jolt-recovery-v3-reference-drop12-right-45.json.gz": {
+      "bytes": 152167,
+      "sha256": "3cf45cde87ddf2e6b3018032160631444f2f816b7e52f560ef931f256bcef02a"
+    },
+    "episodes/jolt-recovery-v3-reference-drop28-left-57.json.gz": {
+      "bytes": 158560,
+      "sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef"
+    },
+    "episodes/jolt-recovery-v3-reference-drop28-right-57.json.gz": {
+      "bytes": 124801,
+      "sha256": "ffff1e4754363e7e70a519a52b423647b670da1be5ecf366074abe26c51751e9"
+    },
+    "episodes/jolt-recovery-v3-reference-floor-left-27.json.gz": {
+      "bytes": 83558,
+      "sha256": "b0bf97515cc4857530d296942aa7162974559cb0167e1c02fd38d7c4e5825b74"
+    },
+    "episodes/jolt-recovery-v3-reference-floor-left-63.json.gz": {
+      "bytes": 160708,
+      "sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177"
+    },
+    "episodes/jolt-recovery-v3-reference-floor-right-27.json.gz": {
+      "bytes": 80487,
+      "sha256": "53a40770130af0792ae4ef6fc647080b4f4728e5d11ffab05989c582f120a441"
+    },
+    "episodes/jolt-recovery-v3-reference-floor-right-63.json.gz": {
+      "bytes": 93132,
+      "sha256": "aeea23b146f8ad30f24205cdff30977037d20fe6ce4ad4ad45ce772e953f5b60"
+    },
+    "manifest.json": {
+      "bytes": 39765,
+      "sha256": "808dea3d9ad1e52ab5c40a73d4375135a4ac7f4f5c290d827e06af0426471fa7"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-24-0.json": {
+      "bytes": 3597,
+      "sha256": "9210bbe9febe688ef2ec327631f7d659cc88a883c91dc437a3eb9b01a363dacf"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-24-1.json": {
+      "bytes": 3596,
+      "sha256": "2b6771fe46540f277884ae10aa4cd07d1ffe8041d09a7cfdc43e3993da8e23d9"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-24-2.json": {
+      "bytes": 3597,
+      "sha256": "ee68a646cc0f7b17d4b5765b53c0f6226db1d93518c1494db10b28945013788e"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-36-0.json": {
+      "bytes": 3566,
+      "sha256": "2f4029356c961d793789b695d91ce9d4b68deb9f6ada1d2f4d7729f24b58c5bc"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-36-1.json": {
+      "bytes": 3571,
+      "sha256": "d73b00153dd50c41b329a2493774d31d059265081305ea5e3c0dad8f6beef885"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-36-2.json": {
+      "bytes": 3568,
+      "sha256": "a3eb97a12375544afca1efcceae8310674174cda6688c4562b211b5a89a03998"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-48-0.json": {
+      "bytes": 3561,
+      "sha256": "682b15eca0a783c9444f797fdc517f465c285145e623ee4c7b0a6a5caaabfd1f"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-48-1.json": {
+      "bytes": 3547,
+      "sha256": "ce949a2b612812b1195a229bab948c17ec2725d28934f608cc7b742525d39112"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-48-2.json": {
+      "bytes": 3560,
+      "sha256": "1b8a2d49765144cfbb867ef5cf4817310627f4d5923e106ca5caadce17c2e5da"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-60-0.json": {
+      "bytes": 3536,
+      "sha256": "df6d2f4bb846f65ee4a0b33e560b3eab554ec0bb6e7594cffc4c956b53bf03ac"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-60-1.json": {
+      "bytes": 3598,
+      "sha256": "a6b46eb1c6ee5063069e96d809d6b6a0479c0c0c12aa54e4401776be15702736"
+    },
+    "metrics/authored-balanced-v1-demo-floor-left-60-2.json": {
+      "bytes": 3558,
+      "sha256": "7491a5af9fbad0cf256ff2e24781f7a7271b45a74a4db5754b2fa44cc32640d1"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-24-0.json": {
+      "bytes": 3543,
+      "sha256": "994f20908734d00ca9ec8c736551554fff756daa6566781d1f5a758ab6ce8d2a"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-24-1.json": {
+      "bytes": 3561,
+      "sha256": "aaa237984ecdaa51575900cbc8d96e873c5d28a0048613ebfc14adc9df862520"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-24-2.json": {
+      "bytes": 3537,
+      "sha256": "8dfc73d37a91d958ed87a932b0a783bb5a7dced4398230c4006a25c494a5577e"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-36-0.json": {
+      "bytes": 3574,
+      "sha256": "0cd008ebac8e5c95c19398a7179bf6013b543a85baef8ad0811c8f6a0f6a4f00"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-36-1.json": {
+      "bytes": 3532,
+      "sha256": "106342c5a054dee0af8180449d41a20e0f28459e928db96f0357921b18037ef7"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-36-2.json": {
+      "bytes": 3566,
+      "sha256": "02d7793cce6fbf5671c0e96156051990ec7b1f23c498e94457bdfb12f045476a"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-48-0.json": {
+      "bytes": 3586,
+      "sha256": "734fc96326797defa1eeb3e2502da28dbe5f8bcd3d42beff690b0901050e4cc7"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-48-1.json": {
+      "bytes": 3581,
+      "sha256": "def8b11105bc5e4e0380c0d7bd626f05e8c70ecbd8558f1f1fe96fe1959d02b8"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-48-2.json": {
+      "bytes": 3567,
+      "sha256": "097934ac848430f68f5f91d9f5fa6f32646060a723602c7551185fb87dd6e47a"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-60-0.json": {
+      "bytes": 3533,
+      "sha256": "4b66b5c432b2c6ccf22fdf503e04daa6893344c1f3e42da7cfd5ede214732410"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-60-1.json": {
+      "bytes": 3537,
+      "sha256": "6d10e218afb45d2a303dc400f0b4ee7dcce1f5ddfea247ed22d698a10c412284"
+    },
+    "metrics/authored-balanced-v1-demo-floor-right-60-2.json": {
+      "bytes": 3535,
+      "sha256": "40488c4af462744fb59553fa3ec507b7ec0db0e3bfb3d99248bc4181a0a0df80"
+    },
+    "metrics/authored-balanced-v1-reference-drop12-left-45.json": {
+      "bytes": 3587,
+      "sha256": "8fa8455cd07fa97bfa3fd946d9b05f9b1e718724c107476ea30af76136963618"
+    },
+    "metrics/authored-balanced-v1-reference-drop12-right-45.json": {
+      "bytes": 3571,
+      "sha256": "a7a9a822cfb05d96bf44f6eb817978ce9ffb7ee293ea88693fab6e0382ac43d4"
+    },
+    "metrics/authored-balanced-v1-reference-drop28-left-57.json": {
+      "bytes": 3560,
+      "sha256": "ec95aafed08f78ea3270aeb8af1dc3c4e73f04c6f4219d23743c9d0c743c9673"
+    },
+    "metrics/authored-balanced-v1-reference-drop28-right-57.json": {
+      "bytes": 3605,
+      "sha256": "febffbad20a94c1dd9a08913cae243774e4a15444cb8d3a7b019e7ceb938953f"
+    },
+    "metrics/authored-balanced-v1-reference-floor-left-27.json": {
+      "bytes": 3581,
+      "sha256": "5e7433f6c2b6398f107d1b27ecdf22cfb88a6ceaebc042fc3fd56c62d120743d"
+    },
+    "metrics/authored-balanced-v1-reference-floor-left-63.json": {
+      "bytes": 3579,
+      "sha256": "8885b4d18c55d57165ed09a8ad8c9d3037b8a78ca77818270de57bfc47b161da"
+    },
+    "metrics/authored-balanced-v1-reference-floor-right-27.json": {
+      "bytes": 3574,
+      "sha256": "4bb80db632e3b063eb43ddade8b69662dc56938a0aea790848dea93c13bad9e2"
+    },
+    "metrics/authored-balanced-v1-reference-floor-right-63.json": {
+      "bytes": 3544,
+      "sha256": "21ff386b454e00f85eadae6ae11faa7f3ec0ae6bbcf6c6bebfb85e5542f5f92f"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-24-0.json": {
+      "bytes": 3481,
+      "sha256": "33908f3b87e4f629a02d693447b506727e3379cb8751f23accc74b1e795d6cd5"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-24-1.json": {
+      "bytes": 3481,
+      "sha256": "3297d065bc4908073eea09e347f22876d8f0bd00265de4ac61f7805cc92379d9"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-24-2.json": {
+      "bytes": 3497,
+      "sha256": "e387cee04236c22a8a06bbd0ec5cd63cdec3e0ac9eb700ad9f3675b02f091028"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-36-0.json": {
+      "bytes": 3507,
+      "sha256": "d8303177fac60ae35d6a124365bb6358364b25ace0fad6171884939d23e275ca"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-36-1.json": {
+      "bytes": 3504,
+      "sha256": "55c58a8f3d3cc311df18b4df3b4b3f4721cb6ee1dbb8a7d771b3ae8329ce9b45"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-36-2.json": {
+      "bytes": 3501,
+      "sha256": "730e5a8e7d02034a3b56e576dbcca276dc544914f539ffd6b7aa4d7b58944a8e"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-48-0.json": {
+      "bytes": 3535,
+      "sha256": "fdd388f7fbcc7e57ce60e54e40ea6164e00751d050e794a184e3904f6b61b5e5"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-48-1.json": {
+      "bytes": 3545,
+      "sha256": "ef2e11f68e16a72c10ac98a04bfebf965b8d528954073a438c47ad493ead6089"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-48-2.json": {
+      "bytes": 3552,
+      "sha256": "1018f424fd5f3119e6315e406f27471d61418e4a5929abed5c3764f3a57f7669"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-60-0.json": {
+      "bytes": 3554,
+      "sha256": "3729fa1a1175a04316532117a428cf870d0a8ae984e9df55d146dfa428f01099"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-60-1.json": {
+      "bytes": 3569,
+      "sha256": "47a8cab1e4a521537af2a574017a8051181fcec91bd66391a6e51518623c4825"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-left-60-2.json": {
+      "bytes": 3558,
+      "sha256": "39f8cc9be3a91df14d7c6444f78b86b07775c9cebe42d46ea463f6f354b2b202"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-24-0.json": {
+      "bytes": 3560,
+      "sha256": "972fc39bb49c5a59d95cb5905dab911236cfdc7ddfbf29ff421f0ba72a4dcfb6"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-24-1.json": {
+      "bytes": 3558,
+      "sha256": "4fea2a511f66302f6d082db504b280217f67196452b3adbad2e22e3c3803a3bf"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-24-2.json": {
+      "bytes": 3546,
+      "sha256": "5f694f5d701a45270777239e54a69bdcd0d4c58c4e5f95bdd9b8cb61ca80ebfd"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-36-0.json": {
+      "bytes": 3570,
+      "sha256": "8484e87d147546212576624d7f012e9b268303b4212bf434180f838e8fe8d9d4"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-36-1.json": {
+      "bytes": 3550,
+      "sha256": "2d0a4110fba6ba747a61c9a04f0c393f06f144eaedd9b0201969b7378574c49b"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-36-2.json": {
+      "bytes": 3504,
+      "sha256": "4912015782460a5f3aff4c3aadd522edefb240752a283890038c244c294e5816"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-48-0.json": {
+      "bytes": 3524,
+      "sha256": "30fc7a5b1fe62abc1f48aa4a2433afd04440614328385e29348316a2c0edbf39"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-48-1.json": {
+      "bytes": 3572,
+      "sha256": "fc56336d5af27d7d3d360e2306e11d9a8fe1f401f7a5e470cd3e72be484cc9d4"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-48-2.json": {
+      "bytes": 3518,
+      "sha256": "fc5871360c0e0278a9e313ab2b2a8dfaf8d85634e1249176a53240153b57e4a5"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-60-0.json": {
+      "bytes": 3524,
+      "sha256": "c2d56d8c0a11ce569bc14402cba06499ec49135230d5e81a24385f189931c56a"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-60-1.json": {
+      "bytes": 3525,
+      "sha256": "38492c78128b10a125316cb72989c0f0519c7fd7791d33c1e69da2c78b4127fa"
+    },
+    "metrics/jolt-arrival-v1-demo-floor-right-60-2.json": {
+      "bytes": 3526,
+      "sha256": "68ad44bac0493df5f38a38d1fb1ab1dffa26581774d115ecce12c3b8e5d731dd"
+    },
+    "metrics/jolt-arrival-v1-reference-drop12-left-45.json": {
+      "bytes": 3532,
+      "sha256": "47515458647abd8c8d6f1b673f4a9bd68f95591ffd40d3c63613fa69c8184b24"
+    },
+    "metrics/jolt-arrival-v1-reference-drop12-right-45.json": {
+      "bytes": 3509,
+      "sha256": "b136aad35bc4f85ffeba59396866452b3efa6b749745c56a4450aa19209e3d59"
+    },
+    "metrics/jolt-arrival-v1-reference-drop28-left-57.json": {
+      "bytes": 3510,
+      "sha256": "73afc5a58a88aac1cd92ff4815fec9445cbd64de574c72badbbedba753981e65"
+    },
+    "metrics/jolt-arrival-v1-reference-drop28-right-57.json": {
+      "bytes": 3557,
+      "sha256": "29b19fadf0fb1b33d5e913a6e892aa7d96fa6f52858d9fbe2aea832e20846d4e"
+    },
+    "metrics/jolt-arrival-v1-reference-floor-left-27.json": {
+      "bytes": 3553,
+      "sha256": "e7c55a2210a407dd66235965aef57b562ffea9e237697d63f20b7fe6f79e6e2c"
+    },
+    "metrics/jolt-arrival-v1-reference-floor-left-63.json": {
+      "bytes": 3567,
+      "sha256": "fdba519bdf921633569f5e53135197e83eb7e99d358de8ffeebfa825243a8866"
+    },
+    "metrics/jolt-arrival-v1-reference-floor-right-27.json": {
+      "bytes": 3544,
+      "sha256": "8c53dc90ad705bf5623ae82061d338b2b743ac2074f80792affc7f5b80c12704"
+    },
+    "metrics/jolt-arrival-v1-reference-floor-right-63.json": {
+      "bytes": 3540,
+      "sha256": "1cff9b696f5f505b8bcf59755b761ed1ac0f928fe41d2e9640adf03f8de2bcfa"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-24-0.json": {
+      "bytes": 3664,
+      "sha256": "5cad08b85145d796c32d846211704990b5263d15197406da1b9866c8d5c086c1"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-24-1.json": {
+      "bytes": 3664,
+      "sha256": "80e6d97038b157dad8d68771d240c0e489050dbea0ee4c5d0a202a92825b832d"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-24-2.json": {
+      "bytes": 3664,
+      "sha256": "065aa82037d6ccb482fecc8b020a77b900de848497ebb3a5e409a4a8cd0680ac"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-36-0.json": {
+      "bytes": 3667,
+      "sha256": "d624e1fc08c11f7d5795f446f4034149d16e0c084967addbc818eda509d2cb56"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-36-1.json": {
+      "bytes": 3682,
+      "sha256": "564c98ed5f93901cd3747b77bcc09a002b1a8ae36f22b5fbe59914901dd3f353"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-36-2.json": {
+      "bytes": 3681,
+      "sha256": "094f48e4f5f4db1f3ba49329e583c4b3564d8049e9703b9a143b0e8e2f1d19c7"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-48-0.json": {
+      "bytes": 3676,
+      "sha256": "d5071acdbf4e5101549fcc3ae8f16cfed1973bb95ba70e0ccb2e9927aa1eeff5"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-48-1.json": {
+      "bytes": 3676,
+      "sha256": "880b4828c84fa74e876ab9dfb7370a3ab202edba30eb1ed9bfb5c2807ae4121d"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-48-2.json": {
+      "bytes": 3659,
+      "sha256": "7161b02bc5dab0e487d0cb34d92a9816dd57e8d3d34a15ce9727f258cef41499"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-60-0.json": {
+      "bytes": 4266,
+      "sha256": "eacf9e2318632bfe681fbeae6b5544faec1c8e2977cf8526825f68de24b802c9"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-60-1.json": {
+      "bytes": 6118,
+      "sha256": "7d4d2ee4dc783810ac99e5b55a860b46706cc88e7e04ad421fd2f756b40792f9"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-left-60-2.json": {
+      "bytes": 4302,
+      "sha256": "722deeb586d75c0c4083fdcf99d145491e9c208af4c752a1cf7070318450ca4a"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-24-0.json": {
+      "bytes": 3664,
+      "sha256": "b9e98f8a14d63e24f9a0ed48f816c32eef330aab02c0e590f4248061ec2993c5"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-24-1.json": {
+      "bytes": 3664,
+      "sha256": "7b0c9e459bf6757f1c2bbbc5516110b67da712d25b7fd7c9129dc2ccd95a4d04"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-24-2.json": {
+      "bytes": 3661,
+      "sha256": "67b167f547c21d0455ff876bcca795cab002edffdc9e44d8447ab73997637790"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-36-0.json": {
+      "bytes": 3695,
+      "sha256": "7c951c0533c531e53e8d7cbd3497bcbbd7926b90f1cab15ffd74f9446021ff1e"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-36-1.json": {
+      "bytes": 4388,
+      "sha256": "b3adecc27ebd395a90b4cab1fedf83498ab6db92d5769de8fbd8721a74094c2c"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-36-2.json": {
+      "bytes": 4382,
+      "sha256": "b55392c58f9698e1d4c0632fbe92374ee423c90435871f3f646fced9f9daf4a8"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-48-0.json": {
+      "bytes": 3702,
+      "sha256": "117eaf74645098a978b485d3817569a308aa25985a193204149e371bdb97e4d6"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-48-1.json": {
+      "bytes": 3704,
+      "sha256": "fa1fb2533372ec53f3acee1b4590f170f11c1ef648c25635c21e9822132179b0"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-48-2.json": {
+      "bytes": 3699,
+      "sha256": "75fb82b78f934cc5d9423497ced04004e02779abc277b2acbbf8923ac82a3ca9"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-60-0.json": {
+      "bytes": 3689,
+      "sha256": "a5e7df189bd99f6cb88abb4807b82662d0be2fe6dc497b0496360173f1ea52b8"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-60-1.json": {
+      "bytes": 3702,
+      "sha256": "2323b193f0799f3b7530c4bf45acb8d0607e429f026aa1b074ec584d8f7dfd8b"
+    },
+    "metrics/jolt-recovery-v3-demo-floor-right-60-2.json": {
+      "bytes": 3713,
+      "sha256": "ded1767c4ec510f9d1c0e6dbff5e4b22c43d91bed8c0dc2f52a4955abac2c4de"
+    },
+    "metrics/jolt-recovery-v3-reference-drop12-left-45.json": {
+      "bytes": 3674,
+      "sha256": "de1b46933fb37d598dc2b6a45fe9580b3ac04e2fb6288c4f2f9811b2bfa337c5"
+    },
+    "metrics/jolt-recovery-v3-reference-drop12-right-45.json": {
+      "bytes": 4353,
+      "sha256": "dab2a951e19a68017166d70a10d12bf29ca6d422b49190381eccaab9696cd984"
+    },
+    "metrics/jolt-recovery-v3-reference-drop28-left-57.json": {
+      "bytes": 3639,
+      "sha256": "6d602176abc4fe2c58b3ae0ce68cbefa373af43a7b6774efe7c3ccba0659117d"
+    },
+    "metrics/jolt-recovery-v3-reference-drop28-right-57.json": {
+      "bytes": 3701,
+      "sha256": "ea7755bc5269f6775bf55305b204f26d66f7fe5b8828e4e6045e0be7b8bb38af"
+    },
+    "metrics/jolt-recovery-v3-reference-floor-left-27.json": {
+      "bytes": 4313,
+      "sha256": "dd6ae21b182b34641a842fd7d5194e5213de1363f094ee8b8c8c78f153df1f3f"
+    },
+    "metrics/jolt-recovery-v3-reference-floor-left-63.json": {
+      "bytes": 5558,
+      "sha256": "d0fc16182191e6760e36a8ea7b5c7f7fa00813e1a61f4578f88e2484d2b08450"
+    },
+    "metrics/jolt-recovery-v3-reference-floor-right-27.json": {
+      "bytes": 3747,
+      "sha256": "e0a938a04856bea7258ac30c342f05e3b4f9494bf0d9e88d826b0f932f8f5a9c"
+    },
+    "metrics/jolt-recovery-v3-reference-floor-right-63.json": {
+      "bytes": 3674,
+      "sha256": "4167fe2758377acd0230b394d9e6b848af621404e1e9cdb54fd8fa5ae2999b87"
+    },
+    "owner-journal-seal.json": {
+      "bytes": 1235,
+      "sha256": "76446ae516192ddcd25771f734d0cf982a01be07d6754c91bfd1519870059b52"
+    },
+    "owner-journal.jsonl": {
+      "bytes": 80426426,
+      "sha256": "43888418cec3848c115102ff9f5190f59c24bd5545702fe58ba4502b84f2053c"
+    },
+    "owner-journal.jsonl.gz": {
+      "bytes": 8198511,
+      "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+    },
+    "owner-journal.jsonl.gz.pending": {
+      "bytes": 8198511,
+      "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+    },
+    "summary.json": {
+      "bytes": 388977,
+      "sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+    }
+  },
+  "audit_effects": {
+    "changed_original_files": 0,
+    "learned_policy_calls": 0,
+    "new_host_starts": 0,
+    "new_owner_requests": 0,
+    "new_simulation_ticks": 0,
+    "optimizer_updates": 0
+  },
+  "audit_runtime": {
+    "device": "cpu",
+    "host_started": false,
+    "python": "3.12.14"
+  },
+  "audit_script": {
+    "bytes": 31188,
+    "name": "forensic_evidence_v2.py",
+    "sha256": "c8bef6412a907916e4585ac79d5750c9314ce8f459c288ef3a7faeb70f4eae15"
+  },
+  "audit_wall_seconds": 104.43053005100046,
+  "bounded_consumption_subcheck": {
+    "actual": {
+      "confirmed_ticks": 13818,
+      "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+      "dispatched_decisions": 2303,
+      "episode_rows": 96,
+      "full_owner_request_count_verified": true,
+      "host_starts": 1,
+      "id": "jolt-recovery-003-diagnostic-v3",
+      "owner_requests": 2568,
+      "requested_ticks": 13818,
+      "resumed": false,
+      "reused_rows": 0,
+      "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "status": "failed_final_output_inventory_verification",
+      "whole_invocation_qualified": false,
+      "whole_process_seconds": 294.9515252410001,
+      "worker_status": "completed"
+    },
+    "declared_limits": {
+      "automatic_budget_extension": false,
+      "automatic_retry": false,
+      "checkpoint_executions": 0,
+      "learned_policy_calls": 0,
+      "maximum_attempts": 1,
+      "maximum_decisions": 3840,
+      "maximum_episode_decisions": 40,
+      "maximum_episode_ticks": 240,
+      "maximum_episodes": 96,
+      "maximum_host_requests": 4226,
+      "maximum_host_starts": 1,
+      "maximum_requested_ticks": 23040,
+      "maximum_wall_seconds": 900,
+      "optimizer_updates": 0
+    },
+    "post_exit_verification_succeeded": false,
+    "startup_sealing_cleanup_attempted_post_exit_verification_inside_ceiling": true,
+    "supervisor_receipt_sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8",
+    "verified": true,
+    "whole_invocation_qualified": false
+  },
+  "case_inventory": {
+    "fresh_episode_rows": 96,
+    "order_verified": true,
+    "paired_cases": 32,
+    "previously_open_evaluation_origin_cases": 8,
+    "sealed_learning_evaluation": false,
+    "training_origin_cases": 24
+  },
+  "classification": "post-run analysis; invocation remains failed",
+  "closed_sibling_identities": {
+    "jolt-recovery-v3-diagnostic-20261020-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "jolt-recovery-v3-diagnostic-20261020-stdout.log": {
+      "bytes": 8710,
+      "sha256": "3f59c669835e8578fe149b1d7767dfb6694e7ce71fd1f2cae9feba1776483987"
+    },
+    "jolt-recovery-v3-diagnostic-20261020-supervisor.json": {
+      "bytes": 1257,
+      "sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8"
+    },
+    "jolt-recovery-v3-diagnostic-20261020-verification-stderr.log": {
+      "bytes": 820,
+      "sha256": "dac64fc6ea3e9c7052b9349d1c5925a6e231d10b5ae78b97b9f1b582d1d2226f"
+    },
+    "jolt-recovery-v3-diagnostic-20261020-verification-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "created_utc": "2026-10-20T19:47:01.243224+00:00",
+  "cumulative_all_declared_diagnostics": {
+    "combined_owner_request_total_fully_verified": false,
+    "dispatched_decisions": 6780,
+    "episode_confirmed_ticks": 40680,
+    "episode_rows": 280,
+    "explanation": "The original arrival journal is truncated; its full owner-call count remains reported. All later recovery owner counts are verified separately. No prior allocation was resumed or reused.",
+    "host_starts": 4,
+    "reported_combined_owner_requests": 7550,
+    "reported_original_owner_requests": 1722,
+    "requested_ticks": 40680,
+    "verified_recovery_owner_requests": 5828,
+    "whole_process_seconds": 1022.8120721580035
+  },
+  "cumulative_cost_table": [
+    {
+      "dispatched_decisions": 1549,
+      "episode_confirmed_ticks": 9294,
+      "episode_rows": 64,
+      "host_starts": 1,
+      "id": "jolt-arrival-diagnostic-v1",
+      "owner_request_count_fully_verified": false,
+      "owner_requests": 1722,
+      "requested_ticks": 9294,
+      "status": "incomplete_owner_journal",
+      "supervised_invocation_wall_seconds": 221.63055612800235
+    },
+    {
+      "dispatched_decisions": 479,
+      "episode_confirmed_ticks": 2874,
+      "episode_rows": 24,
+      "host_starts": 1,
+      "id": "jolt-recovery-001-diagnostic-v1",
+      "owner_request_count_fully_verified": true,
+      "owner_requests": 549,
+      "requested_ticks": 2874,
+      "status": "incomplete",
+      "supervised_invocation_wall_seconds": 61.76433001999976
+    },
+    {
+      "dispatched_decisions": 2449,
+      "episode_confirmed_ticks": 14694,
+      "episode_rows": 96,
+      "host_starts": 1,
+      "id": "jolt-recovery-002-diagnostic-v2",
+      "owner_request_count_fully_verified": true,
+      "owner_requests": 2711,
+      "requested_ticks": 14694,
+      "status": "completed",
+      "supervised_invocation_wall_seconds": 444.46566076900126
+    },
+    {
+      "dispatched_decisions": 2303,
+      "episode_confirmed_ticks": 13818,
+      "episode_rows": 96,
+      "host_starts": 1,
+      "id": "jolt-recovery-003-diagnostic-v3",
+      "owner_request_count_fully_verified": true,
+      "owner_requests": 2568,
+      "requested_ticks": 13818,
+      "status": "failed_final_output_inventory_verification",
+      "supervised_invocation_wall_seconds": 294.9515252410001
+    }
+  ],
+  "cumulative_recovery_diagnostics": {
+    "confirmed_ticks": 31386,
+    "dispatched_decisions": 5231,
+    "episode_rows": 216,
+    "host_starts": 3,
+    "owner_request_total_verified": true,
+    "owner_requests": 5828,
+    "requested_ticks": 31386,
+    "whole_process_seconds": 801.1815160300011
+  },
+  "decision_binding": {
+    "all_physical_frames": 2303,
+    "caller_validated_completion_preserved": true,
+    "candidate_deadline_capped_lease_frames": 754,
+    "native_ticks": 13818,
+    "refused_or_unresolved_decisions": 0,
+    "source_and_action_verified": true
+  },
+  "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+  "durability": {
+    "chain_sha256": "7813c4014003f36e17994cfbe527859f59339aa375b50f3b0cec7170e2509ebe",
+    "closed": true,
+    "directory_fsync": true,
+    "poisoned": false,
+    "record_fsyncs": 5330,
+    "records": 5330,
+    "total_fsyncs": 5331
+  },
+  "evidence_accepted": false,
+  "file_metadata": {
+    "owner-journal-seal.json": {
+      "ctime_ns": 1792524996338743992,
+      "device": 27,
+      "inode": 537938,
+      "links": 1,
+      "mtime_ns": 1792524996338511358
+    },
+    "owner-journal.jsonl.gz": {
+      "ctime_ns": 1792524996318744871,
+      "device": 27,
+      "inode": 532998,
+      "links": 1,
+      "mtime_ns": 1792524901222934309
+    },
+    "owner-journal.jsonl.gz.pending": {
+      "ctime_ns": 1792524996747952906,
+      "device": 27,
+      "inode": 548626,
+      "links": 1,
+      "mtime_ns": 1792524901222934309
+    },
+    "summary.json": {
+      "ctime_ns": 1792524996526735730,
+      "device": 27,
+      "inode": 548623,
+      "links": 1,
+      "mtime_ns": 1792524996524604591
+    }
+  },
+  "forensic_subchecks_completed": true,
+  "frozen_inventory_gate": {
+    "actual_artifact_count_excluding_summary": 197,
+    "all_declared_artifact_bytes_match": true,
+    "cause_limit": "Observed inventory mismatch is exact. Frozen code unlinks and fsyncs the staging file before constructing the inventory; retained bytes and timestamps do not identify why the unindexed path is present after worker exit.",
+    "changed_declared_files": [],
+    "declared_artifact_count_excluding_summary": 196,
+    "extra": [
+      "owner-journal.jsonl.gz.pending"
+    ],
+    "extra_artifact_identities": {
+      "owner-journal.jsonl.gz.pending": {
+        "bytes": 8198511,
+        "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+      }
+    },
+    "missing": [],
+    "passed": false,
+    "pending_identical_to_sealed_gzip": true,
+    "qualification_remains_failed": true
+  },
+  "host_runtime_binding": {
+    "identity": {
+      "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+      "godot_binary_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+      "godot_version": "4.7.stable.official.5b4e0cb0f",
+      "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+      "host_script_sha256": {
+        "godot/scripts/actor_rig_motor.gd": "27b0c731c1495f635c4ee772e6bd678b2d72c1bbc3f0240f429c11f208f3d1fb",
+        "godot/scripts/physical_actor_arena.gd": "8d1e80547101ba752cf4d54812f7073957eed3a279a2c0c56e50e660e9067a29",
+        "godot/scripts/physical_actor_catalog.gd": "9f526afbb352b1c4d065bf04a69a9e85202b3b23cf9df1b7b6665ce526979b12",
+        "godot/scripts/physical_actor_effects.gd": "335de660c67a446f77a1027b4d88b3218172fb6374dadc05cccd83a860251b1a",
+        "godot/scripts/physical_actor_rig.gd": "db283406e3aa86f5e329df15bba7465b58bca9767492ef0b54c7888965443ec4",
+        "godot/scripts/physical_actor_script.gd": "f6521381249255ca34bac27cb88e23e2dca08e86e1d04a55e9d3d19d25a45185",
+        "godot/scripts/physical_actor_session.gd": "ea6bee1fa84b03b6a1d03d4e98cd88f238321d981b4217db99347181f3113fb3",
+        "godot/scripts/rapier_physics_bridge.gd": "b16744468d1f0be4d77752f7c000cf5ead8d19deb4890ab01b5f117a6ad13200",
+        "godot/scripts/rigid_body_coupling.gd": "a3f5562be71adcdb209b6c45a7e67374bc05a419816b195c48e65d1e0e66d142",
+        "godot/scripts/thunderbowl_arena.gd": "d075422be9275fc3ca2543e977a39d39d2397335f2785d9c475df78c20fd5ab5",
+        "godot/scripts/thunderbowl_contract.gd": "1eb1c5cfcd6ec5db398a9677413ec1afefcaf0c2337427d51c6c545a21391218"
+      },
+      "host_tree": "445a185e9f9824b16953fec27bf0157dfeedca77",
+      "native_artifact_sha256": "5bdc55e7f355004fc8a6468234b0d018d3919339ebfe47faca9997de3af17847",
+      "native_source_commit": "d897cac257f90ff37b16ae5bc5c65de85c6465ee",
+      "native_source_inputs": {
+        "godot/native_extension/cyber_demo_bridge.hpp": "92d1ada53f684ca92832f245399078d4f43fdba0b4c6c5e41ba99f265cf759a5",
+        "godot/native_extension/cyber_native_cell_world.cpp": "0f4a88b43ebb1e3e281fa7a98f25aacc29f150fbdb2aacbf67216689d1d7e7f5",
+        "godot/native_extension/cyber_native_cell_world.hpp": "0daa96c1fe0b8d40890914cbba4c7cc489b1113d166624cb4ec2090086c786f6",
+        "godot/native_extension/cyber_observation_values.hpp": "8b76a566de1118e2ee0c4d9b6a4c3d4d8d988c4953743f8bcf0fc786f61705e5",
+        "godot/native_extension/cyber_world_generator.cpp": "3f39cc42553d87a1e464e7ab5136966b67285e44757d8789c6489db5d6ded0e9",
+        "godot/native_extension/cyber_world_generator.hpp": "648dc08fe074b3476778e070208386cc230c82414b2e7f47afd20ba2237bc6ef",
+        "godot/native_extension/register_types.cpp": "2a225e31225918746121285f79f5dc91b3808ac3ec0a980d4eac62467e81c5c1",
+        "native/include/cybersand/bounded_ordered_index.hpp": "79105fd5fe6f3a7f1bda463984aec01b2d067400957c60f88e38db86cc180147",
+        "native/include/cybersand/c_api.h": "d39b153e42111e2b5696c04832f64d1d69f401799236372ca8b690c7d0e1d429",
+        "native/include/cybersand/demo_snapshot.hpp": "1a46f7beef756e0a916be7229956ae295955d555be047e16203eca05860cd3cb",
+        "native/include/cybersand/generation_fields.hpp": "e405c49a96e912ce07535c57fc42467849384eddb43d405718bbefa98356da79",
+        "native/include/cybersand/interaction_policy.hpp": "d959a2ef74afee0f9c2f794ef5ee5362f1d8cfe6fc86a733acf2a17fec54d5ff",
+        "native/include/cybersand/interaction_rules.hpp": "914bc68f4f82d74dc1b444b2962229ed4337ed5d7de2e6a142e28fbc47b98d1e",
+        "native/include/cybersand/material.hpp": "de1bbbccb812d49151c34831196a7e38d5ee97d2045c9b29c197b11553ed126a",
+        "native/include/cybersand/material_appearance.hpp": "5668ffb77a60950159daa393aa1e292b61881f84e4f1c3c786508b4f50015168",
+        "native/include/cybersand/material_rules.hpp": "647931176804ffe3d5c31aa62fbeb5ed3f39b643e8bbecde0d4cfb6719d5ca0e",
+        "native/include/cybersand/physics_diagnostics.hpp": "f027346b04b12ca67a1d38d1e772ff3992ab0a1807f710ca4b709631dac7f0e4",
+        "native/include/cybersand/precision_storage.hpp": "7b7bbdfa6ac5618665b22cf619bbba64c03caeea997a24c94ebdff9902dd4266",
+        "native/include/cybersand/render_snapshot.hpp": "116733aa9b0a384bd739764fb099bc2a95ac19022ba6688e085229898c0db7a3",
+        "native/include/cybersand/scheduler_geometry.hpp": "69ad265aa5cb9823131b46c533a511c71fe089c2f2e3cae3d9950086f6f51460",
+        "native/include/cybersand/settled_discovery.hpp": "e98d772de9ed42397da48b30dc20cd8527ef1100a71757cf0b8a0a6811b150c3",
+        "native/include/cybersand/settled_regions.hpp": "05577c38da9e7fa6f2bbf1e6d589ee104dba71a840974843ff582326900493a1",
+        "native/include/cybersand/settled_world_discovery.hpp": "ab71dc2e0e13b0cc580ba3ce981a321f36b7b83d7904dd899f8746fd0e8d7138",
+        "native/include/cybersand/soliding_lifecycle.hpp": "044335712b4bfcec62a239a57092f11bc5598cc1b9a2427ef0ddbaf1d1d214cd",
+        "native/include/cybersand/transport_policy.hpp": "9204d1e7b112e260097ba3924c8653cde45568d5886d33b9bb53fdfa8019e348",
+        "native/include/cybersand/water_experiment_policy.hpp": "60b6ef5e611ba39eb0d6220115eb2f0662bc58e02b56c0966a239e30ad57dfaf",
+        "native/include/cybersand/world.hpp": "f126bb6f74f912e5614f1998ec0efd7fd8375c3c19d120853718f45ac848f461",
+        "native/include/cybersand/world_generation.hpp": "1a8fbb40ead0ed8f50e2a407eca62ee2312aba64d396d1f44fa5ae6ca48148df",
+        "native/src/c_api.cpp": "9e70906c5489bd10ec2fd00663328c818fe8b281d5199e6a01d756b2cd9b6274",
+        "native/src/generation_fields.cpp": "0f4139421792d9e17c069b542620356a2978a09f7254bc4f11c1b725729a4df3",
+        "native/src/material_rules.cpp": "711abb73d10fef68ace68996cab9a9b1a8f0c2f0b5d12a48934714d93d6c3a4a",
+        "native/src/render_snapshot.cpp": "b905363461d4aa31ffbeb94bd6717993597b9da23b5ea5d8fc717a56662dbf04",
+        "native/src/render_snapshot_internal.hpp": "c36e3b4f41db0f4ac96788a74f66b92407690dccc8609951428ec7b54c292998",
+        "native/src/scheduler_geometry.cpp": "6ddfd5c5601a63edbcc1a8c430dcfe6332cbe54109c6b1d3763f933a6be38764",
+        "native/src/settled_world_discovery.cpp": "5f56ab11ac22eb6af105f52a3abca4ef91a0db1d0046855793123fa941e728b6",
+        "native/src/world.cpp": "0a32fe69a6d2ff804ff053ac520a8138a7aaf89538d914b10a356dd9ce61d211",
+        "native/src/world_generation.cpp": "b3ebf1fa657496e438f436012b8e9b865b5a1bd82fcf550d0ceeead9fbd139ae"
+      },
+      "rapier_artifact_sha256": "147ab5673b9687ccb7a3b12fec07ea55cc674ad8a75f529d1085bf7d61fbd831",
+      "repository": "techrote/cybersand"
+    },
+    "identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+    "matches_preserved_v2_runtime": true,
+    "new_runtime_invocations_for_this_audit": 0
+  },
+  "limitations": [
+    "The prospectively frozen whole-run evidence gate failed and remains failed. Narrow receipt/source/accounting subchecks cannot repair or replace that gate.",
+    "All findings here are labelled post-run analyses of the original retained bytes. The pending file was not deleted, omitted, resealed or added to the original inventory.",
+    "The physical worker completed 96 rows; the original supervisor completed=false because its final inventory verification failed. These statuses are distinct.",
+    "The independent behavior review must keep the unchanged teacher gates; passing receipt subchecks do not grant teacher acceptance.",
+    "All 32 cases were already opened; there is no sealed learned-policy evaluation, dataset-collection admission or morphology admission here.",
+    "Native aggregate actuation and motion do not expose a passive/contact-force decomposition or establish a causal force explanation.",
+    "The original truncated arrival journal and failed v1 evidence remain unchanged; full original owner-call accounting is not reconstructed from later runs."
+  ],
+  "native_accounting": {
+    "answered_requests": 2568,
+    "confirmed_ticks": 13818,
+    "event_counts": {
+      "episode_completed": 96,
+      "episode_started": 96,
+      "host_closed": 1,
+      "host_start_reserved": 1,
+      "request_reserved": 2568,
+      "response_received": 2568
+    },
+    "failed_admissions": 0,
+    "host_termination_confirmed": true,
+    "native_close_confirmed": true,
+    "operation_counts": {
+      "cancel": 72,
+      "close": 1,
+      "profile": 96,
+      "reset": 96,
+      "step": 2303
+    },
+    "owner_requests": 2568,
+    "pending_requests": 0,
+    "raw_chain_sha256": "7813c4014003f36e17994cfbe527859f59339aa375b50f3b0cec7170e2509ebe",
+    "records": 5330,
+    "requested_ticks": 13818,
+    "verified": true
+  },
+  "original_evidence_preservation": {
+    "all_original_artifacts_unchanged": true,
+    "all_original_supervisor_streams_unchanged": true,
+    "artifact_count_including_summary_and_unindexed_pending": 198,
+    "original_final_output_verification_before_and_after": {
+      "error_code": null,
+      "error_type": "ValueError",
+      "verified": false
+    },
+    "original_run_inventory_was_not_repaired": true,
+    "summary_after": {
+      "bytes": 388977,
+      "sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+    },
+    "summary_before": {
+      "bytes": 388977,
+      "sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+    },
+    "supervisor_completed_before_and_after": false,
+    "unindexed_pending_retained": true
+  },
+  "original_full_verifier_reproduction": {
+    "detail": "arrival_final_output: final artifact inventory is incomplete or changed",
+    "error_code": "arrival_final_output",
+    "exception_type": "ContractError",
+    "verified": false
+  },
+  "original_inputs_unchanged_during_audit": true,
+  "original_invocation_outcome": {
+    "final_output_verification": {
+      "error_code": null,
+      "error_type": "ValueError",
+      "verified": false
+    },
+    "invocation_qualification": false,
+    "reason": "The frozen final-output verifier rejected an extra unindexed artifact. No post-run analysis can change this original outcome.",
+    "supervisor_completed": false,
+    "supervisor_error_type": "ValueError",
+    "worker_error": null,
+    "worker_returncode": 0,
+    "worker_status": "completed"
+  },
+  "per_episode_accounting": [
+    {
+      "case_id": "demo-floor-right-24-0",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "43e40bc88703528e946956970313231bec3ff668737b7d48fda7cfb1695edb95",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-24-0",
+      "decisions": 18,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "aa7e9af38e9c5dacdc95a67a114641590e7a07df1058524278ea5e9302841023",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-right-24-0",
+      "decisions": 17,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "c1e7f1b9b85d90810a66c37b69c25bbb333d233f88a458b4915eeb74ef529f4b",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "573cf7adc859b59912bccf1cc77eaf9d4e34bf6065a5eb5aeead2bd62a3ba596",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "decisions": 18,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "f0a13968ee5632078b1931c8024cd42aaec9c892f79e734dc790f7f16e2fd98f",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "decisions": 17,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "64840d589e6316b4b8ffb712f4ed9e88efd4345347cb32ea787c2f85e08872b4",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "cf8370d3bf9288c80f147bd254075b59a4acc6af825fa4061a4aa33e1149c76e",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "decisions": 17,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "534535ee945b00158b206637a8db4d411c64fddc1a892c9cf7b86cb8d50c6f23",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "decisions": 17,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "3a1028d2c4f977826401172f1763fa7d79bbadf2044ad484852381860d526a78",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-left-24-0",
+      "decisions": 8,
+      "family": "authored-balanced-v1",
+      "record_sha256": "c7661dcd06d19fba3aae5d0e17a96417d53cda4490c3ffee1b9bdd7ca17606a8",
+      "source_and_authority_verified": true,
+      "ticks": 48
+    },
+    {
+      "case_id": "demo-floor-left-24-0",
+      "decisions": 12,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "9fc10e7cef445523284e2a2f2091c743ad8af3892a2e3dc3bd4415791bba5ac6",
+      "source_and_authority_verified": true,
+      "ticks": 72
+    },
+    {
+      "case_id": "demo-floor-left-24-0",
+      "decisions": 16,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "a9a68db1646f77069ce2c81ed2ed65194690e49a624f65eaa00fc65090056add",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-left-24-1",
+      "decisions": 8,
+      "family": "authored-balanced-v1",
+      "record_sha256": "6bc339eaf402434ca386618413f5ae28c4319655417300b74fb62426cf33a9e8",
+      "source_and_authority_verified": true,
+      "ticks": 48
+    },
+    {
+      "case_id": "demo-floor-left-24-1",
+      "decisions": 12,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "76a82114f27c3e0939bb9ab34da8e2cd5cc03fbb0d16f0224f41f21f6dcbfa05",
+      "source_and_authority_verified": true,
+      "ticks": 72
+    },
+    {
+      "case_id": "demo-floor-left-24-1",
+      "decisions": 16,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "cce7541bd654872fd2cb660eeaab60e3e43bdba8860f88bd08d269b0ffad2122",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-left-24-2",
+      "decisions": 8,
+      "family": "authored-balanced-v1",
+      "record_sha256": "12abda758acc91ccc804395471650cba4b073b9830c704aa80c21ea536af0adf",
+      "source_and_authority_verified": true,
+      "ticks": 48
+    },
+    {
+      "case_id": "demo-floor-left-24-2",
+      "decisions": 12,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "f0446e62d24587a09c05fab116e40da2fcd3887736b981b1c67cdb4d45cbbfd3",
+      "source_and_authority_verified": true,
+      "ticks": 72
+    },
+    {
+      "case_id": "demo-floor-left-24-2",
+      "decisions": 16,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "28dd51f4fe48c6f9e21c231330273a2fc51fa5add2fca22d5b97cd88bc62cf42",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "decisions": 16,
+      "family": "authored-balanced-v1",
+      "record_sha256": "df2bb820fbe835506a8707478920689c3a971e22d9a540ba30cd4a42a55e9965",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "decisions": 13,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "456107860bb33c3c65bd6609d0a02d3c00731959a17d45f16fa4a46d3fb29e4d",
+      "source_and_authority_verified": true,
+      "ticks": 78
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "decisions": 19,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "926c091d4039a6d1dd648fe6a0676035ad2a4bdaee2f9072851c3d887bae0d46",
+      "source_and_authority_verified": true,
+      "ticks": 114
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "decisions": 13,
+      "family": "authored-balanced-v1",
+      "record_sha256": "d7c00814abcf76959ec8ca84a3ca93d40a59a8f72cb340e7a25902782b71c694",
+      "source_and_authority_verified": true,
+      "ticks": 78
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "decisions": 15,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "a5297a51a9fddee69c2e9f23ebfe7aee5e93c55c92b94a5d499a15b67e83504f",
+      "source_and_authority_verified": true,
+      "ticks": 90
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "decisions": 40,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "43e54b8e8596947e8455c3296987f76cb3458f8f8cc516f0e2e764138667586c",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "4635f2341854a09c83b525806dae93ff4750064249dbeb35c8552a39b8c06d64",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "decisions": 14,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "f132b0d61ee3912321e014d67d746d2127e8a3ed7fea37f6a47b32b45adebc20",
+      "source_and_authority_verified": true,
+      "ticks": 84
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "decisions": 29,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "468ce371e2878080c8bad9b79327c72bbdfa7bbe4589f866f5dbcb33fa6f7e30",
+      "source_and_authority_verified": true,
+      "ticks": 174
+    },
+    {
+      "case_id": "demo-floor-left-36-0",
+      "decisions": 13,
+      "family": "authored-balanced-v1",
+      "record_sha256": "464f4b50b975090d816e3411c8d6f56bed9bd15e8a83ed717b737c5afe464fd6",
+      "source_and_authority_verified": true,
+      "ticks": 78
+    },
+    {
+      "case_id": "demo-floor-left-36-0",
+      "decisions": 15,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "1a016cb905d1c00d3c17d45f87f791ae11da3bd5e10349d734fce637d649ea48",
+      "source_and_authority_verified": true,
+      "ticks": 90
+    },
+    {
+      "case_id": "demo-floor-left-36-0",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "a1aa366333da4513aa3095ad18f23fc0a42b38f3152e543384dc4aca289e53a2",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-left-36-1",
+      "decisions": 13,
+      "family": "authored-balanced-v1",
+      "record_sha256": "9be328798ad729756a668095ec6d5cc855ab7b2ab15f6630760f58a3b25b14ed",
+      "source_and_authority_verified": true,
+      "ticks": 78
+    },
+    {
+      "case_id": "demo-floor-left-36-1",
+      "decisions": 15,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "e281be5f2c1b3e554f08e7de1ca01e14d8cf917f1396ae95b51f0cc4986b0076",
+      "source_and_authority_verified": true,
+      "ticks": 90
+    },
+    {
+      "case_id": "demo-floor-left-36-1",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "eb30a3a8aa82524a631e5de8b6d9c27763ef1e94830c622509185f85b7758256",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-left-36-2",
+      "decisions": 13,
+      "family": "authored-balanced-v1",
+      "record_sha256": "24c2ca11df11aa1c4dd8ddc0643fa4944bcb0779289682e1922bf94938f4a119",
+      "source_and_authority_verified": true,
+      "ticks": 78
+    },
+    {
+      "case_id": "demo-floor-left-36-2",
+      "decisions": 15,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "70d5d4b317e48c506e1977e8e7c7dbb4efb0979bfa30bfed237adab3ad1f831e",
+      "source_and_authority_verified": true,
+      "ticks": 90
+    },
+    {
+      "case_id": "demo-floor-left-36-2",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "b9c079f9a2baaa4d464b9c7d498f6fe91c8976b6eb4b3bfdfbcf4e124f3d2caa",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "decisions": 16,
+      "family": "authored-balanced-v1",
+      "record_sha256": "fdcd7290fa4fc740ef9bee777b4ad75d0a997810317ee60da3d76f346bb1dcda",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "decisions": 16,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "b639bf3c247bb9dcfb9e43ea382c302e5961fe309ab7c5f15c8cf317e5d20393",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "decisions": 24,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "44bddf956d1c9df4d6964605854e8b249498d6f4db315c0b9d7a3d54d97e7c58",
+      "source_and_authority_verified": true,
+      "ticks": 144
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "decisions": 14,
+      "family": "authored-balanced-v1",
+      "record_sha256": "1434b8e1f6ff219b612570e42fb7ec30ca5e4b6ad90e5af52da08c1a6a58dc75",
+      "source_and_authority_verified": true,
+      "ticks": 84
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "decisions": 16,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "9e95e8a006e8d4d089b634f0b7aa300af8ab9cbb213bf4340c7daa4ea9e652fa",
+      "source_and_authority_verified": true,
+      "ticks": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "decisions": 22,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "1a4867c566cb0fd2fc9f0d0948772af81a14ec15f393b95bb18c2347ea879813",
+      "source_and_authority_verified": true,
+      "ticks": 132
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "decisions": 17,
+      "family": "authored-balanced-v1",
+      "record_sha256": "3bc13ba266e69dd7362fbed2f28a49dcc018fa529191cb68caea92a1ef1f417c",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "decisions": 17,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "e926ba9639138a8c1c9fb66a4f771bba8b4eda2bad0393186708d383fe20047b",
+      "source_and_authority_verified": true,
+      "ticks": 102
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "decisions": 29,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "5a2c331a12e85b5d29679af2e9f50a302aae6e8d3c81196eb6b4765d3dbc0420",
+      "source_and_authority_verified": true,
+      "ticks": 174
+    },
+    {
+      "case_id": "demo-floor-left-48-0",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "ccffea0b7ec81daef36a5dff304b271071883810371df99d3afc6397dae4fc7e",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-48-0",
+      "decisions": 20,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "74e5b1c46703acf2869b34ca8080cbd7f19e6c3393c0210d26a83fe6aa14d6b6",
+      "source_and_authority_verified": true,
+      "ticks": 120
+    },
+    {
+      "case_id": "demo-floor-left-48-0",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "5bf88222407a02f2a7c40922a564e9692f693d7f229d11dd6234061f928c506e",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-left-48-1",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "a8fc45914e17bb203913007850a836c1ab1d82ea81567ace8b93a55f9ec675cc",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-48-1",
+      "decisions": 20,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "31458bba49948d6e282d9670c3f128c2fd08f94e77372de0e2ce32a741df49a8",
+      "source_and_authority_verified": true,
+      "ticks": 120
+    },
+    {
+      "case_id": "demo-floor-left-48-1",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "7e9b7f570a66e736eb9309a4511ade549e4601ada92bfc6000ddc7bd5c4870ad",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-left-48-2",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "096b65c32284ad8c88d6ac5b524d6baa2452a7735eea9b2929f6af92d5dbfae0",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-48-2",
+      "decisions": 20,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "3798ae944a2334af874701fd207076093cbfa0798fe19926b83f189801f48726",
+      "source_and_authority_verified": true,
+      "ticks": 120
+    },
+    {
+      "case_id": "demo-floor-left-48-2",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "eef0035715beae8dadd134ae1757ede002665b306a8012ec81851c54583b6d3d",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "fea8e22d7bd40fcd2bff505707073e58ef4b5daf0419e392a905f0069b892d40",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "decisions": 21,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "1c01f978ba877f9c2460ce6d590ea3523cae99c2271177f3f98f15f3ed362c3a",
+      "source_and_authority_verified": true,
+      "ticks": 126
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "decisions": 22,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "6e7f037b21c200850b8cedf9d8f620e50632725f3b1f63c80b2200069d811845",
+      "source_and_authority_verified": true,
+      "ticks": 132
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "9c7a406e2326cf3de5e3699f59de7e622887677fa475cb281a34f5e902a988b1",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "decisions": 21,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "013ae54fc8e7a60ecf5c3ab3d1db55614d7f7f3a5a6a671a36024b04e0963564",
+      "source_and_authority_verified": true,
+      "ticks": 126
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "decisions": 22,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "39db4b885c93ad65f9a65d107a886b35eeea246a470f5ac7a70f25795ae1fcf0",
+      "source_and_authority_verified": true,
+      "ticks": 132
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "39e0debf62ec7c553d8472a79f83c44b76ab05d56756a95a1c57db8ce92a6003",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "decisions": 21,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "f52def86e7de7b62e74f865cafb12340490d4b3b64b6fda5639bb652cc9acd7b",
+      "source_and_authority_verified": true,
+      "ticks": 126
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "decisions": 22,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "5da37e877315e5e38a20d605c9f21b87f05a7b1f8baa82841f99042b954f7a05",
+      "source_and_authority_verified": true,
+      "ticks": 132
+    },
+    {
+      "case_id": "demo-floor-left-60-0",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "3b7a0cb636e7cbe97fbef27816cdb32ed1f1f00c8666868e52d2577dbc32daa3",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-60-0",
+      "decisions": 22,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "8d51dd0fcc96b4633dae23ff67fde71582522fe1953f2e56bc4132e115987f0c",
+      "source_and_authority_verified": true,
+      "ticks": 132
+    },
+    {
+      "case_id": "demo-floor-left-60-0",
+      "decisions": 25,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "411567db7302c2303dd601bbe827188a10ce856b27d69242302adcecb7710b4c",
+      "source_and_authority_verified": true,
+      "ticks": 150
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "decisions": 31,
+      "family": "authored-balanced-v1",
+      "record_sha256": "cafdc2141684582d77ca03e37afc15c6a842572cf70e23f6a89b6cdf4e1e866f",
+      "source_and_authority_verified": true,
+      "ticks": 186
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "decisions": 40,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "2a9a6e9cd721e7b6192a75478436f906a8fd4bbe8bd480199bb15335e0987f04",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "decisions": 40,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "8678c43c1c54e24ff61ea7376e30c9cc5d08ed23f4d102dfd7dbfb7b6bb37906",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-60-2",
+      "decisions": 32,
+      "family": "authored-balanced-v1",
+      "record_sha256": "9c655e3b53c3ec80c1df774a2436b3be471f0b5a33cc8cb6d1850e4efb1271b3",
+      "source_and_authority_verified": true,
+      "ticks": 192
+    },
+    {
+      "case_id": "demo-floor-left-60-2",
+      "decisions": 40,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "ca757d47a36f13358c02f38659e15cfd579cf0b12df1e8c353dbcc549efebe7a",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "demo-floor-left-60-2",
+      "decisions": 26,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "542614285e51a9f7e3d0d2a590fc67c4d95835ce4231c3498f5e32acb91c686b",
+      "source_and_authority_verified": true,
+      "ticks": 156
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "8a34c27a8fd5b343aa78b89396de62967ccc667b932fd4f353275b092c7dbd23",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "decisions": 15,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "bda833f56e08a1225ea32f4e30310001b915d93d2d0a2e8baa5a3b458df7e3d6",
+      "source_and_authority_verified": true,
+      "ticks": 90
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "decisions": 18,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "85a4608f48fc8716d053af301add589ec2a710df5d3f4cabc5de89438233e747",
+      "source_and_authority_verified": true,
+      "ticks": 108
+    },
+    {
+      "case_id": "reference-floor-left-27",
+      "decisions": 10,
+      "family": "authored-balanced-v1",
+      "record_sha256": "691c87ead808569c9a3591e2501c26ea9a25b687eb9d190def666a3397085845",
+      "source_and_authority_verified": true,
+      "ticks": 60
+    },
+    {
+      "case_id": "reference-floor-left-27",
+      "decisions": 14,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "df6d1b3bcc3b44e04ce71ee98438521f5f81e2e8c86465e2110c5bbee856b37d",
+      "source_and_authority_verified": true,
+      "ticks": 84
+    },
+    {
+      "case_id": "reference-floor-left-27",
+      "decisions": 19,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "184e6673e996de31ec7dbfff8a44c0b40aead0679a3ad7874342e79d8446f9f5",
+      "source_and_authority_verified": true,
+      "ticks": 114
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "1c168da4d2c2eac3831212dca47c0c30d7f31acf1641420ba0ed207292698000",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "decisions": 20,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "6055ac9ed9776b5c80830eef19731581593b07ce33b85bdbbee3f6f01aa69d60",
+      "source_and_authority_verified": true,
+      "ticks": 120
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "decisions": 21,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "09fb7b64f08a8d1b924754c77c91732bf16deb6b3579d70bbc9f9f20909d01ce",
+      "source_and_authority_verified": true,
+      "ticks": 126
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "ff5584aaa399f04804e4afb15a3556c487aa689c70b9508a58e9186889ad8a05",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "decisions": 40,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "e5e02366bbf2f76e6574fcc2fb4eb1808f4b67589624773c9d09b09e548aa894",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "decisions": 40,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "87e01efa70a49d3b1de2ca521f42107edb64261384119217c3ed176766bb19f3",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-drop12-right-45",
+      "decisions": 25,
+      "family": "authored-balanced-v1",
+      "record_sha256": "5cf817884aec6b6dba55ef01b70e1ae3d11dae8ee4204361a931e23267db9d3e",
+      "source_and_authority_verified": true,
+      "ticks": 150
+    },
+    {
+      "case_id": "reference-drop12-right-45",
+      "decisions": 40,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "dfa3c70676acc5356171860ce8697abf6ad29e255f281546f0bb3fe1ed6337e2",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-drop12-right-45",
+      "decisions": 36,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "b7f964bf70f6ad92776f8a5057227dc631db4734e3098afc661cf70c4ef980a3",
+      "source_and_authority_verified": true,
+      "ticks": 216
+    },
+    {
+      "case_id": "reference-drop12-left-45",
+      "decisions": 21,
+      "family": "authored-balanced-v1",
+      "record_sha256": "c426e2932d31293a2423a856526b9cb50d2f6de8f3b1f8531aea3c17ede4216b",
+      "source_and_authority_verified": true,
+      "ticks": 126
+    },
+    {
+      "case_id": "reference-drop12-left-45",
+      "decisions": 23,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "1a2076d4962ee21220676384f80bdd8ea1d1eec168fe41e63dc38b291c10ac92",
+      "source_and_authority_verified": true,
+      "ticks": 138
+    },
+    {
+      "case_id": "reference-drop12-left-45",
+      "decisions": 24,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "a31810dc852e89f32f895660abf79f8707bdb9b7d301b16975421304743bb039",
+      "source_and_authority_verified": true,
+      "ticks": 144
+    },
+    {
+      "case_id": "reference-drop28-right-57",
+      "decisions": 20,
+      "family": "authored-balanced-v1",
+      "record_sha256": "6dfa578442b0923250cb4d56018e39b6e388cca3d3e0fc07f5715f829a28a85a",
+      "source_and_authority_verified": true,
+      "ticks": 120
+    },
+    {
+      "case_id": "reference-drop28-right-57",
+      "decisions": 29,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "852a7c4d094bf87a894f61a71fd716811ce03cec2267ff450ca26f1884b5663d",
+      "source_and_authority_verified": true,
+      "ticks": 174
+    },
+    {
+      "case_id": "reference-drop28-right-57",
+      "decisions": 29,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "39055d92360c0274f50b362366b4cdf76a19e0fbcc9964f5dfb904fa4d913b05",
+      "source_and_authority_verified": true,
+      "ticks": 174
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "decisions": 40,
+      "family": "authored-balanced-v1",
+      "record_sha256": "f10425bab80c48dba8cce444d86690497e0a67937ee40c1f49b5239cc0f3d307",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "decisions": 40,
+      "family": "jolt-arrival-v1",
+      "record_sha256": "d91440fe307222238015871ed1c87e139d110732661d36a033b855ac4ff7e70c",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "decisions": 40,
+      "family": "jolt-recovery-v3",
+      "record_sha256": "732bff4aee768ac2120e1ee76ac1757dc44c286bb0713e40a2baa8bd7959cf9c",
+      "source_and_authority_verified": true,
+      "ticks": 240
+    }
+  ],
+  "preceding_forensic_audit": {
+    "audit_wall_seconds": 204.2810461200006,
+    "bytes": 42924,
+    "failed_additional_check": {
+      "code": null,
+      "detail": "refused or unresolved decision retained",
+      "type": "AssertionError"
+    },
+    "failure_interpretation": "Audit-script bug: read_episode freezes controller_decision_failures as an empty tuple, which compares unequal to an empty list. The continuation checks the sequence length. No run artifact or frozen verifier changed.",
+    "name": "post-run-evidence-forensics.json",
+    "reuse_scope": "Only the already completed independent full raw/gzip/seal/native replay; all remaining source/authority/accounting and final input-identity checks run in this continuation.",
+    "sha256": "ac5079d8ecda0ea99840d889a2041bb9472d6c13d17157fa7c14edb0e60a3895",
+    "source_and_all_original_bytes_rebound": true
+  },
+  "projection_lineage": {
+    "binding": "The continuation binds the preceding native replay report hash, its source identity, every original artifact hash and every closed supervisor/stream hash. It replays remaining episode/source/authority accounting and rechecks immutable inputs; it does not repeat the completed native replay.",
+    "completed_continuation": {
+      "bytes": 69949,
+      "name": "post-run-evidence-forensics-completed.json",
+      "sha256": "08cfd486326cd8694db26e84625b62fe7b56ea3dc31cf901ffaf17f757afc139"
+    },
+    "continuation_reuses_completed_native_replay": true,
+    "full_native_replay_attempt": {
+      "audit_wall_seconds": 204.2810461200006,
+      "bytes": 42924,
+      "later_audit_script_error": {
+        "code": null,
+        "detail": "refused or unresolved decision retained",
+        "type": "AssertionError"
+      },
+      "name": "post-run-evidence-forensics.json",
+      "native_replay_subcheck_verified": true,
+      "sha256": "ac5079d8ecda0ea99840d889a2041bb9472d6c13d17157fa7c14edb0e60a3895"
+    },
+    "initial_strict_refusal": {
+      "audit_wall_seconds": 0.01494932700006757,
+      "bytes": 1101,
+      "failure": {
+        "code": null,
+        "detail": "supervised invocation must already be complete",
+        "type": "AssertionError"
+      },
+      "name": "independent-evidence-audit-initial-refusal.json",
+      "sha256": "a471114da754384dd506d8172336d4de6b78614dae9ebbf94cecb0f967002e67"
+    },
+    "portable_projection_changes": "Added explicit lineage, preservation and cost tables; removed only the local traceback from this derived portable view. Every original audit report/script/log and every run artifact remains unchanged."
+  },
+  "projection_script": {
+    "bytes": 6945,
+    "name": "publish_portable_forensics.py",
+    "sha256": "3926a71543432a1d327ef2cacb06f3746f51e43c556422b4bf71712f929f6724"
+  },
+  "retained_audit_artifacts_before_projection": {
+    "__pycache__/audit_evidence.cpython-312.pyc": {
+      "bytes": 29502,
+      "sha256": "24b9d78f37c63d1a70e62c33861b9f57617b11a310d2826ab3197bfecb56315f"
+    },
+    "audit_evidence.py": {
+      "bytes": 23635,
+      "sha256": "7982127494a74c281ca94e5cba242141ee77809272c64d7ad4b0e7f79178e628"
+    },
+    "forensic_evidence.py": {
+      "bytes": 29313,
+      "sha256": "35cc667b1a25bb935bf23a3012746ea27b507f4ef228fd06d714f96e0012ce10"
+    },
+    "forensic_evidence_v2.py": {
+      "bytes": 31188,
+      "sha256": "c8bef6412a907916e4585ac79d5750c9314ce8f459c288ef3a7faeb70f4eae15"
+    },
+    "independent-evidence-audit-initial-refusal.json": {
+      "bytes": 1101,
+      "sha256": "a471114da754384dd506d8172336d4de6b78614dae9ebbf94cecb0f967002e67"
+    },
+    "post-run-evidence-forensics-completed.json": {
+      "bytes": 69949,
+      "sha256": "08cfd486326cd8694db26e84625b62fe7b56ea3dc31cf901ffaf17f757afc139"
+    },
+    "post-run-evidence-forensics-completed.log": {
+      "bytes": 281,
+      "sha256": "bc1893a7c693ead0fad19f913898f35a6b935edbba6c28973478e3bd303621de"
+    },
+    "post-run-evidence-forensics.json": {
+      "bytes": 42924,
+      "sha256": "ac5079d8ecda0ea99840d889a2041bb9472d6c13d17157fa7c14edb0e60a3895"
+    },
+    "post-run-evidence-forensics.log": {
+      "bytes": 281,
+      "sha256": "b6339ddfb774fe2fa960fc9bb547be14be1cd2c1e423eff0fb3cd302f3f44f2a"
+    },
+    "publish_portable_forensics.py": {
+      "bytes": 6945,
+      "sha256": "3926a71543432a1d327ef2cacb06f3746f51e43c556422b4bf71712f929f6724"
+    }
+  },
+  "run_artifact_directory": "jolt-recovery-v3-diagnostic-20261020",
+  "schema": "nca-jolt-v3-portable-post-run-evidence-forensics/v1",
+  "scope": "Independent source, recorded-file identity, raw/sealed journal, native receipt, per-episode authority and cumulative cost subchecks of a failed invocation. These post-run subchecks do not replace or repair the original failing final-output verification; behavior acceptance is reviewed separately.",
+  "sealed_native_receipt_subcheck": {
+    "compressed_sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452",
+    "owner_validation": {
+      "bound_episode_ticks": 13818,
+      "counts": {
+        "confirmed_step_ticks": 13818,
+        "episodes_started": 96,
+        "host_requests": 2568,
+        "host_start_attempts": 1,
+        "host_terminations": 1,
+        "requested_step_ticks": 13818,
+        "step_requests": 2303
+      },
+      "episode_receipts_bound": true,
+      "episodes_completed": 96,
+      "gzip_eof_verified": true,
+      "native_close_confirmed": true,
+      "records": 5330,
+      "verified": true
+    },
+    "raw_sha256": "43888418cec3848c115102ff9f5190f59c24bd5545702fe58ba4502b84f2053c",
+    "scope": "indexed raw/gzip/seal/native/episode binding only; excludes failing outer inventory gate",
+    "seal_sha256": "76446ae516192ddcd25771f734d0cf982a01be07d6754c91bfd1519870059b52",
+    "verified": true,
+    "whole_invocation_qualification": false
+  },
+  "separate_invocation_ledger": [
+    {
+      "accounting_limit": "Episode receipts corroborate all 1549 decisions and 9294 ticks; the truncated raw owner journal cannot independently establish its reported full owner-request count or native closure",
+      "archive_sha256": "55d8be5e14ca7aeeeb42bdbf7d2e58d6e970806017e19d9fedd965c8e68ed4d4",
+      "declaration_sha256": "269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a",
+      "dispatched_decisions": 1549,
+      "episode_confirmed_ticks": 9294,
+      "episode_rows": 64,
+      "evidence_status": "incomplete_owner_journal",
+      "full_owner_request_count_verified": false,
+      "host_starts": 1,
+      "id": "jolt-arrival-diagnostic-v1",
+      "journal_verified_owner_responses": 842,
+      "reported_owner_requests": 1722,
+      "requested_ticks": 9294,
+      "resumed": false,
+      "retained_summary_status": "completed",
+      "reused_rows": 0,
+      "source_revision": "5d9d6a13d2f273ee1b4fd3ce0b50a6482c807382",
+      "whole_process_seconds": 221.63055612800235
+    },
+    {
+      "archive_sha256": "6be1740a1a623084f431ba7ed08f39fceb8d3ee9fa416d519c48ff6b57ede439",
+      "confirmed_ticks": 2874,
+      "declaration_sha256": "2e5d4e3c554ec2382d10a95d347c1f933252050f2a18dff320711c2cc3c7fff7",
+      "dispatched_decisions": 479,
+      "episode_rows": 24,
+      "host_starts": 1,
+      "id": "jolt-recovery-001-diagnostic-v1",
+      "owner_requests": 549,
+      "requested_ticks": 2874,
+      "resumed": false,
+      "reused_rows": 0,
+      "source_revision": "ceb19f5742a782299197557fa53e2208523eb7f7",
+      "status": "incomplete",
+      "whole_process_seconds": 61.76433001999976
+    },
+    {
+      "archive_sha256": "7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53",
+      "confirmed_ticks": 14694,
+      "declaration_sha256": "d7cc13335b453a755e9b7d950ac52d982aff553c025cbe0fbd47b81b5b0729eb",
+      "dispatched_decisions": 2449,
+      "episode_rows": 96,
+      "host_starts": 1,
+      "id": "jolt-recovery-002-diagnostic-v2",
+      "owner_requests": 2711,
+      "requested_ticks": 14694,
+      "resumed": false,
+      "reused_rows": 0,
+      "source_revision": "8da294ae4a263dd95c34b181abb795b906060c2d",
+      "source_tree": "c701a9d37edb5567fab9c7db0fb595fafec2ece5",
+      "status": "completed",
+      "teacher_accepted": false,
+      "whole_process_seconds": 444.46566076900126
+    },
+    {
+      "confirmed_ticks": 13818,
+      "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+      "dispatched_decisions": 2303,
+      "episode_rows": 96,
+      "full_owner_request_count_verified": true,
+      "host_starts": 1,
+      "id": "jolt-recovery-003-diagnostic-v3",
+      "owner_requests": 2568,
+      "requested_ticks": 13818,
+      "resumed": false,
+      "reused_rows": 0,
+      "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "status": "failed_final_output_inventory_verification",
+      "whole_invocation_qualified": false,
+      "whole_process_seconds": 294.9515252410001,
+      "worker_status": "completed"
+    }
+  ],
+  "source_binding": {
+    "candidate_specification_sha256": "e180844789194c1a928c673599aed48a987db617e26be96e7043dc7ee6c72a2e",
+    "preserved_sources": {
+      "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+      "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+      "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+      "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+      "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+      "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+      "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+      "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec"
+    },
+    "source_file_count": 97,
+    "source_files_sha256": "5e0c4980211b17e035b3bac6994fe3de2e80d6b8022055c99e6f97eb85641a85",
+    "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+    "verified": true
+  },
+  "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70"
+}

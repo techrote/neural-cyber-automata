@@ -1,0 +1,64 @@
+{
+  "schema": "nca-jolt-recovery-v3-frozen-source-ci/v1",
+  "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70",
+  "all_five_required_checks_pass": true,
+  "scope": "Hosted conformance checks are separate from the single authored diagnostic allocation and do not supply its outcomes.",
+  "checks": [
+    {
+      "run_id": 39483815128,
+      "job_id": 118838949497,
+      "name": "check-docs",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39483815128/job/118838949497",
+      "started_at": "2026-10-20T19:28:57Z",
+      "completed_at": "2026-10-20T19:29:03Z"
+    },
+    {
+      "run_id": 39483815150,
+      "job_id": 118838958926,
+      "name": "cpu (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39483815150/job/118838958926",
+      "started_at": "2026-10-20T19:28:58Z",
+      "completed_at": "2026-10-20T19:29:35Z"
+    },
+    {
+      "run_id": 39483815150,
+      "job_id": 118838959366,
+      "name": "cpu (windows-2022)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39483815150/job/118838959366",
+      "started_at": "2026-10-20T19:28:58Z",
+      "completed_at": "2026-10-20T19:29:50Z"
+    },
+    {
+      "run_id": 39483815102,
+      "job_id": 118838949734,
+      "name": "actual-host",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39483815102/job/118838949734",
+      "started_at": "2026-10-20T19:28:57Z",
+      "completed_at": "2026-10-20T19:30:08Z"
+    },
+    {
+      "run_id": 39483817089,
+      "job_id": 118838958888,
+      "name": "learning-cpu",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39483817089/job/118838958888",
+      "started_at": "2026-10-20T19:28:58Z",
+      "completed_at": "2026-10-20T19:31:04Z"
+    }
+  ]
+}
