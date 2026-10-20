@@ -1,0 +1,673 @@
+{
+  "candidate_specification_sha256": "2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038",
+  "case_results": [
+    {
+      "artifact_sha256": "d34fb925f2f7c301f7a0eec96bd61b4f4b9516b2bb6b86913a8613d47714fa49",
+      "case_id": "demo-floor-right-24-0",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          197.135375976562,
+          348.475402832031
+        ],
+        "source_tick": 90,
+        "source_velocity": [
+          7.54709148406982,
+          2.27922058105469
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 17,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "6422ad2352c680e6ced0064a016ccf07d58abd0b235ffb80a8bc186ec1b3ab3e",
+      "case_id": "demo-floor-right-24-1",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          197.135375976562,
+          348.475402832031
+        ],
+        "source_tick": 90,
+        "source_velocity": [
+          7.54709148406982,
+          2.27922058105469
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 17,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "e25888f766105ef1018a8f6dc723aa9889d324296b81fb9fd4ac702af4a71d7e",
+      "case_id": "demo-floor-right-24-2",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          196.915588378906,
+          348.490447998047
+        ],
+        "source_tick": 90,
+        "source_velocity": [
+          4.32083415985107,
+          -0.589693963527679
+        ],
+        "v3_phase": "settle_hold",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 17,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "455265eb0adaa5796d8d30c84a09a5269df5d7b1d49c3b60f3ce9f7d86c19e25",
+      "case_id": "demo-floor-left-24-0",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          243.249114990234,
+          348.491333007812
+        ],
+        "source_tick": 84,
+        "source_velocity": [
+          -8.90956211090088,
+          -0.841802835464478
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 16,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "3c5a37b4123edf5ae8eafdac617032183a62b7e8451e6e676f2821207aa4ab05",
+      "case_id": "demo-floor-left-24-1",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          243.249114990234,
+          348.491333007812
+        ],
+        "source_tick": 84,
+        "source_velocity": [
+          -8.90956211090088,
+          -0.841802835464478
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 16,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "5db49f79378890b6b405d0dec2510d0a61d51e92b4812b81cf4381f1bc19765e",
+      "case_id": "demo-floor-left-24-2",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          243.249114990234,
+          348.491333007812
+        ],
+        "source_tick": 84,
+        "source_velocity": [
+          -8.90956211090088,
+          -0.841802835464478
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 16,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "275fbced0bdd04c2a722976d3fc43484302146fdcc70bd26fb76d15f6bfd1534",
+      "case_id": "demo-floor-right-36-0",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          208.96061706543,
+          348.492431640625
+        ],
+        "source_tick": 102,
+        "source_velocity": [
+          4.6166820526123,
+          -1.62343513965607
+        ],
+        "v3_phase": "settle_hold",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 19,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08",
+      "case_id": "demo-floor-right-36-1",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          207.245788574219,
+          346.461486816406
+        ],
+        "source_tick": 126,
+        "source_velocity": [
+          -1.6175445318222,
+          -8.04178237915039
+        ],
+        "v3_phase": "settle",
+        "v4_phase": "post_pulse_coast"
+      },
+      "retained_decisions": 40,
+      "v4_probe_pulses": 2
+    },
+    {
+      "artifact_sha256": "45fa6a2fbfbead6f1c9c3ca786ddb4a02b70fd0c24afa286b408559b4df767b4",
+      "case_id": "demo-floor-right-36-2",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          208.288497924805,
+          346.418884277344
+        ],
+        "source_tick": 144,
+        "source_velocity": [
+          -2.97614979743958,
+          -9.1314525604248
+        ],
+        "v3_phase": "settle",
+        "v4_phase": "post_pulse_coast"
+      },
+      "retained_decisions": 29,
+      "v4_probe_pulses": 2
+    },
+    {
+      "artifact_sha256": "89506b253e8539037ead92cec9b2dad86becfcb036f9b128e6f29c9b0994dd60",
+      "case_id": "demo-floor-left-36-0",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          230.941589355469,
+          348.501800537109
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -8.8723316192627,
+          -3.06825072016181e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "dd4b8f1ea8f65e923dbc8c279a84a91234928f36a007ef1d5270061c6c500743",
+      "case_id": "demo-floor-left-36-1",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          230.941589355469,
+          348.501800537109
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -8.8723316192627,
+          -3.06825072016181e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "e42ad65a579d17de71a4c55c9579fdd7b02a4950e0bf17eeb5a5e75d5e0c0808",
+      "case_id": "demo-floor-left-36-2",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          230.941589355469,
+          348.501800537109
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -8.8723316192627,
+          -3.06825072016181e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "637f3588c1086cecdfeb02e0f566771f6cf3d7c1cf7146ee9483048fd27f4e5e",
+      "case_id": "demo-floor-right-48-0",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          220.485733032227,
+          347.974212646484
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          11.9277601242065,
+          2.8411238193512
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 24,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "66361e6e36144af3cdabd2cb2c5e9e0ca7c8de26423ba441bc39e98c833ab1d1",
+      "case_id": "demo-floor-right-48-1",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          220.551864624023,
+          348.069458007812
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          11.0993556976318,
+          1.64475166797638
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 22,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "476643ed90d8e35d035eb2b89961d0ffe71e70776d61de3e154248034d1f7aaf",
+      "case_id": "demo-floor-right-48-2",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          220.926010131836,
+          348.037322998047
+        ],
+        "source_tick": 102,
+        "source_velocity": [
+          9.48548221588135,
+          2.88685822486877
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 29,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "6e39113d7b092a9fdbf598dc0c4d9091b163634f0b07680475429fe98609e14b",
+      "case_id": "demo-floor-left-48-0",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          218.865585327148,
+          348.499633789062
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -6.35574626922607,
+          0.0925974547863007
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "3c40264825c62aea3d727a77297437292e64c724ff389c6074ccd4b031cb7e26",
+      "case_id": "demo-floor-left-48-1",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          218.865585327148,
+          348.499633789062
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -6.35574626922607,
+          0.0925974547863007
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "ea24145a12085786a8bfb250c1c6f129ec6a07c01044d888d25d84305cd5a2df",
+      "case_id": "demo-floor-left-48-2",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          218.748580932617,
+          348.498596191406
+        ],
+        "source_tick": 96,
+        "source_velocity": [
+          -6.65147638320923,
+          -0.0051491460762918
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "d3ffa5d11b87ca6c2e6b67d3f29c4d7cf413d92bb2e5220db701778b92f82e80",
+      "case_id": "demo-floor-right-60-0",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          232.744781494141,
+          348.501525878906
+        ],
+        "source_tick": 120,
+        "source_velocity": [
+          6.90047359466553,
+          5.4856606368503e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 22,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "96f6b5ab56d8fbd998276d5819c1dd8ffeeff03dce068a33fc04625cc947ac1b",
+      "case_id": "demo-floor-right-60-1",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          232.744781494141,
+          348.501525878906
+        ],
+        "source_tick": 120,
+        "source_velocity": [
+          6.90047359466553,
+          5.4856606368503e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 22,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "66411ea25642bc2f3240a4264caa6499ee8468d6e0875e1a1a3c63224ad02dbe",
+      "case_id": "demo-floor-right-60-2",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          232.744781494141,
+          348.501525878906
+        ],
+        "source_tick": 120,
+        "source_velocity": [
+          6.90047359466553,
+          5.4856606368503e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 22,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "489401d688b9fd9f733bf4a22309500d8e189f8263749b3f626b12de1ced47da",
+      "case_id": "demo-floor-left-60-0",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          207.185760498047,
+          348.457916259766
+        ],
+        "source_tick": 144,
+        "source_velocity": [
+          -3.12553715705872,
+          1.72352457046509
+        ],
+        "v3_phase": "settle_hold",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 25,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a",
+      "case_id": "demo-floor-left-60-1",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          209.057800292969,
+          346.102600097656
+        ],
+        "source_tick": 162,
+        "source_velocity": [
+          3.42383456230164,
+          -12.9127626419067
+        ],
+        "v3_phase": "settle",
+        "v4_phase": "post_pulse_coast"
+      },
+      "retained_decisions": 40,
+      "v4_probe_pulses": 2
+    },
+    {
+      "artifact_sha256": "6384a23082443c51fe65e15c28ec30791fae65614758873cfdb2b1b0cbdaf3c3",
+      "case_id": "demo-floor-left-60-2",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          207.274856567383,
+          348.470794677734
+        ],
+        "source_tick": 144,
+        "source_velocity": [
+          -2.77105832099915,
+          0.976274311542511
+        ],
+        "v3_phase": "settle_hold",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 26,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "53a40770130af0792ae4ef6fc647080b4f4728e5d11ffab05989c582f120a441",
+      "case_id": "reference-floor-right-27",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          199.467422485352,
+          348.270080566406
+        ],
+        "source_tick": 84,
+        "source_velocity": [
+          10.5855894088745,
+          0.338340163230896
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 18,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "b0bf97515cc4857530d296942aa7162974559cb0167e1c02fd38d7c4e5825b74",
+      "case_id": "reference-floor-left-27",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          239.930709838867,
+          348.495880126953
+        ],
+        "source_tick": 102,
+        "source_velocity": [
+          -6.0725679397583,
+          -1.19422090053558
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 19,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "aeea23b146f8ad30f24205cdff30977037d20fe6ce4ad4ad45ce772e953f5b60",
+      "case_id": "reference-floor-right-63",
+      "first_pulse_source_tick_unchanged": 18,
+      "first_request_difference": {
+        "source_position": [
+          235.741577148438,
+          348.501129150391
+        ],
+        "source_tick": 114,
+        "source_velocity": [
+          9.77662563323975,
+          0.124253071844578
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 21,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177",
+      "case_id": "reference-floor-left-63",
+      "first_pulse_source_tick_unchanged": 12,
+      "first_request_difference": {
+        "source_position": [
+          210.321990966797,
+          346.108764648438
+        ],
+        "source_tick": 156,
+        "source_velocity": [
+          -2.74367713928223,
+          -13.9942083358765
+        ],
+        "v3_phase": "approach",
+        "v4_phase": "post_pulse_coast"
+      },
+      "retained_decisions": 40,
+      "v4_probe_pulses": 2
+    },
+    {
+      "artifact_sha256": "3cf45cde87ddf2e6b3018032160631444f2f816b7e52f560ef931f256bcef02a",
+      "case_id": "reference-drop12-right-45",
+      "first_pulse_source_tick_unchanged": 36,
+      "first_request_difference": {
+        "source_position": [
+          206.981323242188,
+          346.498718261719
+        ],
+        "source_tick": 150,
+        "source_velocity": [
+          11.7400026321411,
+          -8.35838317871094
+        ],
+        "v3_phase": "approach",
+        "v4_phase": "post_pulse_coast"
+      },
+      "retained_decisions": 36,
+      "v4_probe_pulses": 2
+    },
+    {
+      "artifact_sha256": "c26b9865872cda2ff147152f7db014d3644577c2536e1982346f517de24f3bc9",
+      "case_id": "reference-drop12-left-45",
+      "first_pulse_source_tick_unchanged": 42,
+      "first_request_difference": {
+        "source_position": [
+          221.676132202148,
+          348.501739501953
+        ],
+        "source_tick": 132,
+        "source_velocity": [
+          -7.04473352432251,
+          -2.23145519839818e-08
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 24,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "ffff1e4754363e7e70a519a52b423647b670da1be5ecf366074abe26c51751e9",
+      "case_id": "reference-drop28-right-57",
+      "first_pulse_source_tick_unchanged": 48,
+      "first_request_difference": {
+        "source_position": [
+          230.056243896484,
+          348.501770019531
+        ],
+        "source_tick": 162,
+        "source_velocity": [
+          7.72547721862793,
+          -1.33887311903891e-07
+        ],
+        "v3_phase": "settle_brake",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 29,
+      "v4_probe_pulses": 1
+    },
+    {
+      "artifact_sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef",
+      "case_id": "reference-drop28-left-57",
+      "first_pulse_source_tick_unchanged": 54,
+      "first_request_difference": {
+        "source_position": [
+          210.283004760742,
+          348.486511230469
+        ],
+        "source_tick": 156,
+        "source_velocity": [
+          -2.65659928321838,
+          1.86916565895081
+        ],
+        "v3_phase": "settle_hold",
+        "v4_phase": "settle_capture"
+      },
+      "retained_decisions": 40,
+      "v4_probe_pulses": 1
+    }
+  ],
+  "counts": {
+    "capture_probes": 112,
+    "different_actions": 123,
+    "post_pulse_coast_probes": 5,
+    "retained_v3_decisions_exact": 754,
+    "v4_decision_probes": 754
+  },
+  "learning_or_optimization_calls": 0,
+  "limits": "V3 decisions and identities are exactly replayed. V4 consumes the same retained source observations as offline arithmetic probes only. After a changed action these observations are not a counterfactual physical rollout; no predicted arrival, rescue, character, native closure or teacher acceptance is claimed.",
+  "physical_host_starts": 0,
+  "preserved_v3_source_sha256": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+  "retained_output_artifact_inventory_sha256": "22a453d30ba4d1f5311ae218e57144565c67d6518b7baa433c9fc73e4d15b8a3",
+  "schema": "nca-jolt-v4-offline-controller-prepass/v1",
+  "source_controller_sha256": "d7903561e37bc0845b3993d3b608ff83200021084e4d41e6f8ab19dff38edeec",
+  "v4_probe_phases": {
+    "airborne_coast": 234,
+    "anticipate": 32,
+    "approach": 159,
+    "contact_recovery_anticipate": 5,
+    "contact_recovery_launch": 5,
+    "emergency_recovery": 19,
+    "ground_correction": 5,
+    "landing": 31,
+    "launch": 32,
+    "post_pulse_coast": 5,
+    "settle": 116,
+    "settle_capture": 111
+  }
+}

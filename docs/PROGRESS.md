@@ -103,3 +103,44 @@ learning, checkpoint execution or optimizer update. The independent review
 supports merging the explicitly experimental version and truthful negative
 evidence after final-head CI; #64 and #48 stay open and #62/#16 remain gated.
 Final evidence packaging and delivery verification are offline work only.
+
+## 2026-10-20 20:40 UTC — JOLT-RECOVERY-004 offline correction checkpoint
+
+The owner commissioned [#64's fourth recovery recommendation](https://github.com/techrote/neural-cyber-automata/issues/64#issuecomment-6300675643).
+D-017 records the fresh scope from accepted main
+`d7d4abe49c537426ef6c6aed0be60de4cdd8b70e`, tree
+`12656145fe9f2a2c25d52dddee2eb70a19bc8da8`. Controller, evidence durability and
+independent source/history review retain separate ownership. All earlier
+allocations and unsuccessful qualifications remain closed and unchanged.
+
+The new `authored-jolt-recovery@4` preserves v3's initial contact-transition
+and pulse-vector methods. It adds Euclidean interior settling with bounded
+slow traction and a fresh, single six-tick coast after a rising second-pulse
+observation. The original supervisor, profile, host, task, pulse limits and
+caller-validated completion remain unchanged. All 86 recovery tests pass,
+including eleven new controller cases. Independent review found no remaining
+controller-source blocker; integrated source and durability admission still
+precede any physical start.
+
+The [retained prepass](evidence/jolt-recovery-v4-retained-prepass-20261020.json)
+verifies all 32 original v3 candidate artifacts and reproduces all 754 decisions.
+The new candidate makes 754 offline arithmetic probes against the same copied
+observations, with 123 changed requests, 112 capture decisions and five bounded
+coast decisions. All first-pulse source ticks remain unchanged. Later retained
+observations after a changed request establish no counterfactual physical
+continuation, arrival or teacher acceptance.
+
+The [v4 evidence overview](evidence/2026-10-20-jolt-recovery-v4.md) records the
+controller/specification hashes and complete historical ledger: four hosts,
+280 rows, 6,780 decisions, 40,680 episode-confirmed ticks, 7,550 reported owner
+calls and 1,022.812072 whole-process seconds. The original arrival journal
+remains truncated, v1 includes its incomplete row, and v2/v3 remain unqualified.
+
+No new host, owner, native-tick, learned, checkpoint or optimizer call occurred
+at this checkpoint. The single allocation requires prospectively published
+exact source and declaration plus independent admission. Its 900 seconds include
+a 120-second shutdown/sealing/verification reserve, one host and 96 fresh
+episodes; global 4,000-decision/24,000-tick/4,500-call limits coexist with tighter
+per-episode-derived totals of 3,840 decisions/23,040 ticks. No retry, extension,
+resumption or interim-outcome tuning is included. Teacher, #62 and #16 retain
+their original separate gates until actual acceptance evidence exists.

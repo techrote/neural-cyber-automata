@@ -6,6 +6,7 @@ learned skill, select a checkpoint, or change the morphology prerequisite.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import gzip
 import hashlib
@@ -30,6 +31,8 @@ from nca.runs import RunBudget
 from nca.train.task import HopTask
 from nca.evaluation.durable_journal import (DurableJournal, file_identity, publish_json,
     seal_owner_journal, sync_directory, verify_sealed_journal)
+from nca.evaluation.durable_publication import (diagnostic_artifact_inventory,
+    publish_json_v2, seal_owner_journal_v2, verify_sealed_journal_v2)
 from nca.evaluation.jolt_character import character_metrics, summarize_character
 from nca.evaluation.jolt_decisions import (SCHEMA as CONTROLLER_DECISION_SCHEMA,
     FAILURE_SCHEMA as CONTROLLER_FAILURE_SCHEMA, CLEANUP_SCHEMA,
@@ -41,6 +44,19 @@ FAMILIES = ("authored-balanced-v1", "jolt-arrival-v1")
 RECOVERY_FAMILIES = (*FAMILIES, "jolt-recovery-v1")
 RECOVERY_V2_FAMILIES = (*FAMILIES, "jolt-recovery-v2")
 RECOVERY_V3_FAMILIES = (*FAMILIES, "jolt-recovery-v3")
+RECOVERY_V4_FAMILIES = (*FAMILIES, "jolt-recovery-v4")
+V4_BUDGET = {
+    "maximum_episodes": 96, "maximum_decisions": 4000,
+    "maximum_requested_ticks": 24000, "maximum_host_requests": 4500,
+    "maximum_wall_seconds": 900, "maximum_host_starts": 1,
+    "maximum_episode_decisions": 40, "maximum_episode_ticks": 240,
+    "optimizer_updates": 0, "checkpoint_executions": 0,
+    "automatic_retry": False, "automatic_budget_extension": False,
+    "maximum_attempts": 1, "learned_policy_calls": 0,
+    "shutdown_reserve_seconds": 120, "maximum_owner_transport_seconds": 15,
+    "independent_verification_reserve_seconds": 60,
+    "supervisor_finalization_reserve_seconds": 6,
+}
 PRESERVED_SOURCES = {
     "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
     "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
@@ -49,14 +65,18 @@ PRESERVED_SOURCES = {
 }
 
 
-def write_json(path: Path, value: Mapping[str, Any]) -> str:
+def write_json(path: Path, value: Mapping[str, Any], *, direct=False) -> str:
     """Exclusive, durable publication; an existing result is never replaced."""
-    return publish_json(path, value)
+    return (publish_json_v2 if direct else publish_json)(path, value)
 
 
 def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
     value = strict_json_loads(path.read_bytes())
-    if (not isinstance(expected_sha256, str) or len(expected_sha256) != 64
+    return _validate_declaration(value, expected_sha256=expected_sha256)
+
+
+def _validate_declaration(value, *, expected_sha256):
+    if (not isinstance(value, dict) or not isinstance(expected_sha256, str) or len(expected_sha256) != 64
             or sha256_json(value) != expected_sha256):
         raise ContractError("arrival_declaration", "the frozen prospective diagnostic declaration is required")
     if expected_sha256 != DECLARATION_SHA256:
@@ -65,7 +85,8 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
         # silently loosen mechanics, task outcomes or execution semantics.
         declared_families = {"nca-jolt-recovery-diagnostic/v1": RECOVERY_FAMILIES,
                              "nca-jolt-recovery-diagnostic/v2": RECOVERY_V2_FAMILIES,
-                             "nca-jolt-recovery-diagnostic/v3": RECOVERY_V3_FAMILIES}
+                             "nca-jolt-recovery-diagnostic/v3": RECOVERY_V3_FAMILIES,
+                             "nca-jolt-recovery-diagnostic/v4": RECOVERY_V4_FAMILIES}
         if (type(value.get("schema")) is not str or value["schema"] not in declared_families
                 or value.get("families") != list(declared_families[value["schema"]])):
             raise ContractError("arrival_declaration", "the separately declared three-family recovery diagnostic is required")
@@ -79,6 +100,10 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
                     "maximum_requested_ticks": 23040, "maximum_host_requests": 4226,
                     "maximum_wall_seconds": 900, "maximum_host_starts": 1,
                     "maximum_episode_decisions": 40, "maximum_episode_ticks": 240}
+        is_v4 = value["schema"] == "nca-jolt-recovery-diagnostic/v4"
+        if is_v4:
+            maximums.update(maximum_decisions=4000, maximum_requested_ticks=24000,
+                            maximum_host_requests=4500)
         if (any(type(limits.get(key)) is not int or not 0 < limits[key] <= cap
                 for key, cap in maximums.items())
                 or limits.get("automatic_retry") is not False
@@ -96,13 +121,13 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
                 "maximum_arrival_angle": .32, "require_support": True}
                 or value["goal"].get("require_support") is not True):
             raise ContractError("arrival_declaration", "the original task success predicate is required")
-        if value["schema"] == "nca-jolt-recovery-diagnostic/v3":
+        if value["schema"] in ("nca-jolt-recovery-diagnostic/v3", "nca-jolt-recovery-diagnostic/v4"):
             from nca.evaluation.jolt_recovery_acceptance import acceptance_specification
             # V3 is a new, complete allocation. Check its unchanged teacher
             # rule before starting a process, not only when auditing outcomes.
             if sha256_json(value.get("teacher_acceptance")) != sha256_json(
-                    acceptance_specification(RECOVERY_V3_FAMILIES[2])):
-                raise ContractError("arrival_declaration", "v3 must retain the prospectively fixed teacher acceptance")
+                    acceptance_specification(RECOVERY_V4_FAMILIES[2] if is_v4 else RECOVERY_V3_FAMILIES[2])):
+                raise ContractError("arrival_declaration", "the new candidate must retain the prospectively fixed teacher acceptance")
             if (any(limits[key] != cap for key, cap in maximums.items())
                     or type(limits.get("maximum_attempts")) is not int or limits["maximum_attempts"] != 1
                     or type(limits.get("learned_policy_calls")) is not int or limits["learned_policy_calls"] != 0):
@@ -113,6 +138,21 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
                 "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
                 "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
             }
+            if is_v4:
+                preserved["src/nca/controllers/jolt_recovery_v3.py"] = "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3"
+                if (set(limits) != set(V4_BUDGET)
+                        or any(type(limits[key]) is not type(expected) or limits[key] != expected
+                               for key, expected in V4_BUDGET.items())):
+                    raise ContractError("arrival_declaration", "v4 requires its exact global, per-episode and reserve allocation")
+                inventory_sha256 = "b48eeeffa3b07f0a12a8cc2736fd0ed80f500e95b00bb69f9e46fb2c3fabd06d"
+                if (value.get("case_inventory_sha256") != inventory_sha256
+                        or sha256_json(value.get("case_inventory")) != inventory_sha256
+                        or sha256_json(value.get("prior_invocations")) != "0ae1d52a22c97e0e191fc2e4385b53850682d182caac4fa02cbdbac562167448"):
+                    raise ContractError("arrival_declaration", "v4 must retain all original case/seed identities and previous invocation costs/failures")
+                if (set(value.get("candidate_specifications", {})) != set(RECOVERY_V4_FAMILIES[1:])
+                        or any(value["candidate_specifications"].get(family) != _controller(family).specification()
+                               for family in RECOVERY_V4_FAMILIES[1:])):
+                    raise ContractError("arrival_declaration", "v4 requires both exact prospective controller specifications")
             if any(value["preserved_sources"].get(path) != digest for path, digest in preserved.items()):
                 raise ContractError("arrival_declaration", "v3 must preserve the arrival, recovery v1/v2 and supervisor sources")
             if (physics.get("host_revision") != "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497"
@@ -136,6 +176,9 @@ def _controller(family):
     if family == RECOVERY_V3_FAMILIES[2]:
         from nca.controllers.jolt_recovery_v3 import JoltRecoveryControllerV3
         return JoltRecoveryControllerV3()
+    if family == RECOVERY_V4_FAMILIES[2]:
+        from nca.controllers.jolt_recovery_v4 import JoltRecoveryControllerV4
+        return JoltRecoveryControllerV4()
     raise ContractError("arrival_family", "undeclared authored controller")
 
 
@@ -181,31 +224,74 @@ def diagnostic_cases(original):
 
 class DiagnosticBudget:
     """Reserve all owner calls before transmission; uncertainty consumes budget."""
-    def __init__(self, limits, journal, *, clock=time.monotonic):
+    def __init__(self, limits, journal, *, clock=time.monotonic, whole_process_started=None):
         self.limits, self.journal, self.clock = limits, journal, clock
-        self.started = clock()
+        now = clock()
+        self.v4 = "shutdown_reserve_seconds" in limits
+        if self.v4:
+            if (type(whole_process_started) not in (int, float)
+                    or not math.isfinite(whole_process_started) or not 0 < whole_process_started <= now):
+                raise ContractError("arrival_wall_origin", "v4 needs its original supervised process start")
+            self.started = whole_process_started
+        else:
+            self.started = now
         self.counts = {"host_requests": 0, "step_requests": 0, "requested_step_ticks": 0,
                        "confirmed_step_ticks": 0, "episodes_started": 0,
                        "host_start_attempts": 0, "host_terminations": 0}
         self.pending = {}
+        self._active_episode = None
+        self._episode_decisions = self._episode_ticks = 0
 
     def note(self, event, **values):
         self.journal.write((canonical_json({"event": event,
             "elapsed_seconds": self.clock() - self.started, **values}) + "\n").encode())
         self.journal.flush()
+        if self.v4 and event == "episode_completed":
+            self._active_episode = None
 
     def check(self):
         if self.clock() - self.started >= self.limits["maximum_wall_seconds"]:
             raise ContractError("arrival_wall_budget", "declared complete invocation ceiling reached")
 
+    def admit_transport(self, operation):
+        """Recheck after durable reservation and before spending owner time."""
+        if not self.v4:
+            return
+        self.check()
+        active = self.limits["maximum_wall_seconds"] - self.limits["shutdown_reserve_seconds"]
+        duration = self.limits["maximum_owner_transport_seconds"]
+        if operation in ("cancel", "close"):
+            return
+        if self.clock() - self.started + duration > active:
+            raise ContractError("arrival_shutdown_reserve", "the next bounded owner operation would endanger the reserved close/seal/verification time")
+
+    def start_host(self):
+        self.admit_transport("start_host")
+        if self.counts["host_start_attempts"] >= self.limits["maximum_host_starts"]:
+            raise ContractError("arrival_host_budget", "the sole host allocation is consumed")
+        self.counts["host_start_attempts"] += 1
+        self.note("host_start_reserved")
+        self.admit_transport("start_host")
+
     def start_episode(self, case, family):
         self.check()
+        self.admit_transport("start_episode")
+        if self.v4 and (self._active_episode is not None or self.pending):
+            raise ContractError("arrival_episode_budget", "the previous episode or request has not closed")
         if self.counts["episodes_started"] >= self.limits["maximum_episodes"]:
             raise ContractError("arrival_episode_budget", "declared episode allocation exhausted")
         self.counts["episodes_started"] += 1
+        self._active_episode = (case, family)
+        self._episode_decisions = self._episode_ticks = 0
         self.note("episode_started", case=case, family=family)
 
     def reserve(self, operation, fields):
+        if self.v4:
+            self.admit_transport(operation)
+            if self.pending:
+                raise ContractError("arrival_owner_budget", "an uncertain prior request cannot admit another owner operation")
+            if operation not in ("cancel", "close") and self._active_episode is None:
+                raise ContractError("arrival_episode_budget", "owner work requires a currently admitted episode")
         if operation not in ("cancel", "close"):
             self.check()
         if self.counts["host_requests"] >= self.limits["maximum_host_requests"]:
@@ -216,8 +302,13 @@ class DiagnosticBudget:
                     or self.counts["step_requests"] >= self.limits["maximum_decisions"]
                     or self.counts["requested_step_ticks"] + ticks > self.limits["maximum_requested_ticks"]):
                 raise ContractError("arrival_step_budget", "declared six-tick decision allocation exhausted")
+            if self.v4 and (self._episode_decisions >= self.limits["maximum_episode_decisions"]
+                    or self._episode_ticks + ticks > self.limits["maximum_episode_ticks"]):
+                raise ContractError("arrival_step_budget", "the unchanged per-episode decision/tick boundary is exhausted")
             self.counts["step_requests"] += 1
             self.counts["requested_step_ticks"] += ticks
+            self._episode_decisions += 1
+            self._episode_ticks += ticks
         self.counts["host_requests"] += 1
         serial = self.counts["host_requests"]
         self.pending[serial] = {"serial": serial, "operation": operation, "requested_ticks": ticks}
@@ -235,9 +326,73 @@ class DiagnosticBudget:
         del self.pending[serial]
 
     def snapshot(self):
-        return {**self.counts, "pending_requests": list(self.pending.values()),
+        result = {**self.counts, "pending_requests": list(self.pending.values()),
                 "unconfirmed_tail": bool(self.pending), "wall_seconds": self.clock() - self.started,
                 "optimizer_updates": 0, "checkpoint_executions": 0, "learned_policy_calls": 0}
+        if self.v4:
+            result["whole_process_started_monotonic"] = self.started
+        return result
+
+
+class _AbsoluteDeadlineSocket:
+    """Cap a complete diagnostic owner exchange across all send/recv calls."""
+
+    def __init__(self, connection, deadline, clock):
+        self.connection, self.deadline, self.clock = connection, deadline, clock
+        self.timeout = connection.gettimeout()
+
+    def __getattr__(self, key):
+        return getattr(self.connection, key)
+
+    def settimeout(self, timeout):
+        self.timeout = timeout
+        self.connection.settimeout(timeout)
+
+    def _arm(self):
+        remaining = self.deadline - self.clock()
+        if remaining <= 0:
+            raise TimeoutError("complete diagnostic owner exchange exceeded its absolute deadline")
+        self.connection.settimeout(remaining if self.timeout is None else min(self.timeout, remaining))
+
+    def sendall(self, data, *args, **kwargs):
+        self._arm()
+        result = self.connection.sendall(data, *args, **kwargs)
+        self._arm()
+        return result
+
+    def recv(self, size, *args, **kwargs):
+        self._arm()
+        result = self.connection.recv(size, *args, **kwargs)
+        self._arm()
+        return result
+
+
+@contextmanager
+def _owner_exchange_deadline(host, budget, operation):
+    if not budget.v4:
+        yield
+        return
+    now = budget.clock()
+    ceiling = budget.started + budget.limits["maximum_wall_seconds"]
+    if operation not in ("cancel", "close"):
+        ceiling -= budget.limits["shutdown_reserve_seconds"]
+    deadline = min(now + budget.limits["maximum_owner_transport_seconds"], ceiling)
+    channel = getattr(host, "_channel", None)
+    connection = getattr(channel, "connection", None)
+    previous_timeout = connection.gettimeout() if connection is not None else None
+    if connection is not None:
+        channel.connection = _AbsoluteDeadlineSocket(connection, deadline, budget.clock)
+    try:
+        yield
+        if budget.clock() >= deadline:
+            raise ContractError("arrival_owner_deadline", "the complete owner exchange exceeded its absolute deadline")
+    finally:
+        if connection is not None:
+            channel.connection = connection
+            try:
+                connection.settimeout(previous_timeout)
+            except OSError:
+                pass  # Native protocol failure may already have closed it.
 
 
 class MeteredHost:
@@ -249,7 +404,9 @@ class MeteredHost:
 
     def request(self, operation, **fields):
         serial = self.budget.reserve(operation, fields)
-        response = self.host.request(operation, **fields)
+        self.budget.admit_transport(operation)
+        with _owner_exchange_deadline(self.host, self.budget, operation):
+            response = self.host.request(operation, **fields)
         self.budget.confirm(serial, response)
         return response
 
@@ -569,6 +726,7 @@ def _capture(host, budget, case, family, output, original, declaration, root):
     try:
         for _ in range(40):
             budget.check()
+            budget.admit_transport("controller_decision")
             view = recorder.view
             started = time.perf_counter_ns()
             frame = controller.step(FeedbackObservation.from_host(view), goal)
@@ -583,7 +741,7 @@ def _capture(host, budget, case, family, output, original, declaration, root):
                 "after_physical_decisions": len(phases), "requested_packet": None,
                 "owner_requests_before": budget.counts["host_requests"],
                 "step_requests_before": budget.counts["step_requests"]}
-            if family in (RECOVERY_FAMILIES[2], RECOVERY_V2_FAMILIES[2], RECOVERY_V3_FAMILIES[2]):
+            if family in (RECOVERY_FAMILIES[2], RECOVERY_V2_FAMILIES[2], RECOVERY_V3_FAMILIES[2], RECOVERY_V4_FAMILIES[2]):
                 lease_ticks = frame_record["diagnostic_state"].get("action_lease_ticks")
                 if (type(lease_ticks) is not int or not 6 <= lease_ticks <= 12
                         or view["tick"] + lease_ticks > 240):
@@ -676,7 +834,8 @@ def _capture(host, budget, case, family, output, original, declaration, root):
         "controller_decision_accounting": evaluation["controller_decision_accounting"],
         "error_cleanup": cleanup,
         "owner_closure_confirmed": closure, "error": error}
-    write_json(output / "metrics" / f"{identifier}.json", row)
+    write_json(output / "metrics" / f"{identifier}.json", row,
+               direct=declaration.get("schema") == "nca-jolt-recovery-diagnostic/v4")
     budget.note("episode_completed", case=case["id"], family=family, row=row)
     return row
 
@@ -714,9 +873,14 @@ def summarize(rows, cases, *, families=FAMILIES):
 
 
 def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path: Path,
-                   output: Path, expected_revision: str, expected_declaration_sha256=DECLARATION_SHA256):
+                   output: Path, expected_revision: str, expected_declaration_sha256=DECLARATION_SHA256,
+                   whole_process_started=None):
     """Single source-frozen invocation; stop on uncertain consumption or cost."""
     declaration = read_declaration(declaration_path, expected_sha256=expected_declaration_sha256)
+    is_v4 = declaration.get("schema") == "nca-jolt-recovery-diagnostic/v4"
+    if is_v4 and (type(whole_process_started) not in (int, float)
+            or not math.isfinite(whole_process_started) or not 0 < whole_process_started <= time.monotonic()):
+        raise ContractError("arrival_wall_origin", "v4 needs its original supervised process start before admission")
     families = tuple(declaration["families"])
     specifications = declaration.get("candidate_specifications", {FAMILIES[1]: declaration.get("candidate_specification")})
     if set(specifications) != set(families) - {FAMILIES[0]}:
@@ -729,18 +893,23 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
     if sha256_json(original) != declaration["case_source"]["sha256"]:
         raise ContractError("arrival_case_source", "original open case/configuration bytes changed")
     cases = diagnostic_cases(original)
+    if is_v4 and cases != declaration["case_inventory"]:
+        raise ContractError("arrival_case_source", "v4 case order or seeds differ from the prospective inventory")
     output.mkdir(parents=True, exist_ok=False)
     sync_directory(output.parent)
     rows, failure, identity, manifest, host = [], None, None, None, None
     with DurableJournal(output / "owner-journal.jsonl") as journal:
-        budget = DiagnosticBudget(declaration["budget"], journal)
+        budget = DiagnosticBudget(declaration["budget"], journal, whole_process_started=whole_process_started)
         try:
             revision, files, _ = source_identity(root)
             if revision != expected_revision or len(revision) != 40:
                 raise ContractError("arrival_revision", "the explicitly published source revision is required")
             if subprocess.check_output(["git", "diff", "--name-only", "HEAD"], cwd=root).strip():
                 raise ContractError("arrival_dirty_source", "the complete published checkout must be clean")
-            for path in (declaration_path, original_path, root / "tools/jolt_arrival.py"):
+            execution_inputs = [declaration_path, original_path, root / "tools/jolt_arrival.py"]
+            if is_v4:
+                execution_inputs.append(root / "tools/execute_jolt_diagnostic.py")
+            for path in execution_inputs:
                 files[path.resolve().relative_to(root.resolve()).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
             for relative, expected in files.items():
                 committed = subprocess.check_output(["git", "show", f"{revision}:{relative}"], cwd=root,
@@ -759,10 +928,15 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
                 "host_identity": identity, "cases": cases, "python": platform.python_version(),
                 "platform": platform.system(), "architecture": platform.machine(), "device": "cpu",
                 "training": False, "evaluation_cases_previously_open": True}
-            write_json(output / "manifest.json", manifest)
+            if is_v4:
+                manifest["whole_process_started_monotonic"] = whole_process_started
+            write_json(output / "manifest.json", manifest, direct=is_v4)
             budget.check()
-            budget.counts["host_start_attempts"] += 1
-            budget.note("host_start_reserved")
+            if is_v4:
+                budget.start_host()
+            else:
+                budget.counts["host_start_attempts"] += 1
+                budget.note("host_start_reserved")
             host = GodotHost(checkout, godot, lane="act004", mode="stepped", timeout=15.)
             metered = MeteredHost(host, budget)
             for case in cases:
@@ -801,7 +975,7 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
                     failure = failure or _error(exc)
             measured = budget.snapshot()
     try:
-        journal_validation = seal_owner_journal(output / "owner-journal.jsonl",
+        journal_validation = (seal_owner_journal_v2 if is_v4 else seal_owner_journal)(output / "owner-journal.jsonl",
             expected_counts=measured, expected_rows=rows, durability=journal.durability_receipt(),
             validate_owner=validate_closed_owner_journal, families=families, artifact_root=output)
         budget.check()
@@ -818,6 +992,12 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
         and measured["wall_seconds"] <= declaration["budget"]["maximum_wall_seconds"])
     artifacts = {path.relative_to(output).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                  for path in sorted(output.rglob("*")) if path.is_file()}
+    if is_v4 and completed:
+        try:
+            artifacts = diagnostic_artifact_inventory(output, rows)
+        except Exception as exc:
+            completed = False
+            failure = failure or _error(exc)
     result = {"schema": "nca-jolt-arrival-diagnostic-result/v1", "status": "completed" if completed else "incomplete",
         "source_revision": expected_revision, "declaration_sha256": sha256_json(declaration),
         "counts": measured, "comparison": comparison, "character_comparison": character_comparison,
@@ -825,7 +1005,7 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
         "worker_wall_seconds_through_seal": budget.clock() - budget.started,
         "artifact_sha256": artifacts, "host_identity": identity, "owner_journal_validation": journal_validation,
         "evidence_limit": "already-open authored development cases; unchanged learned prerequisite remains blocked"}
-    write_json(output / "summary.json", result)
+    write_json(output / "summary.json", result, direct=is_v4)
     return result
 
 
@@ -842,6 +1022,7 @@ def verify_diagnostic_output(output: Path, *, expected_revision: str, expected_d
             or sha256_json(manifest.get("declaration")) != expected_declaration_sha256):
         raise ContractError("arrival_final_output", "complete source/declaration-bound worker evidence is required")
     families = tuple(manifest["declaration"]["families"])
+    is_v4 = manifest["declaration"].get("schema") == "nca-jolt-recovery-diagnostic/v4"
     if summary.get("families") != list(families):
         raise ContractError("arrival_final_output", "summary families differ from the source-frozen declaration")
     identities = summary.get("artifact_sha256")
@@ -853,7 +1034,26 @@ def verify_diagnostic_output(output: Path, *, expected_revision: str, expected_d
         if (Path(relative).is_absolute() or ".." in Path(relative).parts
                 or file_identity(output / relative)["sha256"] != expected):
             raise ContractError("arrival_final_output", "final artifact bytes differ from the closed inventory")
-    validation = verify_sealed_journal(output, expected_counts=summary["counts"], expected_rows=summary["rows"],
+    if is_v4:
+        declaration = _validate_declaration(manifest["declaration"], expected_sha256=expected_declaration_sha256)
+        if declaration.get("budget") != V4_BUDGET:
+            raise ContractError("arrival_final_output", "v4 budget differs from its original exact allocation")
+        strict_inventory = diagnostic_artifact_inventory(output, summary["rows"], summary=True)
+        if {name: digest for name, digest in strict_inventory.items() if name != "summary.json"} != identities:
+            raise ContractError("arrival_final_output", "v4 final inventory differs from its declared artifact paths")
+        counts = summary["counts"]
+        origin = manifest.get("whole_process_started_monotonic")
+        if (type(origin) not in (int, float) or not math.isfinite(origin) or origin <= 0
+                or counts.get("whole_process_started_monotonic") != origin
+                or counts["episodes_started"] != 96 or counts["host_start_attempts"] != 1
+                or counts["step_requests"] > 3840 or counts["requested_step_ticks"] > 23040
+                or counts["host_requests"] > 4500 or counts["wall_seconds"] > 900
+                or any(type(row.get("decisions")) is not int or not 1 <= row["decisions"] <= 40
+                       or row.get("consumed_ticks") != 6 * row["decisions"] or row["consumed_ticks"] > 240
+                       for row in summary["rows"])):
+            raise ContractError("arrival_final_output", "v4 source-bound whole-process and per-episode counts exceed their allocation")
+    validation = (verify_sealed_journal_v2 if is_v4 else verify_sealed_journal)(output,
+        expected_counts=summary["counts"], expected_rows=summary["rows"],
         validate_owner=validate_closed_owner_journal, families=families)
     if validation != summary.get("owner_journal_validation"):
         raise ContractError("arrival_final_output", "independent sealed journal replay differs from the worker")
@@ -862,6 +1062,8 @@ def verify_diagnostic_output(output: Path, *, expected_revision: str, expected_d
         raise ContractError("arrival_final_output", "independent diagnostic pairing differs from the worker")
     if summarize_character(summary["rows"], families) != summary.get("character_comparison"):
         raise ContractError("arrival_final_output", "independent character aggregation differs from the worker")
+    if is_v4 and diagnostic_artifact_inventory(output, summary["rows"], summary=True) != strict_inventory:
+        raise ContractError("arrival_final_output", "v4 evidence changed during complete independent verification")
     return {"verified": True, "summary_sha256": file_identity(summary_path)["sha256"],
             "manifest_sha256": file_identity(output / "manifest.json")["sha256"],
             "artifact_count": len(identities), "owner_journal_validation": validation}
