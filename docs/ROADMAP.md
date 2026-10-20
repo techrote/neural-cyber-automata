@@ -44,11 +44,15 @@ and [complete evidence #43](https://github.com/techrote/neural-cyber-automata/is
 then [LEARN-JOLT-002](design/LEARN_JOLT_002.md), then T-106. Evidence software is
 accepted in PR #58. [The separate v2 result](evidence/2026-10-20-jolt-recovery-v2.md)
 fully verifies 96 rows and native closure, preserving the incomplete v1 attempt.
-Recovery restores airborne character but fails the teacher gate at 25/32 arrivals
-versus 27/32, with two rescues and four regressions. Correct those remaining
-movement failures in [#64](https://github.com/techrote/neural-cyber-automata/issues/64)
-before the [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
-can admit collection. All learned reliability and morphology gates stay unchanged.
+Recovery v2 restores airborne character but fails the teacher gate at 25/32
+arrivals versus 27/32, with two rescues and four regressions. The separately
+bounded [v3 correction](evidence/2026-10-20-jolt-recovery-v3.md) reaches 28/32
+and the required drop rescue, but only two historical rescues and failed final
+inventory verification still prevent acceptance. Its sole allocation is closed;
+[#64](https://github.com/techrote/neural-cyber-automata/issues/64) remains open.
+A new physical attempt requires a separately commissioned prospective allocation.
+The [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
+cannot admit collection. All learned reliability and morphology gates stay unchanged.
 
 ## Dependency gates
 

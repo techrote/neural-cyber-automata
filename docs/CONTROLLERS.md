@@ -179,6 +179,11 @@ advisory holding. These tests establish software decisions, not counterfactual
 physical outcomes. The independently declared diagnostic owns teacher arrival,
 airborne character, landing progress and acceptance claims.
 
+The sole [v3 diagnostic](evidence/2026-10-20-jolt-recovery-v3.md) records 28/32
+arrivals and all 32 purposeful-airborne cases, but fails final inventory
+verification and the required third historical rescue. V3 remains an
+experimental controller, with no teacher-collection or learned admission.
+
 ## Minimal physical recovery supervisor
 
 [`PhysicalRecoverySupervisor`](../src/nca/controllers/recovery_supervisor.py)

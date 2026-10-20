@@ -1,0 +1,996 @@
+{
+  "archive": {
+    "all_member_bytes_verified": true,
+    "bytes": 34469879,
+    "filename": "nca-jolt-recovery-v3-diagnostic-20261020.tar.gz",
+    "fresh_persisted_readback_verified": true,
+    "members": 229,
+    "sha256": "398e81ffc465150b9407cba64b43ed1ba0070aeb9d61180e96650aa1bedef7e8"
+  },
+  "counts": {
+    "checkpoint_executions": 0,
+    "confirmed_step_ticks": 13818,
+    "episodes_started": 96,
+    "host_requests": 2568,
+    "host_start_attempts": 1,
+    "host_terminations": 1,
+    "learned_policy_calls": 0,
+    "optimizer_updates": 0,
+    "pending_requests": [],
+    "requested_step_ticks": 13818,
+    "step_requests": 2303,
+    "unconfirmed_tail": false,
+    "wall_seconds": 183.30217996600004
+  },
+  "cumulative_all_diagnostics": {
+    "combined_owner_request_total_fully_verified": false,
+    "dispatched_decisions": 6780,
+    "episode_confirmed_ticks": 40680,
+    "episode_rows": 280,
+    "explanation": "The original arrival journal is truncated; its full owner-call count remains reported. All later recovery owner counts are verified separately. No prior allocation was resumed or reused.",
+    "host_starts": 4,
+    "reported_combined_owner_requests": 7550,
+    "reported_original_owner_requests": 1722,
+    "requested_ticks": 40680,
+    "verified_recovery_owner_requests": 5828,
+    "whole_process_seconds": 1022.8120721580035
+  },
+  "cumulative_recovery_actuals": {
+    "confirmed_ticks": 31386,
+    "dispatched_decisions": 5231,
+    "episode_rows": 216,
+    "host_starts": 3,
+    "owner_request_total_verified": true,
+    "owner_requests": 5828,
+    "requested_ticks": 31386,
+    "whole_process_seconds": 801.1815160300011
+  },
+  "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+  "evidence_verified": false,
+  "files": {
+    "derived/controller-v3-outcome-review/review.json": {
+      "bytes": 72984,
+      "sha256": "68242d5070a2bbd899aaaa52d61c2f141e31696e9f2b95d882ef0c9a3b552720"
+    },
+    "derived/controller-v3-outcome-review/review.md": {
+      "bytes": 12344,
+      "sha256": "2219c399811214c279ac322059b7827c6082ba691d2d3309ef57a2e7e0e73a5f"
+    },
+    "derived/evidence-v3-audit/__pycache__/audit_evidence.cpython-312.pyc": {
+      "bytes": 29502,
+      "sha256": "24b9d78f37c63d1a70e62c33861b9f57617b11a310d2826ab3197bfecb56315f"
+    },
+    "derived/evidence-v3-audit/audit-artifact-inventory.json": {
+      "bytes": 2499,
+      "sha256": "58bfc12fe5d96091768fd23e0d2323783fa9e884ebfbcb21d5de2c013c31d506"
+    },
+    "derived/evidence-v3-audit/audit_evidence.py": {
+      "bytes": 23635,
+      "sha256": "7982127494a74c281ca94e5cba242141ee77809272c64d7ad4b0e7f79178e628"
+    },
+    "derived/evidence-v3-audit/forensic_evidence.py": {
+      "bytes": 29313,
+      "sha256": "35cc667b1a25bb935bf23a3012746ea27b507f4ef228fd06d714f96e0012ce10"
+    },
+    "derived/evidence-v3-audit/forensic_evidence_v2.py": {
+      "bytes": 31188,
+      "sha256": "c8bef6412a907916e4585ac79d5750c9314ce8f459c288ef3a7faeb70f4eae15"
+    },
+    "derived/evidence-v3-audit/independent-evidence-audit-initial-refusal.json": {
+      "bytes": 1101,
+      "sha256": "a471114da754384dd506d8172336d4de6b78614dae9ebbf94cecb0f967002e67"
+    },
+    "derived/evidence-v3-audit/portable-evidence-forensics.json": {
+      "bytes": 89394,
+      "sha256": "d90c9ebc2a09b4add1aa36b8d37d87c7de22f218d2ab43d844a4319c0b62546a"
+    },
+    "derived/evidence-v3-audit/post-run-evidence-forensics-completed.json": {
+      "bytes": 69949,
+      "sha256": "08cfd486326cd8694db26e84625b62fe7b56ea3dc31cf901ffaf17f757afc139"
+    },
+    "derived/evidence-v3-audit/post-run-evidence-forensics-completed.log": {
+      "bytes": 281,
+      "sha256": "bc1893a7c693ead0fad19f913898f35a6b935edbba6c28973478e3bd303621de"
+    },
+    "derived/evidence-v3-audit/post-run-evidence-forensics.json": {
+      "bytes": 42924,
+      "sha256": "ac5079d8ecda0ea99840d889a2041bb9472d6c13d17157fa7c14edb0e60a3895"
+    },
+    "derived/evidence-v3-audit/post-run-evidence-forensics.log": {
+      "bytes": 281,
+      "sha256": "b6339ddfb774fe2fa960fc9bb547be14be1cd2c1e423eff0fb3cd302f3f44f2a"
+    },
+    "derived/evidence-v3-audit/publish_portable_forensics.py": {
+      "bytes": 6945,
+      "sha256": "3926a71543432a1d327ef2cacb06f3746f51e43c556422b4bf71712f929f6724"
+    },
+    "derived/independent-audit/audit_new_v3.py": {
+      "bytes": 19262,
+      "sha256": "3576a49b42f1478c216e66af2ae14215c346fea38f1f11a21fb0fad9ead967f2"
+    },
+    "derived/independent-audit/audit_v3_behavior.py": {
+      "bytes": 23535,
+      "sha256": "c89a0bb48fdf4a0c38d6477adc9e7308e934540c691ce44989d55a4170ab107b"
+    },
+    "derived/independent-audit/frozen-v3-admission.json": {
+      "bytes": 945,
+      "sha256": "5d6615511b1d51fa382a8117f16dc6814cb3c8591918b307326f7c858f92389b"
+    },
+    "derived/independent-audit/preflight_v3.py": {
+      "bytes": 8143,
+      "sha256": "93c5cce96c71f55c7518aeaabdf61355638b315d9666a316c62568d40d56cb89"
+    },
+    "derived/independent-audit/prospective-v3-review.json": {
+      "bytes": 7422,
+      "sha256": "58e7418563acb3a8c5bbb3897090614024ad8b63609cc9ff7052d6a21eb09649"
+    },
+    "derived/independent-audit/replay_retained_v2.py": {
+      "bytes": 8500,
+      "sha256": "18898ed3619e1e43c1d6536243d14b90237b17d01a2ba02896e2072114a28252"
+    },
+    "derived/independent-audit/retained-v2-replay.json": {
+      "bytes": 67000,
+      "sha256": "480e328f7ffa4417d7b34b694b85836506e8ee11984dcaf1fd504f78d0b086e3"
+    },
+    "derived/independent-audit/v3-behavior-review.json": {
+      "bytes": 549332,
+      "sha256": "bff362e16eae912b02ebac2d344c0ba81a1cfbbca32882ffafc90376210ca11b"
+    },
+    "derived/independent-audit/v3-negative-teacher-review.json": {
+      "bytes": 16219,
+      "sha256": "22ab120a4be3044e49a422738f22b8cc2583b32bbe4a2cce443368048ece488b"
+    },
+    "derived/v3-publication-evidence/archive_jolt_evidence.py": {
+      "bytes": 5107,
+      "sha256": "3cb06a21f1b485333dd0aebf5d546c161d03d8fb903ae77a0799644e8ec55084"
+    },
+    "derived/v3-publication-evidence/frozen-source-ci.json": {
+      "bytes": 2490,
+      "sha256": "2d3dff9d16efb0bbfef3c49765af30851e056b3af186157aa61c3be414d5f3b9"
+    },
+    "derived/v3-publication-evidence/offline-suite.log": {
+      "bytes": 833,
+      "sha256": "73a7d2c25911ec9a9a2bdf3d4e5547a5fd5f9eef2321a14ad2b4faaadba18b7e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020-stdout.log": {
+      "bytes": 8710,
+      "sha256": "3f59c669835e8578fe149b1d7767dfb6694e7ce71fd1f2cae9feba1776483987"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020-supervisor.json": {
+      "bytes": 1257,
+      "sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020-verification-stderr.log": {
+      "bytes": 820,
+      "sha256": "dac64fc6ea3e9c7052b9349d1c5925a6e231d10b5ae78b97b9f1b582d1d2226f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020-verification-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-24-0.json.gz": {
+      "bytes": 43404,
+      "sha256": "4d4ff130b5195f3996cb7481ee3f861a91c288fdb0da42960a804ad65a82bf09"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-24-1.json.gz": {
+      "bytes": 43377,
+      "sha256": "e822d11a8a3123f8f3e9cb6b91bcee762599d5b80afc0606522dc850ee670b1c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-24-2.json.gz": {
+      "bytes": 43384,
+      "sha256": "cf1d9536d84917b2e83d4fd417002fb9142d33a23afd4fb631ea4674befd4a7c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-36-0.json.gz": {
+      "bytes": 63811,
+      "sha256": "715f75ea6697e8219aec1040800b9fd7baaa19e2e965737a6c02d5b0f34371c7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-36-1.json.gz": {
+      "bytes": 63821,
+      "sha256": "98ae785bb4ee3e1bdb88c260610fb4b6e1b639d2b73c45c8464922a0a3777aeb"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-36-2.json.gz": {
+      "bytes": 63813,
+      "sha256": "15e0dbc96601ee9c8d8ef2fa501e63e87883a548baf8e1d00d6adf93d2100bc1"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-48-0.json.gz": {
+      "bytes": 166469,
+      "sha256": "5211753de2d0d545b16a72d9f0fc4129d35d8efa91c2d2a690afcd5d301bf12a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-48-1.json.gz": {
+      "bytes": 166375,
+      "sha256": "071872a05318af1ce314676b5cd10e3397de14040e34c759455e4bc27d5b2b4b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-48-2.json.gz": {
+      "bytes": 166331,
+      "sha256": "e540b17be69d83b4b61e745b301387cc215818caa03cfcabb09ebfc97f427a3a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-60-0.json.gz": {
+      "bytes": 166909,
+      "sha256": "45a2bcc99aca46e8b11e7c695365730d174564ecd080dd7164b2429f57aeb4a2"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-60-1.json.gz": {
+      "bytes": 135373,
+      "sha256": "649a381fee617edf6eccb7d1eca5e6da8c70610a70cb34948748f5ffd1c01804"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-left-60-2.json.gz": {
+      "bytes": 139906,
+      "sha256": "c7c6907d3773b48f46fa505a28f99fec071f8a565fbf31c8ccb21a5333ae4258"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-24-0.json.gz": {
+      "bytes": 162861,
+      "sha256": "70a434a1c6ca97f2d88bab967ed7cde8e14a583e1f84ea5438803a81926cb071"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-24-1.json.gz": {
+      "bytes": 162855,
+      "sha256": "ba850351e3993d22ecf201ea05d313be6a2f04cd92687ead2c503f2f01823116"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-24-2.json.gz": {
+      "bytes": 164070,
+      "sha256": "a7a47bc60a3163195cff38ffaf59e0aa74cfe2f800b3f05d98cd7b25623a1a79"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-36-0.json.gz": {
+      "bytes": 75490,
+      "sha256": "ca399222c572d25c8bd144a44191c1988afe5a7ae987b03832a4305f7716a16a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-36-1.json.gz": {
+      "bytes": 62800,
+      "sha256": "8ef77adaa55f11565f096c072d6ab6377d49b01fb86aa54272991086b2566018"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-36-2.json.gz": {
+      "bytes": 168379,
+      "sha256": "a63fdb057fe91d4cba10c8e78e8e85a16ef8147ce6e6fba8ee42ac3fcafe7ac5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-48-0.json.gz": {
+      "bytes": 75058,
+      "sha256": "ba26d3c9a736d7e27c69a7e390be3f95df7313cc385fadb36243b6ea28c3d248"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-48-1.json.gz": {
+      "bytes": 67515,
+      "sha256": "1577ad55b174a8e5035d3302c89672b7a9524235426e69722cfe168311b278f9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-48-2.json.gz": {
+      "bytes": 79593,
+      "sha256": "14149017e02b0fb2777a43d9d867dffa602c82b90f05a00cf396c9beeccf7441"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-60-0.json.gz": {
+      "bytes": 167245,
+      "sha256": "8aa8e71f5964ff48e84a1cd56f2a16070d9f525414e3ca4a5f90b9476a2fe64e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-60-1.json.gz": {
+      "bytes": 167243,
+      "sha256": "cf817a2879d084840d368362c23506b87eb8427aaf034c6c5ea650f735588cd3"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-demo-floor-right-60-2.json.gz": {
+      "bytes": 167275,
+      "sha256": "67d466552de484938439eb417a336bbb8cb83101c7628c7c2d34c7eeb3941c2f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-drop12-left-45.json.gz": {
+      "bytes": 92693,
+      "sha256": "bdedc18155e9ad67b4a8c6e95974eb161a73b918432137159a38798f010e3120"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-drop12-right-45.json.gz": {
+      "bytes": 107521,
+      "sha256": "53f766346fcf9dad92a532c906330828c45c8e9ff18e7c6998a35c7ecde23ccd"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-drop28-left-57.json.gz": {
+      "bytes": 162918,
+      "sha256": "df17c015e477c47d5ddeacb86a44f8d1bb01598be9f30acb2e55170eb35c80ff"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-drop28-right-57.json.gz": {
+      "bytes": 88867,
+      "sha256": "18d6ad208d93ab02ecdd7e08b3825d0ae47affd0d24845528be01145de1b324a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-floor-left-27.json.gz": {
+      "bytes": 51303,
+      "sha256": "ffbc0bf244d3ae0d714eab21d1fb29450a10615e2e89136256e012821e363292"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-floor-left-63.json.gz": {
+      "bytes": 171113,
+      "sha256": "4a248acdbd3d665f01bc84a00162dcfd3dbd752acf3ec23e690514d06054173f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-floor-right-27.json.gz": {
+      "bytes": 170509,
+      "sha256": "760f2bd09c6a0d5a8544248b5788ec746d33a5a0945c6e35fd7a73237a0a4a0f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/authored-balanced-v1-reference-floor-right-63.json.gz": {
+      "bytes": 169661,
+      "sha256": "65d9d931a21009b0f252fa3372a1a184b835a52d3f7b744dc735cdb345c00f6b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-24-0.json.gz": {
+      "bytes": 58715,
+      "sha256": "8e811a0e958e1efe5a085976dee3c39b21bc59b873c788c6a127cb238802dca3"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-24-1.json.gz": {
+      "bytes": 58721,
+      "sha256": "508327ff42a53ecde9a332facec1622d7a3829cd0f5538ca46380680c40ab32f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-24-2.json.gz": {
+      "bytes": 58755,
+      "sha256": "4823e16b63858530762c5b6bbe870fe27510fe25b92775c802b03dfe17bca85c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-36-0.json.gz": {
+      "bytes": 71037,
+      "sha256": "3aa46872a16af88ffbcea6e2ac618f5e72be8057cb28be3abe93d75915484b83"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-36-1.json.gz": {
+      "bytes": 70990,
+      "sha256": "c27768d7d291771d60fd5aceca33a3fb6442846383311737d3ae58e0441a2387"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-36-2.json.gz": {
+      "bytes": 71028,
+      "sha256": "d9b9f8da22077baa0828a056b66e501ec8a16783176448579c88160589ec5490"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-48-0.json.gz": {
+      "bytes": 88152,
+      "sha256": "849f4d77ee3ac939443cf57fd2cdfb129950e24d595c6771e84442f539bca2f7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-48-1.json.gz": {
+      "bytes": 88158,
+      "sha256": "0d2dedbba82daf5a1c1cb482ff87d1e4978c5056d5d6c742a95707614e35513e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-48-2.json.gz": {
+      "bytes": 88217,
+      "sha256": "3c3f1e2fa1b8ef66ff606ba5c29d1e1c52b307678f260786f690e63496165ddf"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-60-0.json.gz": {
+      "bytes": 97260,
+      "sha256": "bc10d731df41afaa12819171360ea9828f93356cb8538da69e92da67a43d383a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-60-1.json.gz": {
+      "bytes": 159462,
+      "sha256": "dcf6f0204b64f4a9d625dc73a82e9abdf4deee8730c9863a8bd9c685e0a7552c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-left-60-2.json.gz": {
+      "bytes": 160770,
+      "sha256": "f8e68be3c10ca742f78af5485c0716d9ecca5e3cdd855bd80a4f13f97ecac8c8"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-24-0.json.gz": {
+      "bytes": 81983,
+      "sha256": "47f9f513dffd0af0338b097ee62970b1655a1f52cd21a800921d566f70b6e1dc"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-24-1.json.gz": {
+      "bytes": 81946,
+      "sha256": "0d97ceb243d7b31cde05140549c74902ef0282cd76f2e1048eee679847f11d29"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-24-2.json.gz": {
+      "bytes": 78293,
+      "sha256": "5c4d80024f3183e7185739d20992a19669fc0e6723ab343964af84d00117dfe1"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-36-0.json.gz": {
+      "bytes": 62404,
+      "sha256": "23c38748bcc0fa67a2aad789bda3cec00ef848c416fb7b7981ab7e896addde17"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-36-1.json.gz": {
+      "bytes": 71708,
+      "sha256": "49b4ab54500aabf9a4106752313806b70ecf91ad3a96251015b008790e72378d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-36-2.json.gz": {
+      "bytes": 67152,
+      "sha256": "ae0b37ad9166d62a5bab92e92e5d4a74572936c78347a8a289a9f33769081d87"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-48-0.json.gz": {
+      "bytes": 75436,
+      "sha256": "5ae092680ec97db3ae9e1f0265ae16df943c3bcc466b74b165be23a6d96c8f73"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-48-1.json.gz": {
+      "bytes": 74739,
+      "sha256": "ce77f3fecc258a6b7791ec8abc8baa41d3193312f3a4873fe001d1f9fbbc5ca9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-48-2.json.gz": {
+      "bytes": 78169,
+      "sha256": "8f1d1c1f2aa5efb6dfc1ff42a8634d182a7b66a4aaa4276aa6e166bdc0908b3b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-60-0.json.gz": {
+      "bytes": 92875,
+      "sha256": "ace9d7693fd654301d98f7dd638080b4bd0fcfcf749153f9f3861729537658c5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-60-1.json.gz": {
+      "bytes": 92810,
+      "sha256": "151c3c38f1754b75b9d50892ae596c952adef9e8944d7404e818f68237844f6e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-demo-floor-right-60-2.json.gz": {
+      "bytes": 92838,
+      "sha256": "4302ddad50a31f42980cd519f29544e69f37412773dad844690cfdaac3175e7f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-drop12-left-45.json.gz": {
+      "bytes": 100230,
+      "sha256": "55c4b7f8bed9d8ad8324da6c5ec69db925468dc2d50115819a724663d58b2477"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-drop12-right-45.json.gz": {
+      "bytes": 155232,
+      "sha256": "d9aa607f5e83eb68dd8d575b8359c9bcef7a91607a05f8ee2f7e14d9a086e687"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-drop28-left-57.json.gz": {
+      "bytes": 159033,
+      "sha256": "9020b62d22cc8fc43b6988ff73104039c8bc0f4672e748dbc13f41b23e460c2d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-drop28-right-57.json.gz": {
+      "bytes": 127023,
+      "sha256": "567adc212b1c08032079b4b95d575142285e8a39f23c70dc72b14a855e3e697c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-floor-left-27.json.gz": {
+      "bytes": 67837,
+      "sha256": "23bf86f058e283ffcec07177b87a25b44d9dcc43eab6ce4147a42dacd316dd88"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-floor-left-63.json.gz": {
+      "bytes": 159426,
+      "sha256": "40c98ded70e47ca6a23c51732938f54c92a9e8a815c90a56c726f3822086d880"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-floor-right-27.json.gz": {
+      "bytes": 71062,
+      "sha256": "3edd8cc9910e030c8aa7a34025e02c4ead47ded9c97486c9647e1e421031215f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-arrival-v1-reference-floor-right-63.json.gz": {
+      "bytes": 89848,
+      "sha256": "c3fe057360872cbf32765103aaefff739427c7cd116fd6f980d8171a4b1edbdd"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-24-0.json.gz": {
+      "bytes": 72852,
+      "sha256": "455265eb0adaa5796d8d30c84a09a5269df5d7b1d49c3b60f3ce9f7d86c19e25"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-24-1.json.gz": {
+      "bytes": 72898,
+      "sha256": "3c5a37b4123edf5ae8eafdac617032183a62b7e8451e6e676f2821207aa4ab05"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-24-2.json.gz": {
+      "bytes": 72906,
+      "sha256": "5db49f79378890b6b405d0dec2510d0a61d51e92b4812b81cf4381f1bc19765e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-36-0.json.gz": {
+      "bytes": 79634,
+      "sha256": "89506b253e8539037ead92cec9b2dad86becfcb036f9b128e6f29c9b0994dd60"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-36-1.json.gz": {
+      "bytes": 79602,
+      "sha256": "dd4b8f1ea8f65e923dbc8c279a84a91234928f36a007ef1d5270061c6c500743"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-36-2.json.gz": {
+      "bytes": 79615,
+      "sha256": "e42ad65a579d17de71a4c55c9579fdd7b02a4950e0bf17eeb5a5e75d5e0c0808"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-48-0.json.gz": {
+      "bytes": 80897,
+      "sha256": "6e39113d7b092a9fdbf598dc0c4d9091b163634f0b07680475429fe98609e14b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-48-1.json.gz": {
+      "bytes": 80939,
+      "sha256": "3c40264825c62aea3d727a77297437292e64c724ff389c6074ccd4b031cb7e26"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-48-2.json.gz": {
+      "bytes": 80974,
+      "sha256": "ea24145a12085786a8bfb250c1c6f129ec6a07c01044d888d25d84305cd5a2df"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-60-0.json.gz": {
+      "bytes": 105149,
+      "sha256": "489401d688b9fd9f733bf4a22309500d8e189f8263749b3f626b12de1ced47da"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-60-1.json.gz": {
+      "bytes": 159612,
+      "sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-left-60-2.json.gz": {
+      "bytes": 108465,
+      "sha256": "6384a23082443c51fe65e15c28ec30791fae65614758873cfdb2b1b0cbdaf3c3"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-24-0.json.gz": {
+      "bytes": 77417,
+      "sha256": "d34fb925f2f7c301f7a0eec96bd61b4f4b9516b2bb6b86913a8613d47714fa49"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-24-1.json.gz": {
+      "bytes": 77403,
+      "sha256": "6422ad2352c680e6ced0064a016ccf07d58abd0b235ffb80a8bc186ec1b3ab3e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-24-2.json.gz": {
+      "bytes": 76985,
+      "sha256": "e25888f766105ef1018a8f6dc723aa9889d324296b81fb9fd4ac702af4a71d7e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-36-0.json.gz": {
+      "bytes": 84507,
+      "sha256": "275fbced0bdd04c2a722976d3fc43484302146fdcc70bd26fb76d15f6bfd1534"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-36-1.json.gz": {
+      "bytes": 164639,
+      "sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-36-2.json.gz": {
+      "bytes": 122846,
+      "sha256": "45fa6a2fbfbead6f1c9c3ca786ddb4a02b70fd0c24afa286b408559b4df767b4"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-48-0.json.gz": {
+      "bytes": 104600,
+      "sha256": "637f3588c1086cecdfeb02e0f566771f6cf3d7c1cf7146ee9483048fd27f4e5e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-48-1.json.gz": {
+      "bytes": 97184,
+      "sha256": "66361e6e36144af3cdabd2cb2c5e9e0ca7c8de26423ba441bc39e98c833ab1d1"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-48-2.json.gz": {
+      "bytes": 123986,
+      "sha256": "476643ed90d8e35d035eb2b89961d0ffe71e70776d61de3e154248034d1f7aaf"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-60-0.json.gz": {
+      "bytes": 96135,
+      "sha256": "d3ffa5d11b87ca6c2e6b67d3f29c4d7cf413d92bb2e5220db701778b92f82e80"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-60-1.json.gz": {
+      "bytes": 96153,
+      "sha256": "96f6b5ab56d8fbd998276d5819c1dd8ffeeff03dce068a33fc04625cc947ac1b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-demo-floor-right-60-2.json.gz": {
+      "bytes": 96158,
+      "sha256": "66411ea25642bc2f3240a4264caa6499ee8468d6e0875e1a1a3c63224ad02dbe"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-drop12-left-45.json.gz": {
+      "bytes": 101740,
+      "sha256": "c26b9865872cda2ff147152f7db014d3644577c2536e1982346f517de24f3bc9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-drop12-right-45.json.gz": {
+      "bytes": 152167,
+      "sha256": "3cf45cde87ddf2e6b3018032160631444f2f816b7e52f560ef931f256bcef02a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-drop28-left-57.json.gz": {
+      "bytes": 158560,
+      "sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-drop28-right-57.json.gz": {
+      "bytes": 124801,
+      "sha256": "ffff1e4754363e7e70a519a52b423647b670da1be5ecf366074abe26c51751e9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-floor-left-27.json.gz": {
+      "bytes": 83558,
+      "sha256": "b0bf97515cc4857530d296942aa7162974559cb0167e1c02fd38d7c4e5825b74"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-floor-left-63.json.gz": {
+      "bytes": 160708,
+      "sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-floor-right-27.json.gz": {
+      "bytes": 80487,
+      "sha256": "53a40770130af0792ae4ef6fc647080b4f4728e5d11ffab05989c582f120a441"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/episodes/jolt-recovery-v3-reference-floor-right-63.json.gz": {
+      "bytes": 93132,
+      "sha256": "aeea23b146f8ad30f24205cdff30977037d20fe6ce4ad4ad45ce772e953f5b60"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/manifest.json": {
+      "bytes": 39765,
+      "sha256": "808dea3d9ad1e52ab5c40a73d4375135a4ac7f4f5c290d827e06af0426471fa7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-24-0.json": {
+      "bytes": 3597,
+      "sha256": "9210bbe9febe688ef2ec327631f7d659cc88a883c91dc437a3eb9b01a363dacf"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-24-1.json": {
+      "bytes": 3596,
+      "sha256": "2b6771fe46540f277884ae10aa4cd07d1ffe8041d09a7cfdc43e3993da8e23d9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-24-2.json": {
+      "bytes": 3597,
+      "sha256": "ee68a646cc0f7b17d4b5765b53c0f6226db1d93518c1494db10b28945013788e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-36-0.json": {
+      "bytes": 3566,
+      "sha256": "2f4029356c961d793789b695d91ce9d4b68deb9f6ada1d2f4d7729f24b58c5bc"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-36-1.json": {
+      "bytes": 3571,
+      "sha256": "d73b00153dd50c41b329a2493774d31d059265081305ea5e3c0dad8f6beef885"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-36-2.json": {
+      "bytes": 3568,
+      "sha256": "a3eb97a12375544afca1efcceae8310674174cda6688c4562b211b5a89a03998"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-48-0.json": {
+      "bytes": 3561,
+      "sha256": "682b15eca0a783c9444f797fdc517f465c285145e623ee4c7b0a6a5caaabfd1f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-48-1.json": {
+      "bytes": 3547,
+      "sha256": "ce949a2b612812b1195a229bab948c17ec2725d28934f608cc7b742525d39112"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-48-2.json": {
+      "bytes": 3560,
+      "sha256": "1b8a2d49765144cfbb867ef5cf4817310627f4d5923e106ca5caadce17c2e5da"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-60-0.json": {
+      "bytes": 3536,
+      "sha256": "df6d2f4bb846f65ee4a0b33e560b3eab554ec0bb6e7594cffc4c956b53bf03ac"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-60-1.json": {
+      "bytes": 3598,
+      "sha256": "a6b46eb1c6ee5063069e96d809d6b6a0479c0c0c12aa54e4401776be15702736"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-left-60-2.json": {
+      "bytes": 3558,
+      "sha256": "7491a5af9fbad0cf256ff2e24781f7a7271b45a74a4db5754b2fa44cc32640d1"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-24-0.json": {
+      "bytes": 3543,
+      "sha256": "994f20908734d00ca9ec8c736551554fff756daa6566781d1f5a758ab6ce8d2a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-24-1.json": {
+      "bytes": 3561,
+      "sha256": "aaa237984ecdaa51575900cbc8d96e873c5d28a0048613ebfc14adc9df862520"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-24-2.json": {
+      "bytes": 3537,
+      "sha256": "8dfc73d37a91d958ed87a932b0a783bb5a7dced4398230c4006a25c494a5577e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-36-0.json": {
+      "bytes": 3574,
+      "sha256": "0cd008ebac8e5c95c19398a7179bf6013b543a85baef8ad0811c8f6a0f6a4f00"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-36-1.json": {
+      "bytes": 3532,
+      "sha256": "106342c5a054dee0af8180449d41a20e0f28459e928db96f0357921b18037ef7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-36-2.json": {
+      "bytes": 3566,
+      "sha256": "02d7793cce6fbf5671c0e96156051990ec7b1f23c498e94457bdfb12f045476a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-48-0.json": {
+      "bytes": 3586,
+      "sha256": "734fc96326797defa1eeb3e2502da28dbe5f8bcd3d42beff690b0901050e4cc7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-48-1.json": {
+      "bytes": 3581,
+      "sha256": "def8b11105bc5e4e0380c0d7bd626f05e8c70ecbd8558f1f1fe96fe1959d02b8"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-48-2.json": {
+      "bytes": 3567,
+      "sha256": "097934ac848430f68f5f91d9f5fa6f32646060a723602c7551185fb87dd6e47a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-60-0.json": {
+      "bytes": 3533,
+      "sha256": "4b66b5c432b2c6ccf22fdf503e04daa6893344c1f3e42da7cfd5ede214732410"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-60-1.json": {
+      "bytes": 3537,
+      "sha256": "6d10e218afb45d2a303dc400f0b4ee7dcce1f5ddfea247ed22d698a10c412284"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-demo-floor-right-60-2.json": {
+      "bytes": 3535,
+      "sha256": "40488c4af462744fb59553fa3ec507b7ec0db0e3bfb3d99248bc4181a0a0df80"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-drop12-left-45.json": {
+      "bytes": 3587,
+      "sha256": "8fa8455cd07fa97bfa3fd946d9b05f9b1e718724c107476ea30af76136963618"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-drop12-right-45.json": {
+      "bytes": 3571,
+      "sha256": "a7a9a822cfb05d96bf44f6eb817978ce9ffb7ee293ea88693fab6e0382ac43d4"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-drop28-left-57.json": {
+      "bytes": 3560,
+      "sha256": "ec95aafed08f78ea3270aeb8af1dc3c4e73f04c6f4219d23743c9d0c743c9673"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-drop28-right-57.json": {
+      "bytes": 3605,
+      "sha256": "febffbad20a94c1dd9a08913cae243774e4a15444cb8d3a7b019e7ceb938953f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-floor-left-27.json": {
+      "bytes": 3581,
+      "sha256": "5e7433f6c2b6398f107d1b27ecdf22cfb88a6ceaebc042fc3fd56c62d120743d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-floor-left-63.json": {
+      "bytes": 3579,
+      "sha256": "8885b4d18c55d57165ed09a8ad8c9d3037b8a78ca77818270de57bfc47b161da"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-floor-right-27.json": {
+      "bytes": 3574,
+      "sha256": "4bb80db632e3b063eb43ddade8b69662dc56938a0aea790848dea93c13bad9e2"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/authored-balanced-v1-reference-floor-right-63.json": {
+      "bytes": 3544,
+      "sha256": "21ff386b454e00f85eadae6ae11faa7f3ec0ae6bbcf6c6bebfb85e5542f5f92f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-24-0.json": {
+      "bytes": 3481,
+      "sha256": "33908f3b87e4f629a02d693447b506727e3379cb8751f23accc74b1e795d6cd5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-24-1.json": {
+      "bytes": 3481,
+      "sha256": "3297d065bc4908073eea09e347f22876d8f0bd00265de4ac61f7805cc92379d9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-24-2.json": {
+      "bytes": 3497,
+      "sha256": "e387cee04236c22a8a06bbd0ec5cd63cdec3e0ac9eb700ad9f3675b02f091028"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-36-0.json": {
+      "bytes": 3507,
+      "sha256": "d8303177fac60ae35d6a124365bb6358364b25ace0fad6171884939d23e275ca"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-36-1.json": {
+      "bytes": 3504,
+      "sha256": "55c58a8f3d3cc311df18b4df3b4b3f4721cb6ee1dbb8a7d771b3ae8329ce9b45"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-36-2.json": {
+      "bytes": 3501,
+      "sha256": "730e5a8e7d02034a3b56e576dbcca276dc544914f539ffd6b7aa4d7b58944a8e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-48-0.json": {
+      "bytes": 3535,
+      "sha256": "fdd388f7fbcc7e57ce60e54e40ea6164e00751d050e794a184e3904f6b61b5e5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-48-1.json": {
+      "bytes": 3545,
+      "sha256": "ef2e11f68e16a72c10ac98a04bfebf965b8d528954073a438c47ad493ead6089"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-48-2.json": {
+      "bytes": 3552,
+      "sha256": "1018f424fd5f3119e6315e406f27471d61418e4a5929abed5c3764f3a57f7669"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-60-0.json": {
+      "bytes": 3554,
+      "sha256": "3729fa1a1175a04316532117a428cf870d0a8ae984e9df55d146dfa428f01099"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-60-1.json": {
+      "bytes": 3569,
+      "sha256": "47a8cab1e4a521537af2a574017a8051181fcec91bd66391a6e51518623c4825"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-left-60-2.json": {
+      "bytes": 3558,
+      "sha256": "39f8cc9be3a91df14d7c6444f78b86b07775c9cebe42d46ea463f6f354b2b202"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-24-0.json": {
+      "bytes": 3560,
+      "sha256": "972fc39bb49c5a59d95cb5905dab911236cfdc7ddfbf29ff421f0ba72a4dcfb6"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-24-1.json": {
+      "bytes": 3558,
+      "sha256": "4fea2a511f66302f6d082db504b280217f67196452b3adbad2e22e3c3803a3bf"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-24-2.json": {
+      "bytes": 3546,
+      "sha256": "5f694f5d701a45270777239e54a69bdcd0d4c58c4e5f95bdd9b8cb61ca80ebfd"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-36-0.json": {
+      "bytes": 3570,
+      "sha256": "8484e87d147546212576624d7f012e9b268303b4212bf434180f838e8fe8d9d4"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-36-1.json": {
+      "bytes": 3550,
+      "sha256": "2d0a4110fba6ba747a61c9a04f0c393f06f144eaedd9b0201969b7378574c49b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-36-2.json": {
+      "bytes": 3504,
+      "sha256": "4912015782460a5f3aff4c3aadd522edefb240752a283890038c244c294e5816"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-48-0.json": {
+      "bytes": 3524,
+      "sha256": "30fc7a5b1fe62abc1f48aa4a2433afd04440614328385e29348316a2c0edbf39"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-48-1.json": {
+      "bytes": 3572,
+      "sha256": "fc56336d5af27d7d3d360e2306e11d9a8fe1f401f7a5e470cd3e72be484cc9d4"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-48-2.json": {
+      "bytes": 3518,
+      "sha256": "fc5871360c0e0278a9e313ab2b2a8dfaf8d85634e1249176a53240153b57e4a5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-60-0.json": {
+      "bytes": 3524,
+      "sha256": "c2d56d8c0a11ce569bc14402cba06499ec49135230d5e81a24385f189931c56a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-60-1.json": {
+      "bytes": 3525,
+      "sha256": "38492c78128b10a125316cb72989c0f0519c7fd7791d33c1e69da2c78b4127fa"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-demo-floor-right-60-2.json": {
+      "bytes": 3526,
+      "sha256": "68ad44bac0493df5f38a38d1fb1ab1dffa26581774d115ecce12c3b8e5d731dd"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-drop12-left-45.json": {
+      "bytes": 3532,
+      "sha256": "47515458647abd8c8d6f1b673f4a9bd68f95591ffd40d3c63613fa69c8184b24"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-drop12-right-45.json": {
+      "bytes": 3509,
+      "sha256": "b136aad35bc4f85ffeba59396866452b3efa6b749745c56a4450aa19209e3d59"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-drop28-left-57.json": {
+      "bytes": 3510,
+      "sha256": "73afc5a58a88aac1cd92ff4815fec9445cbd64de574c72badbbedba753981e65"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-drop28-right-57.json": {
+      "bytes": 3557,
+      "sha256": "29b19fadf0fb1b33d5e913a6e892aa7d96fa6f52858d9fbe2aea832e20846d4e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-floor-left-27.json": {
+      "bytes": 3553,
+      "sha256": "e7c55a2210a407dd66235965aef57b562ffea9e237697d63f20b7fe6f79e6e2c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-floor-left-63.json": {
+      "bytes": 3567,
+      "sha256": "fdba519bdf921633569f5e53135197e83eb7e99d358de8ffeebfa825243a8866"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-floor-right-27.json": {
+      "bytes": 3544,
+      "sha256": "8c53dc90ad705bf5623ae82061d338b2b743ac2074f80792affc7f5b80c12704"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-arrival-v1-reference-floor-right-63.json": {
+      "bytes": 3540,
+      "sha256": "1cff9b696f5f505b8bcf59755b761ed1ac0f928fe41d2e9640adf03f8de2bcfa"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-24-0.json": {
+      "bytes": 3664,
+      "sha256": "5cad08b85145d796c32d846211704990b5263d15197406da1b9866c8d5c086c1"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-24-1.json": {
+      "bytes": 3664,
+      "sha256": "80e6d97038b157dad8d68771d240c0e489050dbea0ee4c5d0a202a92825b832d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-24-2.json": {
+      "bytes": 3664,
+      "sha256": "065aa82037d6ccb482fecc8b020a77b900de848497ebb3a5e409a4a8cd0680ac"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-36-0.json": {
+      "bytes": 3667,
+      "sha256": "d624e1fc08c11f7d5795f446f4034149d16e0c084967addbc818eda509d2cb56"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-36-1.json": {
+      "bytes": 3682,
+      "sha256": "564c98ed5f93901cd3747b77bcc09a002b1a8ae36f22b5fbe59914901dd3f353"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-36-2.json": {
+      "bytes": 3681,
+      "sha256": "094f48e4f5f4db1f3ba49329e583c4b3564d8049e9703b9a143b0e8e2f1d19c7"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-48-0.json": {
+      "bytes": 3676,
+      "sha256": "d5071acdbf4e5101549fcc3ae8f16cfed1973bb95ba70e0ccb2e9927aa1eeff5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-48-1.json": {
+      "bytes": 3676,
+      "sha256": "880b4828c84fa74e876ab9dfb7370a3ab202edba30eb1ed9bfb5c2807ae4121d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-48-2.json": {
+      "bytes": 3659,
+      "sha256": "7161b02bc5dab0e487d0cb34d92a9816dd57e8d3d34a15ce9727f258cef41499"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-60-0.json": {
+      "bytes": 4266,
+      "sha256": "eacf9e2318632bfe681fbeae6b5544faec1c8e2977cf8526825f68de24b802c9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-60-1.json": {
+      "bytes": 6118,
+      "sha256": "7d4d2ee4dc783810ac99e5b55a860b46706cc88e7e04ad421fd2f756b40792f9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-left-60-2.json": {
+      "bytes": 4302,
+      "sha256": "722deeb586d75c0c4083fdcf99d145491e9c208af4c752a1cf7070318450ca4a"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-24-0.json": {
+      "bytes": 3664,
+      "sha256": "b9e98f8a14d63e24f9a0ed48f816c32eef330aab02c0e590f4248061ec2993c5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-24-1.json": {
+      "bytes": 3664,
+      "sha256": "7b0c9e459bf6757f1c2bbbc5516110b67da712d25b7fd7c9129dc2ccd95a4d04"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-24-2.json": {
+      "bytes": 3661,
+      "sha256": "67b167f547c21d0455ff876bcca795cab002edffdc9e44d8447ab73997637790"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-36-0.json": {
+      "bytes": 3695,
+      "sha256": "7c951c0533c531e53e8d7cbd3497bcbbd7926b90f1cab15ffd74f9446021ff1e"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-36-1.json": {
+      "bytes": 4388,
+      "sha256": "b3adecc27ebd395a90b4cab1fedf83498ab6db92d5769de8fbd8721a74094c2c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-36-2.json": {
+      "bytes": 4382,
+      "sha256": "b55392c58f9698e1d4c0632fbe92374ee423c90435871f3f646fced9f9daf4a8"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-48-0.json": {
+      "bytes": 3702,
+      "sha256": "117eaf74645098a978b485d3817569a308aa25985a193204149e371bdb97e4d6"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-48-1.json": {
+      "bytes": 3704,
+      "sha256": "fa1fb2533372ec53f3acee1b4590f170f11c1ef648c25635c21e9822132179b0"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-48-2.json": {
+      "bytes": 3699,
+      "sha256": "75fb82b78f934cc5d9423497ced04004e02779abc277b2acbbf8923ac82a3ca9"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-60-0.json": {
+      "bytes": 3689,
+      "sha256": "a5e7df189bd99f6cb88abb4807b82662d0be2fe6dc497b0496360173f1ea52b8"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-60-1.json": {
+      "bytes": 3702,
+      "sha256": "2323b193f0799f3b7530c4bf45acb8d0607e429f026aa1b074ec584d8f7dfd8b"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-demo-floor-right-60-2.json": {
+      "bytes": 3713,
+      "sha256": "ded1767c4ec510f9d1c0e6dbff5e4b22c43d91bed8c0dc2f52a4955abac2c4de"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-drop12-left-45.json": {
+      "bytes": 3674,
+      "sha256": "de1b46933fb37d598dc2b6a45fe9580b3ac04e2fb6288c4f2f9811b2bfa337c5"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-drop12-right-45.json": {
+      "bytes": 4353,
+      "sha256": "dab2a951e19a68017166d70a10d12bf29ca6d422b49190381eccaab9696cd984"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-drop28-left-57.json": {
+      "bytes": 3639,
+      "sha256": "6d602176abc4fe2c58b3ae0ce68cbefa373af43a7b6774efe7c3ccba0659117d"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-drop28-right-57.json": {
+      "bytes": 3701,
+      "sha256": "ea7755bc5269f6775bf55305b204f26d66f7fe5b8828e4e6045e0be7b8bb38af"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-floor-left-27.json": {
+      "bytes": 4313,
+      "sha256": "dd6ae21b182b34641a842fd7d5194e5213de1363f094ee8b8c8c78f153df1f3f"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-floor-left-63.json": {
+      "bytes": 5558,
+      "sha256": "d0fc16182191e6760e36a8ea7b5c7f7fa00813e1a61f4578f88e2484d2b08450"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-floor-right-27.json": {
+      "bytes": 3747,
+      "sha256": "e0a938a04856bea7258ac30c342f05e3b4f9494bf0d9e88d826b0f932f8f5a9c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/metrics/jolt-recovery-v3-reference-floor-right-63.json": {
+      "bytes": 3674,
+      "sha256": "4167fe2758377acd0230b394d9e6b848af621404e1e9cdb54fd8fa5ae2999b87"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/owner-journal-seal.json": {
+      "bytes": 1235,
+      "sha256": "76446ae516192ddcd25771f734d0cf982a01be07d6754c91bfd1519870059b52"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/owner-journal.jsonl": {
+      "bytes": 80426426,
+      "sha256": "43888418cec3848c115102ff9f5190f59c24bd5545702fe58ba4502b84f2053c"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/owner-journal.jsonl.gz": {
+      "bytes": 8198511,
+      "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/owner-journal.jsonl.gz.pending": {
+      "bytes": 8198511,
+      "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+    },
+    "original/jolt-recovery-v3-diagnostic-20261020/summary.json": {
+      "bytes": 388977,
+      "sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+    }
+  },
+  "interpretation": "Complete transport of the retained failed invocation and its separately labelled offline analyses. Verification of transported bytes does not repair the original invocation or admit teacher collection.",
+  "learned_skill_qualified": false,
+  "manifest": {
+    "bytes": 39765,
+    "sha256": "808dea3d9ad1e52ab5c40a73d4375135a4ac7f4f5c290d827e06af0426471fa7"
+  },
+  "morphology_admitted": false,
+  "native_forensic_subchecks_verified": true,
+  "original_outputs_unchanged": true,
+  "original_supervisor_completed": false,
+  "original_worker_status": "completed",
+  "owner_feel_accepted": false,
+  "run_id": "jolt-recovery-003-diagnostic-v3",
+  "schema": "nca-jolt-recovery-v3-evidence-index/v1",
+  "source_files_sha256": "5e0c4980211b17e035b3bac6994fe3de2e80d6b8022055c99e6f97eb85641a85",
+  "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70",
+  "status": "failed_final_inventory_and_teacher_acceptance",
+  "summary": {
+    "bytes": 388977,
+    "sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+  },
+  "supervisor": {
+    "bytes": 1257,
+    "sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8"
+  },
+  "teacher_accepted": false,
+  "whole_process_wall_seconds": 294.9515252410001
+}

@@ -1,0 +1,19 @@
+{
+  "all_preserved_source_hashes_match": true,
+  "all_reviewed_source_hashes_match": true,
+  "candidate_specification_sha256": "e180844789194c1a928c673599aed48a987db617e26be96e7043dc7ee6c72a2e",
+  "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+  "execution_checkout_clean": true,
+  "limits": [
+    "Admission applies solely to this immutable source/declaration and fixed one-attempt budget.",
+    "No measured behavioral result is claimed before the retained diagnostic closes."
+  ],
+  "new_host_starts": 0,
+  "new_owner_requests": 0,
+  "prospective_review_sha256": "58e7418563acb3a8c5bbb3897090614024ad8b63609cc9ff7052d6a21eb09649",
+  "schema": "nca-jolt-recovery-003-independent-source-binding/v1",
+  "source_commit": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70",
+  "tracked_blobs_exact": 339,
+  "verdict": "admit_one_predeclared_attempt"
+}

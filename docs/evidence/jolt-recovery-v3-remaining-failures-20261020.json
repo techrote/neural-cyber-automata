@@ -1,0 +1,2310 @@
+{
+  "bounded_outcome_recommendation": {
+    "description": "Record the implemented frozen candidate and its one consumed diagnostic attempt as a failed qualification. The recorded 28/32 exceeds 27/32 but rescues only two of the five required historical cases, below the threshold of three; the outer artifact verification also remains failed. Preserve every original artifact and failed verifier status. Teacher #48 and learned experiment #62 stay blocked. Any future controller change or physical attempt requires a separately scoped authorization and evidence identity.",
+    "historical_rescues": [
+      "demo-floor-left-60-2",
+      "reference-drop12-right-45"
+    ],
+    "historical_rescues_required": 3,
+    "possible_future_design_questions_not_changes_or_authorizations": [
+      "How can ordinary settling enter a useful interior quiet region and remain there without treating sampled quiet state as task completion?",
+      "Can a contact-aware post-pulse phase distinguish actual airborne motion from still-supported upward motion and preserve useful native landing progress within the same two-edge cap?",
+      "What measurable local observation can establish that a second pulse or bounded traction correction is useful, given that a free-flight admission envelope cannot resolve native contact forces?"
+    ],
+    "recorded_arrivals": {
+      "authored-balanced-v1": 17,
+      "jolt-arrival-v1": 27,
+      "jolt-recovery-v3": 28
+    },
+    "regressions_from_arrival": [
+      "demo-floor-right-36-1"
+    ],
+    "teacher_qualified": false
+  },
+  "cases": [
+    {
+      "artifact_sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08",
+      "case_id": "demo-floor-right-36-1",
+      "character_excerpt": {
+        "airborne_ticks": 52,
+        "confirmed_primary_associated_pulses": 2,
+        "ordinary_recovery_events": 1,
+        "pulses_with_airborne_confirmation": 1,
+        "supervisor_intervention_decisions": 0
+      },
+      "episode_artifact": "episodes/jolt-recovery-v3-demo-floor-right-36-1.json.gz",
+      "final": {
+        "absolute_angle_radians": 0.12244891375303313,
+        "blocked": false,
+        "cooldown": 0.0,
+        "distance_cells": 3.7656810408098367,
+        "energy": 1.0,
+        "grounded": true,
+        "position": [
+          208.517578125,
+          347.932861328125
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 6.843072875776793,
+        "tick": 240,
+        "velocity": [
+          6.8415699005127,
+          -0.143414363265038
+        ]
+      },
+      "final_consecutive_quiet_ticks": 0,
+      "ground_corrections": [],
+      "interpretation": {
+        "limit": "Earlier contact-transition launch succeeds as a launch witness, but useful position access does not ensure a continuous quiet interval. The running lease is preserved correctly; this is a real deadline miss, not premature retirement.",
+        "observed_failure": "Repeated distance and speed violations interrupt quiet dwell after first entering tolerance. The final position is inside tolerance but final speed is above 6. The second confirmed pulse never receives raw airborne confirmation.",
+        "source_relationship": "step() switches to a fully neutral request on any current quiet sample, without an interior settling margin or entry hysteresis. Inside tolerance it countersteers only when abs(vx)>6; the ordinary position controller resumes for other nonquiet supported states. These branches explain the recorded settle/settle_brake/settle_hold decision sequence; observations do not isolate the physical cause of its velocity reversals."
+      },
+      "late_decisions": [
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.342017972626141,
+          "grounded": true,
+          "move_x": 0.3076829751332675,
+          "phase": "settle",
+          "tick": 132,
+          "velocity": [
+            7.59452390670776,
+            2.94812488555908
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.419980927817724,
+          "grounded": true,
+          "move_x": -0.07500000000000001,
+          "phase": "settle_brake",
+          "tick": 138,
+          "velocity": [
+            10.9724311828613,
+            9.71422863006592
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.676129283350309,
+          "grounded": true,
+          "move_x": 0.20209965705872318,
+          "phase": "settle",
+          "tick": 144,
+          "velocity": [
+            -4.64217329025269,
+            6.08820152282715
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.5121768808319898,
+          "grounded": true,
+          "move_x": 0.20209965705872318,
+          "phase": "settle",
+          "tick": 150,
+          "velocity": [
+            5.91671895980835,
+            1.50441753864288
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 2.983792702709488,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 156,
+          "velocity": [
+            5.21011066436768,
+            0.221759095788002
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.168812895801538,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 162,
+          "velocity": [
+            -5.4040994644165,
+            2.03236365318298
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.848091623229243,
+          "grounded": true,
+          "move_x": 0.125,
+          "phase": "settle_brake",
+          "tick": 168,
+          "velocity": [
+            -8.56326675415039,
+            1.82330274581909
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.8560804946524616,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 174,
+          "velocity": [
+            3.6294801235199,
+            1.6649854183197
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.934648114329017,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 180,
+          "velocity": [
+            -2.9253294467926,
+            1.23983013629913
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.355720398672568,
+          "grounded": true,
+          "move_x": 0.24305798212688837,
+          "phase": "settle",
+          "tick": 186,
+          "velocity": [
+            -5.0376124382019,
+            1.39765119552612
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.118780229434227,
+          "grounded": true,
+          "move_x": 0.24305798212688837,
+          "phase": "settle",
+          "tick": 192,
+          "velocity": [
+            6.27267646789551,
+            -0.315351188182831
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.390725038225069,
+          "grounded": true,
+          "move_x": -0.07500000000000004,
+          "phase": "settle_brake",
+          "tick": 198,
+          "velocity": [
+            7.28622627258301,
+            1.22892212867737
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.6612849353061963,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 204,
+          "velocity": [
+            -4.04515886306763,
+            3.53539252281189
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.224235042375862,
+          "grounded": true,
+          "move_x": 0.23327785332994863,
+          "phase": "settle",
+          "tick": 210,
+          "velocity": [
+            -7.0924334526062,
+            2.96768236160278
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.0214973314481375,
+          "grounded": true,
+          "move_x": 0.23327785332994863,
+          "phase": "settle",
+          "tick": 216,
+          "velocity": [
+            6.47818851470947,
+            0.232176885008812
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.323477347510247,
+          "grounded": true,
+          "move_x": -0.07499999999999998,
+          "phase": "settle_brake",
+          "tick": 222,
+          "velocity": [
+            7.44093751907349,
+            2.90579199790955
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.5188916194851427,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 228,
+          "velocity": [
+            -3.66678357124329,
+            2.7247486114502
+          ]
+        },
+        {
+          "action_lease_ticks": 6,
+          "arrival_advisory": false,
+          "distance_cells": 4.011318516968946,
+          "grounded": true,
+          "move_x": 0.21752633253730538,
+          "phase": "settle",
+          "tick": 234,
+          "velocity": [
+            -6.17787981033325,
+            2.89550161361694
+          ]
+        }
+      ],
+      "maximum_consecutive_quiet_ticks": 9,
+      "outcome": "task_deadline",
+      "pulses": [
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            35.612142758400715,
+            -50.77373163850349
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            35.50861421409396,
+            -51.73596655280632
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.005387297831475735,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 32.8109639816579,
+            "energy": 0.958905961952118,
+            "grounded": false,
+            "position": [
+              179.453887939453,
+              342.339477539062
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 45.84093193980035,
+            "tick": 24,
+            "velocity": [
+              33.4271202087402,
+              -31.3690719604492
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.02048370987176895,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 29.919495454414953,
+            "energy": 1.0,
+            "grounded": false,
+            "position": [
+              182.727401733398,
+              340.31201171875
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 34.2280775051396,
+            "tick": 30,
+            "velocity": [
+              32.3516082763672,
+              -11.1774206161499
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            64.6256713867188,
+            -94.1594543457031
+          ],
+          "energy_used_first_receipt": 0.0802607047145488,
+          "first_airborne_tick_within_12_after_source": 19,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.0020970753394067287,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 35.36760978519568,
+            "energy": 0.921405961952118,
+            "grounded": false,
+            "position": [
+              176.642578125,
+              345.651153564453
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 60.66881847939767,
+            "tick": 19,
+            "velocity": [
+              35.5498809814453,
+              -49.1620941162109
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.033309534192085266,
+            "blocked": false,
+            "cooldown": 0.0199999999999997,
+            "distance_cells": 16.585652352725173,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              195.41471862793,
+              346.610931396484
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 32.00987442105624,
+            "tick": 55,
+            "velocity": [
+              28.8590526580811,
+              13.8487234115601
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 55,
+          "reason": "initial_contact_loss_launch",
+          "requested_aim": [
+            0.5658808390299498,
+            -0.8244870381144631
+          ],
+          "requested_effort": 0.7296427701322615,
+          "source": {
+            "absolute_angle_radians": 0.0016526257386431098,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 35.9528521341464,
+            "energy": 1.0,
+            "grounded": false,
+            "position": [
+              176.047149658203,
+              346.488647460938
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.9677882980226836,
+            "tick": 18,
+            "velocity": [
+              0.103528544306755,
+              0.962234914302826
+            ]
+          },
+          "source_tick": 18,
+          "toward_position_gain_source_to_landing_cells": 19.36756896972699,
+          "toward_position_gain_twelve_ticks_cells": 6.680252075195,
+          "uninterrupted_airborne_ticks_before_landing": 36
+        },
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            5.065617126298047,
+            -34.71547915935516
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            5.349018943381406,
+            -34.4
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.05528269708156586,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 4.754367418104863,
+            "energy": 0.994637914213251,
+            "grounded": true,
+            "position": [
+              207.245788574219,
+              346.461486816406
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 8.202847928984275,
+            "tick": 126,
+            "velocity": [
+              -1.6175445318222,
+              -8.04178237915039
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.18787913024425507,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 4.342017972626141,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              207.657989501953,
+              346.491943359375
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 8.146670099519707,
+            "tick": 132,
+            "velocity": [
+              7.59452390670776,
+              2.94812488555908
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            9.73521423339844,
+            -62.6080017089844
+          ],
+          "energy_used_first_receipt": 0.0445287524534152,
+          "first_airborne_tick_within_12_after_source": null,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.010026657022535801,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 5.030155105416955,
+            "energy": 0.957137914213251,
+            "grounded": true,
+            "position": [
+              207.182525634766,
+              347.947204589844
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 30.420962020060905,
+            "tick": 121,
+            "velocity": [
+              3.92807149887085,
+              -30.1662921905518
+            ]
+          },
+          "first_subsequent_raw_landing": null,
+          "first_subsequent_raw_landing_tick": null,
+          "reason": "supported_no_progress",
+          "requested_aim": [
+            0.15364832920281418,
+            -0.9881255947161695
+          ],
+          "requested_effort": 0.40480684048559284,
+          "source": {
+            "absolute_angle_radians": 0.00932152196764946,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 5.271517017860794,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              207.110580444336,
+              348.470397949219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.4240798154989113,
+            "tick": 120,
+            "velocity": [
+              -0.283401817083359,
+              -0.315479159355164
+            ]
+          },
+          "source_tick": 120,
+          "toward_position_gain_source_to_landing_cells": null,
+          "toward_position_gain_twelve_ticks_cells": 0.547409057617017,
+          "uninterrupted_airborne_ticks_before_landing": null
+        }
+      ],
+      "quiet_disqualification_ticks_after_first_entry": {
+        "angle": 0,
+        "counts_can_overlap": true,
+        "distance": 26,
+        "first_entry_tick": 135,
+        "raw_support": 0,
+        "speed": 42
+      },
+      "quiet_intervals_start_end_count": [
+        [
+          140,
+          141,
+          2
+        ],
+        [
+          145,
+          149,
+          5
+        ],
+        [
+          155,
+          162,
+          8
+        ],
+        [
+          170,
+          170,
+          1
+        ],
+        [
+          172,
+          180,
+          9
+        ],
+        [
+          199,
+          205,
+          7
+        ],
+        [
+          207,
+          207,
+          1
+        ],
+        [
+          223,
+          231,
+          9
+        ],
+        [
+          238,
+          239,
+          2
+        ]
+      ],
+      "raw_landing_ticks": [
+        12,
+        55
+      ],
+      "raw_support_loss_ticks": [
+        14
+      ],
+      "record_sha256": "43e54b8e8596947e8455c3296987f76cb3458f8f8cc516f0e2e764138667586c",
+      "replay": {
+        "all_task_metrics_exact": true,
+        "controller_frames_exact": 40,
+        "diagnostic_states_exact": 40,
+        "native_ticks_replayed_through_unchanged_task": 240
+      },
+      "target": [
+        212.0,
+        346.5
+      ],
+      "within_tolerance_intervals_start_end_count": [
+        [
+          135,
+          170,
+          36
+        ],
+        [
+          172,
+          180,
+          9
+        ],
+        [
+          193,
+          207,
+          15
+        ],
+        [
+          217,
+          233,
+          17
+        ],
+        [
+          238,
+          240,
+          3
+        ]
+      ]
+    },
+    {
+      "artifact_sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a",
+      "case_id": "demo-floor-left-60-1",
+      "character_excerpt": {
+        "airborne_ticks": 28,
+        "confirmed_primary_associated_pulses": 2,
+        "ordinary_recovery_events": 3,
+        "pulses_with_airborne_confirmation": 2,
+        "supervisor_intervention_decisions": 4
+      },
+      "episode_artifact": "episodes/jolt-recovery-v3-demo-floor-left-60-1.json.gz",
+      "final": {
+        "absolute_angle_radians": 0.009166632778942585,
+        "blocked": true,
+        "cooldown": 0.0,
+        "distance_cells": 5.055274426763328,
+        "energy": 1.0,
+        "grounded": true,
+        "position": [
+          208.65625,
+          348.468536376953
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 0.30448707700847666,
+        "tick": 240,
+        "velocity": [
+          0.270707726478577,
+          -0.139390483498573
+        ]
+      },
+      "final_consecutive_quiet_ticks": 0,
+      "ground_corrections": [
+        {
+          "duration_ticks": 12,
+          "end": {
+            "absolute_angle_radians": 0.00889820046722889,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 5.185203557337205,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.796798706055,
+              348.469024658203
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.32074083778240403,
+            "tick": 210,
+            "velocity": [
+              0.300396114587784,
+              -0.112413786351681
+            ]
+          },
+          "last_decision_tick": 204,
+          "max_observed_speed_cells_per_second": 0.4811715416477809,
+          "observed_end_tick": 210,
+          "raw_supported_all_ticks": true,
+          "requested_shaped_move_x": [
+            -0.975,
+            -0.975
+          ],
+          "source_tick_start": 198,
+          "start": {
+            "absolute_angle_radians": 0.009229560382664204,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 5.24204622222987,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.858657836914,
+              348.467864990234
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.2884009319493983,
+            "tick": 198,
+            "velocity": [
+              0.282099306583405,
+              -0.0599589757621288
+            ]
+          },
+          "toward_position_gain_cells": 0.06185913085900552
+        },
+        {
+          "duration_ticks": 6,
+          "end": {
+            "absolute_angle_radians": 0.009166632778942585,
+            "blocked": true,
+            "cooldown": 0.0,
+            "distance_cells": 5.055274426763328,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.65625,
+              348.468536376953
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.30448707700847666,
+            "tick": 240,
+            "velocity": [
+              0.270707726478577,
+              -0.139390483498573
+            ]
+          },
+          "last_decision_tick": 234,
+          "max_observed_speed_cells_per_second": 0.4378742085122611,
+          "observed_end_tick": 240,
+          "raw_supported_all_ticks": true,
+          "requested_shaped_move_x": [
+            -0.9750000000000001
+          ],
+          "source_tick_start": 234,
+          "start": {
+            "absolute_angle_radians": 0.00945281982421875,
+            "blocked": true,
+            "cooldown": 0.0,
+            "distance_cells": 5.076139926006742,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.679306030273,
+              348.467559814453
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.37811797892853777,
+            "tick": 234,
+            "velocity": [
+              0.369826674461365,
+              -0.0787492021918297
+            ]
+          },
+          "toward_position_gain_cells": 0.023056030273011174
+        }
+      ],
+      "interpretation": {
+        "limit": "A signed-positive admission model and two-edge budget do not establish useful native landing progress or sufficient post-landing traction. Aggregate receipts cannot separate actuator effects from passive/contact forces.",
+        "observed_failure": "The second pulse is confirmed and briefly airborne, but the next raw landing is farther from the target horizontally. The remaining supported motion stalls outside tolerance; two bounded full-traction windows are insufficient before the deadline.",
+        "source_relationship": "_pulse(recovery=True) admits a positive modeled toward velocity and bounded short arc. Raw support remains true at the six-tick post-pulse decision despite continued upward velocity, so step() resumes shaped ordinary traction before the later short airborne interval. After both edges, _ground_correction() emits bounded full traction from fresh stall evidence, as specified, without obtaining material progress."
+      },
+      "late_decisions": [
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.3944138398513495,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "contact_recovery_anticipate",
+          "tick": 150,
+          "velocity": [
+            0.308668076992035,
+            -0.359046459197998
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.447320968112206,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "contact_recovery_launch",
+          "tick": 156,
+          "velocity": [
+            0.761558353900909,
+            -0.987989366054535
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.073388461959163,
+          "grounded": true,
+          "move_x": -0.35428387324016963,
+          "phase": "settle",
+          "tick": 162,
+          "velocity": [
+            3.42383456230164,
+            -12.9127626419067
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.550495900612682,
+          "grounded": true,
+          "move_x": -0.35428387324016963,
+          "phase": "settle",
+          "tick": 168,
+          "velocity": [
+            7.89836835861206,
+            5.69742059707642
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.796089310082119,
+          "grounded": true,
+          "move_x": -0.35428387324016963,
+          "phase": "settle",
+          "tick": 174,
+          "velocity": [
+            -2.4212634563446,
+            17.8340873718262
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.495715072416992,
+          "grounded": true,
+          "move_x": -0.35428387324016963,
+          "phase": "settle",
+          "tick": 180,
+          "velocity": [
+            -7.52810096740723,
+            9.27742767333984
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.322267098557553,
+          "grounded": true,
+          "move_x": -0.3467279911041019,
+          "phase": "settle",
+          "tick": 186,
+          "velocity": [
+            -0.891290307044983,
+            1.0707665681839
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.265971844541994,
+          "grounded": true,
+          "move_x": -0.3429371356964185,
+          "phase": "settle",
+          "tick": 192,
+          "velocity": [
+            0.109750159084797,
+            0.0185403134673834
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.24204622222987,
+          "grounded": true,
+          "move_x": -0.975,
+          "phase": "ground_correction",
+          "tick": 198,
+          "velocity": [
+            0.282099306583405,
+            -0.0599589757621288
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.214317513217784,
+          "grounded": true,
+          "move_x": -0.975,
+          "phase": "ground_correction",
+          "tick": 204,
+          "velocity": [
+            0.465695410966873,
+            -0.121053032577038
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.185203557337205,
+          "grounded": true,
+          "move_x": -0.33729158242545576,
+          "phase": "settle",
+          "tick": 210,
+          "velocity": [
+            0.300396114587784,
+            -0.112413786351681
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.162404917196418,
+          "grounded": true,
+          "move_x": -0.3357299407322924,
+          "phase": "settle",
+          "tick": 216,
+          "velocity": [
+            0.310863614082336,
+            -0.131576895713806
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.131217943401151,
+          "grounded": true,
+          "move_x": -0.3335285425186194,
+          "phase": "settle",
+          "tick": 222,
+          "velocity": [
+            0.149593845009804,
+            -0.188377156853676
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 5.1004381583153195,
+          "grounded": true,
+          "move_x": -0.33134105205533854,
+          "phase": "settle",
+          "tick": 228,
+          "velocity": [
+            0.212404862046242,
+            -0.111863739788532
+          ]
+        },
+        {
+          "action_lease_ticks": 6,
+          "arrival_advisory": false,
+          "distance_cells": 5.076139926006742,
+          "grounded": true,
+          "move_x": -0.9750000000000001,
+          "phase": "ground_correction",
+          "tick": 234,
+          "velocity": [
+            0.369826674461365,
+            -0.0787492021918297
+          ]
+        }
+      ],
+      "maximum_consecutive_quiet_ticks": 0,
+      "outcome": "task_deadline",
+      "pulses": [
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            -57.48791181182862,
+            -39.37861026424426
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            -56.416000000000004,
+            -39.378610234491525
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.008102208375930786,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 54.32544751790082,
+            "energy": 0.951166666666666,
+            "grounded": false,
+            "position": [
+              258.313323974609,
+              345.352355957031
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 61.29610067580019,
+            "tick": 18,
+            "velocity": [
+              -56.7599258422852,
+              -23.1413650512695
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.0130594028159976,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 48.73941507687739,
+            "energy": 0.996166666666666,
+            "grounded": false,
+            "position": [
+              252.664749145508,
+              343.803192138672
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 56.74364976162332,
+            "tick": 24,
+            "velocity": [
+              -56.2372131347656,
+              -7.56423473358154
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            -102.677116394043,
+            -71.6690673828125
+          ],
+          "energy_used_first_receipt": 0.088,
+          "first_airborne_tick_within_12_after_source": 17,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.005688229575753212,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 59.08095338828954,
+            "energy": 0.913666666666667,
+            "grounded": true,
+            "position": [
+              263.065124511719,
+              347.867523193359
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 68.13357648961895,
+            "tick": 13,
+            "velocity": [
+              -57.2696571350098,
+              -36.9103050231934
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.03926543518900871,
+            "blocked": false,
+            "cooldown": 0.17,
+            "distance_cells": 33.87885644918341,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              237.871017456055,
+              347.228759765625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 63.94025828004406,
+            "tick": 40,
+            "velocity": [
+              -54.9234085083008,
+              32.7379875183105
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "requested_aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "requested_effort": 0.8,
+          "source": {
+            "absolute_angle_radians": 0.00014700418978463858,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 60.04891295729508,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              264.015563964844,
+              348.501007080078
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.0719118118286104,
+            "tick": 12,
+            "velocity": [
+              -1.07191181182861,
+              -2.97527353865235e-08
+            ]
+          },
+          "source_tick": 12,
+          "toward_position_gain_source_to_landing_cells": 26.144546508788977,
+          "toward_position_gain_twelve_ticks_cells": 11.350814819335966,
+          "uninterrupted_airborne_ticks_before_landing": 23
+        },
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            -5.295135315849837,
+            -35.38798936605453
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            -6.0566936697507465,
+            -34.4
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.06280498951673508,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 5.073388461959163,
+            "energy": 0.994489883179735,
+            "grounded": true,
+            "position": [
+              209.057800292969,
+              346.102600097656
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 13.358970100881,
+            "tick": 162,
+            "velocity": [
+              3.42383456230164,
+              -12.9127626419067
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.165073543787003,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 5.550495900612682,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              209.524978637695,
+              345.968383789062
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.738830740305264,
+            "tick": 168,
+            "velocity": [
+              7.89836835861206,
+              5.69742059707642
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            -11.0231838226318,
+            -62.6080017089844
+          ],
+          "energy_used_first_receipt": 0.0446767834869314,
+          "first_airborne_tick_within_12_after_source": 163,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.004048869013786316,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 5.215865326680226,
+            "energy": 0.956989883179735,
+            "grounded": true,
+            "position": [
+              209.012084960938,
+              347.943695068359
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 31.364659648969116,
+            "tick": 157,
+            "velocity": [
+              -3.49747085571289,
+              -31.1690483093262
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.165073543787003,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 5.550495900612682,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              209.524978637695,
+              345.968383789062
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.738830740305264,
+            "tick": 168,
+            "velocity": [
+              7.89836835861206,
+              5.69742059707642
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 168,
+          "reason": "supported_no_progress",
+          "requested_aim": [
+            -0.17339954130540244,
+            -0.9848515619498586
+          ],
+          "requested_effort": 0.40615257715392145,
+          "source": {
+            "absolute_angle_radians": 0.004481094423681498,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 5.447320968112206,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              209.072067260742,
+              348.48681640625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.2474350138717063,
+            "tick": 156,
+            "velocity": [
+              0.761558353900909,
+              -0.987989366054535
+            ]
+          },
+          "source_tick": 156,
+          "toward_position_gain_source_to_landing_cells": -0.4529113769530113,
+          "toward_position_gain_twelve_ticks_cells": -0.4529113769530113,
+          "uninterrupted_airborne_ticks_before_landing": 5
+        }
+      ],
+      "quiet_disqualification_ticks_after_first_entry": {
+        "angle": 0,
+        "counts_can_overlap": true,
+        "distance": 0,
+        "first_entry_tick": null,
+        "raw_support": 0,
+        "speed": 0
+      },
+      "quiet_intervals_start_end_count": [],
+      "raw_landing_ticks": [
+        1,
+        40,
+        168
+      ],
+      "raw_support_loss_ticks": [
+        17,
+        163
+      ],
+      "record_sha256": "8678c43c1c54e24ff61ea7376e30c9cc5d08ed23f4d102dfd7dbfb7b6bb37906",
+      "replay": {
+        "all_task_metrics_exact": true,
+        "controller_frames_exact": 40,
+        "diagnostic_states_exact": 40,
+        "native_ticks_replayed_through_unchanged_task": 240
+      },
+      "target": [
+        204.0,
+        346.5
+      ],
+      "within_tolerance_intervals_start_end_count": []
+    },
+    {
+      "artifact_sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177",
+      "case_id": "reference-floor-left-63",
+      "character_excerpt": {
+        "airborne_ticks": 29,
+        "confirmed_primary_associated_pulses": 2,
+        "ordinary_recovery_events": 2,
+        "pulses_with_airborne_confirmation": 2,
+        "supervisor_intervention_decisions": 4
+      },
+      "episode_artifact": "episodes/jolt-recovery-v3-reference-floor-left-63.json.gz",
+      "final": {
+        "absolute_angle_radians": 0.009509740397334099,
+        "blocked": true,
+        "cooldown": 0.0,
+        "distance_cells": 8.131479724495415,
+        "energy": 1.0,
+        "grounded": true,
+        "position": [
+          208.889495849609,
+          348.468963623047
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 0.3710051284307798,
+        "tick": 240,
+        "velocity": [
+          0.288564264774323,
+          -0.233185485005379
+        ]
+      },
+      "final_consecutive_quiet_ticks": 0,
+      "ground_corrections": [
+        {
+          "duration_ticks": 12,
+          "end": {
+            "absolute_angle_radians": 0.009046126157045364,
+            "blocked": true,
+            "cooldown": 0.0,
+            "distance_cells": 8.187502022462393,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.946838378906,
+              348.470520019531
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.37543717528521303,
+            "tick": 222,
+            "velocity": [
+              0.318893909454346,
+              -0.198140725493431
+            ]
+          },
+          "last_decision_tick": 216,
+          "max_observed_speed_cells_per_second": 0.48154359294999255,
+          "observed_end_tick": 222,
+          "raw_supported_all_ticks": true,
+          "requested_shaped_move_x": [
+            -0.975,
+            -0.975
+          ],
+          "source_tick_start": 210,
+          "start": {
+            "absolute_angle_radians": 0.008738461881875992,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 8.218570990684736,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              208.978912353516,
+              348.470245361328
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.48154359294999255,
+            "tick": 210,
+            "velocity": [
+              0.387567937374115,
+              -0.285788953304291
+            ]
+          },
+          "toward_position_gain_cells": 0.03207397461000028
+        }
+      ],
+      "interpretation": {
+        "limit": "Conservative time/room/ceiling bounds constrain requests but do not validate free-flight duration or contact-loaded landing distance. Weak progress persists despite the bounded ground correction; no force mechanism is inferred.",
+        "observed_failure": "The second pulse gains only about 0.60 horizontal cells by the next raw landing. Subsequent supported progress decays and one full-traction window moves only about 0.03 cells; the actor never enters tolerance.",
+        "source_relationship": "The shorter recovery model is an admission envelope. At six ticks after its pulse, raw support remains true while the body is still ascending, so ordinary traction resumes. The later observed toward velocity reverses during the short airborne interval. Full traction after two edges is bounded and resets its evidence window; it does not create a third edge."
+      },
+      "late_decisions": [
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 10.200980542410289,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "contact_recovery_launch",
+          "tick": 150,
+          "velocity": [
+            1.03888475894928,
+            0.478088736534119
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 9.33019724793407,
+          "grounded": true,
+          "move_x": -0.6319004535675122,
+          "phase": "approach",
+          "tick": 156,
+          "velocity": [
+            -2.74367713928223,
+            -13.9942083358765
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 9.339555749127957,
+          "grounded": false,
+          "move_x": 0.0,
+          "phase": "airborne_coast",
+          "tick": 162,
+          "velocity": [
+            4.12061977386475,
+            5.85007286071777
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 9.6608794321522,
+          "grounded": true,
+          "move_x": -0.6319004535675122,
+          "phase": "landing",
+          "tick": 168,
+          "velocity": [
+            3.78051543235779,
+            12.3014354705811
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 9.52624559839356,
+          "grounded": true,
+          "move_x": -0.6319004535675122,
+          "phase": "approach",
+          "tick": 174,
+          "velocity": [
+            -6.69394016265869,
+            11.9492712020874
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 9.003185958610231,
+          "grounded": true,
+          "move_x": -0.5982178688049482,
+          "phase": "approach",
+          "tick": 180,
+          "velocity": [
+            -6.71394395828247,
+            3.22461414337158
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.661707516364865,
+          "grounded": true,
+          "move_x": -0.5740392446518221,
+          "phase": "approach",
+          "tick": 186,
+          "velocity": [
+            -1.90901505947113,
+            1.29754936695099
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.463712370601055,
+          "grounded": true,
+          "move_x": -0.5606520414352213,
+          "phase": "approach",
+          "tick": 192,
+          "velocity": [
+            -1.13047397136688,
+            0.448658972978592
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.323419908792161,
+          "grounded": true,
+          "move_x": -0.5515096823374356,
+          "phase": "approach",
+          "tick": 198,
+          "velocity": [
+            -0.444474905729294,
+            -1.0102025270462
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.249260083258456,
+          "grounded": true,
+          "move_x": -0.5466469367345044,
+          "phase": "approach",
+          "tick": 204,
+          "velocity": [
+            -0.169523000717163,
+            -0.702627003192902
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.218570990684736,
+          "grounded": true,
+          "move_x": -0.975,
+          "phase": "ground_correction",
+          "tick": 210,
+          "velocity": [
+            0.387567937374115,
+            -0.285788953304291
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.203669562727649,
+          "grounded": true,
+          "move_x": -0.975,
+          "phase": "ground_correction",
+          "tick": 216,
+          "velocity": [
+            0.321985334157944,
+            -0.233989417552948
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.187502022462393,
+          "grounded": true,
+          "move_x": -0.542372290293359,
+          "phase": "approach",
+          "tick": 222,
+          "velocity": [
+            0.318893909454346,
+            -0.198140725493431
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 8.172959038476142,
+          "grounded": true,
+          "move_x": -0.5413957675298184,
+          "phase": "approach",
+          "tick": 228,
+          "velocity": [
+            0.314456820487976,
+            -0.265654414892197
+          ]
+        },
+        {
+          "action_lease_ticks": 6,
+          "arrival_advisory": false,
+          "distance_cells": 8.1528143993225,
+          "grounded": true,
+          "move_x": -0.5400606234868497,
+          "phase": "approach",
+          "tick": 234,
+          "velocity": [
+            0.36120617389679,
+            -0.277655959129333
+          ]
+        }
+      ],
+      "maximum_consecutive_quiet_ticks": 0,
+      "outcome": "task_deadline",
+      "pulses": [
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            -57.48791181182862,
+            -39.37861026424426
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            -56.416000000000004,
+            -39.378610234491525
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.008102208375930786,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 57.324813055672934,
+            "energy": 0.951166666666666,
+            "grounded": false,
+            "position": [
+              258.313323974609,
+              345.352355957031
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 61.29610067580019,
+            "tick": 18,
+            "velocity": [
+              -56.7599258422852,
+              -23.1413650512695
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.0130594028159976,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 51.73508555041918,
+            "energy": 0.996166666666666,
+            "grounded": false,
+            "position": [
+              252.664749145508,
+              343.803192138672
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 56.74364976162332,
+            "tick": 24,
+            "velocity": [
+              -56.2372131347656,
+              -7.56423473358154
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            -102.677116394043,
+            -71.6690673828125
+          ],
+          "energy_used_first_receipt": 0.088,
+          "first_airborne_tick_within_12_after_source": 17,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.005688229575753212,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 62.080188468943575,
+            "energy": 0.913666666666667,
+            "grounded": true,
+            "position": [
+              263.065124511719,
+              347.867523193359
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 68.13357648961895,
+            "tick": 13,
+            "velocity": [
+              -57.2696571350098,
+              -36.9103050231934
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.03926543518900871,
+            "blocked": false,
+            "cooldown": 0.17,
+            "distance_cells": 36.8782187617665,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              237.871017456055,
+              347.228759765625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 63.94025828004406,
+            "tick": 40,
+            "velocity": [
+              -54.9234085083008,
+              32.7379875183105
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 40,
+          "reason": "initial_supported_launch",
+          "requested_aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "requested_effort": 0.8,
+          "source": {
+            "absolute_angle_radians": 0.00014700418978463858,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 63.04732612206377,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              264.015563964844,
+              348.501007080078
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.0719118118286104,
+            "tick": 12,
+            "velocity": [
+              -1.07191181182861,
+              -2.97527353865235e-08
+            ]
+          },
+          "source_tick": 12,
+          "toward_position_gain_source_to_landing_cells": 26.144546508788977,
+          "toward_position_gain_twelve_ticks_cells": 11.350814819335966,
+          "uninterrupted_airborne_ticks_before_landing": 23
+        },
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            -13.196625701856693,
+            -33.92191126346588
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            -14.235510460805973,
+            -34.4
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.044963523745536804,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 9.33019724793407,
+            "energy": 0.991547983885578,
+            "grounded": true,
+            "position": [
+              210.321990966797,
+              346.108764648438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 14.260632215737676,
+            "tick": 156,
+            "velocity": [
+              -2.74367713928223,
+              -13.9942083358765
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.1425122320652008,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 9.339555749127957,
+            "energy": 1.0,
+            "grounded": false,
+            "position": [
+              210.322601318359,
+              345.9375
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 7.15561735956247,
+            "tick": 162,
+            "velocity": [
+              4.12061977386475,
+              5.85007286071777
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            -25.9086303710938,
+            -62.6080017089844
+          ],
+          "energy_used_first_receipt": 0.0476186827810883,
+          "first_airborne_tick_within_12_after_source": 157,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.008304023183882236,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 9.923534664611964,
+            "energy": 0.954047983885578,
+            "grounded": true,
+            "position": [
+              210.817916870117,
+              347.943969726562
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 32.18576169014864,
+            "tick": 151,
+            "velocity": [
+              -11.4590311050415,
+              -30.0767993927002
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.1561573892831798,
+            "blocked": false,
+            "cooldown": 0.42,
+            "distance_cells": 9.421454413233153,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              210.410202026367,
+              346.039672851562
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.03334570474203,
+            "tick": 163,
+            "velocity": [
+              5.42765331268311,
+              7.2209358215332
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 163,
+          "reason": "supported_no_progress",
+          "requested_aim": [
+            -0.3823753617508846,
+            -0.9240070793700015
+          ],
+          "requested_effort": 0.432897116191712,
+          "source": {
+            "absolute_angle_radians": 0.011646060273051262,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 10.200980542410289,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              211.010467529297,
+              348.462280273438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.143612863856425,
+            "tick": 150,
+            "velocity": [
+              1.03888475894928,
+              0.478088736534119
+            ]
+          },
+          "source_tick": 150,
+          "toward_position_gain_source_to_landing_cells": 0.6002655029300001,
+          "toward_position_gain_twelve_ticks_cells": 0.6878662109379832,
+          "uninterrupted_airborne_ticks_before_landing": 6
+        }
+      ],
+      "quiet_disqualification_ticks_after_first_entry": {
+        "angle": 0,
+        "counts_can_overlap": true,
+        "distance": 0,
+        "first_entry_tick": null,
+        "raw_support": 0,
+        "speed": 0
+      },
+      "quiet_intervals_start_end_count": [],
+      "raw_landing_ticks": [
+        1,
+        40,
+        163
+      ],
+      "raw_support_loss_ticks": [
+        17,
+        157
+      ],
+      "record_sha256": "87e01efa70a49d3b1de2ca521f42107edb64261384119217c3ed176766bb19f3",
+      "replay": {
+        "all_task_metrics_exact": true,
+        "controller_frames_exact": 40,
+        "diagnostic_states_exact": 40,
+        "native_ticks_replayed_through_unchanged_task": 240
+      },
+      "target": [
+        201.0,
+        346.5
+      ],
+      "within_tolerance_intervals_start_end_count": []
+    },
+    {
+      "artifact_sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef",
+      "case_id": "reference-drop28-left-57",
+      "character_excerpt": {
+        "airborne_ticks": 61,
+        "confirmed_primary_associated_pulses": 1,
+        "ordinary_recovery_events": 0,
+        "pulses_with_airborne_confirmation": 1,
+        "supervisor_intervention_decisions": 0
+      },
+      "episode_artifact": "episodes/jolt-recovery-v3-reference-drop28-left-57.json.gz",
+      "final": {
+        "absolute_angle_radians": 0.010297580622136593,
+        "blocked": false,
+        "cooldown": 0.0,
+        "distance_cells": 3.8984015509773577,
+        "energy": 1.0,
+        "grounded": true,
+        "position": [
+          210.36735534668,
+          348.464294433594
+        ],
+        "quiet": true,
+        "speed_cells_per_second": 0.9570607097629447,
+        "tick": 240,
+        "velocity": [
+          -0.955206990242004,
+          -0.0595382899045944
+        ]
+      },
+      "final_consecutive_quiet_ticks": 5,
+      "ground_corrections": [],
+      "interpretation": {
+        "limit": "A final pose inside tolerance is insufficient. The advisory status stays running; there is no false success or lease defect. This case was a v2 historical rescue, but the v3 run does not rescue it.",
+        "observed_failure": "After the useful first hop and approach, the actor repeatedly drifts just outside the Euclidean tolerance under a neutral hold and re-enters under small ordinary corrections. All late quiet interruptions are distance violations; speed, angle, and raw support do not disqualify them. The maximum quiet streak is 10, with only 5 quiet ticks at the deadline.",
+        "source_relationship": "The quiet branch immediately cancels shaping and requests zero effort at the current tolerance boundary. With a vertical offset near 2 cells, a 4-cell Euclidean radius allows only about 3.46 cells of horizontal error. No interior holding margin or tolerance hysteresis is present, and sampled neutral/correction alternation does not enforce the task's twelve consecutive native ticks."
+      },
+      "late_decisions": [
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.182477777524733,
+          "grounded": true,
+          "move_x": -0.2648520708083977,
+          "phase": "settle",
+          "tick": 150,
+          "velocity": [
+            -4.4388599395752,
+            -1.45217907428741
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.837231701087899,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 156,
+          "velocity": [
+            -2.65659928321838,
+            1.86916565895081
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.9913144660562607,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 162,
+          "velocity": [
+            0.995642900466919,
+            0.877659678459167
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.08592666313778,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 168,
+          "velocity": [
+            0.386419594287872,
+            -0.274445325136185
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.047486378637818,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 174,
+          "velocity": [
+            0.0235980842262506,
+            -0.133013382554054
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.9685287579654798,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 180,
+          "velocity": [
+            -0.398934155702591,
+            -0.397404551506042
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.0690981074737635,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 186,
+          "velocity": [
+            0.430149644613266,
+            0.433387666940689
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.9690199169083122,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 192,
+          "velocity": [
+            -0.733459770679474,
+            -0.420875310897827
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.065162988443222,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 198,
+          "velocity": [
+            0.299737364053726,
+            0.43419486284256
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.9481090058033534,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 204,
+          "velocity": [
+            -0.935130715370178,
+            -0.345133543014526
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.050354497722354,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 210,
+          "velocity": [
+            0.482177287340164,
+            0.219273045659065
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.9253062673771084,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 216,
+          "velocity": [
+            -0.939179837703705,
+            -0.276149451732635
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 4.02569786495181,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 222,
+          "velocity": [
+            0.674853444099426,
+            0.12299583107233
+          ]
+        },
+        {
+          "action_lease_ticks": 12,
+          "arrival_advisory": false,
+          "distance_cells": 3.919791419139911,
+          "grounded": true,
+          "move_x": 0.0,
+          "phase": "settle_hold",
+          "tick": 228,
+          "velocity": [
+            -0.740663886070251,
+            0.114750780165195
+          ]
+        },
+        {
+          "action_lease_ticks": 6,
+          "arrival_advisory": false,
+          "distance_cells": 4.020372211282551,
+          "grounded": true,
+          "move_x": -0.23873728911080652,
+          "phase": "settle",
+          "tick": 234,
+          "velocity": [
+            0.411948323249817,
+            0.298838287591934
+          ]
+        }
+      ],
+      "maximum_consecutive_quiet_ticks": 10,
+      "outcome": "task_deadline",
+      "pulses": [
+        {
+          "admission_model_resulting_velocity_cells_per_second": [
+            -58.69191180801393,
+            -41.79848275684566
+          ],
+          "admission_model_velocity_delta_cells_per_second": [
+            -56.416000000000004,
+            -39.378610234491525
+          ],
+          "after_six_ticks": {
+            "absolute_angle_radians": 0.0671011209487915,
+            "blocked": false,
+            "cooldown": 0.536666666666666,
+            "distance_cells": 52.39413324892205,
+            "energy": 0.951166666666666,
+            "grounded": false,
+            "position": [
+              259.373870849609,
+              345.042999267578
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 63.02455288643863,
+            "tick": 60,
+            "velocity": [
+              -57.6855621337891,
+              -25.386417388916
+            ]
+          },
+          "after_twelve_ticks": {
+            "absolute_angle_radians": 0.0812222957611084,
+            "blocked": false,
+            "cooldown": 0.436666666666666,
+            "distance_cells": 46.737468003996135,
+            "energy": 0.996166666666666,
+            "grounded": false,
+            "position": [
+              253.62646484375,
+              343.280731201172
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 58.46960828426805,
+            "tick": 66,
+            "velocity": [
+              -57.5605583190918,
+              -10.2702102661133
+            ]
+          },
+          "aggregate_linear_impulse_first_receipt": [
+            -102.677116394043,
+            -71.6690673828125
+          ],
+          "energy_used_first_receipt": 0.088,
+          "first_airborne_tick_within_12_after_source": 59,
+          "first_native_receipt": {
+            "absolute_angle_radians": 0.0424610897898674,
+            "blocked": false,
+            "cooldown": 0.62,
+            "distance_cells": 57.2123198828939,
+            "energy": 0.913666666666667,
+            "grounded": true,
+            "position": [
+              264.19921875,
+              347.724304199219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 70.6875298260929,
+            "tick": 55,
+            "velocity": [
+              -58.590705871582,
+              -39.5456199645996
+            ]
+          },
+          "first_subsequent_raw_landing": {
+            "absolute_angle_radians": 0.0903191864490509,
+            "blocked": false,
+            "cooldown": 0.136666666666666,
+            "distance_cells": 29.76800380128609,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              236.757568359375,
+              347.288146972656
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 66.16968153866141,
+            "tick": 84,
+            "velocity": [
+              -55.0742683410645,
+              36.6776733398438
+            ]
+          },
+          "first_subsequent_raw_landing_tick": 84,
+          "reason": "initial_supported_launch",
+          "requested_aim": [
+            -0.82,
+            -0.5723635208501675
+          ],
+          "requested_effort": 0.8,
+          "source": {
+            "absolute_angle_radians": 0.02948937751352787,
+            "blocked": false,
+            "cooldown": 0.0,
+            "distance_cells": 58.209852825359775,
+            "energy": 1.0,
+            "grounded": true,
+            "position": [
+              265.178894042969,
+              348.398223876953
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 3.321980972597786,
+            "tick": 54,
+            "velocity": [
+              -2.27591180801392,
+              -2.41987252235413
+            ]
+          },
+          "source_tick": 54,
+          "toward_position_gain_source_to_landing_cells": 28.421325683593977,
+          "toward_position_gain_twelve_ticks_cells": 11.552429199218977,
+          "uninterrupted_airborne_ticks_before_landing": 25
+        }
+      ],
+      "quiet_disqualification_ticks_after_first_entry": {
+        "angle": 0,
+        "counts_can_overlap": true,
+        "distance": 42,
+        "first_entry_tick": 153,
+        "raw_support": 0,
+        "speed": 0
+      },
+      "quiet_intervals_start_end_count": [
+        [
+          153,
+          162,
+          10
+        ],
+        [
+          178,
+          182,
+          5
+        ],
+        [
+          191,
+          194,
+          4
+        ],
+        [
+          202,
+          207,
+          6
+        ],
+        [
+          214,
+          220,
+          7
+        ],
+        [
+          225,
+          233,
+          9
+        ],
+        [
+          236,
+          240,
+          5
+        ]
+      ],
+      "raw_landing_ticks": [
+        37,
+        84
+      ],
+      "raw_support_loss_ticks": [
+        59
+      ],
+      "record_sha256": "732bff4aee768ac2120e1ee76ac1757dc44c286bb0713e40a2baa8bd7959cf9c",
+      "replay": {
+        "all_task_metrics_exact": true,
+        "controller_frames_exact": 40,
+        "diagnostic_states_exact": 40,
+        "native_ticks_replayed_through_unchanged_task": 240
+      },
+      "target": [
+        207.0,
+        346.5
+      ],
+      "within_tolerance_intervals_start_end_count": [
+        [
+          153,
+          162,
+          10
+        ],
+        [
+          178,
+          182,
+          5
+        ],
+        [
+          191,
+          194,
+          4
+        ],
+        [
+          202,
+          207,
+          6
+        ],
+        [
+          214,
+          220,
+          7
+        ],
+        [
+          225,
+          233,
+          9
+        ],
+        [
+          236,
+          240,
+          5
+        ]
+      ]
+    }
+  ],
+  "causal_limit": "Aggregate actuator impulse, native motion, and raw support are observed. Separate passive/contact wrench is unmeasured. Admission-model velocity is arithmetic from the controller heuristic, not an estimate of an isolated physical force or a landing guarantee.",
+  "controller_specification_sha256": "e180844789194c1a928c673599aed48a987db617e26be96e7043dc7ee6c72a2e",
+  "quiet_rule": {
+    "absolute_angle_radians_maximum": 0.32,
+    "consecutive_base_ticks_required": 12,
+    "deadline_ticks": 240,
+    "distance_cells_maximum": 4,
+    "raw_supported_required": true,
+    "speed_cells_per_second_maximum": 6
+  },
+  "replay_totals": {
+    "episodes_with_exact_all_task_metrics": 4,
+    "exact_controller_frames": 160,
+    "exact_diagnostic_states": 160,
+    "native_task_ticks": 960
+  },
+  "run_state": {
+    "outer_final_verification": {
+      "error_code": null,
+      "error_type": "ValueError",
+      "verified": false
+    },
+    "outer_supervisor_completed": false,
+    "scope_limit": "The final verifier rejected the artifact inventory. Full journal/inventory qualification belongs to the separate evidence review; these episode-level findings do not repair or override that result.",
+    "worker_summary_status": "completed"
+  },
+  "schema": "nca-jolt-recovery-v3-failure-review/v1",
+  "scope": "Read-only controller-author review of four failed retained episodes; exact offline source replay and native-observation analysis. No physical execution, tuning, source edit, allocation renewal, or replacement evidence verification.",
+  "source_files_sha256": {
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec"
+  },
+  "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "summary_sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd",
+  "supervisor_sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8",
+  "tick_convention": "Decision source ticks identify retained observations used by policy. First applied native receipt is normally source tick+1. All interval endpoints are inclusive. Quiet intervals use every retained native tick after the initial observation, not sparse policy samples."
+}

@@ -75,3 +75,31 @@ The next step publishes the exact commit/tree, verifies a clean detached checkou
 and executes the sole 900-second allocation with complete closure and post-exit
 verification. No physical invocation has started at this checkpoint. All prior
 costs, incomplete records and failed gates remain preserved independently.
+
+## 2026-10-20 19:46 UTC — Sole v3 allocation ended with two failed gates
+
+The prospectively published source `c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac`,
+tree `9ac1f17b16868319b88e32cbbf8df3e5bdbcce70`, passed all five hosted checks
+and independent clean-checkout admission before its single invocation. The
+worker wrote all 96 rows and exited 0; the supervisor terminated its process
+group without timeout but records `completed=false` after 294.951525241 seconds.
+Post-exit verification found an additional compressed-journal pending file
+outside the closed 196-artifact inventory. Every declared hash matches; the
+extra gzip matches the sealed gzip byte-for-byte. Its cause is unestablished.
+No original output, failed receipt or extra file is removed or resealed.
+
+[V3 evidence](evidence/2026-10-20-jolt-recovery-v3.md) records 28/32 arrivals
+versus 27/32 arrival-reference and 17/32 original. Independent replay reproduces
+all 2,303 policy decisions and 96 task/character results. All fourteen initial
+right-floor pulses advance from sampled tick 42 to 18, with first toward motion
+0.716667 to 0.316667 seconds; all 32 purposeful-airborne cases remain. However,
+only two historical failures are rescued, below the required three; right36-1
+is a new regression. Native raw/gzip/seal replay verifies 5,330 chain records,
+13,818 ticks, 2,568 answered calls and native closure. Those narrow subchecks
+do not replace the original failed final-inventory gate.
+
+The single allocation is consumed. There is no retry, extension, retuning,
+learning, checkpoint execution or optimizer update. The independent review
+supports merging the explicitly experimental version and truthful negative
+evidence after final-head CI; #64 and #48 stay open and #62/#16 remain gated.
+Final evidence packaging and delivery verification are offline work only.

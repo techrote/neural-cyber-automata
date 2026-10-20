@@ -1,0 +1,497 @@
+{
+  "allocation": {
+    "attempts": 1,
+    "new_host_starts_by_this_review": 0,
+    "new_owner_requests_by_this_review": 0,
+    "new_physics_ticks_by_this_review": 0,
+    "optimizer_updates_by_this_review": 0,
+    "original_counts": {
+      "checkpoint_executions": 0,
+      "confirmed_step_ticks": 13818,
+      "episodes_started": 96,
+      "host_requests": 2568,
+      "host_start_attempts": 1,
+      "host_terminations": 1,
+      "learned_policy_calls": 0,
+      "optimizer_updates": 0,
+      "pending_requests": [],
+      "requested_step_ticks": 13818,
+      "step_requests": 2303,
+      "unconfirmed_tail": false,
+      "wall_seconds": 183.30217996600004
+    },
+    "owned_process_group_terminated": true,
+    "whole_process_seconds": 294.9515252410001,
+    "worker_terminated": true
+  },
+  "behavioral_gate": {
+    "checks": {
+      "angle_limit": true,
+      "at_least_three_historical_rescues": false,
+      "at_most_one_regression": true,
+      "at_most_two_requested_primary_edges": true,
+      "every_case_latency_limit": true,
+      "fresh_physical_pulse_authority": true,
+      "ordinary_trim_limit": true,
+      "restore_airborne_character": true,
+      "retain_overall_airborne_character": true,
+      "strict_arrival_improvement": true,
+      "supported_failure_rescued": true,
+      "unsupported_drop_rescued": true,
+      "vigor_limit": true
+    },
+    "historical_rescues": [
+      "demo-floor-left-60-2",
+      "reference-drop12-right-45"
+    ],
+    "improved_cases": [
+      "demo-floor-left-60-2",
+      "reference-drop12-right-45"
+    ],
+    "learned_skill_qualified": false,
+    "measurements": {
+      "jolt-arrival-v1": {
+        "arrivals": 27,
+        "cases": 32,
+        "maximum_case_inference_p95_ms": 2.4386751999999983,
+        "maximum_requested_primary_edges": 1,
+        "mean_absolute_angle_radians": 0.02636844418701584,
+        "mean_ordinary_trim_reversals_per_second": 0.49019007154518524,
+        "mean_peak_toward_speed_cells_per_second": 53.97427606582642,
+        "purposeful_airborne_cases": 25
+      },
+      "jolt-recovery-v3": {
+        "arrivals": 28,
+        "cases": 32,
+        "maximum_case_inference_p95_ms": 1.02241825,
+        "maximum_requested_primary_edges": 2,
+        "mean_absolute_angle_radians": 0.026413715002546002,
+        "mean_ordinary_trim_reversals_per_second": 0.22621016769670207,
+        "mean_peak_toward_speed_cells_per_second": 42.97924745082854,
+        "purposeful_airborne_cases": 32
+      }
+    },
+    "morphology_admitted": false,
+    "owner_feel_accepted": false,
+    "regressions": [
+      "demo-floor-right-36-1"
+    ],
+    "remaining_failures": [
+      "demo-floor-left-60-1",
+      "demo-floor-right-36-1",
+      "reference-drop28-left-57",
+      "reference-floor-left-63"
+    ],
+    "restored_airborne_cases": [
+      "demo-floor-left-24-0",
+      "demo-floor-left-24-1",
+      "demo-floor-left-24-2",
+      "demo-floor-left-36-0",
+      "demo-floor-left-36-1",
+      "demo-floor-left-36-2",
+      "reference-floor-left-27"
+    ],
+    "schema": "nca-jolt-recovery-behavior-review/v3",
+    "teacher_accepted": false,
+    "toward_speed_ratio": 0.7962913184497654
+  },
+  "candidate_source_sha256": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+  "candidate_specification_sha256": "e180844789194c1a928c673599aed48a987db617e26be96e7043dc7ee6c72a2e",
+  "contact_transition": {
+    "actual_primary_applied_tick": 19,
+    "count": 14,
+    "description": "All14 retained right-floor starts use the exact six-tick observed support transition; no later v2 observation is used as a counterfactual v3 outcome.",
+    "fresh_supported_witness_tick": 12,
+    "v2_first_primary_source_tick": 42,
+    "v2_native_first_toward_seconds": 0.7166666666666667,
+    "v3_first_primary_source_tick": 18,
+    "v3_native_first_toward_seconds": 0.31666666666666665
+  },
+  "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+  "derived": true,
+  "derived_new_phase_analysis": {
+    "first_contact_transition_pulses": 14,
+    "generic_character_metrics_unchanged": true,
+    "ground_correction_bursts": 3,
+    "ground_correction_bursts_detail": [
+      {
+        "case_id": "demo-floor-left-60-1",
+        "distance_reduction_during_request_cells": 0.056842664892664985,
+        "eventually_arrived": false,
+        "final_distance_cells": 5.055274426763328,
+        "requested_ticks": 12,
+        "source_ticks": [
+          198,
+          204
+        ],
+        "subsequent_distance_reduction_cells": 0.053985613936053944,
+        "subsequent_observed_ticks": 12,
+        "toward_motion_during_request_cells": 0.06185913085900552
+      },
+      {
+        "case_id": "demo-floor-left-60-1",
+        "distance_reduction_during_request_cells": 0.0208654992434143,
+        "eventually_arrived": false,
+        "final_distance_cells": 5.055274426763328,
+        "requested_ticks": 6,
+        "source_ticks": [
+          234
+        ],
+        "subsequent_distance_reduction_cells": 0.0,
+        "subsequent_observed_ticks": 0,
+        "toward_motion_during_request_cells": 0.023056030273011174
+      },
+      {
+        "case_id": "reference-floor-left-63",
+        "distance_reduction_during_request_cells": 0.03106896822234262,
+        "eventually_arrived": false,
+        "final_distance_cells": 8.131479724495415,
+        "requested_ticks": 12,
+        "source_ticks": [
+          210,
+          216
+        ],
+        "subsequent_distance_reduction_cells": 0.034687623139893375,
+        "subsequent_observed_ticks": 12,
+        "toward_motion_during_request_cells": 0.03207397461000028
+      }
+    ],
+    "ground_correction_bursts_with_positive_distance_reduction_during_request": 3,
+    "ground_correction_bursts_with_positive_distance_reduction_in_following_12_ticks": 2,
+    "ground_correction_cases": 2,
+    "ground_correction_requested_ticks": 30,
+    "phase_decision_counts": {
+      "ground_correction": 5,
+      "settle_brake": 33,
+      "settle_hold": 54
+    },
+    "quiet_hold_decisions_with_any_nonquiet_native_tick_in_next_six": 16,
+    "quiet_hold_decisions_with_no_quiet_native_tick_in_next_six": 6,
+    "reason_decision_counts": {
+      "supported_arrival_braking": 33,
+      "supported_quiet_hold": 54,
+      "supported_stall_ground_correction": 5
+    },
+    "scope": "Descriptive actual motion after the new requests; no change to generic metrics, and no causal recovery or contact-force claim.",
+    "settle_brake": {
+      "cases": 25,
+      "decisions": 33,
+      "intervals_with_at_least_one_quiet_native_tick": 33,
+      "shaped_move_opposed_source_vx": 33,
+      "six_tick_end_speed_at_most_6": 32,
+      "six_tick_end_speed_below_source_speed": 33
+    },
+    "two_remaining_settling_failures": [
+      {
+        "case_id": "demo-floor-right-36-1",
+        "failed_predicate_counts_during_quiet_hold": {
+          "angle_above_0.32": 0,
+          "not_supported": 0,
+          "outside_tolerance": 10,
+          "speed_above_6": 13
+        },
+        "final_distance_cells": 3.7656810408098367,
+        "final_quiet_ticks": 0,
+        "longest_quiet_ticks": 9,
+        "quiet_spans": [
+          [
+            140,
+            141
+          ],
+          [
+            145,
+            149
+          ],
+          [
+            155,
+            162
+          ],
+          [
+            170,
+            170
+          ],
+          [
+            172,
+            180
+          ],
+          [
+            199,
+            205
+          ],
+          [
+            207,
+            207
+          ],
+          [
+            223,
+            231
+          ],
+          [
+            238,
+            239
+          ]
+        ]
+      },
+      {
+        "case_id": "reference-drop28-left-57",
+        "failed_predicate_counts_during_quiet_hold": {
+          "angle_above_0.32": 0,
+          "not_supported": 0,
+          "outside_tolerance": 20,
+          "speed_above_6": 0
+        },
+        "final_distance_cells": 3.8984015509773577,
+        "final_quiet_ticks": 5,
+        "longest_quiet_ticks": 10,
+        "quiet_spans": [
+          [
+            153,
+            162
+          ],
+          [
+            178,
+            182
+          ],
+          [
+            191,
+            194
+          ],
+          [
+            202,
+            207
+          ],
+          [
+            214,
+            220
+          ],
+          [
+            225,
+            233
+          ],
+          [
+            236,
+            240
+          ]
+        ]
+      }
+    ]
+  },
+  "independent_replay": {
+    "candidate_lease_decisions": {
+      "12": 750,
+      "6": 4
+    },
+    "candidate_pulses": {
+      "confirmed_upward": 37,
+      "requested": 37,
+      "second_edges": 5
+    },
+    "fresh_pulse_witness_checks": true,
+    "native_accounting": "Separate companion forensic evidence review; original final verification remains false.",
+    "policy_decisions": {
+      "authored-balanced-v1": 878,
+      "jolt-arrival-v1": 671,
+      "jolt-recovery-v3": 754
+    },
+    "task_and_character_episodes_recomputed": 96
+  },
+  "input_sha256": {
+    "frozen-v3-admission.json": "5d6615511b1d51fa382a8117f16dc6814cb3c8591918b307326f7c858f92389b",
+    "manifest.json": "808dea3d9ad1e52ab5c40a73d4375135a4ac7f4f5c290d827e06af0426471fa7",
+    "owner-journal-seal.json": "76446ae516192ddcd25771f734d0cf982a01be07d6754c91bfd1519870059b52",
+    "retained-v2-replay.json": "480e328f7ffa4417d7b34b694b85836506e8ee11984dcaf1fd504f78d0b086e3",
+    "summary.json": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd",
+    "supervisor.json": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8",
+    "v3-behavior-review.json": "bff362e16eae912b02ebac2d344c0ba81a1cfbbca32882ffafc90376210ca11b"
+  },
+  "latency_and_pulse_comparison": {
+    "authored-balanced-v1": {
+      "arrivals": 17,
+      "cases": 32,
+      "confirmed_primary_associated_pulses": 63,
+      "means_seconds": {
+        "first_active_request_seconds": 0.0,
+        "first_aggregate_actuation_seconds": 0.016666666666666666,
+        "first_toward_motion_seconds": 0.17760416666666667
+      },
+      "pulses_with_airborne_confirmation": 63,
+      "purposeful_airborne_cases": 32,
+      "requested_pulses": 66
+    },
+    "jolt-arrival-v1": {
+      "arrivals": 27,
+      "cases": 32,
+      "confirmed_primary_associated_pulses": 32,
+      "means_seconds": {
+        "first_active_request_seconds": 0.0,
+        "first_aggregate_actuation_seconds": 0.016666666666666666,
+        "first_toward_motion_seconds": 0.22760416666666666
+      },
+      "pulses_with_airborne_confirmation": 25,
+      "purposeful_airborne_cases": 25,
+      "requested_pulses": 32
+    },
+    "jolt-recovery-v2": {
+      "arrivals": 25,
+      "cases": 32,
+      "confirmed_primary_associated_pulses": 42,
+      "means_seconds": {
+        "first_active_request_seconds": 0.0,
+        "first_aggregate_actuation_seconds": 0.016666666666666666,
+        "first_toward_motion_seconds": 0.49635416666666665
+      },
+      "pulses_with_airborne_confirmation": 42,
+      "purposeful_airborne_cases": 32,
+      "requested_pulses": 42
+    },
+    "jolt-recovery-v3": {
+      "arrivals": 28,
+      "cases": 32,
+      "confirmed_primary_associated_pulses": 37,
+      "means_seconds": {
+        "first_active_request_seconds": 0.0,
+        "first_aggregate_actuation_seconds": 0.016666666666666666,
+        "first_toward_motion_seconds": 0.32135416666666666
+      },
+      "pulses_with_airborne_confirmation": 35,
+      "purposeful_airborne_cases": 32,
+      "requested_pulses": 37
+    }
+  },
+  "learned_skill_qualified": false,
+  "limits": [
+    "These32cases were already-open development evidence, not sealed qualification.",
+    "Observed post-request motion does not identify passive/contact force causes or establish causal benefit.",
+    "The unmet minimum of3 historical rescues and original output-inventory failure remain disqualifying; no tuning, retry, budget extension or gate relaxation occurred."
+  ],
+  "morphology_admitted": false,
+  "original_evidence_gate": {
+    "accepted": false,
+    "actual_file_count": 198,
+    "declared_artifact_hashes_verified": 196,
+    "exact_output_inventory": false,
+    "expected_file_count_including_summary": 197,
+    "extra_file_cause": "not established",
+    "extra_file_removed": false,
+    "extra_files": [
+      {
+        "bytes": 8198511,
+        "path": "owner-journal.jsonl.gz.pending",
+        "sha256": "f4930c47ec91ead8c7def33d1606bca756df4ae12c84e451b75bf0f780014452"
+      }
+    ],
+    "extra_gzip_byte_identical_to_sealed_gzip": true,
+    "failure_preserved": true,
+    "final_output_verification": {
+      "error_code": null,
+      "error_type": "ValueError",
+      "verified": false
+    },
+    "missing_files": [],
+    "original_evidence_mutated": false,
+    "scope": "Indexed hashes and independent forensic subchecks do not convert the failed original strict inventory verification into an accepted run.",
+    "supervisor_completed": false
+  },
+  "owner_feel_accepted": false,
+  "reviewed_source_files": 97,
+  "schema": "nca-jolt-recovery-003-negative-teacher-review/v1",
+  "second_pulse_observations": [
+    {
+      "aim": [
+        0.15364832920281418,
+        -0.9881255947161695
+      ],
+      "case_id": "demo-floor-right-36-1",
+      "confirmed_upward_actuation": true,
+      "effort": 0.40480684048559284,
+      "eventually_arrived": false,
+      "landing_tick": null,
+      "reason": "supported_no_progress",
+      "source_tick": 120,
+      "ticks_until_landing": null,
+      "toward_landing_progress_cells": null
+    },
+    {
+      "aim": [
+        0.06897231562696365,
+        -0.997618574244212
+      ],
+      "case_id": "demo-floor-right-36-2",
+      "confirmed_upward_actuation": true,
+      "effort": 0.40095484419286886,
+      "eventually_arrived": true,
+      "landing_tick": null,
+      "reason": "supported_no_progress",
+      "source_tick": 138,
+      "ticks_until_landing": null,
+      "toward_landing_progress_cells": null
+    },
+    {
+      "aim": [
+        -0.17339954130540244,
+        -0.9848515619498586
+      ],
+      "case_id": "demo-floor-left-60-1",
+      "confirmed_upward_actuation": true,
+      "effort": 0.40615257715392145,
+      "eventually_arrived": false,
+      "landing_tick": 168,
+      "reason": "supported_no_progress",
+      "source_tick": 156,
+      "ticks_until_landing": 12,
+      "toward_landing_progress_cells": -0.4529113769530113
+    },
+    {
+      "aim": [
+        -0.3823753617508846,
+        -0.9240070793700015
+      ],
+      "case_id": "reference-floor-left-63",
+      "confirmed_upward_actuation": true,
+      "effort": 0.432897116191712,
+      "eventually_arrived": false,
+      "landing_tick": 163,
+      "reason": "supported_no_progress",
+      "source_tick": 150,
+      "ticks_until_landing": 13,
+      "toward_landing_progress_cells": 0.6002655029300001
+    },
+    {
+      "aim": [
+        0.5345197604382591,
+        -0.845155977143288
+      ],
+      "case_id": "reference-drop12-right-45",
+      "confirmed_upward_actuation": true,
+      "effort": 0.47328541809766295,
+      "eventually_arrived": true,
+      "landing_tick": 160,
+      "reason": "supported_no_progress",
+      "source_tick": 144,
+      "ticks_until_landing": 16,
+      "toward_landing_progress_cells": 2.2497100830080115
+    }
+  ],
+  "source_files_sha256": "5e0c4980211b17e035b3bac6994fe3de2e80d6b8022055c99e6f97eb85641a85",
+  "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+  "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70",
+  "teacher_accepted": false,
+  "verdict": "failed_teacher_and_original_evidence_gate",
+  "versus_preserved_v2": {
+    "lost_arrival_vs_v2": [
+      "demo-floor-right-36-1",
+      "reference-drop28-left-57"
+    ],
+    "lost_purposeful_airborne_vs_v2": [],
+    "newly_arrived_vs_v2": [
+      "demo-floor-right-48-0",
+      "demo-floor-right-60-0",
+      "demo-floor-right-60-1",
+      "demo-floor-right-60-2",
+      "reference-drop12-right-45"
+    ],
+    "v2_retained_replay_sha256": "480e328f7ffa4417d7b34b694b85836506e8ee11984dcaf1fd504f78d0b086e3",
+    "v2_source_revision": "8da294ae4a263dd95c34b181abb795b906060c2d",
+    "v2_summary_sha256": "3ce71ed0bb9748111b3d820597c8f29afad268978c4426f18d588af99d9c4347"
+  }
+}
