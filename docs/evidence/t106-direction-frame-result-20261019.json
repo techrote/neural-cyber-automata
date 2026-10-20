@@ -1,94 +1,172 @@
 {
-  "schema": "nca-t106-direction-frame-result-receipt/v1",
+  "schema": "nca-t106-direction-frame-reconciled-result/v2",
   "experiment": "t106-jolt-direction-frame-followup",
-  "publication_commit": "f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed",
-  "github_actions": {
-    "run_id": 39323820599,
-    "job_id": 118304403161,
-    "artifact_id": 12220749995,
-    "artifact_name": "t106-direction-frame-evidence",
-    "artifact_zip_bytes": 18749182,
-    "artifact_zip_sha256": "fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510"
+  "designation": {
+    "primary_execution": "local-public1222d2e",
+    "reason": "original designated local invocation was already running before the later push-triggered GitHub workflow",
+    "alternate_used_for_selection_or_tuning": false
   },
-  "evidence": {
-    "summary_file_sha256": "6098e8114de26c9b17d0b6c13fee73b40697549f02311ab61b326e7173e777e5",
-    "summary_canonical_sha256": "5b721e6f6b2373a18247ab86869d1106279a152df66859fd5f8e8906452df3ff",
-    "config_sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
-    "learner_sources_sha256": "c3a50b61ecc12b2f44b6ac586f28f44db1e4f2a73f6f8af8ea3a56f0ebb051e4"
-  },
-  "completion": {
-    "status": "completed",
-    "wall_seconds": 385.96986998600005,
-    "recorded_game_requests": 4660,
-    "confirmed_physical_ticks": 27960,
-    "completed_optimizer_updates": 11760,
-    "host_start_attempts": 1,
-    "unconfirmed_game_requests": 0,
-    "unknown_tick_counts": 0,
-    "morphology_transfer_evaluations": 0,
-    "automatic_budget_extension": false
-  },
-  "prerequisite": {
-    "passed": false,
-    "selected_family": null,
-    "learned_morphology_transfer_measured": false,
-    "original_entry_result_changed": false,
-    "owner_feel_accepted": false,
-    "thresholds": {
-      "minimum_mean_success": 0.75,
-      "minimum_every_seed_success": 0.5,
-      "minimum_gain_over_initial": 0.125,
-      "positive_gain_lower95": true
+  "primary": {
+    "publication_commit": "1222d2e8dc30b87bb58de2326711fc3df361ac5e",
+    "source_attempt": "original first local public1222 invocation",
+    "complete": true,
+    "process_exit_code": 0,
+    "archive": {
+      "file": "t106-direction-frame-evidence-v1.tar.gz",
+      "bytes": 18708060,
+      "members": 438,
+      "sha256": "291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4",
+      "summary_file_sha256": "574a51108903484977629804bc9be9a54d348b8bf929c594eeee169584a30f78",
+      "summary_content_sha256": "ed1c999a935a5a308f6d63ca64676b15000e4ecee511ccb8df10a0f0fe23a5e9",
+      "index_sha256": "11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443",
+      "index_hash_kind": "canonical-content",
+      "index_file_sha256": "130a945f2b0c6b3d0e98ead3eec4db59ee036be9dfce26e24bf0da6dbb1d9e50"
     },
-    "direction_frame_bc": {
-      "mean_success": 0.3333333333333333,
-      "minimum_seed_success": 0.25,
-      "per_seed_success": [
-        0.25,
-        0.25,
-        0.5
-      ],
-      "gain_over_initial": {
-        "mean": 0.25,
-        "lower95": 0.15208333333333332,
-        "upper95": 0.34791666666666654
+    "completion": {
+      "rows": 136,
+      "frozen_initial_final_checkpoints": 12,
+      "attempted_game_requests": 4693,
+      "recorded_game_requests": 4693,
+      "confirmed_physical_ticks": 28158,
+      "unconfirmed_game_requests": 0,
+      "unknown_tick_counts": 0,
+      "completed_optimizer_updates": 11760,
+      "host_start_attempts": 1,
+      "wall_seconds": 943.6056704980001,
+      "morphology_transfer_evaluations": 0
+    },
+    "prerequisite": {
+      "passed": false,
+      "selected_family": null,
+      "thresholds": {
+        "minimum_mean_success": 0.75,
+        "minimum_every_seed_success": 0.5
       },
-      "failed": [
-        "minimum_mean_success",
-        "minimum_every_seed_success",
-        "all_original_character_runtime_integrity_gates"
-      ]
-    },
-    "world_frame_bc": {
-      "mean_success": 0.25,
-      "minimum_seed_success": 0,
-      "per_seed_success": [
-        0.125,
-        0.625,
-        0
-      ],
-      "gain_over_initial": {
-        "mean": 0.16666666666666666,
-        "lower95": -0.07083333333333333,
-        "upper95": 0.41874999999999973
+      "direction_frame_bc": {
+        "mean_success": 0.25,
+        "minimum_seed_success": 0.125
       },
-      "failed": [
-        "minimum_mean_success",
-        "minimum_every_seed_success",
-        "positive_success_gain_lower95",
-        "all_original_character_runtime_integrity_gates"
-      ]
-    },
-    "baseline_success": 0.5,
-    "idle_success": 0
+      "world_frame_bc": {
+        "mean_success": 0.2916666666666667,
+        "minimum_seed_success": 0
+      },
+      "retained_other_failures": [
+        "style",
+        "latency"
+      ],
+      "learned_morphology_transfer_measured": false,
+      "owner_feel_accepted": false
+    }
   },
-  "runtime": {
-    "platform": "Linux",
-    "architecture": "x86_64",
-    "device": "cpu",
-    "python": "3.12.14",
-    "numpy": "2.3.5",
-    "torch": "2.8.0+cpu",
-    "torch_threads": 1
+  "alternate_concurrent_execution": {
+    "schema": "nca-t106-direction-frame-result-receipt/v1",
+    "experiment": "t106-jolt-direction-frame-followup",
+    "publication_commit": "f0c4c1aa4ad30e972ebd406ca8eba78f96ef99ed",
+    "github_actions": {
+      "run_id": 39323820599,
+      "job_id": 118304403161,
+      "artifact_id": 12220749995,
+      "artifact_name": "t106-direction-frame-evidence",
+      "artifact_zip_bytes": 18749182,
+      "artifact_zip_sha256": "fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510"
+    },
+    "evidence": {
+      "summary_file_sha256": "6098e8114de26c9b17d0b6c13fee73b40697549f02311ab61b326e7173e777e5",
+      "summary_canonical_sha256": "5b721e6f6b2373a18247ab86869d1106279a152df66859fd5f8e8906452df3ff",
+      "config_sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
+      "learner_sources_sha256": "c3a50b61ecc12b2f44b6ac586f28f44db1e4f2a73f6f8af8ea3a56f0ebb051e4"
+    },
+    "completion": {
+      "status": "completed",
+      "wall_seconds": 385.96986998600005,
+      "recorded_game_requests": 4660,
+      "confirmed_physical_ticks": 27960,
+      "completed_optimizer_updates": 11760,
+      "host_start_attempts": 1,
+      "unconfirmed_game_requests": 0,
+      "unknown_tick_counts": 0,
+      "morphology_transfer_evaluations": 0,
+      "automatic_budget_extension": false
+    },
+    "prerequisite": {
+      "passed": false,
+      "selected_family": null,
+      "learned_morphology_transfer_measured": false,
+      "original_entry_result_changed": false,
+      "owner_feel_accepted": false,
+      "thresholds": {
+        "minimum_mean_success": 0.75,
+        "minimum_every_seed_success": 0.5,
+        "minimum_gain_over_initial": 0.125,
+        "positive_gain_lower95": true
+      },
+      "direction_frame_bc": {
+        "mean_success": 0.3333333333333333,
+        "minimum_seed_success": 0.25,
+        "per_seed_success": [
+          0.25,
+          0.25,
+          0.5
+        ],
+        "gain_over_initial": {
+          "mean": 0.25,
+          "lower95": 0.15208333333333332,
+          "upper95": 0.34791666666666654
+        },
+        "failed": [
+          "minimum_mean_success",
+          "minimum_every_seed_success",
+          "all_original_character_runtime_integrity_gates"
+        ]
+      },
+      "world_frame_bc": {
+        "mean_success": 0.25,
+        "minimum_seed_success": 0,
+        "per_seed_success": [
+          0.125,
+          0.625,
+          0
+        ],
+        "gain_over_initial": {
+          "mean": 0.16666666666666666,
+          "lower95": -0.07083333333333333,
+          "upper95": 0.41874999999999973
+        },
+        "failed": [
+          "minimum_mean_success",
+          "minimum_every_seed_success",
+          "positive_success_gain_lower95",
+          "all_original_character_runtime_integrity_gates"
+        ]
+      },
+      "baseline_success": 0.5,
+      "idle_success": 0
+    },
+    "runtime": {
+      "platform": "Linux",
+      "architecture": "x86_64",
+      "device": "cpu",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "torch": "2.8.0+cpu",
+      "torch_threads": 1
+    }
+  },
+  "reconciliation": {
+    "both_executions_no_go": true,
+    "primary_replaced_by_alternate": false,
+    "original_t105_entry_result_changed": false,
+    "morphology_family_promoted": false,
+    "combined_confirmed_game_requests": 9353,
+    "combined_confirmed_physical_ticks": 56118,
+    "combined_completed_optimizer_updates": 23520,
+    "combined_observed_host_starts": 2,
+    "original_maximum_total_decisions": 6000,
+    "original_aggregate_decision_ceiling_respected": false,
+    "additional_allocation_declared_by_original_execution_thread": false,
+    "sum_of_reported_internal_wall_seconds": 1329.5755404840002,
+    "complete_aggregate_wall_seconds": null,
+    "wall_time_scope": "sum of separate internal execution timers; startup and outer-process overhead are not a complete aggregate receipt",
+    "budget_status": "additional concurrent execution; original aggregate decision budget exceeded"
   }
 }
