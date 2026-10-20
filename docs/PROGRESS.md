@@ -262,3 +262,27 @@ documentation validation passed 58 files with no warnings or errors; final hoste
 checks remain next.
 Issue #43 remains open for its unmet complete-journal requirement, and the
 original learned reliability gate still blocks morphology issue #16.
+
+## 2026-10-20 17:19 UTC — Jolt recovery and evidence work started in parallel
+
+Fresh accepted main is `b923f39c1d00219cc789505414f02e61db60570a` (PR #44).
+The owner commissioned [JOLT-RECOVERY-001 / #48](https://github.com/techrote/neural-cyber-automata/issues/48)
+and EVIDENCE-001 continuation of [#43](https://github.com/techrote/neural-cyber-automata/issues/43).
+D-015 records that scope. Controller/supervisor code and evidence transport/metrics
+have independent branches, file ownership and offline tests. A third reviewer
+audits observation semantics, acceptance and the next learning experiment.
+
+The original 64-episode result and truncated owner journal remain unchanged.
+The current writer has no file fsync per exchange, and its supervisor does not
+independently bind the final worker evidence; these are concrete durability gaps,
+not an established explanation of the historical truncation. The proposed
+correction records durable raw exchanges before transport, seals a closed copy,
+and independently validates completion. Recovery work covers supported-blocked
+progress, edge/landing/support changes and fresh-observation second-hop admission.
+
+The pinned host/runtime setup is verified without a diagnostic rollout.
+The next learning design must change the versioned action mapping: the current
+residual learner copies authored launch buttons and therefore cannot demonstrate
+learned launch timing. No training, checkpoint selection or morphology execution
+has started. A single new matched three-reference diagnostic will be declared
+after source review; no historical case is treated as sealed evaluation.
