@@ -26,6 +26,7 @@ verified: 2026-10-20
 | Which primary sources support the design? | [Sources](research/SOURCES.md) |
 | What remains optional? | [IDEAS.md](IDEAS.md) |
 | What compute is supported or measured? | [HARDWARE.md](HARDWARE.md) |
+| How is the first CUDA IK task defined and qualified? | [IK contracts](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and [host handoff](IK_HOST_HANDOFF.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |

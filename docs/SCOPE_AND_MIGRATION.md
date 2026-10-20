@@ -3,7 +3,7 @@ title: Scope and programme migration
 kind: history
 summary: How the NCA-first plan becomes a Cybersand behaviour programme, including the owner's gameplay-emulation clarification.
 owns: [scope.migration]
-verified: 2026-10-18
+verified: 2026-10-20
 ---
 
 # Scope and programme migration
@@ -46,6 +46,20 @@ Cybersand owns the gameplay plant: Rapier bodies/contact integration, native mat
 “Train in the actual environment” means the configured game mechanics, including deliberate emulation, compliance and assistance. It does not require a mechanically exact replica of a real machine.
 
 Cybersand remains read-only during this prepass. A missing host interface gets a bounded host-side follow-up; a toy or sampled environment cannot be relabelled as the ACT-004 game implementation.
+
+## CUDA IK extension
+
+On 20 October the owner requested the CUDA GPU IK issue chain and began its
+implementation. D-016 records that scope. The [programme](ROADMAP.md#cuda-ik-programme)
+starts with Runner's fixed right-leg point task, followed by optional CUDA
+training and independent reference/data work, a separately tracked host target
+lane, CPU export and physical testing of the exact exported artifact.
+
+The first [contract milestone](IK_LAYER.md) is nominal software preparation.
+It does not replace Jolt control or start morphology transfer. The failed
+locomotion reliability gate remains attached to #16; it is not a prerequisite
+for this independent fixed-chain inverse mapping. Source/profile identities,
+predeclared budgets, truthful device evidence and host ownership still apply.
 
 ## NCA remains a research option
 

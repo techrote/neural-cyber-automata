@@ -8,9 +8,10 @@ verified: 2026-10-20
 
 # Current state
 
-Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open:
-its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite.
-[The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
+Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open: its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite. [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
+
+[CURRENT] The [Runner IK milestone](IK_LAYER.md) adds a registered nominal profile, strict source/lifetime-bound targets/results and prospective numeric acceptance.
+CUDA learning, inverse-solver implementation, CPU IK export and physical joint-target qualification remain unmeasured or unimplemented.
 
 [Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
 The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
@@ -19,8 +20,7 @@ The [recovery v1 diagnostic](evidence/2026-10-20-jolt-recovery-v1.md) stopped at
 
 ## T-100 — Accepted research baseline
 
-The T-100 research programme landed in PR #21 at
-`95d8788686980974d4f849e892c33f531d992fe7`.
+The T-100 research programme landed in PR #21 at `95d8788686980974d4f849e892c33f531d992fe7`.
 ## Accepted CPU foundation
 
 T-101 merged through [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22)

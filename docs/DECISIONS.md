@@ -3,7 +3,7 @@ title: Decisions
 kind: decisions
 summary: Current owner scope and gameplay fidelity, research proposals, and preserved historical decisions.
 owns: [decisions.register]
-verified: 2026-10-18
+verified: 2026-10-20
 ---
 
 # Decisions
@@ -13,6 +13,32 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+
+### D-016 — Build a CUDA-trained inverse kinematics layer
+
+[ACCEPTED] 2026-10-20 by owner: open the CUDA IK issue chain, then begin execution.
+
+The [IK programme / #49](https://github.com/techrote/neural-cyber-automata/issues/49)
+commissions a fixed articulated-chain point task, optional CUDA training,
+independent numerical references, branch-aware datasets, a small learned inverse
+model, CPU export and physical qualification of the exact delivered artifact.
+The first bounded implementation is the Runner right-sole contract in #50.
+Its two rotary joints control point x/y; the observed chassis is a reference
+frame, not a solver actuator. Authored play and assistance remain governed by D-011.
+
+Freeze source-bound geometry and numeric acceptance before learning. Numerical
+IK, raw learned predictions, bounded correction and full reference fallback
+retain separate identities and contribution measures. A numerical or analytic
+reference can be the useful result; learned metadata or GPU availability cannot
+establish trained value or physical success.
+
+This fixed-chain task is independent of the failed locomotion/morphology gate in
+#16. Journal/recovery tasks #43/#48 remain related evidence work, not blanket
+entry blockers. CUDA/device qualification, complete run provenance and finite
+prospective budgets remain required for actual experiments. No newly purchased
+compute or paid service is included. Missing joint-target capabilities require
+the separately tracked Cybersand task and host acceptance in #55; this increment
+changes no host source or existing ACT003/ACT004 packet semantics.
 
 ### D-015 — Recover Jolt and qualify evidence before the next learned skill
 
