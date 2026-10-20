@@ -1,9 +1,12 @@
 """Software evidence for the authored diagnostic's admission and accounting."""
 
 import copy
+import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import tempfile
@@ -11,7 +14,8 @@ import unittest
 
 from nca.contracts import ContractError
 from nca.evaluation.jolt_arrival import (DiagnosticBudget, FAMILIES, diagnostic_cases,
-                                       read_declaration, summarize, write_json)
+                                       read_declaration, summarize, validate_owner_interval, write_json)
+from test_morphology import fixture
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -103,9 +107,65 @@ class ArrivalDiagnosticTests(unittest.TestCase):
                 write_json(path, {"status": "completed"})
             self.assertEqual(json.loads(path.read_bytes()), {"status": "failed"})
 
+    def test_terminal_suspension_requires_exactly_one_owner_revocation(self):
+        adapter, source = fixture(tick=0, control=0)
+        for generation in (0, 1, 2):
+            _, after = fixture(tick=6, control=generation)
+            after["suspended"] = True
+            with self.subTest(generation=generation):
+                if generation == 1:
+                    validate_owner_interval(adapter, source, after, terminal=True)
+                else:
+                    with self.assertRaisesRegex(ContractError, "arrival_owner_interval"):
+                        validate_owner_interval(adapter, source, after, terminal=True)
+
+    def test_terminal_does_not_allow_changed_mount_or_detached_part(self):
+        adapter, source = fixture(tick=0, control=0)
+        for change in ("mount", "part"):
+            _, after = fixture(tick=6, control=1)
+            after["suspended"] = True
+            if change == "mount":
+                after["mount_generation"] = 1
+            else:
+                after["parts"][1]["detached"] = True
+            with self.subTest(change=change), self.assertRaisesRegex(ContractError, "arrival_owner_interval"):
+                validate_owner_interval(adapter, source, after, terminal=True)
+
     def test_import_does_not_load_neural_runtime_or_start_host(self):
         code = "import sys; import nca.evaluation.jolt_arrival; assert 'torch' not in sys.modules; assert 'numpy' not in sys.modules"
         subprocess.run([sys.executable, "-c", code], check=True, cwd=ROOT)
+
+    @unittest.skipUnless(sys.platform == "linux", "process-state inspection uses Linux procfs")
+    def test_supervisor_kills_descendant_after_worker_has_already_exited(self):
+        spec = importlib.util.spec_from_file_location("arrival_cli", ROOT / "tools/jolt_arrival.py")
+        cli = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cli)
+        # The leader exits successfully while its child remains in the owned group.
+        code = ("import subprocess,sys; "
+                "child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(30)'],"
+                "stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); print(child.pid,flush=True)")
+        process = subprocess.Popen([sys.executable, "-c", code], start_new_session=True,
+                                   stdout=subprocess.PIPE, text=True)
+        child_pid = int(process.stdout.readline())
+        try:
+            self.assertEqual(process.wait(timeout=3), 0)
+            self.assertTrue(cli.process_group_exists(process.pid))
+            confirmed = cli.terminate_owned_tree(process, grace_seconds=.3)
+            child_state = Path(f"/proc/{child_pid}/stat")
+            # Orphan zombies may await the container init's reaper. They are not
+            # active workers, but the receipt must not claim an absent group.
+            if child_state.exists():
+                self.assertEqual(child_state.read_text().split(") ", 1)[1].split()[0], "Z")
+                self.assertFalse(confirmed)
+            else:
+                self.assertTrue(confirmed)
+        finally:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait(timeout=3)
+            process.stdout.close()
 
 
 if __name__ == "__main__":
