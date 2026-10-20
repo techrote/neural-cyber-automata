@@ -1,0 +1,25 @@
+{
+  "schema": "nca-morphology-prerequisite-selection/v1",
+  "id": "t106-designated-primary-direction-frame",
+  "followup_config_sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
+  "primary": {
+    "learner_revision": "1222d2e8dc30b87bb58de2326711fc3df361ac5e",
+    "learner_tree": "fb32973085e1fbd61cec2bf0e762a5e30a26fa6c",
+    "learner_sources_sha256": "c3a50b61ecc12b2f44b6ac586f28f44db1e4f2a73f6f8af8ea3a56f0ebb051e4",
+    "manifest_sha256": "84a744820b08f05ad045e4cde56f104df90d8b811e756bb71124a049a64f65e4",
+    "summary_content_sha256": "ed1c999a935a5a308f6d63ca64676b15000e4ecee511ccb8df10a0f0fe23a5e9",
+    "summary_file_sha256": "574a51108903484977629804bc9be9a54d348b8bf929c594eeee169584a30f78",
+    "summary_bytes": 334332,
+    "archive_sha256": "291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4",
+    "archive_member_index_file_sha256": "130a945f2b0c6b3d0e98ead3eec4db59ee036be9dfce26e24bf0da6dbb1d9e50"
+  },
+  "selection": {
+    "basis": "The first local execution was designated primary during the concurrent overlap, before its result was available.",
+    "primary_started_utc": "2026-10-19T20:58:56.159798+00:00",
+    "allows_alternate_execution": false,
+    "outcome_based_selection": false,
+    "original_experiment_configuration_rewritten": false,
+    "authorizes_new_game_work": false,
+    "concurrent_execution_use": "Preserve separately and account aggregate work; never substitute its candidate outcomes as this prerequisite."
+  }
+}
