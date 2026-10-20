@@ -251,3 +251,28 @@ physical allocation is opened. Conditional [#62](https://github.com/techrote/neu
 retains three training seeds, fresh geometry/start evaluation, meaningful learned
 aim/buttons and a learned residual base; its collection and execution remain
 blocked until teacher acceptance. Morphology #16 remains blocked independently.
+
+## 2026-10-20 19:17 UTC — JOLT-RECOVERY-003 begins from preserved replay
+
+The owner commissioned completion of [#64](https://github.com/techrote/neural-cyber-automata/issues/64).
+Accepted main is `40daa141d104f2796c0ce922595dd103c37d282a`, tree
+`5f5935d8170b9e444ef7f5adcd86e54ca3cfbd3a`. No overlapping open PR was found.
+Controller implementation, diagnostic/declaration support and independent
+source/evidence review have separate ownership on this issue's branch.
+
+Independent offline replay binds all 93 v2 source inputs, all 32 candidate
+episode records and all 900 decisions, including 42 pulses and ten second
+pulses. It confirms the fourteen initial anticipation cancellations, late
+right-60 quiet spans and supported post-pulse stalls. No contact-force cause
+is inferred. The correction will use fresh local contact transitions, useful
+landing progress and ordinary approach/settling control. V1/v2 sources,
+original failures, task/host/profile and numeric acceptance remain unchanged.
+
+No new physical invocation has started. A new one-attempt allocation will be
+published with the reviewed exact source before execution: one persistent host,
+96 matched episodes, 3,840 six-tick decisions, 23,040 requested ticks, 4,226 owner
+calls and 900 whole-process seconds including startup, raw/sealed evidence,
+cleanup and post-exit verification. No automatic retry, budget extension,
+learning, checkpoint execution or optimizer work is included. These remain
+already-open diagnostic cases. Teacher acceptance, #62 collection and #16
+morphology retain their separate gates; a failed bounded result stays failed.
