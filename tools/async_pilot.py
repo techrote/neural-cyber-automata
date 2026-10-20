@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record bounded actual realtime conformance, including injected provider faults.
+"""Record bounded stepped and realtime conformance, including provider faults.
 
 The fixed conformance cases live beside their assertions in test_decisions_host.
 This command adds immutable source/runtime and complete owner-operation receipts;
@@ -47,66 +47,106 @@ def main():
     specification.loader.exec_module(module)
     operations, cases = [], []
     started = time.monotonic()
-    host_identity = None
+    hosts = []
+    attempted_step_calls = 0
 
     class RecordedHost:
-        def __init__(self):
-            nonlocal host_identity
-            self.actual = GodotHost(args.checkout, args.godot, mode="realtime")
-            host_identity = self.actual.identity
-            self.steps = 0
+        def __init__(self, mode):
+            if time.monotonic() - started > 120:
+                raise RuntimeError("predeclared pilot budget exhausted before host start")
+            self.actual = GodotHost(args.checkout, args.godot, mode=mode)
+            self.id = f"host-{len(hosts) + 1}"
+            self.receipt = {"id": self.id, "mode": mode, "identity": self.actual.identity,
+                            "cleanup": {"status": "not_called", "internal_close_rpc_recorded": False}}
+            hosts.append(self.receipt)
 
         def __getattr__(self, name):
             return getattr(self.actual, name)
 
         def request(self, operation, **fields):
-            if time.monotonic() - started > 120 or self.steps >= 2000:
+            nonlocal attempted_step_calls
+            if time.monotonic() - started > 120 or attempted_step_calls >= 2000:
                 raise RuntimeError("predeclared pilot budget exhausted")
             before = time.monotonic()
-            result = self.actual.request(operation, **fields)
-            self.steps += operation == "step"
-            operations.append({"case": cases[-1]["name"] if cases else "setup",
-                               "operation": operation, "request": fields, "response": result,
-                               "wall_seconds": time.monotonic() - before})
-            return result
+            attempted_step_calls += operation == "step"
+            record = {"case": cases[-1]["name"] if cases else "setup", "host_id": self.id,
+                      "mode": self.actual.mode, "operation": operation, "request": fields,
+                      "response": None, "status": "incomplete", "error_type": None}
+            operations.append(record)
+            try:
+                result = self.actual.request(operation, **fields)
+                record.update(response=result, status="completed")
+                return result
+            except BaseException as exc:
+                record["error_type"] = type(exc).__name__
+                raise
+            finally:
+                record["wall_seconds"] = time.monotonic() - before
 
         def close(self):
-            self.actual.close()
+            # Cleanup remains permitted after the execution budget is exhausted.
+            # GodotHost.close owns its graceful RPC and process termination; that
+            # internal exchange is distinct from recorded test-driven requests.
+            before = time.monotonic()
+            try:
+                self.actual.close()
+                self.receipt["cleanup"]["status"] = "completed"
+            except BaseException as exc:
+                self.receipt["cleanup"].update(status="failed", error_type=type(exc).__name__)
+                raise
+            finally:
+                self.receipt["cleanup"]["wall_seconds"] = time.monotonic() - before
 
-    class RecordedCases(module.ContinuousDecisionTests):
-        @classmethod
-        def setUpClass(cls):
-            cls.host = RecordedHost()
+    def recorded_cases(base):
+        class RecordedCases(base):
+            @classmethod
+            def setUpClass(cls):
+                cls.host = RecordedHost(cls.mode)
 
-        def setUp(self):
-            cases.append({"name": self._testMethodName, "operation_start": len(operations)})
+            def setUp(self):
+                cases.append({"id": self.id(), "name": self._testMethodName, "mode": self.mode, "host_id": self.host.id,
+                              "operation_start": len(operations)})
 
-        def tearDown(self):
-            cases[-1]["operation_end"] = len(operations)
+            def tearDown(self):
+                cases[-1]["operation_end"] = len(operations)
 
-    suite = unittest.defaultTestLoader.loadTestsFromTestCase(RecordedCases)
+        RecordedCases.__name__ = "Recorded" + base.__name__
+        RecordedCases.__qualname__ = RecordedCases.__name__
+        return RecordedCases
+
+    suite = unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromTestCase(recorded_cases(base))
+                               for base in (module.SteppedDecisionTests, module.ContinuousDecisionTests))
     result = unittest.TestResult()
     suite.run(result)
-    failed = {test._testMethodName: details.splitlines()[-1] for test, details in (*result.failures, *result.errors)}
+    failure_details = [{"id": test.id(), "case_id": getattr(test, "test_case", test).id(),
+                        "detail": details.splitlines()[-1]}
+                       for test, details in (*result.failures, *result.errors)]
+    failed = {failure["case_id"]: failure["detail"] for failure in failure_details}
     for case in cases:
-        case["passed"] = case["name"] not in failed
-        case["failure"] = failed.get(case["name"])
+        case["passed"] = case["id"] not in failed
+        case["failure"] = failed.get(case["id"])
     drift = [name for name, digest in scoped_hashes.items()
              if hashlib.sha256((root / name).read_bytes()).hexdigest() != digest]
-    record = {"schema": "nca-async-realtime-pilot/v1", "created_utc": datetime.now(timezone.utc).isoformat(),
+    elapsed = time.monotonic() - started
+    within_budget = elapsed <= 120 and attempted_step_calls <= 2000
+    record = {"schema": "nca-async-host-pilot/v2", "created_utc": datetime.now(timezone.utc).isoformat(),
               "learner_revision": revision, "learner_sources_sha256": source_hash, "source_files": sources,
               "scoped_source_sha256": sha256_json(scoped_hashes), "scoped_source_files": scoped_hashes,
-              "source_drift": drift, "host_identity": host_identity, "python": platform.python_version(),
+              "source_drift": drift, "hosts": hosts, "python": platform.python_version(),
               "platform": platform.system(), "architecture": platform.machine(),
-              "budget": {"wall_seconds": 120, "step_calls": 2000}, "mode": "realtime",
+              "budget": {"wall_seconds": 120, "step_calls": 2000}, "mode": "mixed-stepped-realtime",
+              "attempted_step_calls": attempted_step_calls, "within_budget": within_budget,
               "provider": "deterministic mocks and injected failures", "live_calls": 0, "tokens": None,
               "cost": 0, "owner_feel_accepted": False, "evaluator_success": None,
               "tests_run": result.testsRun, "skipped": len(result.skipped), "cases": cases,
-              "operations": operations, "wall_seconds": time.monotonic() - started,
-              "passed": result.wasSuccessful() and not result.skipped and not drift,
+              "suite_failures": failure_details,
+              "operations": operations, "wall_seconds": elapsed,
+              "passed": result.wasSuccessful() and not result.skipped and not drift and within_budget,
               "limits": ["scripted human-priority injection, no live human session",
                          "actual detach/reattach and full reset, no independent object replacement",
-                         "Linux realtime headless owner, no desktop or other-platform timing qualification"]}
+                         "exact contracts use the stepped owner; independent advance uses realtime",
+                         "test-driven requests are recorded; host cleanup is separate and its internal close RPC is not captured",
+                         "Linux headless owner, no desktop or other-platform timing qualification"]}
     payload = gzip.compress(canonical_json(record).encode(), mtime=0)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("xb") as stream:
@@ -114,8 +154,9 @@ def main():
     index = {key: value for key, value in record.items() if key != "operations"}
     index["artifact"] = {"path": args.output.name, "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
     index["owner_operations"] = len(operations)
-    index["step_calls"] = sum(item["operation"] == "step" for item in operations)
-    index["actual_ticks"] = sum(item["response"].get("actual_ticks", 0) for item in operations if item["operation"] == "step")
+    index["step_calls"] = sum(item["operation"] == "step" and item["status"] == "completed" for item in operations)
+    index["actual_ticks"] = sum((item["response"] or {}).get("actual_ticks", 0)
+                                for item in operations if item["operation"] == "step")
     with args.output.with_suffix(".index.json").open("x") as stream:
         json.dump(index, stream, indent=2, sort_keys=True)
         stream.write("\n")
