@@ -94,15 +94,18 @@ bounds separately from stepped-mode ticks. Multiple learned actors, in-engine
 execution, Windows or GPU physical deployment, exact mid-episode host resume,
 whole-game determinism and owner feel remain unmeasured.
 
-## Load and dispatch the qualified artifact
+## Reproduce the historical qualified artifact
 
 Install the declared CPU environment using [learning setup](LEARNING.md),
 prepare the pinned [host](HOST_ADAPTER.md), and obtain the unchanged bundle from
 the verified evidence collection. The optional `.[torch-export]` dependency
 group declares NumPy/Torch; select the CPU Torch wheel explicitly. Use source
 whose installed runtime closure still matches the bundle. The following bounded
-example uses the recorded rightward case and its original observation at every
-dispatch:
+historical example is for the qualifying source
+`f3bf96fa402fc3131ce871b5bd23e65855722ade`, with its original three-argument
+dispatch API. It uses the recorded rightward case and original observation at
+every dispatch. Current source has a corrected owner boundary, described below,
+and deliberately refuses this older artifact's source hashes.
 
 ```python
 import os
@@ -150,6 +153,40 @@ The registry entry is `policy/jolt-torch-cpu-export/v1`. A realtime caller must
 also account for elapsed host ticks and retain idle receipts. Cancellation
 retires the old goal and clears recurrence; a fresh invocation requires a fresh
 goal ID and current owner observation. The host's final admission is authoritative.
+
+## Current owner boundary after issue #42
+
+The [dispatch correction](evidence/2026-10-20-t109-dispatch-authority.md) applies
+to both numeric backends without changing their numerical operators. Current
+source uses `dispatch(env, controller, decision, issued)`: the producing
+controller must own that single unused pending decision. Source changes,
+cancellation, replacement and transport failures retire retained decisions.
+A dispatched helper requires a validated native cancellation receipt before a
+new invocation; local reset cannot erase uncertain cleanup.
+
+Current decisions cap the original-source motor lease at the absolute goal
+deadline. A supplied `current_tick` is checked during inference admission and
+again at dispatch; the host independently enforces expiry during transport.
+The last interval can be shorter than six ticks. Native admission, consumption,
+unchanged part/mount ownership and the full interval's source/goal bounds are
+checked before dispatch succeeds. Complete delayed intervals remain distinct
+from refused or expired work.
+
+The current API for a newly converted and separately qualified bundle is:
+
+```python
+decision = controller.step(issued, goal, source_generation=1, current_tick=known_tick)
+transition = dispatch(env, controller, decision, issued, current_tick=known_tick)
+# Explicit cleanup, including after a transport error:
+controller.cancel()
+controller.confirm_owner_cancel(env.cancel())
+```
+
+`known_tick` is an actually known host clock; it must not be an invented refresh
+of `issued`. The original bundle and composite receipt stay unchanged and remain
+evidence for their original source. They do not qualify this corrected boundary.
+No new conversion, long deployment screen, learned-policy evaluation or training
+is claimed by the issue #42 software and synthetic-policy owner tests.
 
 ## Completed evidence path
 

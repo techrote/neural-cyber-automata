@@ -103,6 +103,15 @@ class TorchScreenTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             require_consumed_decision(*terminal)
 
+    def test_new_goal_capped_lease_is_explicit_and_does_not_relabel_old_receipts(self):
+        terminal = self.receipt(234)
+        terminal[5]["trace"][0]["requested"][0]["lease_ticks"] = 6
+        with self.assertRaisesRegex(ContractError, "throughput_admission"):
+            require_consumed_decision(*terminal)
+        require_consumed_decision(*terminal, helper_lease_ticks=6)
+        with self.assertRaisesRegex(ContractError, "throughput_admission"):
+            require_consumed_decision(*self.receipt(234), helper_lease_ticks=6)
+
     def test_locally_accepted_but_refused_incomplete_or_replaced_work_cannot_count(self):
         for mutate in (lambda r: r[5]["trace"][0]["admission"][0].update(accepted=False),
                        lambda r: r[5]["trace"][0]["requested"][0].update(observed_tick=1),
@@ -191,8 +200,7 @@ class TorchScreenTests(unittest.TestCase):
             host.request.return_value = {"id": 17, "profile": profile}
             with patch("nca.bench.torch_screen._environment", return_value=(env, first, {}, 0)), \
                  patch("nca.bench.torch_screen.context_for", return_value=None), \
-                 patch("nca.bench.torch_screen.TorchRuntimeBundle", side_effect=ContractError("context", "fixture refusal")), \
-                 patch("nca.bench.torch_screen.dispatch") as cancel:
+                 patch("nca.bench.torch_screen.TorchRuntimeBundle", side_effect=ContractError("context", "fixture refusal")):
                 result = _variant(host, Mock(value={}), {"trajectory": {"cases": [episode["case"]]}},
                                   model=model, decision_ticks=cadence)
             validate_frames(result, 24)
@@ -203,7 +211,7 @@ class TorchScreenTests(unittest.TestCase):
             self.assertEqual(result["config"], env.config)
             self.assertTrue(result["passed"])
             self.assertEqual(result["requested_actions"], 0)
-            cancel.assert_called_once()
+            env.cancel.assert_called_once_with()
 
     def test_declaration_cannot_expand_work_or_lower_acceptance_after_results(self):
         for change in (lambda p: p["throughput"].update(minimum_active_window_seconds=79.),
