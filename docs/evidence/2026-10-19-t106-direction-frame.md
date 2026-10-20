@@ -10,7 +10,9 @@ verified: 2026-10-20
 
 The renewed instruction to complete the repository authorizes this separately declared useful-skill
 follow-up. The [original T105 result and T106 entry decision](2026-10-19-t106.md) remain immutable and
-blocked. The experiment is complete. Its purpose was to test one coordinate
+blocked. The designated primary experiment is complete and failed the unchanged gate. The
+[combined provenance record](t106-direction-frame-result-20261019.json) retains both executions and
+their aggregate budget deviation. Its purpose was to test one coordinate
 interpretation within the existing Jolt cloning implementation; it does not itself answer the
 shared-morphology research question.
 
@@ -121,7 +123,7 @@ Preparation is read-only and imports neither Torch nor a host:
 PYTHONPATH=src python tools/direction_frame.py prepare
 ```
 
-After the complete declaration and source are public, the single coordinated CPU invocation is:
+The completed invocation used this command shape after its declaration and source were public:
 
 ```sh
 PYTHONPATH=src python tools/direction_frame.py run \
@@ -163,6 +165,15 @@ summary-content SHA-256
 and an index self-hash of
 `11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443`.
 The archive contains **438 verified members**.
+
+The [primary-only detailed index](t106-direction-frame-result.json) retains the complete original
+family evaluation and all twelve checkpoint receipts. Direction-frame mean gain over initialization
+was 0.166667 with lower 95% bound 0.027083; world-frame gain was 0.208333 with lower bound -0.070833.
+Every final policy seed failed its per-scenario latency gate, and one seed in each family failed
+purposeful-launch retention. Source, owner, integrity and uncensored-evidence checks passed.
+The primary local run overlapped a separately coordinated staged export-candidate evaluation, so no
+uncontended latency qualification or isolated timing cause is claimed. The reliability thresholds
+failed independently of latency. Removing a latency concern would not admit either family.
 
 A 20 October read-only recovery audit found the available TAR copy truncated at
 18,451,815 bytes. Its observed hash differs from the original container identity
@@ -228,5 +239,25 @@ would still require a qualified semantic waypoint teacher, the unchanged conditi
 comparison allocation, actual zero-shot and adaptation evidence, and independent result review. The
 original admission runner stays blocked. Unsupported independent geometry/damage perturbations,
 Windows runtime qualification and owner feel remain unmeasured.
+
+## Guarded comparison source
+
+The [conditional morphology preparation](2026-10-19-t106-learning.md) now includes distinct complete
+local-input capture, masked recurrent BC/PPO, immutable checkpoint lineage, a separate semantic waypoint
+teacher, a guarded orchestrator and the exact 148-row comparison summary. Its expanded software suite
+passes 99 tests with no skips. The development admission verified the actual primary files, source
+and episode/metric/checkpoint links, then returned the expected failed-gate refusal in 282.603 seconds.
+The subsequent public-source admission at `eb488674475e3d13e8e6e4511ddfbe66192552bb` completed in
+217.304178604 seconds with the same refusal, CLI exit 2 and zero host, model, checkpoint, policy, game
+or optimizer work. Its exact source and receipt hashes are recorded in the
+[conditional preparation evidence](2026-10-19-t106-learning.md). Torch and the morphology capture,
+learner and checkpoint modules remained absent. Source verification imported generic
+`nca.data.capture` and host adapter definitions; it constructed no host.
+
+The separate [selection declaration](../../configs/morphology/prerequisite-selection-v1.json) binds the
+designated public `1222d2e8` source, manifest and exact original summary bytes. A valid concurrent repeat
+cannot replace that primary input, and no outcome-based choice or CLI bypass exists. The source
+preparation changes no original experiment record or allocation and starts no morphology qualification,
+teacher collection, optimizer, transfer or adaptation. The measured acceptance remains unmet.
 
 © 2026 techrote. All rights reserved.

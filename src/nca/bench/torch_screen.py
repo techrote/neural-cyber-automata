@@ -22,6 +22,7 @@ from nca.export.torch_runtime import TorchRuntimeBundle, BACKEND, make_torch_bun
 from .common import durations, pose, process_memory, wire_difference, write_artifact, numpy_build
 from .deployment import (_arithmetic, _compare_episodes, _environment, _goal,
                          _sources, _expired_twelve_tick_refusals, _processor_model)
+from .subprocess_capture import run_captured
 
 
 DECLARATION_SHA256 = "eaceadbfd76b5f09156e6ba2173df6205bea9554159b324e99200820ac8b1435"
@@ -455,7 +456,9 @@ def _variant(host, bundle, config, *, model="jev", decision_ticks=6):
     from nca.contracts import WireAction
     case = config["trajectory"]["cases"][0]
     env, view, _, _ = _environment(host, case, config, ticks=24, model=model, decision_ticks=decision_ticks)
-    profile = host.request("profile")["profile"]
+    initial = view
+    profile_response = host.request("profile")
+    profile = profile_response["profile"]
     reason = None
     try:
         TorchRuntimeBundle(bundle.value, context_for(profile, host.identity, decision_ticks=decision_ticks))
@@ -469,7 +472,12 @@ def _variant(host, bundle, config, *, model="jev", decision_ticks=6):
         traces.extend(info["trace"])
         if terminal or truncated:
             break
-    return {"passed": reason is not None, "case": case, "controller": "refused-and-owner-cancelled",
+    return {"format": "nca-export-refusal-trajectory/v1", "passed": reason is not None,
+            "case": case, "controller": "refused-and-owner-cancelled", "config": env.config,
+            "initial": initial, "final": view, "profile": profile, "profile_sha256": sha256_json(profile),
+            "profile_provenance": {"source": "live profile response after reset", "response_id": profile_response["id"],
+                "reset_observation_id": initial["observation_id"], "run_id": initial["run_id"],
+                "epoch": initial["epoch"], "actor_id": initial["actor_id"]},
             "frames": frames, "trace": traces, "reason": reason, "requested_actions": 0, "actual_ticks": view["tick"]}
 
 
@@ -710,9 +718,10 @@ def run_followup(*, root, declaration_path, original_root, host_path, godot_path
                 "camera": {"world_bounds": [128, 200, 320, 368], "panel_pixels": [576, 504]},
                 "source": "actual own-part poses; reconstruction, not engine-rendered frames",
                 "base_hz": 60, "frame_stride": 6, "frame_duration_ms": 100})
-            subprocess.run([render_python, "-m", "nca.bench.pose_clip", "--root", str(output)], check=True,
-                           timeout=min(45, declaration["budget"]["maximum_wall_seconds"] - budget.snapshot()["wall_seconds"]),
-                           cwd=root, env=child_environment, capture_output=True)
+            run_captured([render_python, "-m", "nca.bench.pose_clip", "--root", str(output)],
+                         output=output, label="renderer",
+                         timeout=min(45, declaration["budget"]["maximum_wall_seconds"] - budget.snapshot()["wall_seconds"]),
+                         cwd=root, env=child_environment)
             report["clips"], _ = read_json(output / "clips.json")
             report["retained_fresh_episode_resume"], _ = read_json(original_root / "screen-v1/resume.json")
             report["retained_learner_cost"], _ = read_json(original_root / "screen-v1/learner-cost.json")

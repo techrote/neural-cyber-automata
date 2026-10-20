@@ -6,6 +6,7 @@ import io
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 HAS_RUNTIME = all(importlib.util.find_spec(name) is not None for name in ("numpy", "torch"))
 if HAS_RUNTIME:
@@ -174,6 +175,35 @@ class TorchScreenTests(unittest.TestCase):
         self.assertEqual(result["realtime_horizon_reserved_upper_bound_ticks"], 600)
         self.assertEqual(result["native_tick_upper_bound"], 606)
         self.assertFalse(result["unconfirmed_tail"])
+
+    def test_both_future_refusal_captures_preserve_live_profile_and_reset_provenance(self):
+        from nca.bench.torch_screen import _variant
+        from nca.bench.export_postprocess import validate_frames
+        from test_export_postprocess import fixture
+        for model, cadence in (("jev", 12), ("astra", 6)):
+            episode, _, exchanges = fixture(model, cadence)
+            first = exchanges[1]["response"]["observation"]
+            profile = exchanges[2]["response"]["profile"]
+            final = episode["trace"][-1]["observation"]
+            env = Mock(config=exchanges[1]["request"]["fields"]["config"])
+            env.step_packet.return_value = (final, 0., False, True, {"trace": episode["trace"]})
+            host = Mock(identity={})
+            host.request.return_value = {"id": 17, "profile": profile}
+            with patch("nca.bench.torch_screen._environment", return_value=(env, first, {}, 0)), \
+                 patch("nca.bench.torch_screen.context_for", return_value=None), \
+                 patch("nca.bench.torch_screen.TorchRuntimeBundle", side_effect=ContractError("context", "fixture refusal")), \
+                 patch("nca.bench.torch_screen.dispatch") as cancel:
+                result = _variant(host, Mock(value={}), {"trajectory": {"cases": [episode["case"]]}},
+                                  model=model, decision_ticks=cadence)
+            validate_frames(result, 24)
+            self.assertEqual(result["profile"], profile)
+            self.assertEqual(result["profile_provenance"]["response_id"], 17)
+            self.assertEqual(result["profile_provenance"]["reset_observation_id"], first["observation_id"])
+            self.assertEqual(result["initial"], first)
+            self.assertEqual(result["config"], env.config)
+            self.assertTrue(result["passed"])
+            self.assertEqual(result["requested_actions"], 0)
+            cancel.assert_called_once()
 
     def test_declaration_cannot_expand_work_or_lower_acceptance_after_results(self):
         for change in (lambda p: p["throughput"].update(minimum_active_window_seconds=79.),
