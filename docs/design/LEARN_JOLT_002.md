@@ -8,7 +8,8 @@ verified: 2026-10-20
 
 # LEARN-JOLT-002
 
-This is the next experiment design commissioned by D-015. It is conditional on
+This is the next experiment design commissioned by D-015 and tracked in
+[LEARN-JOLT-002 / #62](https://github.com/techrote/neural-cyber-automata/issues/62). It is conditional on
 accepted [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
 and [complete diagnostic evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43).
 It does not authorize treating the earlier open diagnostic cases as sealed
@@ -18,14 +19,28 @@ No dataset collection, fitting, checkpoint execution or transfer has occurred
 under this design. The final source/dependency/split declaration must precede
 any such work.
 
+The [implementation checklist](LEARN_JOLT_002_IMPLEMENTATION.md) binds complete
+learned actuation, action/history masks, immutable invocation time, zero-correction
+residual parity and the remaining prospective cost and split checks.
+
 The first [recovery diagnostic](../evidence/2026-10-20-jolt-recovery-v1.md)
 stopped after 24 of 96 rows. A sampled settled estimate retired its lease before
 the per-tick task had twelve quiet ticks. Its seven complete matched pairs also
 show restored short-left airborne launches but a peak-speed ratio of 0.58924;
-the full character/reliability gate remains unmeasured. The separate advisory
-arrival correction and complete diagnostic in [#60](https://github.com/techrote/neural-cyber-automata/issues/60)
-must qualify before this design can admit collection. No partial result becomes
-a teacher-acceptance substitute.
+the full character/reliability gate remained unmeasured in that attempt.
+The [separate complete v2 result](../evidence/2026-10-20-jolt-recovery-v2.md)
+verifies all 96 rows and repairs the advisory lifecycle, but fails teacher
+qualification: 25/32 arrivals versus 27/32, two historical rescues instead of
+three, the unsupported/drop failure unresolved and four regressions instead of
+at most one. Airborne character is restored in 32/32 cases, and the complete
+0.727556 vigor ratio passes. Motion response is slower despite sub-millisecond
+worst-case inference p95. These findings prioritize arrival timing and physical
+recovery over architecture work. Complete evidence alone cannot admit collection;
+an accepted corrective teacher result must precede this learning pilot.
+[JOLT-RECOVERY-003 / #64](https://github.com/techrote/neural-cyber-automata/issues/64)
+tracks anticipation contact loss, useful second-hop landing progress and arrival
+timing. Its completed source and separately declared evidence must satisfy the
+unchanged teacher gate before this issue's collection dependency can be released.
 
 ## Question and comparison
 

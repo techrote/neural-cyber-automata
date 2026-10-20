@@ -75,6 +75,12 @@ def graph_morphology_policy(**kwargs):
     return SharedGraphPolicy(**kwargs)
 
 
+def ik_runner_profile():
+    """Load the source-derived point-IK descriptor without optional runtimes."""
+    from .ik.profiles import runner_right_sole_profile
+    return runner_right_sole_profile()
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -92,6 +98,8 @@ def builtin_registry() -> Registry:
     registry = Registry()
     registry.register("profile", "recorded-rig", 1, recorded_fixture_profile,
                       ("recorded_fixture", "wire", "local-observation"))
+    registry.register("profile", "runner-right-sole", 1, ik_runner_profile,
+                      ("nominal-geometry", "point-ik-2d", "root-local", "fixed-chain"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
     registry.register("adapter", "recorded-playback", 1, RecordedEnv,
                       ("recorded_fixture", "reset-step", "owned-observation"))

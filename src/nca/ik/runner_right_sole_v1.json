@@ -1,0 +1,137 @@
+{
+  "id": "runner-right-sole",
+  "version": 1,
+  "source": {
+    "repository": "techrote/cybersand",
+    "commit": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "files": [
+      {
+        "path": "godot/scripts/physical_actor_catalog.gd",
+        "git_blob_sha1": "397ac8a3103134da276590c5a409b17429394836",
+        "content_sha256": "9f526afbb352b1c4d065bf04a69a9e85202b3b23cf9df1b7b6665ce526979b12",
+        "size_bytes": 33076
+      },
+      {
+        "path": "godot/scripts/physical_actor_rig.gd",
+        "git_blob_sha1": "ba2f00d018fa7db849927bb0a8bfef2aaa875c03",
+        "content_sha256": "db283406e3aa86f5e329df15bba7465b58bca9767492ef0b54c7888965443ec4",
+        "size_bytes": 63070
+      }
+    ],
+    "derivation": "audited-source-nominal-not-live-host-export"
+  },
+  "convention": {
+    "frame": "root_local",
+    "length_unit": "game_cells",
+    "angle_unit": "radians",
+    "time_unit": "base_ticks_at_60_hz",
+    "axes": "x_right_y_down",
+    "positive_rotation": "clockwise_on_screen",
+    "rotation_rule": "(cos(a)*x-sin(a)*y,sin(a)*x+cos(a)*y)",
+    "anchor_rule": "R(-initial_angle)*(authored_pivot-initial_position)",
+    "precision": "nominal_binary64_host_rounding_unqualified",
+    "root_motion": "observed_frame_only_no_root_output"
+  },
+  "root_part_id": "chassis",
+  "parts": [
+    {
+      "id": "chassis", "index": 0, "initial_position": [0.0, 0.0],
+      "initial_angle_radians": 0.0, "size": [6.0, 8.0], "mass": 1.35,
+      "role": "hull", "shape": "centred_rectangle"
+    },
+    {
+      "id": "leg_-1", "index": 1, "initial_position": [-3.6, 5.5],
+      "initial_angle_radians": -0.18, "size": [2.0, 5.0], "mass": 0.28,
+      "role": "leg", "shape": "centred_rectangle"
+    },
+    {
+      "id": "foot_-1", "index": 2, "initial_position": [-4.6, 8.0],
+      "initial_angle_radians": 0.0, "size": [4.0, 2.0], "mass": 0.23,
+      "role": "foot", "shape": "centred_rectangle"
+    },
+    {
+      "id": "leg_1", "index": 3, "initial_position": [3.6, 5.5],
+      "initial_angle_radians": 0.18, "size": [2.0, 5.0], "mass": 0.28,
+      "role": "leg", "shape": "centred_rectangle"
+    },
+    {
+      "id": "foot_1", "index": 4, "initial_position": [4.6, 8.0],
+      "initial_angle_radians": 0.0, "size": [4.0, 2.0], "mass": 0.23,
+      "role": "foot", "shape": "centred_rectangle"
+    }
+  ],
+  "joints": [
+    {
+      "id": "hip_-1", "index": 0,
+      "parent_part_id": "chassis", "child_part_id": "leg_-1",
+      "authored_pivot": [-3.6, 2.8],
+      "parent_anchor_local": [-3.6, 2.8],
+      "child_anchor_local": [0.4833798482497253, -2.6563779705279282],
+      "zero_radians": -0.18, "lower": -0.75, "upper": 0.75,
+      "target_lower": -0.72, "target_upper": 0.72,
+      "participation": "passive", "kind": "rotary", "coordinate_unit": "radians",
+      "coordinate_semantics": "child_minus_parent_minus_authored_zero",
+      "motor_speed_radians_per_second": 7.0
+    },
+    {
+      "id": "ankle_-1", "index": 1,
+      "parent_part_id": "leg_-1", "child_part_id": "foot_-1",
+      "authored_pivot": [-3.6, 7.75],
+      "parent_anchor_local": [-0.4028165402081044, 2.2136483087732732],
+      "child_anchor_local": [1.0, -0.25],
+      "zero_radians": 0.18, "lower": -0.3, "upper": 0.3,
+      "target_lower": -0.27, "target_upper": 0.27,
+      "participation": "passive", "kind": "rotary", "coordinate_unit": "radians",
+      "coordinate_semantics": "child_minus_parent_minus_authored_zero",
+      "motor_speed_radians_per_second": 7.0
+    },
+    {
+      "id": "hip_1", "index": 2,
+      "parent_part_id": "chassis", "child_part_id": "leg_1",
+      "authored_pivot": [3.6, 2.8],
+      "parent_anchor_local": [3.6, 2.8],
+      "child_anchor_local": [-0.4833798482497253, -2.6563779705279282],
+      "zero_radians": 0.18, "lower": -0.75, "upper": 0.75,
+      "target_lower": -0.72, "target_upper": 0.72,
+      "participation": "active", "kind": "rotary", "coordinate_unit": "radians",
+      "coordinate_semantics": "child_minus_parent_minus_authored_zero",
+      "motor_speed_radians_per_second": 7.0
+    },
+    {
+      "id": "ankle_1", "index": 3,
+      "parent_part_id": "leg_1", "child_part_id": "foot_1",
+      "authored_pivot": [3.6, 7.75],
+      "parent_anchor_local": [0.4028165402081044, 2.2136483087732732],
+      "child_anchor_local": [-1.0, -0.25],
+      "zero_radians": -0.18, "lower": -0.3, "upper": 0.3,
+      "target_lower": -0.27, "target_upper": 0.27,
+      "participation": "active", "kind": "rotary", "coordinate_unit": "radians",
+      "coordinate_semantics": "child_minus_parent_minus_authored_zero",
+      "motor_speed_radians_per_second": 7.0
+    }
+  ],
+  "solver_joint_ids": ["hip_1", "ankle_1"],
+  "effector": {
+    "id": "right_sole", "part_id": "foot_1", "point_local": [0.0, 1.0],
+    "outward_normal_local": [0.0, 1.0],
+    "task_components": ["position_x", "position_y"],
+    "orientation": "diagnostic_only_not_independent_control"
+  },
+  "workspace": {
+    "joint_ids": ["hip_1", "ankle_1"], "lower": [-0.6, -0.2], "upper": [0.6, 0.2],
+    "parameterization": "joint_rectangle_pushforward_by_nominal_fk",
+    "claim": "nominal_geometric_reachability_only"
+  },
+  "authored_play_radians": 0.055,
+  "max_delta_radians": 0.25,
+  "part_capacity": 8,
+  "joint_capacity": 7,
+  "decision_ticks": 6,
+  "max_observation_age_ticks": 12,
+  "max_target_lease_ticks": 18,
+  "schema_version": 1,
+  "topology_kind": "rooted_tree",
+  "host_target_lane": "absent_requires_separate_host_integration",
+  "participation_semantics": "solver_only_passive_does_not_mean_physically_frozen",
+  "observation_target_semantics": "rotary_host_target_is_motor_velocity_not_position"
+}

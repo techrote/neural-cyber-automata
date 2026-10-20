@@ -1,0 +1,609 @@
+{
+  "schema_version": "nca-ik-acceptance/v1",
+  "id": "runner-right-sole-acceptance@1",
+  "status": "prospective_unmeasured",
+  "owning_issue": 50,
+  "programme_issue": 49,
+  "profile_binding": {
+    "descriptor_path": "src/nca/ik/runner_right_sole_v1.json",
+    "profile_id": "runner-right-sole",
+    "profile_version": 1,
+    "profile_semantic_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+    "descriptor_file_sha256": "76fd5e0a481e628f30fe2fb55d62eb5cc66014be07c13a5b7720d30e792d2c65",
+    "semantic_hash_definition": "IKProfile.from_json(descriptor_bytes).sha256: canonical normalized Record content",
+    "file_hash_definition": "SHA-256 of exact descriptor file bytes",
+    "acceptance_hash_definition": "Run preregistration records SHA-256 of exact acceptance file bytes externally; this document has no self-hash.",
+    "require_both_profile_hashes_before_consumption": true
+  },
+  "source": {
+    "repository": "techrote/cybersand",
+    "revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "catalogue": "godot/scripts/physical_actor_catalog.gd",
+    "rig": "godot/scripts/physical_actor_rig.gd",
+    "basis": "Source-derived kinematics and prospective tolerances; no CUDA, learned or physical qualification."
+  },
+  "units": {
+    "position": "cell",
+    "angle": "rad",
+    "duration": "base_tick",
+    "base_hz": 60,
+    "decision_ticks": 6,
+    "maximum_helper_lease_ticks": 12,
+    "maximum_observation_age_ticks": 12,
+    "maximum_target_lease_ticks": 18,
+    "target_frame": "root_local_same_issued_observation",
+    "normalized_position_error": "Euclidean endpoint error in cells divided by nominal_reach_cells",
+    "joint_error": "Absolute difference of rest-relative rotary coordinates; equivalence by wrapping never bypasses joint bounds.",
+    "result_mapping": "Evaluate the resolved absolute desired joint position. A bounded delta is added to its original measured configuration before FK, without later projection/refinement. An intermediate best-effort step cannot be relabelled as a solved full target.",
+    "percentile": "nearest_rank: sort all N numeric samples ascending; rank=max(1,ceil(p*N)); take rank-1; do not interpolate or average per-episode percentiles.",
+    "joint_aggregation": "Use the maximum absolute error over the two selected joints for each sample.",
+    "conjunctive_limits": true
+  },
+  "geometry": {
+    "effector_part_id": "foot_1",
+    "effector_point_local_cells": [
+      0,
+      1
+    ],
+    "root_hip_anchor_cells": [
+      3.6,
+      2.8
+    ],
+    "hip_to_ankle_rest_vector_cells": [
+      0,
+      4.95
+    ],
+    "ankle_to_effector_rest_vector_cells": [
+      1,
+      1.25
+    ],
+    "nominal_reach_cells": 6.550781059358212,
+    "nominal_reach_definition": "norm(hip_to_ankle_rest_vector_cells)+norm(ankle_to_effector_rest_vector_cells)",
+    "authored_play_radians": 0.055,
+    "inner_target_margin_radians": 0.03,
+    "hard_joint_bounds_radians": {
+      "hip_1": [
+        -0.75,
+        0.75
+      ],
+      "ankle_1": [
+        -0.3,
+        0.3
+      ]
+    },
+    "inner_target_bounds_radians": {
+      "hip_1": [
+        -0.72,
+        0.72
+      ],
+      "ankle_1": [
+        -0.27,
+        0.27
+      ]
+    },
+    "nominal_workspace_bounds_radians": {
+      "hip_1": [
+        -0.6,
+        0.6
+      ],
+      "ankle_1": [
+        -0.2,
+        0.2
+      ]
+    },
+    "play_only_first_order_endpoint_allowance_cells": 0.4483359165294033,
+    "play_allowance_definition": "play*(norm(a)+2*norm(b)); explanatory first-order geometric bound, not a measured contact/compliance bound.",
+    "inner_domain_jacobian_determinant_min_cells_squared": 3.1202651724990154,
+    "root_control": false,
+    "orientation_objective": false,
+    "physical_workspace_certified": false
+  },
+  "ownership": {
+    "50": "Contract/profile/acceptance declaration and source-derived software checks only.",
+    "51": "CUDA installation, preflight, actual forward/backward/optimizer smoke and synchronized device measurements.",
+    "52": "Independent FK/Jacobian/numerical IK and geometric failure semantics.",
+    "53": "Dataset generation, whole-family splits, target-region holdouts and immutable manifests.",
+    "54": "Three-seed CUDA training, geometric qualification, raw/corrected/fallback attribution and contribution comparison.",
+    "55": "Separate host joint-target capability and physical-owner conformance; corresponding Cybersand task.",
+    "56": "Exact CPU export, common-input parity, lifecycle guards and full-decision runtime measurements.",
+    "57": "Exact-bundle physical tracking, obstruction, lifecycle/realtime evidence and operator handoff."
+  },
+  "populations": {
+    "training_seeds": [
+      41011,
+      42013,
+      43019
+    ],
+    "training_seed_rule": "Three separately initialized and optimized candidates; no best-seed substitution; every per-seed gate must pass.",
+    "split_seed": 61003,
+    "split_unit": "whole_generation_family_or_complete_trajectory",
+    "split_fraction": {
+      "training": 0.7,
+      "tuning": 0.15,
+      "sealed_evaluation": 0.15
+    },
+    "minimum_generation_families": 100,
+    "split_definition": "Freeze exact family assignments before generation/learning. All derived initial-pose variants and augmentations inherit the family partition. No adjacent-row split.",
+    "minimum_sealed_target_regions": 8,
+    "target_region_rule": "Freeze eight disjoint joint-space target-region interiors before training; exclude their targets and derived copies from training and tuning. Publish exact bounds and any boundary exclusion bands in issue 53.",
+    "normalization_rule": "Use fixed source-derived scales here; any learned normalization uses training data only and is frozen before tuning/sealed scoring.",
+    "geometric_nominal": {
+      "minimum_point_queries_per_seed": 2000,
+      "coverage_grid": {
+        "hip_bins": 10,
+        "ankle_bins": 8,
+        "minimum_queries_per_bin": 25
+      },
+      "minimum_holdout_region_queries_per_seed": 200,
+      "minimum_trajectories_per_seed": 40,
+      "minimum_decisions_per_trajectory": 20,
+      "definition": "Targets known feasible in the declared nominal workspace by the independent reference; input/current-pose families remain distinct from target-region identities.",
+      "required_strata": [
+        "interior_points",
+        "rest_neighbourhood",
+        "sealed_target_regions",
+        "smooth_sweeps",
+        "reversals",
+        "root_frame_transforms"
+      ],
+      "raw_numeric_output_required_for_every_scheduled_query": true
+    },
+    "geometric_stress": {
+      "minimum_cases_per_class": 20,
+      "classes": [
+        "inner_limit_boundary",
+        "hard_limit_boundary",
+        "certified_geometric_infeasible",
+        "unsupported_profile_or_effector",
+        "missing_measurement_or_inactive_dof",
+        "nonfinite_or_malformed_input"
+      ],
+      "definition": "Separate declared stress populations; boundary results report their own errors and statuses. Unsupported and invalid cases cannot be credited as ordinary reaches."
+    },
+    "export_parity": {
+      "minimum_common_inputs": 1000,
+      "minimum_inputs_per_required_class": 20,
+      "classes": [
+        "nominal",
+        "near_inner_limits",
+        "frame_transforms",
+        "masks",
+        "invalid_inputs",
+        "status_boundaries",
+        "target_discontinuities"
+      ],
+      "same_inputs_and_state": true
+    },
+    "lifecycle": {
+      "minimum_cases_per_class": 3,
+      "classes": [
+        "stale_observation",
+        "expiry_before_at_after",
+        "cancel_and_replay",
+        "source_takeover",
+        "already_consumed",
+        "actor_or_generation_change",
+        "profile_or_topology_change",
+        "unknown_host_capability",
+        "ambiguous_receipt_cleanup"
+      ],
+      "expected_result": "Every case matches its predeclared refusal/revocation expectation; all attempts and rejected payloads remain in the ledger."
+    },
+    "physical": {
+      "minimum_nominal_episodes_per_bundle": 20,
+      "minimum_static_episodes_per_bundle": 10,
+      "minimum_sweep_episodes_per_bundle": 10,
+      "minimum_static_final_hold_ticks": 60,
+      "minimum_sweep_scored_ticks": 240,
+      "minimum_directed_response_trials_per_bundle": 10,
+      "response_trial_selection": "Predeclare at least ten nominal static episodes as directed-response trials; no selecting only trials that later moved. Each satisfies the static-distance and requested-joint-change minima.",
+      "minimum_obstruction_episodes_per_bundle": 4,
+      "candidate_selection": "Either all three training seeds or one explicitly identified representative selected before any physical holdout; report every candidate attempted and never replace it using physical results.",
+      "geometry_is_not_physical_feasibility": "Issue 55/57 must predeclare unobstructed nominal fixtures using a reference-only capability check. Contacts, blocked motion and capability failures retain separate rows; no retrospective exclusion."
+    }
+  },
+  "accounting": {
+    "primary_nominal_denominator": "Every prospectively scheduled nominal query or episode, including refused, invalid-output, fallback, interrupted and failed attempts.",
+    "endpoint_percentile_population": "All scheduled nominal numeric outputs, separately for raw, corrected and delivered output. Missing/nonfinite raw outputs fail the completeness gate; never improve a percentile by dropping them.",
+    "fallback_fraction_denominator": "All scheduled nominal decision calls, not only successful or admitted calls.",
+    "correction_fraction_denominator": "All scheduled nominal decision calls; report numerical refinement, soft-margin projection, full reference fallback and emergency intervention separately.",
+    "lifecycle_and_stress_denominator": "Every scheduled case within each separately declared class, including failed setup and missing receipts; these cannot disappear into a nominal success percentage.",
+    "incomplete_evidence_result": "inconclusive_or_no_go_never_qualified",
+    "minimum_counts_rule": "Counts are minima, not permission to add attempts; actual exact counts and finite allocation must be published prospectively.",
+    "unmeasured_rule": "Unavailable measurement is null with a reason; it is not zero or a pass.",
+    "no_automatic_retry_or_budget_reset": true
+  },
+  "metrics": {
+    "geometry_reference": {
+      "owner_issue": 52,
+      "fixture_endpoint_max": {
+        "value": 1e-8,
+        "unit": "cell",
+        "definition": "Maximum Euclidean endpoint difference from independent hand-calculated float64 transform fixtures."
+      },
+      "fixture_joint_angle_max": {
+        "value": 1e-9,
+        "unit": "rad",
+        "definition": "Maximum absolute rest-relative rotary coordinate reconstruction error."
+      },
+      "reference_feasible_endpoint_max": {
+        "cells": 0.000001,
+        "normalized_reach": 0.000001,
+        "definition": "Both limits apply to independently certified feasible cases; iteration exhaustion is not geometric infeasibility."
+      },
+      "jacobian_check": {
+        "absolute_max": 0.00001,
+        "relative_max": 0.00001,
+        "unit": "cell_per_rad",
+        "definition": "For every analytic/autograd Jacobian element, abs(error) <= absolute_max + relative_max*abs(reference); central finite-difference step 1e-6 rad away from hard bounds.",
+        "finite_difference_step_radians": 0.000001
+      }
+    },
+    "learned_raw": {
+      "owner_issue": 54,
+      "endpoint_p95_max": {
+        "cells": 0.06,
+        "normalized_reach": 0.01,
+        "definition": "Per training seed, over all nominal point/path queries and separately the sealed target-region subset."
+      },
+      "endpoint_worst_max": {
+        "cells": 0.18,
+        "normalized_reach": 0.03,
+        "definition": "Worst nominal raw endpoint error per training seed."
+      },
+      "feasible_success_fraction_min": {
+        "value": 0.95,
+        "unit": "fraction",
+        "definition": "Queries whose raw FK endpoint meets both 0.06-cell and 0.01-reach limits, with finite in-bound output and no full-reference fallback, divided by all scheduled nominal queries."
+      },
+      "joint_hard_bound_violations_max": {
+        "value": 0,
+        "unit": "count",
+        "definition": "Raw outputs outside the source-authored hard limits; angular wrapping cannot repair a violation."
+      },
+      "nonfinite_raw_outputs_max": {
+        "value": 0,
+        "unit": "count",
+        "definition": "Raw nonfinite results count even when a later guard prevents dispatch."
+      }
+    },
+    "correction": {
+      "owner_issue": 54,
+      "permitted_modes": [
+        "direct",
+        "learned_initializer_plus_two_iterations"
+      ],
+      "mode_selection": "Select exactly one mode and all solver settings before training; retain direct/raw measurements in either mode.",
+      "numerical_iterations_per_call_max": {
+        "value": 2,
+        "unit": "iteration",
+        "definition": "Every numerical correction step after model inference counts; no hidden inner convergence loop."
+      },
+      "correction_fraction_max": {
+        "direct": 0,
+        "learned_initializer_plus_two_iterations": 1,
+        "unit": "fraction",
+        "definition": "Routine declared refinement may occur on every hybrid call, and is never credited as raw learned accuracy."
+      },
+      "corrected_endpoint_p95_max": {
+        "cells": 0.006,
+        "normalized_reach": 0.001,
+        "definition": "Hybrid corrected outputs before full-reference fallback; both limits apply per seed."
+      },
+      "corrected_endpoint_worst_max": {
+        "cells": 0.018,
+        "normalized_reach": 0.003,
+        "definition": "Hybrid corrected outputs before full-reference fallback; both limits apply per seed."
+      },
+      "soft_margin_projection_max": {
+        "value": 0.03,
+        "unit": "rad",
+        "definition": "Maximum correction of a raw value already within hard bounds into the inner target range; not a numerical IK iteration."
+      },
+      "soft_margin_projection_fraction_max": {
+        "value": 0.05,
+        "unit": "fraction",
+        "definition": "Count projection when any coordinate changes by more than 2e-5 rad."
+      },
+      "full_reference_fallback_fraction_max": {
+        "value": 0.01,
+        "unit": "fraction",
+        "definition": "Nominal calls invoking a fresh/full reference solve outside the two-step allowance; all returned outcomes remain attributed to fallback."
+      },
+      "comparator": "Same maximum two correction iterations and limits with the numerical solver's normal initializer; independent analytic/reference results are also reported."
+    },
+    "continuity": {
+      "owner_issue": 54,
+      "joint_change_max": {
+        "value": 0.25,
+        "unit": "rad_per_decision",
+        "definition": "Maximum absolute change of either solved joint across consecutive feasible targets at most 0.10 cell apart in the same inner target rectangle; no source/profile/goal discontinuity."
+      },
+      "qualifying_target_step_max": {
+        "value": 0.1,
+        "unit": "cell",
+        "definition": "Euclidean difference of consecutive root-local target points."
+      },
+      "domain": "hip_1 [-0.72,0.72] rad; ankle_1 [-0.27,0.27] rad; the same connected admitted branch.",
+      "branch_switches_max": {
+        "value": 0,
+        "unit": "count",
+        "definition": "Runner's admitted sole-point domain has one branch; a switch, out-of-domain equivalent angle or silent change of joint identity fails."
+      },
+      "discontinuity_rule": "Intentional target/source/profile changes have their own response/reset cases and are never silently discarded from accounting."
+    },
+    "export_parity": {
+      "owner_issue": 56,
+      "joint_output_difference_max": {
+        "value": 0.00002,
+        "unit": "rad",
+        "definition": "Maximum coordinate difference for common inputs/state between frozen CUDA, CPU reference and serialized CPU runtime."
+      },
+      "fk_endpoint_difference_max": {
+        "value": 0.0002,
+        "unit": "cell",
+        "definition": "Maximum independently reconstructed endpoint difference from the corresponding raw joint outputs."
+      },
+      "status_and_mask_differences_max": {
+        "value": 0,
+        "unit": "count",
+        "definition": "Exact semantic status, mask and admission agreement; compare only supported common-input paths."
+      }
+    },
+    "cpu_runtime": {
+      "owner_issue": 56,
+      "warmup_calls": 100,
+      "measured_calls": 10000,
+      "threads": 1,
+      "batch_size": 1,
+      "p95_max": {
+        "value": 2,
+        "unit": "ms",
+        "definition": "Complete feature/model/FK/validation/correction decision; includes any fallback on its actual frequency."
+      },
+      "p99_max": {
+        "value": 5,
+        "unit": "ms",
+        "definition": "Same all-call timing population."
+      },
+      "maximum_max": {
+        "value": 10,
+        "unit": "ms",
+        "definition": "Maximum observed call in the frozen run, with outliers retained."
+      },
+      "environment": "A prospectively identified deployment CPU/OS/Python/runtime; not a universal shared-CI timing gate.",
+      "report_separately": [
+        "startup",
+        "artifact_load",
+        "transport",
+        "host_step",
+        "memory",
+        "fallback_call_cost",
+        "raw_model_cost"
+      ]
+    },
+    "physical": {
+      "owner_issue": 57,
+      "nominal_success_fraction_min": {
+        "value": 0.9,
+        "unit": "fraction",
+        "definition": "Successful static/sweep episodes divided by all scheduled nominal episodes, separately per evaluated bundle and episode family."
+      },
+      "static_endpoint_max": {
+        "cells": 0.75,
+        "normalized_reach": 0.13,
+        "definition": "Actual measured sole-point displacement from the target, using the root pose from the same completed owner observation; both limits apply."
+      },
+      "settling_deadline": {
+        "value": 90,
+        "unit": "base_tick",
+        "boundary": "completed_dwell_end_inclusive",
+        "definition": "The final receipt of the first qualifying 18 consecutive completed base-tick intervals must be no later than first_admission_tick + 90; entry alone before the deadline is insufficient."
+      },
+      "settling_dwell_min": {
+        "value": 18,
+        "unit": "base_tick",
+        "definition": "Consecutive completed physical ticks meeting endpoint and static-speed limits; one sample cannot stand in for the interval."
+      },
+      "static_point_speed_max": {
+        "value": 1,
+        "unit": "cell_per_second",
+        "definition": "Root-relative actual sole-point speed during the qualifying dwell."
+      },
+      "static_step_fixture_max": {
+        "value": 2,
+        "unit": "cell",
+        "definition": "Initial root-local distance from actual sole point to the new nominal static target; larger jumps are separate stress cases."
+      },
+      "static_step_fixture_min": {
+        "value": 1,
+        "unit": "cell",
+        "definition": "Initial root-local actual sole-to-target distance at first owner admission, strictly outside the 0.75-cell settling envelope. Every nominal static trial must require a reach."
+      },
+      "sweep_target_speed_max": {
+        "value": 2,
+        "unit": "cell_per_second",
+        "definition": "Maximum prescribed target speed in the nominal smooth sweep fixtures."
+      },
+      "sweep_target_acceleration_max": {
+        "value": 8,
+        "unit": "cell_per_second_squared",
+        "definition": "Maximum prescribed target acceleration in the nominal smooth sweep fixtures."
+      },
+      "sweep_target_diameter_min": {
+        "value": 3,
+        "unit": "cell",
+        "definition": "Maximum pairwise distance between prescribed root-local targets during each scored sweep; requires a nonconstant target range wider than twice the tracking p95 envelope."
+      },
+      "sweep_target_path_length_min": {
+        "value": 6,
+        "unit": "cell",
+        "definition": "Sum of adjacent base-tick prescribed target displacements during each scored sweep; actual scripted trajectory is retained."
+      },
+      "sweep_target_moving_speed_min": {
+        "value": 0.5,
+        "unit": "cell_per_second",
+        "definition": "Lower speed threshold used only to classify moving target intervals; the maximum-speed limit still applies."
+      },
+      "sweep_target_moving_fraction_min": {
+        "value": 0.5,
+        "unit": "fraction_of_scored_base_ticks",
+        "definition": "At least half of every scored sweep's target intervals have speed at least 0.5 cell/s; no qualifying a long stationary hold with a brief excursion."
+      },
+      "sweep_target_reversals_min": {
+        "value": 1,
+        "unit": "count_per_scored_sweep",
+        "definition": "At least one sign reversal of target velocity projected onto a prospectively fixed unit sweep axis; ignore projected speeds below 0.5 cell/s, and do not choose the axis from results."
+      },
+      "sweep_acquisition_ticks_max": {
+        "value": 90,
+        "unit": "base_tick",
+        "definition": "At most this initial interval is designated acquisition before the fixed scored sweep; still retained and reported."
+      },
+      "sweep_endpoint_p95_max": {
+        "cells": 1,
+        "normalized_reach": 0.16,
+        "definition": "Actual sole-point error across every scored physical tick, separately per bundle and over each complete nominal sweep."
+      },
+      "sweep_endpoint_worst_max": {
+        "cells": 1.5,
+        "normalized_reach": 0.24,
+        "definition": "Worst actual sole-point error in the same scored sweep population."
+      },
+      "target_admission_latency_max": {
+        "value": 6,
+        "unit": "base_tick",
+        "definition": "Fresh target creation at an identified owner tick to first reflected joint-reference/motor receipt in nominal continuously advancing execution."
+      },
+      "meaningful_motion_latency_max": {
+        "value": 12,
+        "unit": "base_tick",
+        "definition": "From first owner admission to directed measured joint change >=0.01 rad or endpoint-error improvement >=0.05 cell in every predeclared directed-response trial; missing or absent response fails, rather than removing the trial."
+      },
+      "response_requested_joint_change_min": {
+        "value": 0.1,
+        "unit": "rad",
+        "definition": "At least one selected joint's first resolved desired reference must differ from its measured admission configuration by this amount in every directed-response trial; a zero/suppressed request cannot evade latency scoring."
+      },
+      "motion_response_threshold": {
+        "joint_radians": 0.01,
+        "endpoint_improvement_cells": 0.05,
+        "definition": "Either directed response suffices; record its commanded/admitted/actual attribution, not just passive drift."
+      },
+      "chatter_window": {
+        "value": 60,
+        "unit": "base_tick",
+        "definition": "Final fixed window of each static hold after acquisition; no selecting the quietest segment."
+      },
+      "reference_reversals_max": {
+        "value": 2,
+        "unit": "count_per_joint_per_window",
+        "definition": "Sign reversals in successive nontrivial reference increments; ignore increments of absolute size <=0.01 rad; compare remaining consecutive signs."
+      },
+      "reference_increment_ignore_max": {
+        "value": 0.01,
+        "unit": "rad",
+        "definition": "Chatter deadband for increment-sign classification only, not an extra actuation deadband."
+      },
+      "reference_peak_to_peak_max": {
+        "value": 0.11,
+        "unit": "rad",
+        "definition": "Maximum-minus-minimum requested reference per selected joint during the chatter window; twice authored play."
+      },
+      "actual_joint_peak_to_peak_max": {
+        "value": 0.165,
+        "unit": "rad",
+        "definition": "Maximum-minus-minimum actual rest-relative coordinate per selected joint in the same static window; three times authored play."
+      },
+      "blocked_target_rule": "No free-space arrival requirement during declared obstruction. Require finite bounded actuation, preserved owner limits, explicit blocked/best-effort outcome and successful cancellation/replacement. Recovery is scored on a new predeclared free target with the same limits.",
+      "physical_authority": "Full actor remains simulated; same authored assistance and bounded servo for every comparator; no pose locking, root optimization, hidden reset or increased force.",
+      "stationary_reference_control": {
+        "required": true,
+        "pairing": "Run every nominal static and sweep fixture with the same initial state, target trajectory, host mechanics and bounded servo, refreshing the selected joints' initial measured references at the same cadence instead of solving new targets. Preserve all paired outcomes.",
+        "success_metric": "shared_endpoint_dwell_tracking_and_integrity",
+        "excluded_control_gates": [
+          "response_requested_joint_change_min",
+          "meaningful_motion_latency_max"
+        ],
+        "success_fraction_max": 0.5,
+        "learned_success_fraction_gain_min": 0.4,
+        "unit": "fraction_of_scheduled_episodes",
+        "definition": "Separately in the static and sweep families, the stationary-reference control succeeds on at most half the scheduled cases and the learned system improves by at least 0.4 absolute success fraction. Score the control by the same endpoint/dwell or sweep-tracking and common integrity limits, without declaring it failed solely for not issuing a new joint reference or directed motion; report response fields separately. If holding still already passes, this suite cannot qualify useful physical IK."
+      }
+    }
+  },
+  "learned_contribution": {
+    "owner_issue": 54,
+    "raw_error_ratio_to_untrained_p95_max": 0.5,
+    "definition": "Each trained seed's raw p95 nominal endpoint error must be at most half its matched untrained initialization's raw p95; report absolute errors and all controls.",
+    "practical_utility_selection": "Before training select one primary utility comparison below; report both where measurable and do not switch the primary metric after seeing results.",
+    "allowed_primary_utility_gates": [
+      {
+        "id": "cpu_decision_cost",
+        "maximum_ratio": 0.8,
+        "definition": "At equal declared endpoint/bounds acceptance, trained pipeline p95 CPU decision cost divided by matched numerical pipeline p95 cost."
+      },
+      {
+        "id": "bounded_correction_success",
+        "minimum_absolute_fraction_gain": 0.05,
+        "definition": "Trained initializer plus two iterations feasible-success fraction minus normal initializer plus the same two iterations, using corrected endpoint limits and every nominal query."
+      }
+    ],
+    "analytic_reference_cost_always_reported": true,
+    "raw_accuracy_and_fallback_gates_always_required": true,
+    "no_go_rule": "A trained model may satisfy geometric accuracy while failing practical utility; record these verdicts separately. Do not claim useful deployment solely from fallback/correction."
+  },
+  "integrity": {
+    "owner_issues": [
+      50,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+    ],
+    "critical_violations_max": 0,
+    "required_negative_case_success_fraction": 1,
+    "zero_tolerance_cases": [
+      "nonfinite_admitted_payload",
+      "emitted_inner_bound_violation",
+      "passive_or_disabled_joint_command",
+      "root_or_orientation_command",
+      "ungranted_host_capability",
+      "stale_or_expired_actuation",
+      "cancelled_or_replayed_actuation",
+      "profile_or_topology_identity_drift",
+      "evaluator_privilege_leak",
+      "missing_owner_receipt_claimed_complete"
+    ],
+    "missing_measurement": "Reject the nominal two-DOF solve if either selected joint measurement or the issued root pose is missing; derive nominal sole geometry from q and the descriptor. Physical scoring separately requires actual sole/root telemetry from the same completed owner frame; missing physical telemetry makes that attempt incomplete or no-go. Never replace missing state with observed zero.",
+    "masks": "Presence, measurement availability, solver participation and actuator authority remain distinct; only hip_1 and ankle_1 have selected reference outputs.",
+    "admission": "Geometric status never grants dispatch. Retain the original observation/source/actor/profile/topology identity, absolute deadline and single-use owner authority.",
+    "status_semantics": "Solved, bounded best effort, certified geometric infeasibility and iteration exhaustion are distinct. Invalid, stale, unsupported or cancelled cases have no actionable payload."
+  },
+  "freeze": {
+    "implemented_stage": "issue_50_contract_only",
+    "training_performed": false,
+    "physical_host_executed": false,
+    "gpu_qualified": false,
+    "learned_qualified": false,
+    "physical_qualified": false,
+    "required_preregistration": [
+      "learner_and_host_revisions",
+      "exact_profile_semantic_and_file_hashes",
+      "acceptance_file_hash",
+      "source_and_environment_hashes",
+      "model_loss_and_initializer",
+      "chosen_correction_mode_and_primary_utility_gate",
+      "exact_family_and_target_region_assignments",
+      "all_training_seeds",
+      "candidate_selection",
+      "all_exact_scenario_counts",
+      "finite_samples_updates_wall_time_memory_allocation"
+    ],
+    "thresholds_change_rule": "Reference-only calibration may publish a new immutable acceptance id/file before any learned training or sealed scoring. Preserve this version, rationale and all prior evidence; never retune this identity after viewing learned or final physical results.",
+    "outcome_rule": "Software contract checks do not confer CUDA, learned, runtime or physical qualification; each owning issue supplies its separate measured evidence.",
+    "existing_jolt_and_morphology_gates_unchanged": true
+  }
+}

@@ -36,7 +36,8 @@ def parser() -> argparse.ArgumentParser:
     commands.add_parser("doctor", help="report the CPU environment without loading a GPU runtime")
     commands.add_parser("plugins", help="list the small registered CPU conformance extensions")
     validate = commands.add_parser("validate", help="validate a strict versioned JSON record")
-    validate.add_argument("kind", choices=("profile", "command", "legacy-command", "observation", "wire-action"))
+    validate.add_argument("kind", choices=("profile", "command", "legacy-command", "observation", "wire-action",
+                                           "ik-profile", "ik-observation", "ik-target", "ik-result"))
     validate.add_argument("path", type=Path)
     fixture = commands.add_parser("fixture", help="run a recorded contract example, not a game simulation")
     fixture.add_argument("--output", type=Path, default=Path("artifacts/records"))
@@ -84,9 +85,14 @@ def main(argv: list[str] | None = None) -> int:
             from .builtins import builtin_registry
             print_json([item.to_dict() for item in builtin_registry().list()])
         elif args.command == "validate":
-            record_type = {"profile": GameplayProfile, "command": Command,
-                           "legacy-command": LegacyCommand, "observation": Observation,
-                           "wire-action": WireAction}[args.kind]
+            record_types = {"profile": GameplayProfile, "command": Command,
+                            "legacy-command": LegacyCommand, "observation": Observation,
+                            "wire-action": WireAction}
+            if args.kind.startswith("ik-"):
+                from .ik import IKObservation, IKProfile, IKResult, IKTarget
+                record_types.update({"ik-profile": IKProfile, "ik-observation": IKObservation,
+                                     "ik-target": IKTarget, "ik-result": IKResult})
+            record_type = record_types[args.kind]
             record = record_type.from_dict(strict_json_loads(args.path.read_bytes()))
             print_json({"valid": True, "kind": args.kind, "sha256": record.sha256})
         elif args.command == "fixture":

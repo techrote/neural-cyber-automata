@@ -1,0 +1,71 @@
+{
+  "artifact_filename": "nca-jolt-recovery-v2-diagnostic-20261020.tar.gz",
+  "artifact_index_sha256": "783fcbd0e564f07f7f3d04e785f4aaa21ae38bc421cee6954d0c15c14bef03c9",
+  "cause": "Undetermined. The size changes followed direct transfer operations. Success after atomic staging does not identify the mutating layer or establish a cause for any earlier journal truncation.",
+  "earlier_failed_transfer_bytes_retained": true,
+  "expected_archive": {
+    "bytes": 27852949,
+    "members": 206,
+    "sha256": "7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53"
+  },
+  "failed_direct_transfers": [
+    {
+      "archive_complete": false,
+      "bytes": 17213270,
+      "complete_archive_verified_before_operation": true,
+      "complete_members_read": 203,
+      "operation": "direct_create",
+      "original_diagnostic_files_changed": false,
+      "provider_reported_success": true,
+      "read_error": "EOFError: Compressed file ended before the end-of-stream marker was reached",
+      "saved_version": 0,
+      "sha256": "92e552b0b9e1820238721c1b7135dea8c9f064442ec127b32506635b8695da45",
+      "shorter_archive_observed_after_operation": true
+    },
+    {
+      "archive_complete": false,
+      "bytes": 19216860,
+      "complete_archive_verified_before_operation": true,
+      "complete_members_read": 204,
+      "operation": "direct_guarded_replace",
+      "original_diagnostic_files_changed": false,
+      "provider_reported_success": true,
+      "read_error": "EOFError: Compressed file ended before the end-of-stream marker was reached",
+      "saved_version": 1,
+      "sha256": "3a98ee2d7720fb5ac41fa2c1adde63f46240d1f9cbb3a3f5dbeb9335c42de544",
+      "shorter_archive_observed_after_operation": true
+    }
+  ],
+  "interpretation": "Archive delivery is now verified by a fresh persisted readback. Both shorter transfer states remain failures. This post-archive delivery receipt is stored separately in Git and is not one of the 206 archive members.",
+  "optimizer_updates": 0,
+  "original_artifact_index_unchanged": true,
+  "original_diagnostic_files_unchanged": true,
+  "physical_evidence_verdict_changed": false,
+  "physical_reruns": 0,
+  "preparation_failures_before_any_upload_session": [
+    "Helper tool discovery could not connect under default network restrictions.",
+    "Initial escalation review declined; read-only destination ownership and payload checks were completed before a new review allowed execution.",
+    "Allowed helper tool discovery returned HTTP 403; no preparation or upload session began."
+  ],
+  "run_id": "jolt-recovery-v2-diagnostic-20261020",
+  "schema": "nca-artifact-delivery-audit/v1",
+  "successful_transfer": {
+    "every_member_matches_index": true,
+    "existing_artifact_identity_preserved": true,
+    "expected_previous_version": 1,
+    "fresh_readback_archive": {
+      "bytes": 27852949,
+      "sha256": "7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53"
+    },
+    "fresh_readback_members": 206,
+    "operation": "direct_guarded_replace_after_atomic_staging",
+    "post_write_local_archive": {
+      "bytes": 27852949,
+      "sha256": "7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53"
+    },
+    "returned_bytes": 27852949,
+    "saved_version": 2
+  },
+  "teacher_verdict_changed": false,
+  "verified_at": "2026-10-20T19:00:36.605307+00:00"
+}

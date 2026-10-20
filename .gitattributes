@@ -12,3 +12,7 @@ docs/evidence/jolt-arrival-reference-supervisor-20261020.json text eol=lf
 docs/evidence/jolt-arrival-reference-audit-20261020.json text eol=lf
 docs/evidence/jolt-arrival-reference-index-20261020.json text eol=lf
 docs/evidence/jolt-recovery-v1-*-20261020.json text eol=lf
+docs/evidence/jolt-recovery-v2-*-20261020.json text eol=lf
+# IK acceptance binds these exact descriptor/declaration bytes on every OS.
+src/nca/ik/runner_right_sole_v1.json text eol=lf
+configs/ik/runner_right_sole_acceptance_v1.json text eol=lf

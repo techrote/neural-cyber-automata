@@ -1,0 +1,431 @@
+{
+  "derived": true,
+  "families": {
+    "authored-balanced-v1": {
+      "admitted_primary_edges": {
+        "maximum": 4,
+        "mean": 2.0625,
+        "measured_cases": 32,
+        "sum": 66
+      },
+      "aggregate_absolute_angular_impulse_sum": {
+        "maximum": 258.4538914351588,
+        "mean": 134.1600937434888,
+        "measured_cases": 32,
+        "sum": 4293.122999791642
+      },
+      "aggregate_linear_impulse_magnitude_sum": {
+        "maximum": 1101.6499882532592,
+        "mean": 569.8682847072524,
+        "measured_cases": 32,
+        "sum": 18235.785110632078
+      },
+      "airborne_seconds": {
+        "maximum": 3.5,
+        "mean": 1.6859375,
+        "measured_cases": 32,
+        "sum": 53.95
+      },
+      "airborne_ticks": {
+        "maximum": 210,
+        "mean": 101.15625,
+        "measured_cases": 32,
+        "sum": 3237
+      },
+      "confirmed_primary_associated_pulses": {
+        "maximum": 4,
+        "mean": 1.96875,
+        "measured_cases": 32,
+        "sum": 63
+      },
+      "consumed_primary_edges": {
+        "maximum": 4,
+        "mean": 2.0625,
+        "measured_cases": 32,
+        "sum": 66
+      },
+      "first_toward_motion_seconds": {
+        "maximum": 0.6666666666666666,
+        "mean": 0.17760416666666667,
+        "measured_cases": 32,
+        "sum": 5.683333333333334
+      },
+      "inference_p95_ms": {
+        "maximum": 1.3333493999999972,
+        "mean": 0.39748993124999976,
+        "measured_cases": 32,
+        "sum": 12.719677799999992
+      },
+      "landing_transitions": {
+        "maximum": 6,
+        "mean": 3.21875,
+        "measured_cases": 32,
+        "sum": 103
+      },
+      "ordinary_recovery_events": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "outcomes_by_supervision": {
+        "emergency_cases": [],
+        "with_emergency": {
+          "arrivals": 0,
+          "cases": 0
+        },
+        "without_emergency": {
+          "arrivals": 17,
+          "cases": 32
+        }
+      },
+      "owner_roundtrip_p95_ms": {
+        "maximum": 110.81365074999984,
+        "mean": 64.24576740468748,
+        "measured_cases": 32,
+        "sum": 2055.8645569499995
+      },
+      "pulses_with_airborne_confirmation": {
+        "maximum": 4,
+        "mean": 1.96875,
+        "measured_cases": 32,
+        "sum": 63
+      },
+      "recoveries_with_observed_progress": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "request_to_aggregate_actuation_ticks": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "requested_primary_edges": {
+        "maximum": 4,
+        "mean": 2.0625,
+        "measured_cases": 32,
+        "sum": 66
+      },
+      "supervisor_intervention_decisions": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "supervisor_recovery_events": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "support_loss_transitions": {
+        "maximum": 5,
+        "mean": 2.59375,
+        "measured_cases": 32,
+        "sum": 83
+      },
+      "supported_blocked_heuristic_ticks": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "unknown_support_ticks": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      }
+    },
+    "jolt-arrival-v1": {
+      "admitted_primary_edges": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "aggregate_absolute_angular_impulse_sum": {
+        "maximum": 425.5351249542874,
+        "mean": 79.4015307500014,
+        "measured_cases": 32,
+        "sum": 2540.8489840000448
+      },
+      "aggregate_linear_impulse_magnitude_sum": {
+        "maximum": 1322.3976819899176,
+        "mean": 476.16519176788455,
+        "measured_cases": 32,
+        "sum": 15237.286136572306
+      },
+      "airborne_seconds": {
+        "maximum": 3.816666666666667,
+        "mean": 0.5786458333333333,
+        "measured_cases": 32,
+        "sum": 18.516666666666666
+      },
+      "airborne_ticks": {
+        "maximum": 229,
+        "mean": 34.71875,
+        "measured_cases": 32,
+        "sum": 1111
+      },
+      "confirmed_primary_associated_pulses": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "consumed_primary_edges": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "first_toward_motion_seconds": {
+        "maximum": 0.8,
+        "mean": 0.22760416666666666,
+        "measured_cases": 32,
+        "sum": 7.283333333333333
+      },
+      "inference_p95_ms": {
+        "maximum": 2.6804188999999985,
+        "mean": 0.7077649140624999,
+        "measured_cases": 32,
+        "sum": 22.648477249999996
+      },
+      "landing_transitions": {
+        "maximum": 2,
+        "mean": 1.75,
+        "measured_cases": 32,
+        "sum": 56
+      },
+      "ordinary_recovery_events": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "outcomes_by_supervision": {
+        "emergency_cases": [],
+        "with_emergency": {
+          "arrivals": 0,
+          "cases": 0
+        },
+        "without_emergency": {
+          "arrivals": 27,
+          "cases": 32
+        }
+      },
+      "owner_roundtrip_p95_ms": {
+        "maximum": 205.47967839999998,
+        "mean": 69.22595163593749,
+        "measured_cases": 32,
+        "sum": 2215.2304523499997
+      },
+      "pulses_with_airborne_confirmation": {
+        "maximum": 1,
+        "mean": 0.78125,
+        "measured_cases": 32,
+        "sum": 25
+      },
+      "recoveries_with_observed_progress": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "request_to_aggregate_actuation_ticks": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "requested_primary_edges": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "supervisor_intervention_decisions": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "supervisor_recovery_events": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      },
+      "support_loss_transitions": {
+        "maximum": 1,
+        "mean": 0.78125,
+        "measured_cases": 32,
+        "sum": 25
+      },
+      "supported_blocked_heuristic_ticks": {
+        "maximum": 96,
+        "mean": 10.53125,
+        "measured_cases": 32,
+        "sum": 337
+      },
+      "unknown_support_ticks": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      }
+    },
+    "jolt-recovery-v2": {
+      "admitted_primary_edges": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "aggregate_absolute_angular_impulse_sum": {
+        "maximum": 274.75858084641857,
+        "mean": 120.32924045487405,
+        "measured_cases": 32,
+        "sum": 3850.5356945559697
+      },
+      "aggregate_linear_impulse_magnitude_sum": {
+        "maximum": 1042.9813059240914,
+        "mean": 587.4889886634734,
+        "measured_cases": 32,
+        "sum": 18799.647637231148
+      },
+      "airborne_seconds": {
+        "maximum": 1.9833333333333334,
+        "mean": 1.0526041666666666,
+        "measured_cases": 32,
+        "sum": 33.68333333333333
+      },
+      "airborne_ticks": {
+        "maximum": 119,
+        "mean": 63.15625,
+        "measured_cases": 32,
+        "sum": 2021
+      },
+      "confirmed_primary_associated_pulses": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "consumed_primary_edges": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "first_toward_motion_seconds": {
+        "maximum": 0.8166666666666667,
+        "mean": 0.49635416666666665,
+        "measured_cases": 32,
+        "sum": 15.883333333333333
+      },
+      "inference_p95_ms": {
+        "maximum": 0.9577016999999937,
+        "mean": 0.6687217265624994,
+        "measured_cases": 32,
+        "sum": 21.39909524999998
+      },
+      "landing_transitions": {
+        "maximum": 3,
+        "mean": 2.3125,
+        "measured_cases": 32,
+        "sum": 74
+      },
+      "ordinary_recovery_events": {
+        "maximum": 2,
+        "mean": 0.75,
+        "measured_cases": 32,
+        "sum": 24
+      },
+      "outcomes_by_supervision": {
+        "emergency_cases": [
+          "demo-floor-left-60-0",
+          "demo-floor-left-60-1",
+          "demo-floor-left-60-2",
+          "reference-floor-left-27",
+          "reference-floor-left-63"
+        ],
+        "with_emergency": {
+          "arrivals": 3,
+          "cases": 5
+        },
+        "without_emergency": {
+          "arrivals": 22,
+          "cases": 27
+        }
+      },
+      "owner_roundtrip_p95_ms": {
+        "maximum": 93.3774225,
+        "mean": 65.3480091515625,
+        "measured_cases": 32,
+        "sum": 2091.13629285
+      },
+      "pulses_with_airborne_confirmation": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "recoveries_with_observed_progress": {
+        "maximum": 2,
+        "mean": 0.875,
+        "measured_cases": 32,
+        "sum": 28
+      },
+      "request_to_aggregate_actuation_ticks": {
+        "maximum": 1,
+        "mean": 1,
+        "measured_cases": 32,
+        "sum": 32
+      },
+      "requested_primary_edges": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "supervisor_intervention_decisions": {
+        "maximum": 4,
+        "mean": 0.59375,
+        "measured_cases": 32,
+        "sum": 19
+      },
+      "supervisor_recovery_events": {
+        "maximum": 1,
+        "mean": 0.15625,
+        "measured_cases": 32,
+        "sum": 5
+      },
+      "support_loss_transitions": {
+        "maximum": 2,
+        "mean": 1.3125,
+        "measured_cases": 32,
+        "sum": 42
+      },
+      "supported_blocked_heuristic_ticks": {
+        "maximum": 26,
+        "mean": 1.375,
+        "measured_cases": 32,
+        "sum": 44
+      },
+      "unknown_support_ticks": {
+        "maximum": 0,
+        "mean": 0,
+        "measured_cases": 32,
+        "sum": 0
+      }
+    }
+  },
+  "interpretation": "Equal weight per each of 32 opened cases; sums are physical receipts, progress is temporal association, impulse units are native actuator units, native roundtrip includes durable transport overhead; no sealed or owner-feel claim.",
+  "schema": "nca-jolt-derived-character-summary/v1",
+  "source_summary_sha256": "3ce71ed0bb9748111b3d820597c8f29afad268978c4426f18d588af99d9c4347"
+}

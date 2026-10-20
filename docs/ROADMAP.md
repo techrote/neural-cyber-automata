@@ -42,10 +42,13 @@ Each issue contains an execution prompt, read-set, write-set, checks, limits and
 The current prerequisite path is contact-aware [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
 and [complete evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43),
 then [LEARN-JOLT-002](design/LEARN_JOLT_002.md), then T-106. Evidence software is
-accepted in PR #58. The first recovery diagnostic is an immutable incomplete
-24-row result; [#60](https://github.com/techrote/neural-cyber-automata/issues/60)
-separately corrects advisory arrival and declares a new full comparison. It does
-not resume the failed invocation or weaken the original learned gates.
+accepted in PR #58. [The separate v2 result](evidence/2026-10-20-jolt-recovery-v2.md)
+fully verifies 96 rows and native closure, preserving the incomplete v1 attempt.
+Recovery restores airborne character but fails the teacher gate at 25/32 arrivals
+versus 27/32, with two rescues and four regressions. Correct those remaining
+movement failures in [#64](https://github.com/techrote/neural-cyber-automata/issues/64)
+before the [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
+can admit collection. All learned reliability and morphology gates stay unchanged.
 
 ## Dependency gates
 
@@ -87,6 +90,35 @@ Before a learning run, freeze the profile, observation/action semantics, scenari
 Routine CI checks contracts, reset, sample handling and small fixtures. Long training and live model calls use explicit experiment tasks. Preserve failed and capped runs. A no-go or inconclusive result can satisfy a research issue if it answers the scoped question honestly and leaves reproducible evidence.
 
 Promotion requires matched capabilities and declared information/timing, no critical lifecycle failures, useful task performance, measured runtime cost and separately recorded owner feel judgement. Do not demand perfect joints, a gyro momentum ledger or exact energy conservation.
+
+## CUDA IK programme
+
+D-016 commissions [IK-CUDA-000 / #49](https://github.com/techrote/neural-cyber-automata/issues/49).
+The first pilot targets Runner's right sole using two rotary coordinates and an
+observed root frame. Its [contracts](IK_LAYER.md), [prospective acceptance](IK_ACCEPTANCE.md)
+and [separate host requirements](IK_HOST_HANDOFF.md) distinguish nominal geometry,
+actual CUDA learning, exact CPU export and physical tracking evidence.
+
+| Issue | Deliverable | Dependency | Evidence state |
+|---|---|---|---|
+| [#50](https://github.com/techrote/neural-cyber-automata/issues/50) | Registered rig/effector/target/result contracts | Entry | Nominal profile and software fixtures |
+| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | Unimplemented; hardware unqualified |
+| [#52](https://github.com/techrote/neural-cyber-automata/issues/52) | Batched FK and independent numerical IK | #50 | Unimplemented |
+| [#53](https://github.com/techrote/neural-cyber-automata/issues/53) | Branch-aware data/curriculum and sealed family splits | #52 | Unimplemented |
+| [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | Unmeasured |
+| [#55](https://github.com/techrote/neural-cyber-automata/issues/55) | Host joint-target handoff and NCA adapter | #50, accepted separate Cybersand capability | Specification only |
+| [#56](https://github.com/techrote/neural-cyber-automata/issues/56) | Exact CPU runtime export | #54 | Unimplemented |
+| [#57](https://github.com/techrote/neural-cyber-automata/issues/57) | Physical qualification and runbook for the exported bundle | #55, #56 | Unmeasured |
+
+After #50, CUDA infrastructure, reference geometry and host-interface preparation
+can proceed independently. Export precedes final physics scoring so the scored
+artifact is the delivered artifact. A host-capability gap does not prevent
+nominal learning preparation; it prevents claims of actual tracking.
+
+The independent fixed-chain task does not relax or inherit #16's failed
+locomotion/morphology prerequisite. Journal #43 and recovery #48 are related
+work, not unconditional blockers. Each issue retains a distinct branch/PR,
+independent review, exact-head checks and bounded experiment declaration.
 
 ## Preserved legacy programme
 

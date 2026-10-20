@@ -8,19 +8,19 @@ verified: 2026-10-20
 
 # Current state
 
-Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open:
-its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite.
-[The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
+Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open: its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite. [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
+
+[CURRENT] The [Runner IK milestone](IK_LAYER.md) adds a registered nominal profile, strict source/lifetime-bound targets/results and prospective numeric acceptance.
+CUDA learning, inverse-solver implementation, CPU IK export and physical joint-target qualification remain unmeasured or unimplemented.
 
 [Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
 The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
-Its historical complete-journal audit remains incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58).
-The [recovery v1 failure](evidence/2026-10-20-jolt-recovery-v1.md), 24/96 rows, is preserved in accepted [PR #59](https://github.com/techrote/neural-cyber-automata/pull/59); the reviewed advisory correction in [#60](https://github.com/techrote/neural-cyber-automata/issues/60) has a separate pending diagnostic. #48, #43 and #16 remain open.
+Its historical journal stays incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58); the separate [v2 comparison](evidence/2026-10-20-jolt-recovery-v2.md) fully verifies all 96 rows and closure in 444.465661 seconds.
+The [v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) remains preserved. [PR #61](https://github.com/techrote/neural-cyber-automata/pull/61) records v2 arrivals 25/32 versus 27/32, despite 32/32 purposeful airborne cases; teacher #48, [LEARN-JOLT-002](design/LEARN_JOLT_002.md) and morphology #16 remain blocked on their respective gates.
 
 ## T-100 — Accepted research baseline
 
-The T-100 research programme landed in PR #21 at
-`95d8788686980974d4f849e892c33f531d992fe7`.
+The T-100 research programme landed in PR #21 at `95d8788686980974d4f849e892c33f531d992fe7`.
 ## Accepted CPU foundation
 
 T-101 merged through [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22)
