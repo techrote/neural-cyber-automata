@@ -20,7 +20,7 @@ if HAS_NUMPY:
     from test_export_runtime import bundle as synthetic_bundle
 
 
-@unittest.skipUnless(ENABLED, "evaluated CPU export bundle and actual host not configured; no deployment evidence")
+@unittest.skipUnless(ENABLED, "NumPy, evaluated CPU export bundle and actual host are required; no deployment evidence")
 class ExportHostTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -90,7 +90,7 @@ class ExportHostTests(unittest.TestCase):
         self.assertEqual(pose(current), pose(fresh))
 
 
-@unittest.skipUnless(OWNER_ENABLED, "pinned actual host not configured; synthetic policy is not deployment evidence")
+@unittest.skipUnless(OWNER_ENABLED, "NumPy and pinned actual host are required; synthetic policy is not deployment evidence")
 class ExportOwnerBoundaryTests(unittest.TestCase):
     """Real native receipts with synthetic weights, never a learned-skill result."""
     @classmethod

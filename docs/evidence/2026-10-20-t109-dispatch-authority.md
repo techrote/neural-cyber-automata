@@ -187,3 +187,23 @@ sustained deployment cost, continuous realtime deadline reliability, multiple
 learned actors, in-engine execution or owner feel. Their wall times are test
 runner observations, not deployment latency or throughput measurements. The
 existing learned reliability gate and morphology block remain unchanged.
+
+## Prospective CI coverage follow-up
+
+After [PR #45](https://github.com/techrote/neural-cyber-automata/pull/45) merged
+at `aa47e36bde7900f2a3a980a0bb59ebefb05e2fe1`, review of the pinned-host workflow
+found that its bare package install omitted NumPy. All six synthetic-policy
+owner tests therefore skipped, despite that job succeeding. Their old skip
+message named only the host, obscuring the missing optional dependency.
+
+[Issue #46](https://github.com/techrote/neural-cyber-automata/issues/46) installs
+the existing `.[export]` extra and explicitly requires
+NumPy 2.3.5 and `test_export_host.OWNER_ENABLED` during workflow admission.
+Missing owner-test prerequisites now fail that job before test execution.
+Skip descriptions also name NumPy for both actual-owner and evaluated-artifact
+checks. No runtime operator, host source or deployment contract changes here.
+
+This section records prospective CI coverage; the corrected workflow has not
+yet supplied a passing native result at this source. No local physical run was
+added. The earlier test/source hashes and local execution history above remain
+unchanged and identify their original measured bytes.
