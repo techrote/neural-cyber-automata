@@ -2,7 +2,7 @@
 
 Research, training and evaluation for intelligent behaviour in [Cybersand](https://github.com/techrote/cybersand): physical actor control, movement and tool skills, human and model command sources, coordination, and neural cellular automata where local distributed behaviour helps the game.
 
-**Stage: implementation, 19 October 2026.** The CPU contract and run-record foundation is implemented. Host integration, authored controls and the bounded learning programme have separate acceptance records in [current state](docs/STATE.md). The programme uses the articulated ACT-004 host and preserves the existing Thunderbowl control contracts.
+**Stage: nine of ten programme tasks have accepted results, 20 October 2026.** The CPU package, physical host adapter, authored controls, capture/replay, learned Jolt skill, usable skills and asynchronous ownership are implemented. The bounded graph experiment is complete with a recorded no-go. The [exact evaluated Linux Torch CPU bundle](docs/evidence/2026-10-20-t109-torch-cpu.md) has separate composite deployment qualification, including two active five-minute host windows and all four matched pose clips; its original rendering failure and the earlier NumPy no-go remain recorded. Morphology transfer is the remaining programme task: the designated primary still fails the fixed 75% mean / 50% every-seed reliability prerequisite. [Current state](docs/STATE.md) records the results and limits, and [progress checkpoints](docs/PROGRESS.md) track the remaining work. The programme uses the articulated ACT-004 host and preserves the existing Thunderbowl contracts.
 
 ## Start here
 
@@ -14,7 +14,7 @@ Research, training and evaluation for intelligent behaviour in [Cybersand](https
 - [Pinned source audit](docs/evidence/2026-10-18-source-prepass.md)
 - [Full documentation map](docs/README.md)
 
-The recommended first comparison is a tuned physical controller, an imitation policy, and a small recurrent residual policy on the same rig, sensors, actuator limits and scenarios. Graph policies, learned coordination, world models and cellular controllers enter when a specific experiment can show why they are useful.
+The first learned-skill comparison evaluated an authored physical controller, an imitation policy and a small recurrent residual policy on matched Jolt scenarios. The bounded improvements and directional failures are retained in the [learning evidence](docs/evidence/2026-10-19-t105.md). Graph and cellular candidates have separate declared experiments; their structure alone does not establish useful behaviour.
 
 The original NCA programme is preserved in history and retained as a Cybersand research track. It no longer makes pattern-growth reproduction, a toy sand engine or legacy GPU qualification prerequisites for actor control. [Scope and migration](docs/SCOPE_AND_MIGRATION.md) explains the change.
 
