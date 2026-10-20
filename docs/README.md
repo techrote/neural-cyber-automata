@@ -31,6 +31,8 @@ verified: 2026-10-20
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |
 | How do I use authored skills and repeat matched response fixtures? | [Controllers](CONTROLLERS.md) |
 | What is the separate arrival-aware Jolt teacher and how is it measured? | [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) |
+| What happened in the contact-recovery diagnostic? | [Preserved recovery v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) |
+| What must the next learned Jolt experiment prove? | [LEARN-JOLT-002 design](design/LEARN_JOLT_002.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |

@@ -39,6 +39,14 @@ programme task; its fixed reliability prerequisite and continuation gates still 
 
 Each issue contains an execution prompt, read-set, write-set, checks, limits and budget. No task may claim trained/physical/live-model evidence from a schema, mock or metadata flag.
 
+The current prerequisite path is contact-aware [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
+and [complete evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43),
+then [LEARN-JOLT-002](design/LEARN_JOLT_002.md), then T-106. Evidence software is
+accepted in PR #58. The first recovery diagnostic is an immutable incomplete
+24-row result; [#60](https://github.com/techrote/neural-cyber-automata/issues/60)
+separately corrects advisory arrival and declares a new full comparison. It does
+not resume the failed invocation or weaken the original learned gates.
+
 ## Dependency gates
 
 **T-101:** Can start after the prepass merge; no ACT-004 implementation dependency for the package and recorded fixtures.

@@ -14,6 +14,28 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-015 — Recover Jolt and qualify evidence before the next learned skill
+
+[ACCEPTED] 2026-10-20 by owner: start JOLT-RECOVERY-001 and EVIDENCE-001
+in parallel with independent source ownership and regular repository checkpoints.
+
+Add a versioned contact/progress recovery controller while preserving both
+existing authored references, all historical failures and the configured host.
+Keep ordinary movement, posture, launch timing and correction in the controller.
+A minimal physical recovery supervisor handles invalid state, lost authority,
+expired commands and explicitly declared emergency recovery; it must not become
+an implicit authored movement policy for a future learner.
+
+Complete durable diagnostic recording and native-close verification. A newly
+declared bounded diagnostic keeps a distinct source, allocation and evidence
+identity; it cannot repair or replace the earlier truncated owner journal.
+Measure actual impulses, airborne time, recovery, response and chatter together
+with arrivals. Use the accepted findings to design LEARN-JOLT-002 with three
+independent seeds, fresh held-out geometry/starts, a prospective compute budget
+and meaningful learned actuation. Preserve the 75% mean / 50% every-seed
+reliability, character, runtime and integrity gates. Morphology transfer stays
+blocked until learned qualification and its separate continuation requirements.
+
 ### D-014 — Execute the complete current implementation programme
 
 [ACCEPTED] 2026-10-19 by owner: complete all current issues and record progress in the repository every 30 minutes.
