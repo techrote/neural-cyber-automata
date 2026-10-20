@@ -6,7 +6,12 @@ src/nca/controllers/jolt_arrival.py text eol=lf
 src/nca/controllers/shaping.py text eol=lf
 src/nca/controllers/jolt_recovery.py text eol=lf
 src/nca/controllers/jolt_recovery_v2.py text eol=lf
+src/nca/controllers/jolt_recovery_v3.py text eol=lf
+src/nca/controllers/jolt_recovery_v4.py text eol=lf
 src/nca/controllers/recovery_supervisor.py text eol=lf
+# V4 also checks the unchanged task and bridge as exact source bytes.
+src/nca/train/task.py text eol=lf
+src/nca/adapters/host_bridge.gd text eol=lf
 # Preserve the original diagnostic and derived audit receipt bytes.
 docs/evidence/jolt-arrival-reference-result-20261020.json text eol=lf
 docs/evidence/jolt-arrival-reference-supervisor-20261020.json text eol=lf
@@ -15,6 +20,7 @@ docs/evidence/jolt-arrival-reference-index-20261020.json text eol=lf
 docs/evidence/jolt-recovery-v1-*-20261020.json text eol=lf
 docs/evidence/jolt-recovery-v2-*-20261020.json text eol=lf
 docs/evidence/jolt-recovery-v3-*-20261020.json text eol=lf
+docs/evidence/jolt-recovery-v4-*-20261020.json text eol=lf
 # IK acceptance binds these exact descriptor/declaration bytes on every OS.
 src/nca/ik/runner_right_sole_v1.json text eol=lf
 configs/ik/runner_right_sole_acceptance_v1.json text eol=lf

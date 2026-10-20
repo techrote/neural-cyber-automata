@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -18,6 +19,12 @@ class RecoveryV4SupervisorTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location("v4_supervisor", ROOT / "tools/jolt_arrival.py")
         self.cli = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.cli)
+        # These workers and process groups are synthetic. Model the declared
+        # POSIX supervision contract on every test OS without changing pathlib's
+        # real platform or implying that Windows physical execution is supported.
+        platform = mock.patch.object(self.cli, "os", SimpleNamespace(name="posix", fsync=os.fsync))
+        platform.start()
+        self.addCleanup(platform.stop)
         self.declaration = {"schema": "nca-jolt-recovery-diagnostic/v4", "budget": {
             "maximum_wall_seconds": 900, "shutdown_reserve_seconds": 120,
             "independent_verification_reserve_seconds": 60,

@@ -127,6 +127,15 @@ Linux Python process test confirms cleanup across separate sessions in the
 execution context. The default sandbox's inconsistent process namespace is
 refused before launch. Strict documentation validation passes 72 files.
 
+The first public, unexecuted source checkpoint `80ca7d265fa3dba9141b36ea201ae579136e1dc2`
+passed Linux CPU and pinned-host CI but failed Windows CPU CI: checkout converted
+previously unpinned v3/task/bridge line endings, and synthetic supervisor tests
+implicitly selected the host operating system. Narrow LF checkout rules now
+preserve those exact bytes, and the four fake supervisor tests explicitly model
+POSIX supervision while retaining native test paths. All four targeted tests
+pass; no controller behavior, declaration or production execution code changed.
+The revised public freeze must pass its own CI and independent source binding.
+
 The [independent source review](jolt-recovery-v4-source-review-20261020.json)
 binds every package source, Jolt test and execution tool. It reproduces all
 32 first-launch prefixes, comprising 605 unchanged requests before their first

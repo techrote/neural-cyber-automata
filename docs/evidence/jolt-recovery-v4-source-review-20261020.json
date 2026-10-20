@@ -1,6 +1,6 @@
 {
   "admission_limit": "Exact public commit/tree, clean execution checkout and completed source/runner/evidence checks must still be bound prospectively.",
-  "audit_script_sha256": "3414a2a5e7b7b4b41fbaf5d52f6b3d4c44a8f27e3b87ec815479c33d51a1f395",
+  "audit_script_sha256": "ef5fa637b2e000d150286a6c7bda4bddb88482a65fa7701fa17e7921f615d929",
   "budget": {
     "automatic_budget_extension": false,
     "automatic_retry": false,
@@ -2518,6 +2518,7 @@
   "schema": "nca-jolt-recovery-004-independent-source-review/v1",
   "scope": "Offline declaration/inheritance review and retained physical prefixes; no new physical outcome prediction.",
   "source_file_sha256": {
+    ".gitattributes": "939448d2f2aaca508f4c7404c9e81538e9e6b72371fb1a4c243dfe0f72e3e702",
     "configs/baselines/jolt-recovery-diagnostic-v4.json": "a8a00e4f143c94363e398263af7e8423a80a0eab246b753731ff93e17cbf4b22",
     "configs/first-skill/jolt-direction-frame-v1.json": "f3aee95344531ef7b4c17998f26b9dd314f1d211bc16cf51df2004b2b86c2ba4",
     "pyproject.toml": "d62d7e0b38be25b1a4591c39adcc17a741ebe7b67c6200fed256fac5fdcbab06",
@@ -2629,9 +2630,22 @@
     "tests/test_jolt_recovery_v4.py": "9ac1b360386b4f68bc72973cd153f1730347e8ab1e2ca80e1fe7d712d1697f41",
     "tests/test_jolt_recovery_v4_diagnostic.py": "6c81e39d8f43c30eba279b69ad374cd98c3428809c3a8f5dfefa295747c36585",
     "tests/test_jolt_recovery_v4_executor.py": "d7a5484ab36e82a4110c572fee90c04cd2eb151a0c0022a4a77bee0b114d795b",
-    "tests/test_jolt_recovery_v4_supervisor.py": "b7619a3638a5efb949568cc74cc94a5e9c74ca92d347c926f982f46213cb33c1",
+    "tests/test_jolt_recovery_v4_supervisor.py": "46eccab9e08c7582c52d8e398a07eeec55923f2ecd15dfca6ec793e5b60bf97a",
     "tools/execute_jolt_diagnostic.py": "c8a4f0699f45a67d3cc287c53aa6cbcbd4c0ed553dfde4c3b53e7f66c750ef85",
     "tools/jolt_arrival.py": "446ce889f4b6d6378993bc8e872803385649b4897868848f98616eb84c2c1e02"
+  },
+  "superseded_unexecuted_source_checkpoint": {
+    "correction_scope": "Narrow LF source/evidence attributes and a test-local POSIX os namespace; production behavior, declaration, case inventory and numeric acceptance remain unchanged.",
+    "failures": [
+      "Windows CRLF conversion of omitted exact-byte pinned v3 controller, task and host bridge inputs.",
+      "Four synthetic supervisor tests did not explicitly select their declared POSIX process-group model on Windows."
+    ],
+    "new_host_starts": 0,
+    "new_owner_calls": 0,
+    "new_physical_ticks": 0,
+    "revision": "80ca7d265fa3dba9141b36ea201ae579136e1dc2",
+    "status": "Withheld before physical invocation because Windows CPU CI failed.",
+    "tree": "152331386c00ec961ae24a024d06b08e95be3604"
   },
   "unchanged_acceptance_sha256_without_identity": "1d20379d7a724c87b7d16845c1f5043e253ec7640a3b208a008240665383afa2"
 }

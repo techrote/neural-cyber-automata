@@ -144,3 +144,19 @@ episodes; global 4,000-decision/24,000-tick/4,500-call limits coexist with tight
 per-episode-derived totals of 3,840 decisions/23,040 ticks. No retry, extension,
 resumption or interim-outcome tuning is included. Teacher, #62 and #16 retain
 their original separate gates until actual acceptance evidence exists.
+
+## 2026-10-20 21:05 UTC — Offline review and Windows checkout correction
+
+[PR #66](https://github.com/techrote/neural-cyber-automata/pull/66) publishes the
+first unexecuted v4 source checkpoint. The full offline suite passes 521 tests
+with 161 expected optional/physical skips, including all 57 new tests. Independent
+review binds the implementation, declaration, cases and historical costs. The
+external executor's fourteen tests include a harmless Linux process tree across
+separate sessions; inconsistent process namespaces are refused before launch.
+
+The Windows check exposed missing LF checkout rules for hash-pinned source and
+an implicit operating-system assumption in four fake supervisor tests. The
+correction preserves exact bytes and models POSIX supervision explicitly without
+skipping the tests or changing production behavior. Targeted tests pass. The
+first checkpoint has spent no physical allocation; a revised published source,
+clean execution checkout, independent admission and CI precede the sole run.
