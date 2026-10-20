@@ -172,7 +172,8 @@ def throughput_complete(rows, setting, *, phase_seconds):
             and sum(row["decisions"] for row in rows) <= setting["maximum_decisions"])
 
 
-def require_consumed_decision(source, action, final, terminated, truncated, info, *, action_tolerance=2e-5):
+def require_consumed_decision(source, action, final, terminated, truncated, info, *, action_tolerance=2e-5,
+                              helper_lease_ticks=12):
     """Count only a complete, admitted six-tick request on the stepped owner."""
     from nca.adapters.protocol import make_physical_command
     wire_difference(action, action)
@@ -205,7 +206,7 @@ def require_consumed_decision(source, action, final, terminated, truncated, info
             if (type(sequence) not in (int, float) or not math.isfinite(sequence)
                     or sequence != int(sequence) or sequence <= source.get("last_sequence", -1)):
                 raise ContractError("throughput_admission", "fresh owner sequence required")
-            expected = make_physical_command(source, int(sequence), action, 12)
+            expected = make_physical_command(source, int(sequence), action, helper_lease_ticks)
             if set(packet) != set(expected) or any(packet[key] != expected[key] for key in expected if key != "action"):
                 raise ContractError("throughput_admission", "receipt must refer to the original issued source")
             difference = wire_difference(packet["action"], action)
@@ -257,12 +258,16 @@ def _paired_episode(host, case, config, controller, *, reference):
                 action=result.action.to_dict(), features=result.features, hidden_before=result.hidden_before,
                 hidden_after=hidden_after, value=result.value)
             if reference:
-                view, _, terminated, truncated, info = env.step_packet(env.command(result.action.to_dict(), observation=issued))
+                lease = min(12, initial["tick"] + round(goal.timeout_seconds * 60) - issued["tick"])
+                view, _, terminated, truncated, info = env.step_packet(
+                    env.command(result.action.to_dict(), observation=issued, lease_ticks=lease))
             else:
                 if result.status != "accepted":
                     raise ContractError("deployment_fallback", result.reason)
-                view, _, terminated, truncated, info = dispatch(env, result, issued)
-            require_consumed_decision(issued, result.action.to_dict(), view, terminated, truncated, info)
+                view, _, terminated, truncated, info = dispatch(env, controller, result, issued)
+                lease = result.helper_lease_ticks
+            require_consumed_decision(issued, result.action.to_dict(), view, terminated, truncated, info,
+                                      helper_lease_ticks=lease)
             steps.append({"issued_observation_id": issued["observation_id"], "issued_tick": issued["tick"],
                 "action": result.action.to_dict(), "features": result.features, "hidden_before": result.hidden_before,
                 "hidden_after": hidden_after, "value": result.value, "actual_ticks": info["actual_ticks"],
@@ -322,9 +327,10 @@ def _throughput(host, bundle, original, setting, budget, output):
                         raise ContractError("throughput_fallback", decision.reason)
                     before = time.perf_counter_ns()
                     issued = view
-                    view, _, terminal, truncated, info = dispatch(env, decision, issued)
+                    view, _, terminal, truncated, info = dispatch(env, controller, decision, issued)
                     transport_ns = time.perf_counter_ns() - before
-                    require_consumed_decision(issued, decision.action.to_dict(), view, terminal, truncated, info)
+                    require_consumed_decision(issued, decision.action.to_dict(), view, terminal, truncated, info,
+                                              helper_lease_ticks=decision.helper_lease_ticks)
                     ticks += info["actual_ticks"]
                     decisions += 1
                     total_decisions += 1
@@ -443,7 +449,7 @@ def _negative_contracts(host, bundle, config):
             else:
                 controller.step(current, goal)
                 result = controller.step(first, goal)
-        cancelled = dispatch(env, result, current)
+        cancelled = dispatch(env, controller, result, current)
         rows.append({"case": name, "passed": result.cancel_owner and pose(cancelled) == pose(current),
                      "reason": result.reason, "cancel_preserves_pose": pose(cancelled) == pose(current)})
     names = {row["case"] for row in rows}
@@ -464,7 +470,7 @@ def _variant(host, bundle, config, *, model="jev", decision_ticks=6):
         TorchRuntimeBundle(bundle.value, context_for(profile, host.identity, decision_ticks=decision_ticks))
     except ContractError as exc:
         reason = exc.code
-    dispatch(env, ExportDecision(WireAction(effort=0), "fallback", reason or "unexpected_acceptance", True), view)
+    env.cancel()
     frames, traces = [pose(view)], []
     while view["tick"] < 24:
         view, _, terminal, truncated, info = env.step_packet(None)
@@ -506,7 +512,7 @@ def _realtime(host_path, godot_path, bundle, config, budget):
         calls += 1
         before_response = host.request("observe")
         before = before_response["observation"]
-        cancelled = dispatch(env, result, before)
+        cancelled = dispatch(env, controller, result, before)
         # A realtime request can straddle a tick. The immutable cancellation
         # result is compared to the last available receipt at its own tick.
         after_response = host.request("observe")
@@ -524,11 +530,11 @@ def _realtime(host_path, godot_path, bundle, config, budget):
         calls += 1
         if launched.status != "accepted":
             raise ContractError("realtime_fresh_invocation", launched.reason)
-        fresh, _, _, _, fresh_info = dispatch(env, launched, fresh)
+        fresh, _, _, _, fresh_info = dispatch(env, controller, launched, fresh)
         takeover = controller.step(fresh, next_goal, source_generation=2)
         calls += 1
         transfer_before = host.request("observe")
-        transferred = dispatch(env, takeover, fresh)
+        transferred = dispatch(env, controller, takeover, fresh)
         transfer_after = host.request("observe")
         transfer_candidates = [transfer_before["observation"]]
         transfer_candidates.extend(row["observation"] for response in (transfer_before, transfer_after)

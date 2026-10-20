@@ -19,6 +19,7 @@ if HAS_NUMPY:
     from nca.export.build import immutable_json, make_bundle
     from nca.export.runtime import encode, map_action
     from nca.export.spec import EXPECTED_SPECIFICATION, WEIGHT_SHAPES, PINNED_HOST
+    from nca.adapters.protocol import make_physical_command
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -63,6 +64,64 @@ def view(tick=0, epoch=1, control=0):
             "ground_distance": 4., "ceiling_distance": 96., "fault": "", "suspended": False,
             "parts": [{"id": name, "index": i, "detached": False}
                       for i, name in enumerate(("impact_core", "rebound_pad_-1", "rebound_pad_1"))]}
+
+
+class NativeReceiptFixture:
+    """Synthetic native-boundary records; no physics or deployment evidence."""
+    def __init__(self, observation=None):
+        self.view = deepcopy(view() if observation is None else observation)
+        self.calls = []
+        self.packets = []
+        self.sequence = -1
+        self.fail_command = self.fail_step = self.fail_cancel = False
+        self.cancel_generation_delta = 1
+        self.mutate_receipt = None
+        self.terminal_tick = None
+
+    def command(self, action, *, observation, lease_ticks):
+        self.calls.append("command")
+        if self.fail_command:
+            raise RuntimeError("source invalidated")
+        self.sequence += 1
+        return make_physical_command(observation, self.sequence, action, lease_ticks)
+
+    def step_packet(self, packet, *, ticks):
+        self.calls.append("step")
+        self.packets.append(deepcopy(packet))
+        if self.fail_step:
+            raise RuntimeError("transport failure")
+        start = self.view["tick"]
+        count = min(ticks, self.terminal_tick - start) if self.terminal_tick is not None else ticks
+        traces = []
+        for offset in range(count):
+            terminal = self.terminal_tick == start + offset + 1
+            following = deepcopy(self.view)
+            following.update(tick=start + offset + 1, suspended=terminal,
+                             control_generation=self.view["control_generation"] + int(terminal))
+            following["observation_id"] = ":".join(str(following[key]) for key in
+                ("run_id", "epoch", "actor_id", "control_generation", "tick"))
+            traces.append({"tick_before": start + offset, "tick_after": start + offset + 1,
+                "failed": False, "requested": [deepcopy(packet)] if offset == 0 else [],
+                "admission": [{"accepted": True, "reason": ""}] if offset == 0 else [],
+                "observation": following,
+                "applied": {"action_available": not terminal, "terminal_revocation": terminal,
+                            "action": None if terminal else deepcopy(packet["action"])}})
+        self.view = deepcopy(traces[-1]["observation"])
+        info = {"actual_ticks": count, "trace": traces, "idle_trace": [], "idle_trace_dropped": 0,
+                "consumed_trace_complete": True, "unconsumed_terminal_commands": []}
+        result = (deepcopy(self.view), 0., False, self.view["suspended"], info)
+        if self.mutate_receipt is not None:
+            self.mutate_receipt(result)
+        return result
+
+    def cancel(self):
+        self.calls.append("cancel")
+        if self.fail_cancel:
+            raise OSError("cleanup failed")
+        self.view["control_generation"] += self.cancel_generation_delta
+        self.view["observation_id"] = ":".join(str(self.view[key]) for key in
+            ("run_id", "epoch", "actor_id", "control_generation", "tick"))
+        return deepcopy(self.view)
 
 
 @unittest.skipUnless(HAS_NUMPY, "optional NumPy CPU export dependency unavailable")
@@ -242,58 +301,251 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(controller.step(bad, self.goal).reason, "observation_identity")
 
     def test_dispatch_cancels_fallback_without_sending_neutral_release(self):
-        class Env:
-            def __init__(self): self.calls = []
-            def cancel(self): self.calls.append("cancel"); return {"cancelled": True}
-            def command(self, *args, **kwargs): self.calls.append("command"); raise AssertionError()
-            def step_packet(self, packet): self.calls.append("step"); raise AssertionError()
-        env = Env()
-        fallback = ExportController(bundle()).cancel("profile_mismatch")
-        self.assertEqual(dispatch(env, fallback, view()), {"cancelled": True})
+        env = NativeReceiptFixture()
+        controller = ExportController(bundle())
+        fallback = controller.cancel("profile_mismatch")
+        receipt = dispatch(env, controller, fallback, view())
+        self.assertEqual(receipt["control_generation"], 1)
         self.assertEqual(env.calls, ["cancel"])
+        self.assertFalse(controller.owner_cleanup_unconfirmed)
 
     def test_dispatch_preserves_original_packet_and_cleans_up_transport_error(self):
-        class Env:
-            def __init__(self): self.original = None; self.cancelled = 0
-            def command(self, action, *, observation): self.original = observation; return {"request": action}
-            def step_packet(self, packet): raise RuntimeError("transport failure")
-            def cancel(self): self.cancelled += 1; raise OSError("cleanup failure")
-        env = Env()
+        env = NativeReceiptFixture()
+        env.fail_step = env.fail_cancel = True
+        controller = ExportController(bundle())
         observation = view()
-        decision = ExportController(bundle()).step(observation, self.goal)
+        decision = controller.step(observation, self.goal)
         with self.assertRaisesRegex(RuntimeError, "transport failure"):
-            dispatch(env, decision, observation)
-        self.assertIs(env.original, observation)
-        self.assertEqual(env.cancelled, 1)
+            dispatch(env, controller, decision, observation)
+        self.assertEqual(env.packets[0]["observation_id"], observation["observation_id"])
+        self.assertEqual(env.calls, ["command", "step", "cancel"])
+        self.assertIsNone(controller.pending)
+        self.assertTrue(controller.owner_cleanup_unconfirmed)
+        fresh = controller.step(view(6), replace(self.goal, id="after-error"))
+        self.assertEqual(fresh.reason, "owner_cleanup_unconfirmed")
+        controller.reset()
+        self.assertTrue(controller.owner_cleanup_unconfirmed)
+        env.fail_cancel = False
+        controller.confirm_owner_cancel(env.cancel())
+        self.assertFalse(controller.owner_cleanup_unconfirmed)
+        fresh = controller.step(env.view, replace(self.goal, id="confirmed-fresh"))
+        self.assertEqual(fresh.status, "accepted")
+        self.assertEqual(fresh.hidden_before, (0.,) * 32)
 
     def test_dispatch_command_construction_failure_cancels_and_preserves_error(self):
-        class Env:
-            def __init__(self): self.calls = []
-            def command(self, *args, **kwargs):
-                self.calls.append("command")
-                raise RuntimeError("source invalidated")
-            def step_packet(self, packet): self.calls.append("step"); raise AssertionError()
-            def cancel(self): self.calls.append("cancel"); raise OSError("cleanup failed")
-        env = Env()
+        env = NativeReceiptFixture()
+        env.fail_command = env.fail_cancel = True
+        controller = ExportController(bundle())
         observation = view()
-        decision = ExportController(bundle()).step(observation, self.goal)
+        decision = controller.step(observation, self.goal)
         with self.assertRaisesRegex(RuntimeError, "source invalidated"):
-            dispatch(env, decision, observation)
+            dispatch(env, controller, decision, observation)
         self.assertEqual(env.calls, ["command", "cancel"])
+        self.assertTrue(controller.owner_cleanup_unconfirmed)
 
     def test_dispatch_cannot_refresh_old_inference_with_newer_or_changed_view(self):
-        class Env:
-            def __init__(self): self.calls = []
-            def command(self, *args, **kwargs): self.calls.append("command"); raise AssertionError()
-            def step_packet(self, packet): self.calls.append("step"); raise AssertionError()
-            def cancel(self): self.calls.append("cancel")
         for changed in (view(6), view(control=1), view(epoch=2), dict(view(), position=[177., 346.5])):
-            env = Env()
+            env = NativeReceiptFixture()
             original = view()
-            decision = ExportController(bundle()).step(original, self.goal)
+            controller = ExportController(bundle())
+            decision = controller.step(original, self.goal)
             with self.assertRaisesRegex(ContractError, "decision_source_mismatch"):
-                dispatch(env, decision, changed)
+                dispatch(env, controller, decision, changed)
             self.assertEqual(env.calls, ["cancel"])
+
+    def test_retired_replaced_cross_controller_and_copied_decisions_cannot_dispatch(self):
+        for change in ("cancel", "reset", "new_goal", "new_source", "copy", "foreign_controller"):
+            with self.subTest(change=change):
+                env = NativeReceiptFixture()
+                controller = ExportController(bundle())
+                decision = controller.step(view(), self.goal)
+                if change == "cancel":
+                    controller.cancel()
+                elif change == "reset":
+                    controller.reset()
+                elif change == "new_goal":
+                    controller.step(view(6), replace(self.goal, id="replacement"))
+                elif change == "new_source":
+                    controller.step(view(6), replace(self.goal, id="replacement"), source_generation=2)
+                elif change == "copy":
+                    decision = replace(decision)
+                else:
+                    controller = ExportController(bundle())
+                with self.assertRaisesRegex(ContractError, "decision_source_mismatch"):
+                    dispatch(env, controller, decision, view())
+                self.assertEqual(env.calls, ["cancel"])
+                self.assertEqual(env.packets, [])
+
+    def test_successful_decision_is_single_use_and_live_goal_change_requires_native_cancel(self):
+        env = NativeReceiptFixture()
+        controller = ExportController(bundle())
+        decision = controller.step(view(), self.goal)
+        following, *_ = dispatch(env, controller, decision, view())
+        self.assertIsNone(controller.pending)
+        replacement = controller.step(following, replace(self.goal, id="new"), source_generation=2)
+        self.assertTrue(replacement.cancel_owner)
+        self.assertEqual(replacement.reason, "owner_or_mount_changed")
+        with self.assertRaisesRegex(ContractError, "decision_source_mismatch"):
+            dispatch(env, controller, decision, view())
+        self.assertEqual(len(env.packets), 1)
+        self.assertFalse(controller.owner_cleanup_unconfirmed)
+        current = env.view
+        accepted = controller.step(current, replace(self.goal, id="after-revocation"), source_generation=2)
+        self.assertEqual(accepted.status, "accepted")
+        self.assertEqual(accepted.hidden_before, (0.,) * 32)
+
+    def test_cancel_receipt_must_revoke_original_owner_and_not_rewind_clock(self):
+        for mutate in (lambda v: v.update(control_generation=0),
+                       lambda v: v.update(tick=0), lambda v: v.update(epoch=2),
+                       lambda v: v.update(observation_id="forged"),
+                       lambda v: v.pop("parts")):
+            env = NativeReceiptFixture()
+            controller = ExportController(bundle())
+            decision = controller.step(view(), self.goal)
+            dispatch(env, controller, decision, view())
+            controller.cancel()
+            receipt = env.cancel()
+            mutate(receipt)
+            if receipt.get("observation_id") != "forged":
+                receipt["observation_id"] = ":".join(str(receipt[key]) for key in
+                    ("run_id", "epoch", "actor_id", "control_generation", "tick"))
+            with self.assertRaises(ContractError):
+                controller.confirm_owner_cancel(receipt)
+            self.assertTrue(controller.owner_cleanup_unconfirmed)
+            self.assertEqual(controller.step(env.view, replace(self.goal, id="retry")).reason,
+                             "owner_cleanup_unconfirmed")
+
+    def test_old_or_same_epoch_reset_shape_cannot_clear_uncertain_owner(self):
+        env = NativeReceiptFixture(view(epoch=5))
+        env.fail_step = env.fail_cancel = True
+        controller = ExportController(bundle())
+        decision = controller.step(env.view, self.goal)
+        with self.assertRaisesRegex(RuntimeError, "transport failure"):
+            dispatch(env, controller, decision, env.view)
+        for epoch in (3, 5):
+            result = controller.step(view(epoch=epoch), replace(self.goal, id=f"old-{epoch}"))
+            self.assertTrue(result.cancel_owner)
+            self.assertTrue(controller.owner_cleanup_unconfirmed)
+        fresh = controller.step(view(epoch=6), replace(self.goal, id="real-reset"))
+        self.assertEqual(fresh.status, "accepted")
+        self.assertFalse(controller.owner_cleanup_unconfirmed)
+        self.assertEqual(fresh.hidden_before, (0.,) * 32)
+        self.assertEqual(controller.step(view(epoch=3), replace(self.goal, id="unseen-old")).reason, "retired_actor")
+
+    def test_goal_deadline_uses_current_tick_and_caps_original_lease(self):
+        goal = replace(self.goal, timeout_seconds=.1)
+        controller = ExportController(bundle())
+        expired = controller.step(view(), goal, current_tick=6)
+        self.assertTrue(expired.cancel_owner)
+        self.assertEqual(expired.reason, "goal_deadline")
+        controller = ExportController(bundle())
+        accepted = controller.step(view(), goal, current_tick=5)
+        self.assertEqual((accepted.helper_lease_ticks, accepted.goal_deadline_tick, accepted.checked_tick), (6, 6, 5))
+        env = NativeReceiptFixture(view(5))
+        following, _, _, _, info = dispatch(env, controller, accepted, view(), current_tick=5)
+        self.assertEqual(info["actual_ticks"], 1)
+        self.assertEqual(following["tick"], 6)
+        self.assertEqual(env.packets[0]["observed_tick"], 0)
+        self.assertEqual(env.packets[0]["lease_ticks"], 6)
+        self.assertTrue(controller.owner_cleanup_unconfirmed)
+        self.assertIsNone(controller.pending)
+
+    def test_dispatch_checks_deadline_again_and_shortens_partial_final_interval(self):
+        for now in (-1, 6, 12):
+            controller = ExportController(bundle())
+            goal = replace(self.goal, timeout_seconds=.1)
+            decision = controller.step(view(), goal)
+            env = NativeReceiptFixture()
+            with self.assertRaisesRegex(ContractError, "dispatch_deadline"):
+                dispatch(env, controller, decision, view(), current_tick=now)
+            self.assertEqual(env.calls, ["cancel"])
+        controller = ExportController(bundle())
+        goal = replace(self.goal, timeout_seconds=7 / 60)
+        env = NativeReceiptFixture()
+        first = controller.step(view(), goal)
+        following, *_ = dispatch(env, controller, first, view())
+        second = controller.step(following, goal)
+        self.assertEqual(second.helper_lease_ticks, 1)
+        final, _, _, _, info = dispatch(env, controller, second, following)
+        self.assertEqual((final["tick"], info["actual_ticks"]), (7, 1))
+        self.assertEqual(env.packets[-1]["observed_tick"] + env.packets[-1]["lease_ticks"], 7)
+
+    def test_delayed_original_view_can_dispatch_with_complete_live_receipts(self):
+        controller = ExportController(bundle())
+        decision = controller.step(view(), self.goal, current_tick=3)
+        env = NativeReceiptFixture(view(3))
+        following, *_ = dispatch(env, controller, decision, view())
+        self.assertEqual(following["tick"], 9)
+        self.assertEqual(env.packets[0]["observed_tick"], 0)
+        self.assertFalse(controller.owner_cleanup_unconfirmed)
+
+    def test_matching_actions_cannot_prove_consumption_after_original_lease_expiry(self):
+        controller = ExportController(bundle())
+        decision = controller.step(view(), self.goal, current_tick=9)
+        env = NativeReceiptFixture(view(9))
+        with self.assertRaisesRegex(ContractError, "dispatch_deadline"):
+            dispatch(env, controller, decision, view())
+        self.assertEqual(env.calls, ["cancel"])
+        # A further native delay can occur after a valid dispatch-time check.
+        # Even matching action values and unchanged synthetic owner metadata
+        # cannot turn the expired suffix into confirmed consumption.
+        controller = ExportController(bundle())
+        decision = controller.step(view(), self.goal, current_tick=3)
+        env = NativeReceiptFixture(view(9))
+        with self.assertRaisesRegex(ContractError, "dispatch_receipt"):
+            dispatch(env, controller, decision, view())
+        self.assertEqual(env.calls, ["command", "step", "cancel"])
+        self.assertEqual(tuple(controller.hidden), (0.,) * 32)
+
+    def test_refused_mixed_missing_or_changed_receipts_cancel_and_cannot_retry(self):
+        mutations = (
+            lambda r: r[4]["trace"][0]["admission"][0].update(accepted=False),
+            lambda r: r[4]["trace"][1].update(requested=[r[4]["trace"][0]["requested"][0]]),
+            lambda r: r[4].update(consumed_trace_complete=False),
+            lambda r: r[4]["trace"].pop(),
+            lambda r: r[4]["trace"][2]["applied"]["action"].update(effort=0.),
+            lambda r: r[0].update(mount_generation=1),
+            lambda r: r[0]["parts"][1].update(detached=True),
+        )
+        for mutate in mutations:
+            env = NativeReceiptFixture()
+            env.mutate_receipt = mutate
+            controller = ExportController(bundle())
+            decision = controller.step(view(), self.goal)
+            with self.assertRaises(ContractError):
+                dispatch(env, controller, decision, view())
+            self.assertEqual(env.calls, ["command", "step", "cancel"])
+            self.assertIsNone(controller.pending)
+            self.assertEqual(tuple(controller.hidden), (0.,) * 32)
+
+    def test_echoed_packet_allows_only_json_rounding_with_exact_source_and_flags(self):
+        for difference, accepted in ((1e-14, True), (1e-7, False)):
+            env = NativeReceiptFixture()
+            def mutate(result):
+                action = result[4]["trace"][0]["requested"][0]["action"]
+                action["effort"] += difference
+            env.mutate_receipt = mutate
+            controller = ExportController(bundle())
+            decision = controller.step(view(), self.goal)
+            if accepted:
+                dispatch(env, controller, decision, view())
+            else:
+                with self.assertRaisesRegex(ContractError, "dispatch_refused"):
+                    dispatch(env, controller, decision, view())
+
+    def test_terminal_receipt_keeps_unavailable_last_action_and_retires_local_goal(self):
+        env = NativeReceiptFixture()
+        env.terminal_tick = 4
+        controller = ExportController(bundle())
+        decision = controller.step(view(), self.goal)
+        final, _, terminated, truncated, info = dispatch(env, controller, decision, view())
+        self.assertFalse(terminated)
+        self.assertTrue(truncated)
+        self.assertEqual(info["actual_ticks"], 4)
+        self.assertIsNone(info["trace"][-1]["applied"]["action"])
+        self.assertTrue(controller.owner_cleanup_unconfirmed)
+        self.assertEqual(controller.step(final, replace(self.goal, id="cannot-revive-terminal")).reason,
+                         "actor_unavailable")
 
 
 if __name__ == "__main__":

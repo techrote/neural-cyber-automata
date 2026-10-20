@@ -261,15 +261,24 @@ class ExportDecision:
     logits: tuple[float, ...] = ()
     value: float | None = None
     source: SourceStamp | None = None
+    helper_lease_ticks: int = 0
+    goal_deadline_tick: int | None = None
+    checked_tick: int | None = None
 
 
 class ExportController:
     """Per-actor recurrence and explicit neutral/owner-cancel fallback."""
     def __init__(self, bundle: RuntimeBundle):
         self.bundle = bundle
-        self.reset()
+        self.pending: ExportDecision | None = None
+        self.owner_cleanup_unconfirmed = False
+        self._owner_may_be_active = False
+        self._owner_source: SourceStamp | None = None
+        self._owner_boundary = None
+        self._owner_goal: SkillGoal | None = None
+        self._initialize_lifetime()
 
-    def reset(self):
+    def _initialize_lifetime(self):
         self.hidden = np.zeros(32, dtype=np.float32)
         self.previous = WireAction(effort=0)
         self.lifetime = None
@@ -282,6 +291,12 @@ class ExportController:
         self.start_tick = 0
         self.retired = set()
         self.retired_lifetimes = set()
+        self._lifetime_key = None
+        self._last_source = None
+
+    def reset(self):
+        """Reset local memory without claiming that the native owner was reset."""
+        return self.cancel("controller_reset")
 
     def cancel(self, reason="cancelled"):
         if self.goal is not None:
@@ -289,7 +304,58 @@ class ExportController:
         self.hidden.fill(0)
         self.previous = WireAction(effort=0)
         self.last_tick = None
+        self.pending = None
+        self.owner_cleanup_unconfirmed |= self._owner_may_be_active
         return ExportDecision(self.previous, "fallback", reason, True)
+
+    def _view(self, observation):
+        view = FeedbackObservation.from_host(policy_view(observation))
+        expected_id = ":".join(str(observation[k]) for k in
+                               ("run_id", "epoch", "actor_id", "control_generation", "tick"))
+        if (view.actor != "jev" or observation.get("observation_scope") != SENSORS["scope"]
+                or observation["observation_id"] != expected_id):
+            raise ContractError("observation_identity", "source view identity or perception scope differs")
+        parts = observation.get("parts", ())
+        if (not isinstance(parts, (list, tuple)) or any(not isinstance(part, Mapping) for part in parts)
+                or tuple(part.get("id") for part in parts) != self.bundle.part_ids
+                or any(type(part.get("index")) is not int or part["index"] != i
+                       or type(part.get("detached")) is not bool for i, part in enumerate(parts))):
+            raise ContractError("part_identity", "part graph differs from bundle")
+        return view
+
+    def _clear_owner(self):
+        self.owner_cleanup_unconfirmed = False
+        self._owner_may_be_active = False
+        self._owner_source = None
+        self._owner_boundary = None
+        self._owner_goal = None
+
+    def confirm_owner_cancel(self, observation: Mapping[str, Any]):
+        """Require the native revocation observation before clearing uncertainty."""
+        try:
+            view = self._view(observation)
+            previous = self._owner_source
+            if previous is not None and (
+                    (observation["run_id"], observation["epoch"], observation["actor_id"])
+                    != (previous.run_id, previous.epoch, previous.actor_id)
+                    or view.tick < previous.tick or view.control_generation <= previous.control_generation):
+                raise ContractError("owner_cancel_receipt", "the dispatched owner has not demonstrably been revoked")
+            if (self.lifetime is not None and view.lifetime != self.lifetime
+                    or self.highest_observed_tick is not None and view.tick < self.highest_observed_tick
+                    or view.control_generation < 1
+                    or self.highest_control_generation is not None
+                    and view.control_generation <= self.highest_control_generation):
+                raise ContractError("owner_cancel_receipt", "cancellation cannot rewind or retain observed authority")
+        except (ValueError, TypeError, KeyError) as exc:
+            raise ContractError("owner_cancel_receipt", "a complete native revocation observation is required") from exc
+        self.cancel("owner_cancel_confirmed")
+        self.lifetime = view.lifetime
+        self._lifetime_key = (observation["run_id"], observation["epoch"], observation["actor_id"])
+        self._last_source = _source_stamp(observation)
+        self.highest_observed_tick = view.tick
+        self.highest_control_generation = view.control_generation
+        self.boundary = None
+        self._clear_owner()
 
     def step(self, observation: Mapping[str, Any], goal: SkillGoal, *,
              source_generation: int = 1, current_tick: int | None = None,
@@ -299,30 +365,40 @@ class ExportController:
                 raise ContractError("goal_schema", "typed explicit goal required")
             if context is not None and context != self.bundle.context:
                 raise ContractError("runtime_context_mismatch", "active deployment context changed")
-            view = FeedbackObservation.from_host(policy_view(observation))
+            view = self._view(observation)
             if view.actor != "jev" or not view.valid or not view.controllable:
                 raise ContractError("actor_unavailable", "invalid, suspended or foreign actor")
-            expected_id = ":".join(str(observation[k]) for k in
-                                   ("run_id", "epoch", "actor_id", "control_generation", "tick"))
-            if (observation.get("observation_scope") != SENSORS["scope"]
-                    or observation["observation_id"] != expected_id):
-                raise ContractError("observation_identity", "source view identity or perception scope differs")
             now = view.tick if current_tick is None else current_tick
             if type(now) is not int or not 0 <= now-view.tick < 12:
                 raise ContractError("source_expired", "original observation's twelve-tick lease expired")
             if type(source_generation) is not int or source_generation < 1:
                 raise ContractError("source_generation", "positive explicit source grant required")
+            previous_owner = self._owner_source or self._last_source
+            new_world_reset = (previous_owner is not None and view.tick == 0 and view.control_generation == 0
+                               and (observation["run_id"] != previous_owner.run_id
+                                    or observation["epoch"] > previous_owner.epoch))
+            if self.owner_cleanup_unconfirmed and not new_world_reset:
+                raise ContractError("owner_cleanup_unconfirmed", "confirmed native cancellation or a new host reset is required")
             if self.lifetime != view.lifetime:
                 if view.lifetime in self.retired_lifetimes:
                     raise ContractError("retired_actor", "old actor incarnation cannot resume")
+                if (self._lifetime_key is not None and observation["run_id"] == self._lifetime_key[0]
+                        and observation["epoch"] < self._lifetime_key[1]):
+                    raise ContractError("retired_actor", "a run's actor epoch cannot move backward")
                 retired = set(self.retired_lifetimes)
                 if self.lifetime is not None:
                     retired.add(self.lifetime)
                 if len(retired) > 1024:
                     raise ContractError("lifetime_capacity", "explicit controller reconstruction required")
-                self.reset()
+                if self._owner_may_be_active and not new_world_reset:
+                    raise ContractError("owner_boundary_requires_cancel", "a different actor cannot clear a live owner")
+                self.pending = None
+                self._initialize_lifetime()
                 self.retired_lifetimes = retired
                 self.lifetime = view.lifetime
+                self._lifetime_key = (observation["run_id"], observation["epoch"], observation["actor_id"])
+                if new_world_reset:
+                    self._clear_owner()
             if self.highest_observed_tick is not None and view.tick < self.highest_observed_tick:
                 raise ContractError("source_reordered", "older observation cannot start a fresh invocation")
             if self.highest_control_generation is not None and view.control_generation < self.highest_control_generation:
@@ -335,19 +411,17 @@ class ExportController:
             self.highest_observed_tick = view.tick
             self.highest_control_generation = view.control_generation
             self.highest_source_generation = source_generation
+            self._last_source = _source_stamp(observation)
             if self.goal is not None and goal.id == self.goal.id and goal != self.goal:
                 raise ContractError("goal_collision", "same invocation cannot change parameters")
             if goal.id in self.retired:
                 raise ContractError("retired_goal", "fresh goal identity required")
             parts = observation.get("parts", ())
-            expected = self.bundle.part_ids
-            if (not isinstance(parts, (list, tuple)) or any(not isinstance(part, Mapping) for part in parts)
-                    or tuple(part.get("id") for part in parts) != expected
-                    or any(type(part.get("index")) is not int or part["index"] != i
-                           or type(part.get("detached")) is not bool for i, part in enumerate(parts))):
-                raise ContractError("part_identity", "part graph differs from bundle")
             boundary = (view.control_generation, observation.get("mount_generation"), source_generation,
                         tuple((part["id"], part["index"], part["detached"]) for part in parts))
+            if self._owner_may_be_active and (boundary != self._owner_boundary or goal != self._owner_goal):
+                reason = "owner_or_mount_changed" if boundary != self._owner_boundary else "owner_boundary_requires_cancel"
+                raise ContractError(reason, "revoke the live helper before changing invocation or source")
             if self.boundary is not None and boundary != self.boundary:
                 old_goal = self.goal
                 self.cancel("owner_or_mount_changed")
@@ -367,34 +441,150 @@ class ExportController:
                 self.hidden.fill(0)
                 self.previous = WireAction(effort=0)
                 self.start_tick = view.tick
-            if view.tick-self.start_tick >= round(goal.timeout_seconds*60):
+            deadline = self.start_tick + round(goal.timeout_seconds*60)
+            if now >= deadline:
                 raise ContractError("goal_deadline", "skill duration elapsed")
             encoded = encode(observation, goal, self.previous, self.start_tick)
             before = tuple(float(v) for v in self.hidden)
             outputs, value, following, logits = self.bundle.network.forward(encoded, self.hidden)
             action = map_action(outputs, observation, goal)
             self.hidden, self.previous, self.last_tick = following, action, view.tick
-            return ExportDecision(action, "accepted", "numeric_policy_request", False, encoded, before,
-                                  tuple(float(v) for v in following), tuple(float(v) for v in logits), value,
-                                  _source_stamp(observation))
+            self.pending = ExportDecision(action, "accepted", "numeric_policy_request", False, encoded, before,
+                                          tuple(float(v) for v in following), tuple(float(v) for v in logits), value,
+                                          _source_stamp(observation), min(12, deadline - view.tick), deadline, now)
+            return self.pending
         except (ContractError, ValueError, TypeError, KeyError, FloatingPointError) as exc:
             reason = exc.code if isinstance(exc, ContractError) else "invalid_runtime_input"
             return self.cancel(reason)
 
 
-def dispatch(env, decision: ExportDecision, source_observation: Mapping[str, Any]):
-    """Apply the original issued observation, or cancel without a release step."""
+def _same_action(actual, expected, *, tolerance=2e-5):
+    """Compare the native FP32 readback without re-normalizing its unit aim."""
+    if not isinstance(actual, Mapping) or set(actual) != set(expected):
+        return False
+    for key, wanted in expected.items():
+        value = actual[key]
+        if type(wanted) is bool:
+            if value is not wanted:
+                return False
+        else:
+            if isinstance(wanted, (tuple, list)):
+                if not isinstance(value, (tuple, list)) or len(value) != len(wanted):
+                    return False
+                pairs = zip(value, wanted)
+            else:
+                pairs = ((value, wanted),)
+            if any(type(a) not in (int, float) or not math.isfinite(a) or abs(a - b) > tolerance for a, b in pairs):
+                return False
+    return True
+
+
+def _dispatch_receipt(controller, decision, packet, transition, repeat_ticks):
+    """A returned RPC must still prove the original request was consumed."""
+    if not isinstance(transition, (tuple, list)) or len(transition) != 5:
+        raise ContractError("dispatch_receipt", "complete native transition required")
+    after, _, terminated, truncated, info = transition
+    if not isinstance(after, Mapping) or not isinstance(info, Mapping):
+        raise ContractError("dispatch_receipt", "native observation and trace required")
+    view = controller._view(after)
+    source = decision.source
+    terminal = terminated or truncated
+    actual = info.get("actual_ticks")
+    traces = info.get("trace")
+    if (type(terminated) is not bool or type(truncated) is not bool or type(actual) is not int
+            or not 1 <= actual <= repeat_ticks or (not terminal and actual != repeat_ticks)
+            or not isinstance(traces, list) or len(traces) != actual
+            or info.get("consumed_trace_complete") is not True or info.get("idle_trace_dropped") != 0
+            or not isinstance(info.get("idle_trace"), list) or info.get("unconsumed_terminal_commands") != []
+            or not view.valid or view.controllable != (not terminal)
+            or (after["run_id"], after["epoch"], after["actor_id"]) != (source.run_id, source.epoch, source.actor_id)
+            or view.tick < source.tick + actual or view.tick > decision.goal_deadline_tick
+            or view.tick > source.tick + decision.helper_lease_ticks
+            or view.control_generation != source.control_generation + int(terminal)):
+        raise ContractError("dispatch_receipt", "complete original-owner interval required")
+    boundary = controller._owner_boundary
+    if (after.get("mount_generation") != boundary[1]
+            or tuple((part["id"], part["index"], part["detached"]) for part in after["parts"]) != boundary[3]):
+        raise ContractError("dispatch_boundary", "native result changed the issued part or mount boundary")
+    start = view.tick - actual
+    if start >= source.tick + decision.helper_lease_ticks:
+        raise ContractError("dispatch_receipt", "expired input cannot count as a consumed decision")
+    for offset, row in enumerate(traces):
+        if (not isinstance(row, Mapping) or row.get("tick_before") != start + offset
+                or row.get("tick_after") != start + offset + 1 or row.get("failed") is not False):
+            raise ContractError("dispatch_receipt", "causal native tick receipts required")
+        if offset == 0:
+            admissions, requests = row.get("admission"), row.get("requested")
+            if (not isinstance(admissions, list) or len(admissions) != 1
+                    or not isinstance(admissions[0], Mapping) or admissions[0].get("accepted") is not True
+                    or not isinstance(requests, list) or len(requests) != 1
+                    or not isinstance(requests[0], Mapping) or set(requests[0]) != set(packet)
+                    or any(requests[0][key] != value for key, value in packet.items() if key != "action")
+                    or not _same_action(requests[0]["action"], packet["action"], tolerance=1e-12)):
+                raise ContractError("dispatch_refused", "the native owner must admit the original packet")
+        elif row.get("admission") != [] or row.get("requested") != []:
+            raise ContractError("dispatch_refused", "mixed or replacement input cannot confirm a decision")
+        applied = row.get("applied", {})
+        if not isinstance(applied, Mapping):
+            raise ContractError("dispatch_receipt", "native input readback required")
+        final_revocation = terminal and offset == actual - 1
+        if final_revocation:
+            valid = (applied.get("action_available") is False and applied.get("terminal_revocation") is True
+                     and applied.get("action") is None)
+        else:
+            valid = (applied.get("action_available") is True and applied.get("terminal_revocation") is False
+                     and _same_action(applied.get("action"), packet["action"]))
+        if not valid:
+            raise ContractError("dispatch_consumption", "native readback differs from the admitted request")
+    controller.highest_observed_tick = view.tick
+    controller.highest_control_generation = view.control_generation
+    if terminal or view.tick >= decision.goal_deadline_tick:
+        controller.cancel("native_terminal" if terminal else "goal_deadline")
+
+
+def dispatch(env, controller: ExportController, decision: ExportDecision,
+             source_observation: Mapping[str, Any], *, current_tick: int | None = None):
+    """Consume one controller-owned decision, or confirm actual owner cancellation.
+
+    The original source identity and absolute deadline are never refreshed.
+    The native owner still decides admission if the host advances during an RPC.
+    """
+    if not isinstance(controller, ExportController) or not isinstance(decision, ExportDecision):
+        raise ContractError("dispatch_controller", "typed controller and its decision are required")
     if decision.cancel_owner:
-        return env.cancel()
+        controller.cancel(decision.reason)
+        controller.owner_cleanup_unconfirmed = True
+        receipt = env.cancel()
+        controller.confirm_owner_cancel(receipt)
+        return receipt
     try:
-        if (decision.status != "accepted" or decision.source is None
+        if (controller.owner_cleanup_unconfirmed or controller.pending is not decision
+                or decision.status != "accepted" or decision.source is None
                 or decision.source != _source_stamp(source_observation)):
-            raise ContractError("decision_source_mismatch", "inference cannot be re-stamped with another view")
-        packet = env.command(decision.action.to_dict(), observation=source_observation)
-        return env.step_packet(packet)
+            raise ContractError("decision_source_mismatch", "only this controller's current unused decision may dispatch")
+        now = decision.checked_tick if current_tick is None else current_tick
+        if (type(now) is not int or now < decision.checked_tick
+                or now >= decision.goal_deadline_tick or now >= decision.source.tick + decision.helper_lease_ticks):
+            raise ContractError("dispatch_deadline", "the original goal or source lease has expired")
+        repeat = min(6, decision.goal_deadline_tick - now)
+        if now + repeat > decision.source.tick + decision.helper_lease_ticks:
+            raise ContractError("dispatch_deadline", "the original source lease cannot cover this action repeat")
+        controller.pending = None
+        controller._owner_may_be_active = True
+        controller._owner_source = decision.source
+        controller._owner_boundary = controller.boundary
+        controller._owner_goal = controller.goal
+        packet = env.command(decision.action.to_dict(), observation=source_observation,
+                             lease_ticks=decision.helper_lease_ticks)
+        result = env.step_packet(packet, ticks=repeat)
+        _dispatch_receipt(controller, decision, packet, result, repeat)
+        return result
     except BaseException:
+        controller.cancel("dispatch_failed")
+        controller.owner_cleanup_unconfirmed = True
         try:
-            env.cancel()
+            receipt = env.cancel()
+            controller.confirm_owner_cancel(receipt)
         except Exception:
             pass
         raise

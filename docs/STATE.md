@@ -12,9 +12,9 @@ Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.c
 its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite.
 [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
 
-Two bounded follow-ups are under review: [export dispatch authority #42](https://github.com/techrote/neural-cyber-automata/issues/42)
-and [the versioned Jolt arrival teacher #43](evidence/2026-10-20-jolt-arrival-reference.md).
-Their implementation and diagnostics do not admit morphology training.
+[Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
+The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
+Its complete-journal audit is incomplete; #43 and morphology #16 remain open.
 
 ## T-100 — Accepted research baseline
 
@@ -224,6 +224,10 @@ Its NumPy and Torch CPU backends preserve source, ownership, deadline and profil
 fences. The ordinary converter requires complete T105 evidence; the staged
 converter retains interrupted training and requires separate candidate evaluation.
 
+The [dispatch authority follow-up](evidence/2026-10-20-t109-dispatch-authority.md) binds
+unused decisions to the producing controller, confirmed native cleanup and capped deadlines.
+Six native cases have passing coverage; original artifact qualification keeps its original source.
+
 The current fixed BC1103 artifact came from the interrupted reproduction of the
 accepted learner implementation. Its [separate evaluation](evidence/2026-10-19-t109-candidate-evaluation.md)
 at public source `4510347e` completed all eight fixed cases with three successes
@@ -260,13 +264,10 @@ realtime deadlines, multiple learned actors, other devices or owner feel.
 
 ## Conditional per-part graph result
 
-The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed
-119 episodes with six preselected trained checkpoints, normal and delayed/lost/
-partitioned/reset communication, and saved untrained controls. The three-part
-star has private recurrence, one neighbor round and root-only action readout.
-The equal-size no-message candidate shares the same local features and action
-limits. All original declarations, failed attempts and audit corrections remain
-in the [evidence index](evidence/2026-10-19-t110.md).
+The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed 119 episodes with six preselected
+checkpoints, normal/delayed/lost/partitioned/reset communication, and untrained controls. Its three-part star has
+private recurrence, one neighbor round and root-only readout; the equal-size no-message candidate shares its features
+and action limits. Original declarations, failures and audit corrections remain in the [evidence index](evidence/2026-10-19-t110.md).
 
 The predeclared result is no-go: graph and no-message each succeeded in one of
 six normal holdout trials, with zero paired success gain; the graph was slightly
@@ -287,10 +288,8 @@ above the original aggregate **4,000** ceiling; the GitHub receipt's reported
 in [the reconciliation and evidence](evidence/2026-10-19-t110-reproduction.md),
 with both immutable artifact identities. It does not qualify graph utility.
 
-The current runner also records actual owner cancellation on early quiet arrival
-and clears private memory/messages before closing. A dedicated actual-host
-regression passed; frozen historical and reproduction source/records are unchanged.
-Owner feel and unsupported physical topology changes remain unmeasured.
+The graph runner records native cancellation and clears private memory/messages on early arrival; its host regression passed.
+Historical source/records are unchanged. Owner feel and unsupported topology remain unmeasured.
 
 ## Host authority
 

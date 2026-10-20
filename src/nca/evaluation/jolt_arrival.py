@@ -16,6 +16,7 @@ import platform
 import subprocess
 import time
 from typing import Any, Mapping
+import zlib
 
 from nca.adapters.godot import CybersandEnv, GodotHost, inspect_host, physical_config
 from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads
@@ -140,6 +141,187 @@ class MeteredHost:
         response = self.host.request(operation, **fields)
         self.budget.confirm(serial, response)
         return response
+
+
+def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows):
+    """Replay the closed gzip completely before trusting its in-memory summary.
+
+    This is an offline accounting check, not a repair or a host invocation. A
+    valid gzip footer alone is insufficient: every declared episode, request,
+    native response and final close must reconcile with the retained results.
+    """
+    def require(condition, code, detail):
+        if not condition:
+            raise ContractError(f"arrival_journal_{code}", detail)
+
+    counters = ("host_requests", "step_requests", "requested_step_ticks",
+                "confirmed_step_ticks", "episodes_started", "host_start_attempts",
+                "host_terminations")
+    require(isinstance(expected_counts, Mapping) and all(
+        type(expected_counts.get(key)) is int and expected_counts[key] >= 0 for key in counters),
+        "counts", "complete nonnegative expected counters are required")
+    require(expected_counts.get("pending_requests") == []
+        and expected_counts.get("unconfirmed_tail") is False
+        and all(type(expected_counts.get(key)) is int and expected_counts[key] == 0
+                for key in ("optimizer_updates", "checkpoint_executions", "learned_policy_calls")),
+        "counts", "pending or learned activity cannot support diagnostic completion")
+    wall = expected_counts.get("wall_seconds")
+    require(type(wall) in (int, float) and math.isfinite(wall) and wall >= 0,
+            "counts", "a finite expected accounting interval is required")
+    require(expected_rows and all(isinstance(row, Mapping) for row in expected_rows),
+            "episodes", "the complete expected episode rows are required")
+    keys = [(row.get("case_id"), row.get("family")) for row in expected_rows]
+    require(all(type(case) is str and case and family in FAMILIES for case, family in keys)
+        and len(keys) == len(set(keys)) and len(keys) == expected_counts["episodes_started"],
+        "episodes", "unique expected case/family rows must match episode accounting")
+    counts = dict.fromkeys(counters, 0)
+    active, pending, native_close, host_closed = None, None, False, False
+    completed, records, last_elapsed = 0, 0, 0.
+    try:
+        with gzip.open(path, "rb") as source:
+            while True:
+                # Read through EOF, including the gzip CRC/length trailer. A
+                # streaming prefix must never be mistaken for a closed file.
+                line = source.readline(1_048_577)
+                if not line:
+                    break
+                records += 1
+                require(len(line) <= 1_048_576 and line.endswith(b"\n"),
+                        "record", "bounded complete JSONL records are required")
+                try:
+                    record = strict_json_loads(line)
+                except ContractError as exc:
+                    raise ContractError("arrival_journal_record", "invalid journal JSON") from exc
+                require(isinstance(record, dict), "record", "journal records must be objects")
+                elapsed, event = record.get("elapsed_seconds"), record.get("event")
+                require(type(elapsed) in (int, float) and math.isfinite(elapsed)
+                    and last_elapsed <= elapsed <= wall and not host_closed,
+                    "order", "records must be chronological and precede final host closure")
+                last_elapsed = elapsed
+                if event == "host_start_reserved":
+                    require(records == 1, "order", "exactly one initial host start is required")
+                    counts["host_start_attempts"] += 1
+                elif event == "episode_started":
+                    key = (record.get("case"), record.get("family"))
+                    require(counts["host_start_attempts"] == 1 and active is None
+                        and pending is None and not native_close and completed < len(keys)
+                        and key == keys[completed],
+                        "episodes", "episodes must start once in the declared result order")
+                    counts["episodes_started"] += 1
+                    active = {"key": key, "stage": "reset", "decisions": 0, "ticks": 0}
+                elif event == "request_reserved":
+                    serial, operation = record.get("serial"), record.get("operation")
+                    fields, ticks = record.get("fields"), record.get("requested_ticks")
+                    require(counts["host_start_attempts"] == 1 and pending is None and not native_close
+                        and type(serial) is int and serial == counts["host_requests"] + 1
+                        and type(operation) is str and isinstance(fields, dict) and type(ticks) is int,
+                        "order", "each synchronous request needs its next unique reservation")
+                    if operation == "close":
+                        require(active is None and completed == len(keys) and fields == {} and ticks == 0,
+                                "close", "native close must follow every completed episode")
+                    else:
+                        stages = {"reset": ("reset",), "profile": ("profile",), "step": ("step",),
+                                  "cancel": ("step", "terminal")}
+                        require(operation in stages and active is not None
+                            and active["stage"] in stages[operation],
+                            "order", "episode owner operations are missing or out of order")
+                        require(ticks == (6 if operation == "step" else 0)
+                            and (operation != "step" or type(fields.get("ticks")) is int
+                                 and fields["ticks"] == 6),
+                            "counts", "each step must reserve the declared six physical ticks")
+                        if operation == "step":
+                            counts["step_requests"] += 1
+                            counts["requested_step_ticks"] += ticks
+                        if operation == "cancel":
+                            require(active["decisions"] > 0, "close", "episode closure needs a physical interval")
+                    counts["host_requests"] += 1
+                    pending = {"serial": serial, "operation": operation, "requested_ticks": ticks}
+                elif event == "response_received":
+                    response, serial = record.get("response"), record.get("serial")
+                    require(pending is not None and type(serial) is int and serial == pending["serial"],
+                            "order", "a native response must match the sole pending reservation")
+                    require(isinstance(response, dict) and response.get("protocol") == "nca-host/1"
+                        and type(response.get("id")) is int and response["id"] == serial
+                        and response.get("ok") is True,
+                        "response", "a successful correlated native response is required")
+                    operation = pending["operation"]
+                    if operation == "close":
+                        require(response.get("closed") is True, "close", "native host close was not confirmed")
+                        native_close = True
+                    elif operation == "profile":
+                        require(isinstance(response.get("profile"), dict), "response", "native profile response is missing")
+                        active["stage"] = "step"
+                    else:
+                        view = response.get("observation")
+                        require(isinstance(view, dict) and type(view.get("tick")) is int,
+                                "response", "native observation and physical tick are required")
+                        if operation == "reset":
+                            require(view["tick"] == 0 and view.get("suspended") is False,
+                                    "response", "an active native reset observation is required")
+                            active["stage"] = "profile"
+                            active["view"] = view
+                        elif operation == "cancel":
+                            require(response.get("cancelled") is True
+                                and view["tick"] == active["ticks"],
+                                "close", "native episode cancellation was not confirmed")
+                            try:
+                                cancellation_receipt(active["view"], view)
+                            except (ContractError, KeyError, TypeError) as exc:
+                                raise ContractError("arrival_journal_close", "native cancellation must revoke ownership without stepping") from exc
+                            active["stage"] = "closed"
+                        else:
+                            actual, start, end = (response.get(key) for key in ("actual_ticks", "start_tick", "tick"))
+                            traces = response.get("traces")
+                            require(type(actual) is int and actual == pending["requested_ticks"] == 6
+                                and type(start) is int and start == active["ticks"]
+                                and type(end) is int and end == start + actual and view["tick"] == end
+                                and isinstance(traces, list) and len(traces) == actual
+                                and all(isinstance(trace, dict)
+                                    and type(trace.get("tick_before")) is int and trace["tick_before"] == start + index
+                                    and type(trace.get("tick_after")) is int and trace["tick_after"] == start + index + 1
+                                    for index, trace in enumerate(traces)),
+                                "response", "complete contiguous native six-tick receipts are required")
+                            require(all(type(response.get(key)) is bool for key in ("terminated", "truncated", "finished")),
+                                    "response", "native terminal status is missing")
+                            terminal = response["terminated"] or response["truncated"]
+                            require(response["finished"] is terminal and view.get("suspended") is terminal,
+                                    "close", "native terminal status and ownership closure must agree")
+                            counts["confirmed_step_ticks"] += actual
+                            active["decisions"] += 1
+                            active["ticks"] = end
+                            active["view"] = view
+                            if terminal:
+                                active["stage"] = "terminal"
+                    pending = None
+                elif event == "episode_completed":
+                    row = record.get("row")
+                    require(active is not None and pending is None and active["stage"] in ("terminal", "closed")
+                        and (record.get("case"), record.get("family")) == active["key"]
+                        and isinstance(row, dict) and sha256_json(row) == sha256_json(expected_rows[completed])
+                        and row.get("owner_closure_confirmed") is True and row.get("error") is None
+                        and type(row.get("decisions")) is int and row["decisions"] == active["decisions"]
+                        and type(row.get("consumed_ticks")) is int and row["consumed_ticks"] == active["ticks"],
+                        "episodes", "each completed row must match its native intervals and closure")
+                    completed += 1
+                    active = None
+                elif event == "host_closed":
+                    require(native_close and active is None and pending is None and completed == len(keys)
+                        and record.get("termination_confirmed") is True,
+                        "close", "a final confirmed host termination must follow its native close response")
+                    counts["host_terminations"] += 1
+                    host_closed = True
+                else:
+                    require(False, "record", "unknown or missing journal event")
+    except (EOFError, OSError, zlib.error) as exc:
+        raise ContractError("arrival_journal_stream", "the complete gzip stream and trailer are required") from exc
+    require(host_closed and native_close and pending is None and active is None and completed == len(keys),
+            "incomplete", "the journal has a missing episode, response or final native closure")
+    require(counts == {key: expected_counts[key] for key in counters}
+        and counts["host_start_attempts"] == counts["host_terminations"] == 1
+        and counts["requested_step_ticks"] == counts["confirmed_step_ticks"],
+        "counts", "replayed owner accounting differs from the expected complete counters")
+    return {"verified": True, "records": records, "counts": counts,
+            "episodes_completed": completed, "native_close_confirmed": True, "gzip_eof_verified": True}
 
 
 def _error(exc):
@@ -357,8 +539,15 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
                 except Exception as exc:
                     failure = failure or _error(exc)
             measured = budget.snapshot()
+    try:
+        journal_validation = validate_closed_owner_journal(output / "owner-journal.jsonl.gz",
+            expected_counts=measured, expected_rows=rows)
+    except Exception as exc:
+        journal_validation = {"verified": False, "error": _error(exc)}
+        failure = failure or _error(exc)
     comparison = summarize(rows, cases)
-    completed = (failure is None and comparison["complete_valid_pairing"] and not measured["unconfirmed_tail"]
+    completed = (failure is None and journal_validation["verified"]
+        and comparison["complete_valid_pairing"] and not measured["unconfirmed_tail"]
         and measured["host_start_attempts"] == measured["host_terminations"] == 1
         and measured["requested_step_ticks"] == measured["confirmed_step_ticks"]
         and measured["wall_seconds"] <= declaration["budget"]["maximum_wall_seconds"])
@@ -367,7 +556,7 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
     result = {"schema": "nca-jolt-arrival-diagnostic-result/v1", "status": "completed" if completed else "incomplete",
         "source_revision": expected_revision, "declaration_sha256": sha256_json(declaration),
         "counts": measured, "comparison": comparison, "rows": rows, "error": failure,
-        "artifact_sha256": artifacts, "host_identity": identity,
+        "artifact_sha256": artifacts, "host_identity": identity, "owner_journal_validation": journal_validation,
         "evidence_limit": "already-open authored development cases; unchanged learned prerequisite remains blocked"}
     write_json(output / "summary.json", result)
     return result
