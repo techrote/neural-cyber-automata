@@ -1,0 +1,11 @@
+{
+  "receipts": [
+    {
+      "content_sha256": "1db208d57245eaa2271acf13eb34fe5e2a39f18554b31f69b5cd3b9cf0555fca",
+      "game_decisions": 0,
+      "id": "t110-launch-import-failure-20261019",
+      "wall_seconds": 3.311061632000019
+    }
+  ],
+  "schema": "nca-cellular-prior-budget/v1"
+}

@@ -1,0 +1,173 @@
+{
+  "schema": "nca-morphology-conformance-result/v1",
+  "id": "t106-scripted-conformance-v1",
+  "status": "passed_interface_conformance",
+  "source_revision": "557799ce4cf95d9d3ebcf862549cb363b5783a93",
+  "source_files_sha256": "3292659256bb24c2319c1071d00a74ccd9ccde5303f0c6f6859f893cd4962608",
+  "config_sha256": "e4113cc9d5860cce76dc73a18e4b279ad4f39cfc3338652069e4f7eb1e02bb9a",
+  "profile_fixture_sha256": "4a2cebba31a0e540922f14cb9bdb1abe2a33e49a00b42ed6130a5589b5665c0a",
+  "seed": 6106,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Linux",
+    "architecture": "x86_64"
+  },
+  "host_identity": {
+    "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "host_tree": "445a185e9f9824b16953fec27bf0157dfeedca77",
+    "godot_version": "4.7.stable.official.5b4e0cb0f",
+    "godot_binary_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "native_artifact_sha256": "5bdc55e7f355004fc8a6468234b0d018d3919339ebfe47faca9997de3af17847",
+    "native_source_commit": "d897cac257f90ff37b16ae5bc5c65de85c6465ee",
+    "rapier_artifact_sha256": "147ab5673b9687ccb7a3b12fec07ea55cc674ad8a75f529d1085bf7d61fbd831",
+    "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "lane": "act004",
+    "mode": "stepped",
+    "schedule": "synchronous-mask-actuation-effects-material-feedback-terrain-rapier/v1"
+  },
+  "first_attempt": {
+    "source_revision": "487fa04e4afea90051ef6a42667273a1ac83db45",
+    "summary_sha256": "8d5b488123bb4ea1fa19cf32262abecb1859d86c7917c461260c7b45db5e4b60",
+    "status": "failed",
+    "game_decisions": 0,
+    "completed_ticks": 0,
+    "wall_seconds": 18.202958365000086,
+    "cause": "HostError during startup; exact cause unavailable"
+  },
+  "continuation": {
+    "summary_sha256": "3311fdfa3080659c8e49f0b5e64f528a2f4d2c8e3eace5979bd458e21af2d70f",
+    "declaration_sha256": "4d47e4ac6f179da58bc0ceb909cc9f4f9060042fc7f5c207e1e8f99c6cc171d9",
+    "budget": {
+      "attempted_decisions": 32,
+      "completed_decisions": 32,
+      "completed_ticks": 192,
+      "learned_policy_calls": 0,
+      "maximum_decisions": 32,
+      "maximum_wall_seconds": 41.797,
+      "optimizer_updates": 0,
+      "transfer_evaluations": 0,
+      "unconfirmed_decisions": 0,
+      "wall_ceiling_respected": true,
+      "wall_seconds": 36.551695367999855
+    },
+    "episodes": [
+      {
+        "artifact": "jev-0.json.gz",
+        "bytes": 37193,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "jev-0",
+        "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+        "sha256": "4f42428626cf9b6f90e7f8476d28bbad27b76287b3339c3b54a0f033d5cbf5ca",
+        "status": "passed"
+      },
+      {
+        "artifact": "jev-1.json.gz",
+        "bytes": 37491,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "jev-1",
+        "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+        "sha256": "4f30da9df9a230dc6931bb335c3ef37dc78bedd508cce4cd5d22de42ff55f65a",
+        "status": "passed"
+      },
+      {
+        "artifact": "astra-0.json.gz",
+        "bytes": 37806,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "astra-0",
+        "profile_sha256": "28b3665b5ecb695aa58e10a557af79f499f927152fe233c8abe74d4867ab71b0",
+        "sha256": "c5be09e3efce6fdb04d2c94b6254d13f861c9bfbc20525d36acf41ae15570d62",
+        "status": "passed"
+      },
+      {
+        "artifact": "astra-1.json.gz",
+        "bytes": 37859,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "astra-1",
+        "profile_sha256": "28b3665b5ecb695aa58e10a557af79f499f927152fe233c8abe74d4867ab71b0",
+        "sha256": "e95f81bdec0653d2ab57a2ffda3f12fbad34e58ab973e475806e3a1db65fdb89",
+        "status": "passed"
+      },
+      {
+        "artifact": "monowheel-0.json.gz",
+        "bytes": 33635,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "monowheel-0",
+        "profile_sha256": "6da0f8baf5da2adfb7d1131a0913f0cad186e8f0c0b8354bf1fcae1d5bf9848b",
+        "sha256": "02a2fead988456d13d67ea7125d5eb0a6d789ecf6725134c6616a051a8f6221f",
+        "status": "passed"
+      },
+      {
+        "artifact": "monowheel-1.json.gz",
+        "bytes": 33691,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "monowheel-1",
+        "profile_sha256": "6da0f8baf5da2adfb7d1131a0913f0cad186e8f0c0b8354bf1fcae1d5bf9848b",
+        "sha256": "d8e14d0290f225c5c1615b284a2b1315857cf651300038ee5c48695bc9758fd0",
+        "status": "passed"
+      },
+      {
+        "artifact": "ripper-0.json.gz",
+        "bytes": 44649,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "ripper-0",
+        "profile_sha256": "be59daec39c0f56ecf93aeb4e570ef29d2f5c0261c8e7b2b610481265a5777da",
+        "sha256": "b659c9e6fe5b6dbc669cfa56a0d043666b13dd35d551249138ecd374b31d7fd7",
+        "status": "passed"
+      },
+      {
+        "artifact": "ripper-1.json.gz",
+        "bytes": 44717,
+        "decisions_prepared": 4,
+        "errors": [],
+        "id": "ripper-1",
+        "profile_sha256": "be59daec39c0f56ecf93aeb4e570ef29d2f5c0261c8e7b2b610481265a5777da",
+        "sha256": "ed0e30a1660a3b838cee65f4eb2c641e2764388986800cce23a1e491177b14c4",
+        "status": "passed"
+      }
+    ]
+  },
+  "aggregate_budget": {
+    "attempted_decisions": 32,
+    "completed_decisions": 32,
+    "completed_ticks": 192,
+    "failed_first_attempt_retained": true,
+    "host_start_attempts": 2,
+    "maximum_completed_ticks": 192,
+    "maximum_game_decisions": 32,
+    "maximum_wall_seconds": 60.0,
+    "wall_seconds": 54.75465373299994
+  },
+  "admission": {
+    "status": "training_blocked",
+    "public487fa04_sha256": "071c5899dd4c2617cbb370ef2aeb399d58d8a8bc2f1f4aca54cf44324419876d",
+    "public557799c_sha256": "d66d7eb5a46fb32be91b5636a6a673ae88ed5d7baf9d8ec5590858abba51d120",
+    "all_work_counts_zero": true
+  },
+  "archive": {
+    "file": "t106-conformance-evidence-v1.tar.gz",
+    "sha256": "379b338682791a7e2ac5765eae9dbab79f67fad020804b4eb55025bae0e62275",
+    "bytes": 329544,
+    "member_count": 20,
+    "index_content_sha256": "a4d5fbe8133d071b227b9a6927eefef2351254aa35f54627f4f445bfec385f99",
+    "index_file_sha256": "08e0b231e85da8fab24b2186ebc31e253d8891e990756c0fd974bd0af002243f"
+  },
+  "learned_transfer_measured": false,
+  "task_success_scored": false,
+  "owner_feel_accepted": false,
+  "missing_qualification": [
+    "learned zero-shot transfer",
+    "learned fixed-budget adaptation",
+    "independent geometry sweep",
+    "arbitrary damage/mass/assist perturbations",
+    "Windows runtime",
+    "owner feel judgment"
+  ],
+  "sha256": "a65d22f406d1ffdadb69bf2afd32074dc30721d8bfe93373256da5bdf53af5b5"
+}

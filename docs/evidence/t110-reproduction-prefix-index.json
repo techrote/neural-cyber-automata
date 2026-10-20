@@ -1,0 +1,130 @@
+{
+  "additional_launches_after_executor_loss": 0,
+  "archives": [
+    {
+      "file": "t110-reproduction-prefix-20261019T194247Z.zip",
+      "owner_delivery_verified": true,
+      "public_download_url": null,
+      "role": "immutable earlier prefix",
+      "sha256": "48dd01b9c084dfe435ffa69f655aebaf9c3bca3b4c5f50d6166278acabede178",
+      "size_bytes": 15349217
+    },
+    {
+      "file": "t110-reproduction-audited-prefix-20261019.zip",
+      "index_sha256": "e043e86b84758cda339bb12faf59750c5409c1e731248d6da5cf2762076d8f18",
+      "members_including_index": 379,
+      "owner_delivery_verified": true,
+      "public_download_url": null,
+      "role": "audited prefix plus later cancellation evidence and helpers",
+      "sha256": "38905e57031da728558f10cd30569a3886f123a53330432510b445337d9c8986",
+      "size_bytes": 15198868
+    }
+  ],
+  "cli_invocations": 2,
+  "completed_screen": false,
+  "config_sha256": "e5a66f5a830b9e097a5bbb9647ade4bea42c82e26fb5718273b5bae2b992de5d",
+  "corrected_launch_utc": "2026-10-19T19:26:41.023947Z",
+  "declaration_publication": {
+    "commit": "9facc2f50ecc759ce1170587d325a5b215e0edc3",
+    "path": "configs/cellular/t110-reproduction-20261019.json",
+    "sha256": "9cec333181dcdd169f24d29c51e9ed0f861a7967e9255197ca97347ec303b642"
+  },
+  "declared_budget": {
+    "aggregate_wall_seconds": 900,
+    "game_decisions": 4000,
+    "remaining_seconds_after_import_failure": 896.688938368
+  },
+  "expected_episodes": 119,
+  "failed_import_invocation": {
+    "game_decisions": 0,
+    "native_ticks": 0,
+    "process_exit_code": 1,
+    "receipt_sha256": "1db208d57245eaa2271acf13eb34fe5e2a39f18554b31f69b5cd3b9cf0555fca",
+    "wall_seconds": 3.311061632000019
+  },
+  "final_budget_counters": null,
+  "final_process_exit_status": null,
+  "frozen_checkpoint_files": 12,
+  "historical_raw_archive_recovered": false,
+  "historical_result_preserved": "no-go-at-this-screen",
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "last_retained_raw_artifact_utc": "2026-10-19T19:38:17.238651Z",
+  "launcher_correction_publication": {
+    "commit": "1aede29234e3132aaae8f625d7957ef700f31797",
+    "path": "configs/cellular/t110-launch-correction-20261019.json",
+    "sha256": "1c749dcd5971c1778b3004ee1d32cf4ad1d14c56179979b1a08d3ee68decef22"
+  },
+  "learner_revision": "626099f98bf37f961c45796914b31926dc05f29d",
+  "limits": [
+    "Integrity pass covers only retained records; it does not establish completion, final budget compliance or zero unknown tail work.",
+    "Original626 quiet-arrival records may end without a dedicated owner cancellation; following resets have distinct recorded run identities.",
+    "Current source now records prospective quiet-arrival cancellation separately; it does not reinterpret original626 records.",
+    "No historical raw artifact was recovered by this new experiment.",
+    "Owner feel, physical topology mutation, other devices and broader graph utility remain unmeasured."
+  ],
+  "maximum_json_request_echo_delta": 5.551115123125783e-16,
+  "maximum_local_feature_delta": 0.0,
+  "missing_episode_ids": [
+    "t110-untrained-floor-left-42-17017-63201-no_message-normal",
+    "t110-untrained-drop16-right-48-17017-63211-graph-normal",
+    "t110-untrained-drop16-right-48-17017-63211-no_message-normal",
+    "t110-untrained-floor-left-42-17021-63301-graph-normal",
+    "t110-untrained-floor-left-42-17021-63301-no_message-normal",
+    "t110-untrained-drop16-right-48-17021-63311-graph-normal",
+    "t110-untrained-drop16-right-48-17021-63311-no_message-normal"
+  ],
+  "missing_final_receipts": [
+    "corrected-launch/screen/screen-summary.json",
+    "corrected-launch/completion-receipt.json",
+    "corrected-launch/screen/runs/t110-jolt-three-part-screen.json"
+  ],
+  "outcome_seal": "Numerical outcomes remain withheld from the separate unconfirmed T105 training process; no aggregate utility gate is computed for this prefix.",
+  "process_termination_confirmed": false,
+  "qualification": "none from this unfinished reproduction",
+  "raw_screen_bytes": 21946293,
+  "raw_screen_files": 356,
+  "read_only_audits": [
+    {
+      "file": "retained-prefix-audit.json",
+      "result": "retained-prefix-integrity-pass",
+      "script": "audit_reproduction.py",
+      "script_sha256": "b95a9c8a964f065fabe9cd5260602e47e9afb1ae05e99bdcea4fad48e63ccc90",
+      "sha256": "14e6ea476e832eece7d8f764ba4e97b2b20651c28823241264bd7928aa2da4c6"
+    },
+    {
+      "file": "retained-lifecycle-audit.json",
+      "result": "retained-source-and-reset-lineage-pass",
+      "script": "audit_lifecycle.py",
+      "script_sha256": "a8917e10cf7cf0e6e94564e090a41a95fa81b096d2048b456718364af62540b7",
+      "sha256": "9e78252a746f30ed451e12c53986229b82b5f8db3826ab3354743d79c7d16269",
+      "verified_distinct_following_resets": 111
+    }
+  ],
+  "recomputed_episode_metrics": 112,
+  "reproduction_id": "t110-jolt-three-part-reproduction-20261019",
+  "retained_counts": {
+    "decisions": 3096,
+    "eligible_training_rows": 180,
+    "episodes": 112,
+    "local_graph_frames": 1981,
+    "messages_arrived": 3449,
+    "messages_sent": 3473,
+    "native_ticks": 18576,
+    "stage_demonstration": 8,
+    "stage_evaluation": 90,
+    "stage_tuning": 9,
+    "stage_untrained": 5
+  },
+  "safe_interrupt_receipt_sha256": "9aafe8bda427b67f47b07acae034b53cd512dfd5ef557765e36f552138845c7f",
+  "safe_interrupt_result": "Original execution session was unknown; cancellation was not confirmed.",
+  "schema": "nca-t110-independent-reproduction-prefix-index/v1",
+  "scope": "original local corrected invocation and its retained prefix only; separately reported later GitHub repeat is excluded from these counts",
+  "source_file_aggregate_sha256": "ab0783530cecb26250605ac3be9cf22b0a7e62d1f39b1fc627a5ae1b526076f5",
+  "source_files": 38,
+  "source_manifest_sha256": "dd853bc3a9e2ff207b2918b4e079f0ace8397d99012ff75388956ab10487156e",
+  "status": "unfinalized-prefix",
+  "unconfirmed_work_after_last_retained_episode": true,
+  "utility_gate": null,
+  "verified_artifact_references": 227,
+  "verified_run_manifests": 113
+}

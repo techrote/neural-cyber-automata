@@ -3,7 +3,7 @@ title: Cybersand behaviour implementation programme
 kind: roadmap
 summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Implementation programme
@@ -27,11 +27,11 @@ T-101 can start from this repository immediately after the prepass lands. T-102 
 | T-103 | Merged [PR #24](https://github.com/techrote/neural-cyber-automata/pull/24) | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
 | T-104 | Merged [PR #25](https://github.com/techrote/neural-cyber-automata/pull/25) | Demonstration capture, consumed-action replay and intervention datasets | T-101, T-102 | [#14](https://github.com/techrote/neural-cyber-automata/issues/14) |
 | T-105 | Merged [PR #26](https://github.com/techrote/neural-cyber-automata/pull/26) | First learned actor skill: imitation and recurrent residual control | T-102, T-103, T-104 | [#15](https://github.com/techrote/neural-cyber-automata/issues/15) |
-| T-106 | [IN-PROGRESS T-106], [PR #30](https://github.com/techrote/neural-cyber-automata/pull/30); original transfer gate unmet | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |
+| T-106 | Preparation merged in [PR #30](https://github.com/techrote/neural-cyber-automata/pull/30); guarded follow-up [PR #38](https://github.com/techrote/neural-cyber-automata/pull/38) pending; transfer blocked | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |
 | T-107 | Merged [PR #27](https://github.com/techrote/neural-cyber-automata/pull/27) | Usable skills and feedback-driven task composition | T-103, T-104 | [#17](https://github.com/techrote/neural-cyber-automata/issues/17) |
 | T-108 | Merged [PR #31](https://github.com/techrote/neural-cyber-automata/pull/31) | Human takeover and asynchronous decision-model or LLM adapter | T-102, T-107 | [#18](https://github.com/techrote/neural-cyber-automata/issues/18) |
-| T-109 | [IN-PROGRESS T-109], [PR #29](https://github.com/techrote/neural-cyber-automata/pull/29) | Runtime export, end-to-end throughput and deployment qualification | T-105 | [#19](https://github.com/techrote/neural-cyber-automata/issues/19) |
-| T-110 | [IN-PROGRESS T-110], [PR #28](https://github.com/techrote/neural-cyber-automata/pull/28) | Conditional distributed NCA and coordination experiments for Cybersand | T-101, T-102, T-104 | [#20](https://github.com/techrote/neural-cyber-automata/issues/20) |
+| T-109 | Export implementation/no-go merged in [PR #29](https://github.com/techrote/neural-cyber-automata/pull/29); deployment qualification open | Runtime export, end-to-end throughput and deployment qualification | T-105 | [#19](https://github.com/techrote/neural-cyber-automata/issues/19) |
+| T-110 | Bounded no-go merged in [PR #28](https://github.com/techrote/neural-cyber-automata/pull/28); cancellation and repeated-run accounting corrected in [PR #35](https://github.com/techrote/neural-cyber-automata/pull/35) | Conditional distributed NCA and coordination experiments for Cybersand | T-101, T-102, T-104 | [#20](https://github.com/techrote/neural-cyber-automata/issues/20) |
 
 Each issue contains an execution prompt, read-set, write-set, checks, limits and budget. No task may claim trained/physical/live-model evidence from a schema, mock or metadata flag.
 

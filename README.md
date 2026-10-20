@@ -2,7 +2,7 @@
 
 Research, training and evaluation for intelligent behaviour in [Cybersand](https://github.com/techrote/cybersand): physical actor control, movement and tool skills, human and model command sources, coordination, and neural cellular automata where local distributed behaviour helps the game.
 
-**Stage: seven of ten implementation tasks accepted, 19 October 2026.** The package, persistent physical host adapter, authored controls, capture/replay, first learned Jolt skill, usable skills and asynchronous ownership are implemented on main. Morphology transfer, runtime export and the bounded cellular experiment remain in progress. [Current state](docs/STATE.md) records the measured results and their limits; [progress checkpoints](docs/PROGRESS.md) track ongoing completion. The programme uses the articulated ACT-004 host and preserves the existing Thunderbowl control contracts.
+**Stage: eight of ten programme tasks have accepted results, 20 October 2026.** The CPU package, physical host adapter, authored controls, capture/replay, learned Jolt skill, usable skills and asynchronous ownership are implemented. The bounded graph experiment is complete with a recorded no-go. Export implementation is merged, but deployment qualification remains open; morphology transfer is blocked by its learned-skill reliability prerequisite. [Current state](docs/STATE.md) records the results and limits, and [progress checkpoints](docs/PROGRESS.md) track the remaining work. The programme uses the articulated ACT-004 host and preserves the existing Thunderbowl contracts.
 
 ## Start here
 

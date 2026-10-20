@@ -1,0 +1,401 @@
+{
+  "schema": "nca-jolt-direction-frame-followup/v1",
+  "id": "t106-jolt-direction-frame-prerequisite-v1",
+  "authorization": "Renewed owner instruction to complete the repository; separate fixed per-rig follow-up commissioned before new collection or fitting",
+  "original_evidence": {
+    "t105_config_sha256": "8e40c1f65a2fe32597ecc97d10bd6f4414f96762bdc198f5063a56acad68616c",
+    "t105_summary_sha256": "5799a3fe61924d55244bc278e36d4ae0c264c6da1ad54d18a258ba4ed3aed784",
+    "t106_entry_declaration_sha256": "6d4b567e99308d57e0dfb076e2137ea693112ab8bf4ea30af144111bb9516654",
+    "t106_prerequisite_result_sha256": "810ef64d9c95a682050e6e5420a847d1229f908bc490df499ad078e200935678",
+    "preservation": "Original results and source/seed-bound admission remain immutable; known original holdouts are not sealed evaluation for this increment"
+  },
+  "actor": "jev",
+  "skill": "directed_hop",
+  "lane": "act004",
+  "mode": "stepped",
+  "host_sha": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+  "baseline_source_sha256": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+  "baseline_tuning": "balanced",
+  "base_hz": 60,
+  "decision_ticks": 6,
+  "helper_lease_ticks": 12,
+  "goal": {
+    "pace": 0.8,
+    "tolerance_cells": 4.0,
+    "deadline_ticks": 240,
+    "quiet_ticks": 12,
+    "maximum_arrival_speed": 6.0,
+    "maximum_arrival_angle": 0.32,
+    "require_support": true
+  },
+  "reward": {
+    "schema": "jolt-arrival-best-progress/v1",
+    "progress": "one-time decrease of closest-ever target distance /64; never reset within an episode",
+    "success_bonus_once": 2.0,
+    "task_deadline_penalty_once": -0.5,
+    "time_per_second": -0.05,
+    "effort_proxy_per_second": -0.005,
+    "effort_proxy_definition": "effort*(abs(move_x)+abs(trim))",
+    "wobble_per_second": -0.02,
+    "wobble_definition": "max(0,abs(wrapped_angle)-0.32)",
+    "ordinary_trim_variation": -0.01,
+    "ordinary_definition": "all consumed ticks supported, cooldown<=0 and primary/secondary/auxiliary false"
+  },
+  "bc": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "unroll": 16,
+    "continuous_loss": "mean_squared_error",
+    "discrete_loss_weight": 0.25,
+    "discrete_positive_weight": "negative/positive training counts clamped [1,10]",
+    "data": "all admitted unmodified authored training samples including unsuccessful trajectories",
+    "burn_in": "entire preceding episode prefix under current weights, no gradient"
+  },
+  "runtime": {
+    "torch": "2.8.0+cpu",
+    "numpy": "2.3.5"
+  },
+  "training_seeds": [
+    7103,
+    7207,
+    7301
+  ],
+  "training_families": [
+    {
+      "id": "floor-right-24",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        200.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621001,
+        621002,
+        621003
+      ]
+    },
+    {
+      "id": "floor-left-24",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        240.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621031,
+        621032,
+        621033
+      ]
+    },
+    {
+      "id": "floor-right-36",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621061,
+        621062,
+        621063
+      ]
+    },
+    {
+      "id": "floor-left-36",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        228.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621091,
+        621092,
+        621093
+      ]
+    },
+    {
+      "id": "floor-right-48",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621121,
+        621122,
+        621123
+      ]
+    },
+    {
+      "id": "floor-left-48",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        216.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621151,
+        621152,
+        621153
+      ]
+    },
+    {
+      "id": "floor-right-60",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        236.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621181,
+        621182,
+        621183
+      ]
+    },
+    {
+      "id": "floor-left-60",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        204.0,
+        346.5
+      ],
+      "demo_seeds": [
+        621211,
+        621212,
+        621213
+      ]
+    }
+  ],
+  "tuning_families": [],
+  "evaluation_families": [
+    {
+      "id": "floor-right-27",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        203.0,
+        346.5
+      ],
+      "host_seed": 625001
+    },
+    {
+      "id": "floor-left-27",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        237.0,
+        346.5
+      ],
+      "host_seed": 625002
+    },
+    {
+      "id": "floor-right-63",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        239.0,
+        346.5
+      ],
+      "host_seed": 625003
+    },
+    {
+      "id": "floor-left-63",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        201.0,
+        346.5
+      ],
+      "host_seed": 625004
+    },
+    {
+      "id": "drop12-right-45",
+      "spawn": [
+        176.0,
+        334.5
+      ],
+      "target": [
+        221.0,
+        346.5
+      ],
+      "host_seed": 625005
+    },
+    {
+      "id": "drop12-left-45",
+      "spawn": [
+        264.0,
+        334.5
+      ],
+      "target": [
+        219.0,
+        346.5
+      ],
+      "host_seed": 625006
+    },
+    {
+      "id": "drop28-right-57",
+      "spawn": [
+        176.0,
+        318.5
+      ],
+      "target": [
+        233.0,
+        346.5
+      ],
+      "host_seed": 625007
+    },
+    {
+      "id": "drop28-left-57",
+      "spawn": [
+        264.0,
+        318.5
+      ],
+      "target": [
+        207.0,
+        346.5
+      ],
+      "host_seed": 625008
+    }
+  ],
+  "candidates_in_priority_order": [
+    "direction_frame_bc",
+    "world_frame_bc"
+  ],
+  "candidates": {
+    "direction_frame_bc": {
+      "frame": "initial_goal_direction"
+    },
+    "world_frame_bc": {
+      "frame": "world"
+    }
+  },
+  "models": {
+    "base": "linear-tanh encoder, 32-wide GRUCell, six direct clone channels, unchanged critic",
+    "hidden_size": 32,
+    "feature_count": 26,
+    "learned_input_privilege": "none",
+    "matched_initialization": "Identical numeric weights for both candidates at each policy seed; independently initialized across the three seeds",
+    "direction": "Sign of explicit caller target X minus initial observed own-root X, fixed for the complete invocation; coincident X chooses +1",
+    "signed_features": [
+      "target_dx_div64",
+      "vx_div80",
+      "sin_rotation",
+      "angular_velocity_div8",
+      "previous_move_x",
+      "previous_trim"
+    ],
+    "signed_feature_indices": [
+      0,
+      2,
+      4,
+      6,
+      20,
+      21
+    ],
+    "signed_teacher_labels": [
+      "move_x",
+      "trim"
+    ],
+    "wire_restore": "Multiply predicted move_x and trim by the same fixed sign; preserve all other predicted channels and the original world-goal aim mapper",
+    "assumption": "Coordinate canonicalization is an inductive-bias hypothesis; no reflection symmetry of the host, contacts, terrain, materials or full rig is asserted",
+    "data": "The same complete eligible authored training sequences for both families; no mirrored extra episodes, success filtering or teacher tuning"
+  },
+  "prerequisite": {
+    "minimum_mean_success": 0.75,
+    "minimum_every_seed_success": 0.5,
+    "minimum_mean_success_gain_over_initial": 0.125,
+    "require_success_gain_lower95_strictly_positive": true,
+    "uncertainty": {
+      "unit": "Independently trained policy seed",
+      "method": "All 27 length-three resamples with replacement of the three paired per-seed success gains",
+      "interval": "Linearly interpolated 2.5 and 97.5 percentiles of the sorted 27 means"
+    },
+    "required_for_every_seed": {
+      "complete_paired_scenarios": true,
+      "integrity_failures": 0,
+      "failed_admissions": 0,
+      "ownership_or_lifetime_fence_regressions": 0,
+      "censored_evaluations": 0,
+      "ordinary_trim_reversals_per_second_increase_over_authored_maximum": 0.5,
+      "mean_absolute_angle_increase_over_authored_maximum_radians": 0.1,
+      "mean_peak_toward_speed_ratio_to_authored_minimum": 0.7,
+      "mean_peak_toward_speed_ratio_to_authored_maximum": 1.5,
+      "purposeful_launch_fraction_loss_to_authored_maximum": 0.125,
+      "every_scenario_inference_p95_maximum_ms": 5.0
+    }
+  },
+  "evaluation": {
+    "comparator": "Each entire family against its own initial checkpoint for every seed on all eight new cases",
+    "reference": "Frozen authored baseline and idle once per case, shared across policy seeds",
+    "selection": "Fixed final epoch40 for all six candidate/seed combinations; declared family priority only, no best-seed selection",
+    "holdout_opening": "After all six final checkpoint hashes freeze",
+    "tuning": "None; no heldout-dependent fitting, extra seeds, scenario replacement or automatic budget extension",
+    "unchanged_task": "Original 12-base-tick quiet supported arrival, intrinsic240-tick deadline and original style/runtime/integrity predicates",
+    "owner_feel": "Separate human judgement, never inferred from numerical gates"
+  },
+  "budget": {
+    "maximum_total_decisions": 6000,
+    "planned_worst_case_decisions": 5440,
+    "maximum_wall_seconds": 1800,
+    "demo_maximum_decisions": 960,
+    "evaluation_maximum_decisions": 4480,
+    "maximum_episode_decisions": 40,
+    "maximum_episode_ticks": 240,
+    "bc_epochs_per_family_seed": 40,
+    "family_seed_combinations": 6,
+    "ppo_decisions": 0,
+    "adaptation_decisions": 0,
+    "transfer_evaluations": 0,
+    "device": "cpu",
+    "torch_threads": 1,
+    "gpu_allowed": false,
+    "automatic_budget_extension": false
+  },
+  "excluded_claims": [
+    "Morphology transfer",
+    "Exact physical reflection symmetry",
+    "General navigation reliability",
+    "Owner feel approval",
+    "Real-time runtime qualification",
+    "Original T105 result reproduction"
+  ],
+  "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+  "accepted_dependency_commits": {
+    "t102": "df0deea16b6b6ad1d5494e31c0256c9b48b0c675",
+    "t103": "82702fa2875ad4863bc7faec860c5b86b6c50ce1",
+    "t104": "b5f665244d117fe55de7a4bd65721835684646f8"
+  }
+}

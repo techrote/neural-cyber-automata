@@ -121,6 +121,38 @@ predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
 remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
 a separate CPU export qualification, with its directional failures retained.
 
+## Gated morphology preparation
+
+The [morphology preparation](evidence/2026-10-19-t106.md) pins accepted Jolt,
+Vector, Monowheel and Ripper contracts with eight part slots, seven connection
+slots and separate presence, measurement and activity masks. Optional padded
+recurrent and two-round shared graph candidates have 13,048 and 13,192 parameters.
+Forty-one focused checks and independent review cover locality, padding,
+source-age limits, recurrence and confirmed owner-revocation boundaries.
+
+The immutable admission runner retains the failed predeclared T105 reliability
+prerequisite and emits zero training, candidate-game and optimizer work. Its
+fixed conditional comparison budget is preparatory; no transfer result exists.
+A separate [32-request / 192-tick scripted profile diagnostic](evidence/2026-10-19-t106-conformance.md)
+passed on all four profiles at public source `557799ce`. It retains the first
+zero-request startup failure; both attempts total 54.754654 seconds within the
+original 60-second allocation. This establishes interface conformance; learned
+transfer, adaptation, damage recovery and owner feel remain unmeasured.
+The research question remains blocked by the stated prerequisite.
+
+The separately commissioned [Jolt direction-frame BC follow-up](evidence/2026-10-19-t106-direction-frame.md)
+completed its single fixed actual-host run with **4,660 requests / 27,960 ticks** in
+385.969869986 seconds and all six declared 40-epoch fits (11,760 optimizer updates).
+Direction-frame BC improved over its own initialization by 0.25 mean success, with a
+strictly positive 95% lower bound, but reached only **33.3% mean success / 25% minimum
+seed success**. World-frame BC reached **25% mean / 0% minimum**. Both therefore failed
+the unchanged **75% mean / 50% every-seed** prerequisite; direction-frame also failed
+the complete original character/runtime gate on two of three seeds. The immutable
+result selects no family, records `mechanical_utility_prerequisite_passed=false`,
+and performs **zero morphology-transfer evaluations**. The preparation remains useful,
+but learned transfer, adaptation and damage-recovery claims stay blocked rather than
+being manufactured from an insufficient prerequisite.
+
 ## Asynchronous source ownership
 
 The [asynchronous adapter](ASYNC_CONTROL.md) connects bounded mock/local-worker
@@ -137,6 +169,59 @@ original 120-tick expiry; longer explicit typed local missions are separate.
 No live service or owner feel verdict is claimed.
 The frozen actual pilot passed ten cases, recording 338 owner operations and
 790 completed native ticks in 19.169 seconds with no skips or source drift.
+
+## Evaluated CPU export and deployment no-go
+
+The optional [runtime export lane](RUNTIME_EXPORT.md) converts the fixed trained
+BC seed 1103 policy into a hash-bound NumPy GRU with declared preprocessing,
+recurrence, wire mapping and exact runtime context. It fences original source
+observations, ownership changes, deadlines and unsupported profiles. Conversion
+verifies the accepted T105 training/evaluation lineage before admitting weights.
+
+The [single fixed-candidate screen](evidence/2026-10-19-t109-deployment-no-go.md)
+completed with an immutable no-go on published source `eb953615`. Both physical
+trajectory pairs exceeded the unchanged tolerances. The fixed-count throughput
+phase measured 79.033537896 seconds; the requested full ten-minute observation
+remains outstanding. A proven realtime reason-filter defect has a prospective
+checker correction and a separate same-receipt audit. Eleven focused checker
+tests and four actual evaluated-bundle integration tests passed, the latter
+using one host and 36 ticks. These engineering results do not qualify the
+deployment. The original interrupted training termination remains unconfirmed,
+and the complete original failure and distinct follow-up evidence are preserved.
+
+## Conditional per-part graph result
+
+The [fixed Jolt graph experiment](evidence/2026-10-19-t110-screen.md) completed
+119 episodes with six preselected trained checkpoints, normal and delayed/lost/
+partitioned/reset communication, and saved untrained controls. The three-part
+star has private recurrence, one neighbor round and root-only action readout.
+The equal-size no-message candidate shares the same local features and action
+limits. All original declarations, failed attempts and audit corrections remain
+in the [evidence index](evidence/2026-10-19-t110.md).
+
+The predeclared result is no-go: graph and no-message each succeeded in one of
+six normal holdout trials, with zero paired success gain; the graph was slightly
+slower under the capped-completion metric. Each untrained method succeeded in
+three of six. The trained successes did not require a purposeful hop, a retained
+limitation of the frozen quiet-arrival task. Other declared gates passed, but
+these observations provide no reason to promote communication in this screen.
+Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
+227.1865 seconds through final ledger publication. Owner feel remains unjudged.
+
+The independent local reproduction stopped producing records after 112 episodes,
+3,096 confirmed decisions and 18,576 ticks; its completion and termination are
+unconfirmed. Its audited archive is saved. A concurrently launched GitHub repeat
+later completed 119 rows / 3,297 decisions and reported the same no-go. These are
+separate executions. Their combined confirmed decisions are at least **6,393**,
+above the original aggregate **4,000** ceiling; the GitHub receipt's reported
+142.008-second total omits the interrupted local work. This deviation is retained
+in [the reconciliation and evidence](evidence/2026-10-19-t110-reproduction.md),
+with both immutable artifact identities. It does not qualify graph utility.
+
+The current runner also records actual owner cancellation on early quiet arrival
+and clears private memory/messages before closing. A dedicated actual-host
+regression passed; frozen historical and reproduction source/records are unchanged.
+Owner feel and unsupported physical topology changes remain unmeasured.
 
 ## Host authority
 

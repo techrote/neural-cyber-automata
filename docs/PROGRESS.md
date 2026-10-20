@@ -3,7 +3,7 @@ title: Implementation progress checkpoints
 kind: evidence
 summary: Timestamped checkpoints for the commissioned ten-issue implementation programme.
 owns: [evidence.programme-progress]
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Implementation progress
@@ -245,3 +245,22 @@ complete final-head checks and scoped merges, then reconcile the final README,
 state, roadmap and run ledger. No new formal training, morphology experiment,
 paid service or host-source modification is in progress. The next checkpoint
 is due within 30 minutes.
+
+## 2026-10-19 22:13 UTC — Export merge and guarded-preparation handoff
+
+- **Accepted source:** PR #29 merged as `43f2b765add160f6042d382b7f32b90a21794298`. Its merge tree `65aca6cd4689d0391fdab1df394049ab1334d8d6` exactly matches the independently reviewed public head; all four required workflows passed there. The runtime/export implementation and complete no-go evidence are now on main. Issue #19 remains open for failed closed-loop tolerances and the outstanding full ten-minute observation.
+- **T106 guarded preparation:** PR #38 publishes `eb488674475e3d13e8e6e4511ddfbe66192552bb`. One read-only admission from that clean public source finished at 22:05:50 UTC in 217.304178604 seconds. The expected CLI exit 2 reports `training_blocked`, `admitted=false`, and no continuation declaration. Torch, learner, capture and checkpoint modules remained absent. Evidence helpers imported host adapter definitions, but host starts, model constructions, checkpoint loads, policy calls, game requests and optimizer updates were all zero. Issue #16 remains open.
+- **CI follow-up:** PR #36's first exact-head combined check failed an existing delay-240 fixture's mandatory `retired_reply` assertion. PR #38's first combined check ran 343 tests and failed an existing human-takeover charge assertion. Source review identified realtime ownership/lease assumptions that need receipt-based fixture assertions; the precise transitions in those failing jobs are not proven by their limited logs. A scoped test-only correction is being prepared. Production source ages, native leases and experiment thresholds remain unchanged.
+- **Evidence accounting:** Both T106 direction runs and both T110 reproduction executions remain separately recorded. Their combined confirmed allocations exceed the original 6,000 and 4,000 request ceilings respectively. No extra formal screen or morphology successor run has been started.
+- **Artifact audit:** A new post-save check found that the currently available primary-direction TAR container differs from its recorded container hash, while its companion index is unchanged. Member-level comparison is in progress before delivering that archive. The original extracted evidence passed the public admission's full identity check; no substitute run or changed selection is being introduced.
+- **Next:** Complete the CI correction, integrate the provenance and guarded preparation changes with accepted main, reconcile README/state/roadmap/run records, and verify the final public checks and merge trees. The programme remains eight accepted task scopes with measured morphology transfer and runtime deployment acceptance open. Next checkpoint is due within 30 minutes if work continues.
+
+## 2026-10-20 00:29 UTC — Resumed execution checkpoint
+
+The owner requested continued project implementation and regular repository records. Accepted main is `43f2b765add160f6042d382b7f32b90a21794298` (T109 export implementation/no-go from PR #29), verified from a fresh checkout. Open implementation issues are #16 and #19, with guarded preparation #37 and this progress task also open. PRs #36, #38 and #33 remain open.
+
+Current work has independent owners for T109 trajectory/throughput diagnosis, T106 preparation acceptance plus the concrete T108 realtime CI failures, and recovery/audit of the preserved runtime and immutable evidence. The progress PR has merge conflicts and will be reconciled against accepted results.
+
+PR #36 and PR #38 each have one failing optional-learning realtime T108 assertion; other observed checks passed. These failures will be diagnosed before rerun or merge. The T106 primary reliability prerequisite and cumulative budget accounting remain failed; no morphology learning or transfer is being started. T109 retains its original trajectory no-go and incomplete ten-minute observation while a prospective bounded correction is prepared.
+
+Progress entries will be published at intervals no longer than 30 minutes during this execution. No activity or checkpoints are backdated across the previous session gap.

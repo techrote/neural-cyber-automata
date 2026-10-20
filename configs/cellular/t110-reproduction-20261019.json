@@ -1,0 +1,102 @@
+{
+  "authorization": "Renewed owner instruction to complete the current programme; one bounded reproduction, explicitly declared before execution.",
+  "budget": {
+    "automatic_extension": false,
+    "maximum_attempts": 1,
+    "maximum_game_decisions": 4000,
+    "maximum_wall_seconds": 900,
+    "planned_worst_case_game_decisions": 3570,
+    "prior_budget_receipts": [],
+    "retry_allowed": false,
+    "scope": "This new independently commissioned screen only. It does not reset, replace or conceal any historical attempt or its accounted budget.",
+    "tuning_allowed": false
+  },
+  "configuration": {
+    "canonical_sha256": "e5a66f5a830b9e097a5bbb9647ade4bea42c82e26fb5718273b5bae2b992de5d",
+    "changes": [],
+    "file_sha256": "35145b22feecee2bf888ed817b40778db834f96ebaf341c8e8960d636e5f710e",
+    "path": "configs/cellular/jolt-three-part-hop-v1.json"
+  },
+  "declared_utc": "2026-10-19T19:04:39Z",
+  "experiment": {
+    "checkpoint_selection": "fixed final epoch for all six candidates before holdout opening",
+    "criteria": "unchanged utility_gate and ArrivalTask from the frozen learner and original immutable declaration",
+    "demonstrations": "eight freshly recaptured authored training episodes; unsuccessful trajectories retained",
+    "episodes": {
+      "demonstration": 8,
+      "evaluation": 90,
+      "total": 119,
+      "tuning": 9,
+      "untrained": 12
+    },
+    "epochs_per_candidate": 30,
+    "faults": [
+      "normal",
+      "delay",
+      "loss",
+      "partition",
+      "memory_reset"
+    ],
+    "trained_methods": [
+      "graph",
+      "no_message"
+    ],
+    "training_seeds": [
+      17011,
+      17017,
+      17021
+    ],
+    "tuning": "diagnostic only; no setting or checkpoint selection",
+    "updates_per_candidate": 120
+  },
+  "historical_result": {
+    "aggregate_game_decisions": 3315,
+    "aggregate_runtime_seconds": 227.1865,
+    "archive_availability": "original raw files unavailable at this review; historical report and hashes retained",
+    "decision": "no-go-at-this-screen",
+    "normal_graph_successes": "1/6",
+    "normal_no_message_successes": "1/6",
+    "relationship": "Report the new outcome separately even if it differs. No new bytes will be relabelled as the old experiment archive.",
+    "run_id": "t110-jolt-three-part-v2"
+  },
+  "host": {
+    "bridge_sha256": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "execution": "stepped",
+    "godot_binary_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "godot_version": "4.7.stable.official.5b4e0cb0f",
+    "lane": "physical_ACT004",
+    "native_artifact_sha256": "5bdc55e7f355004fc8a6468234b0d018d3919339ebfe47faca9997de3af17847",
+    "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+    "rapier_artifact_sha256": "147ab5673b9687ccb7a3b12fec07ea55cc674ad8a75f529d1085bf7d61fbd831",
+    "repository": "techrote/cybersand",
+    "revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "tree": "445a185e9f9824b16953fec27bf0157dfeedca77"
+  },
+  "id": "t110-jolt-three-part-reproduction-20261019",
+  "learner": {
+    "checkout": "clean detached checkout of the original immutable learner revision; no implementation changes",
+    "entry_point": "tools/cellular_screen.py",
+    "revision": "626099f98bf37f961c45796914b31926dc05f29d",
+    "source_files_sha256": "ab0783530cecb26250605ac3be9cf22b0a7e62d1f39b1fc627a5ae1b526076f5",
+    "source_manifest_file_sha256": "dd853bc3a9e2ff207b2918b4e079f0ace8397d99012ff75388956ab10487156e",
+    "tree": "5d46e52b32122bbb2b4127f150541a420b93e66e"
+  },
+  "publication_gates": {
+    "after_execution": "Retain all output files and failure logs, perform read-only integrity audit, create a complete archive with per-file hashes, and publish a stable archive link.",
+    "before_execution": "This declaration must be committed and publicly retrievable before any reproduction rollout; record the publication commit and file hash in a separate launch receipt.",
+    "outcome": "Conditional utility, no-go or failure is retained exactly as produced by the unchanged criteria. No additional attempt follows this declaration."
+  },
+  "purpose": "One newly commissioned faithful reproduction with retained, publishable raw artifacts. This is not recovery of the unavailable historical runtime bytes.",
+  "runtime": {
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "gpu_allowed": false,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "torch": "2.8.0+cpu",
+    "torch_threads": 1
+  },
+  "schema": "nca-t110-independent-reproduction/v1"
+}

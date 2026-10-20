@@ -1,0 +1,320 @@
+{
+  "actor": "jev",
+  "base_hz": 60,
+  "bc": {
+    "batch_episodes": 2,
+    "continuous_loss": "MSE on bounded first three outputs",
+    "dataset": "all eligible autonomous authored training rows, including unsuccessful trajectories; no heldout features",
+    "discrete_loss": "BCEWithLogits, positive class negative/positive training counts clamped1to10",
+    "discrete_weight": 0.5,
+    "epochs": 30,
+    "learning_rate": 0.003,
+    "max_gradient_norm": 1.0,
+    "padding": "zero loss and no hidden advancement for ended episodes",
+    "selection": "fixed final epoch for every seed; tuning diagnostic only",
+    "unroll": "full episode, no hidden-state truncation"
+  },
+  "budget": {
+    "automatic_extension": false,
+    "demo": 240,
+    "device": "cpu",
+    "final_evaluation": 2700,
+    "gpu_allowed": false,
+    "maximum_game_decisions": 4000,
+    "maximum_wall_seconds": 900,
+    "planned_worst_case_game_decisions": 3570,
+    "torch_threads": 1,
+    "tuning": 270,
+    "untrained_evaluation": 360
+  },
+  "communication": {
+    "aggregation": "mean of self-message and received one-hop neighbor messages; root state is the only action readout",
+    "instantaneous_reach_hops": 1,
+    "message_source": "current local encoded features and previous private hidden state",
+    "message_ttl_ticks_exclusive": 12,
+    "message_width": 8,
+    "missing_message": "no implicit hold or resubmission",
+    "no_message_control": "identical active self-message network and parameter count; all inter-node edges disabled",
+    "queue_hard_capacity": 16,
+    "rounds_per_decision": 1,
+    "successive_decisions_reach": "at most one further edge per decision"
+  },
+  "decision_ticks": 6,
+  "evaluation": {
+    "cross_task_seal": "do not relay T110holdout outcomes to T105before T105sixcheckpoint freeze",
+    "holdout_opening": "after all6finalcheckpoints and their hashes are frozen",
+    "include_untrained": "both models,3seeds,2heldout families,normal only",
+    "methods": [
+      "authored",
+      "graph",
+      "no_message"
+    ],
+    "paired": true,
+    "uncertainty": "paired policy-seed means, all27 resamples of3seeds with replacement, percentile95 interval"
+  },
+  "evaluation_families": [
+    {
+      "host_seed": 63101,
+      "id": "floor-left-42",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        222.0,
+        346.5
+      ]
+    },
+    {
+      "host_seed": 63111,
+      "id": "drop16-right-48",
+      "spawn": [
+        176.0,
+        330.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ]
+    }
+  ],
+  "excluded_claims": [
+    "physical topology mutation",
+    "morphology transfer",
+    "full-state input",
+    "live model service",
+    "owner feel acceptance",
+    "general graph superiority",
+    "Growing NCA image efficacy"
+  ],
+  "faults": [
+    {
+      "id": "normal"
+    },
+    {
+      "delay_ticks": 6,
+      "id": "delay"
+    },
+    {
+      "edge_loss_probability": 0.25,
+      "id": "loss"
+    },
+    {
+      "blocked_undirected_edge": [
+        0,
+        2
+      ],
+      "id": "partition"
+    },
+    {
+      "id": "memory_reset",
+      "reset_tick": 60
+    }
+  ],
+  "helper_lease_ticks": 12,
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "id": "jolt-three-part-hop-v1",
+  "lane": "act004",
+  "memory": {
+    "clear_on": [
+      "episode",
+      "actor",
+      "profile",
+      "control_generation",
+      "source_generation",
+      "mount_generation",
+      "goal",
+      "observed_part_topology"
+    ],
+    "duplicate_tick": "no second state update",
+    "floats_per_node": 16,
+    "memory_reset_stress": "clear all controller private recurrence at tick60; explicit caller goal and external task deadline remain",
+    "owner": "actor incarnation + profile + control/source/mount generations + goal"
+  },
+  "mode": "stepped",
+  "models": {
+    "encoder": "Linear30to16+tanh",
+    "hidden_size": 16,
+    "host_mechanics": "unaltered authored assistance, Rapier, joints and native materials",
+    "message": "Linear32to8+tanh",
+    "message_size": 8,
+    "outputs": [
+      "move_x",
+      "trim",
+      "effort",
+      "primary",
+      "secondary",
+      "auxiliary"
+    ],
+    "parameter_count": 2878,
+    "readout": "Linear16to6 of node0 only",
+    "shared_mapping": "continuous tanh/tanh/sigmoid and Boolean0.5 thresholds; move_y0; same authored directed-hop aim; all tool/mount/reel channelszero",
+    "shared_primary_gate": "supported true, known cooldown<=0, previous requested primary false; applied identically to authored/graph/no-message",
+    "update": "GRUCell24to16 shared at all nodes"
+  },
+  "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+  "runtime": {
+    "numpy": "2.3.5",
+    "python_minimum": "3.11",
+    "torch": "2.8.0+cpu"
+  },
+  "schema": "nca-jolt-part-graph-screen/v1",
+  "seed_rules": {
+    "bc_order": "derive_seed(training_seed,cellular.bc)",
+    "communication": "derive_seed(training_seed,cellular.communication,family_index)",
+    "paired_host": "family.host_seed + 100*policy_seed_index, shared by all methods and faults",
+    "weights": "training_seed, same initial state for graph and no-message"
+  },
+  "sensors": {
+    "every_node": "its own part position/velocity/rotation/angular_velocity/mass/size; explicit goal and previous requested actor command",
+    "excluded": [
+      "evaluator",
+      "reward",
+      "other actors",
+      "cell patch",
+      "global scene",
+      "unobserved physical contacts"
+    ],
+    "features_per_node": 30,
+    "pads": "root-only sensor slots are zero with validity false; no root observation injection",
+    "population_budget": "three nodes and same per-node assigned sensors for graph and no-message; authored receives the same permitted local actor view",
+    "root_only": "actor grounded, energy, cooldown, ground and ceiling rays, with independent validity masks",
+    "schema": "jolt-per-part-proprioception-goal/v1"
+  },
+  "skill": "directed_hop",
+  "status": "predeclared before implementation and training",
+  "task": {
+    "deadline_ticks": 180,
+    "goal_pace": 0.8,
+    "maximum_arrival_angle": 0.32,
+    "maximum_arrival_speed": 6.0,
+    "quiet_ticks": 12,
+    "require_support": true,
+    "success": "one-time12consecutive completed ticks inside all arrival bounds",
+    "tolerance_cells": 4.0
+  },
+  "topology": {
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "id": "jolt-three-part-star/v1",
+    "kind": "per-part",
+    "nodes": [
+      "impact_core",
+      "rebound_pad_-1",
+      "rebound_pad_1"
+    ],
+    "physical_topology_changes": "unsupported/refuse; communication masks do not modify parts/joints",
+    "readout_node": 0,
+    "root_actuation": "same six wire channels for the single actor"
+  },
+  "training_families": [
+    {
+      "demo_seeds": [
+        61101,
+        61102
+      ],
+      "id": "floor-right-36",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ]
+    },
+    {
+      "demo_seeds": [
+        61111,
+        61112
+      ],
+      "id": "floor-left-36",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        228.0,
+        346.5
+      ]
+    },
+    {
+      "demo_seeds": [
+        61121,
+        61122
+      ],
+      "id": "floor-right-60",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        236.0,
+        346.5
+      ]
+    },
+    {
+      "demo_seeds": [
+        61131,
+        61132
+      ],
+      "id": "floor-left-60",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        204.0,
+        346.5
+      ]
+    }
+  ],
+  "training_seeds": [
+    17011,
+    17017,
+    17021
+  ],
+  "tuning_families": [
+    {
+      "host_seed": 62101,
+      "id": "floor-right-48",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ]
+    }
+  ],
+  "utility_gate": {
+    "alternative_both_success_minimum": 0.8333333333333334,
+    "alternative_capped_completion_gain_seconds": 0.15,
+    "decision": "conditional utility only if every gate passes; otherwise no-go under this fixed screen",
+    "failed_admissions_allowed": 0,
+    "integrity_failures_allowed": 0,
+    "maximum_inference_p95_ms": 5.0,
+    "maximum_mean_absolute_angle_increase_vs_authored": 0.1,
+    "maximum_normal_success_regression_vs_authored": 0.0,
+    "maximum_stress_success_loss_vs_normal": 0.16666666666666666,
+    "minimum_normal_success_gain_vs_no_message": 0.16666666666666666,
+    "require_positive_bootstrap_lower95": true
+  }
+}
