@@ -81,6 +81,7 @@ def builtin_registry() -> Registry:
     from .adapters.godot import CybersandEnv, GodotHost
     from .envs.recorded import RecordedEnv
     from .controllers import AuthoredController
+    from .controllers.jolt_arrival import JoltArrivalController
     from .data import replay_episode
     from .skills import register_skills
     from .cellular import register as register_cellular
@@ -99,6 +100,8 @@ def builtin_registry() -> Registry:
     registry.register("policy", "idle", 1, IdlePolicy, ("recorded_fixture",))
     registry.register("policy", "authored-feedback", 1, AuthoredController,
                       ("local-observation", "wire", "bounded-feedback", "cancellation"))
+    registry.register("policy", "authored-jolt-arrival", 1, JoltArrivalController,
+                      ("local-observation", "wire", "bounded-feedback", "arrival-diagnostic", "cancellation"))
     registry.register("evaluator", "recorded", 1, RecordedEvaluator, ("recorded_fixture",))
     registry.register("evaluator", "consumed-replay", 1, replay_episode,
                       ("act004", "same-runtime", "original-observation-age"))

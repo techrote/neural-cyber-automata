@@ -12,6 +12,10 @@ Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.c
 its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite.
 [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
 
+Two bounded follow-ups are under review: [export dispatch authority #42](https://github.com/techrote/neural-cyber-automata/issues/42)
+and [the versioned Jolt arrival teacher #43](evidence/2026-10-20-jolt-arrival-reference.md).
+Their implementation and diagnostics do not admit morphology training.
+
 ## T-100 — Accepted research baseline
 
 The T-100 research programme landed in PR #21 at
@@ -290,11 +294,7 @@ Owner feel and unsupported physical topology changes remain unmeasured.
 
 ## Host authority
 
-The refreshed Cybersand source at
-`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497` includes ACT-004 articulated actors
-merged through PR #181. Its owner API has configure, reset, observation, submit,
-cancel, step and snapshot operations. T-102 owns qualification of that boundary.
-No Cybersand source mutation is part of T-101.
-
-Package tests and a recorded protocol example establish no gameplay success,
-learned-policy value or owner feel acceptance. GPU qualification is unmeasured.
+The ACT-004 host accepted through Cybersand PR #181 is pinned at
+`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497`; T-102 qualifies its configure/reset,
+observation, submit/cancel, step and snapshot API, with no host changes by T-101.
+Package/recorded tests do not measure gameplay, learned-policy value, owner feel or GPU qualification.

@@ -19,6 +19,14 @@ returns a bounded `WireAction`. It does not have access to evaluator snapshots.
 Unknown actor/profile mappings require an explicit implementation. An arrival
 result ends an invocation; it does not promise sustained holding or hovering.
 
+The separate `authored-jolt-arrival@1` candidate in
+[`jolt_arrival.py`](../src/nca/controllers/jolt_arrival.py) adds a single
+room-aware Jolt hop, ground approach and supported settling. It preserves the
+original `authored-feedback@1` implementation and source identity. Its
+[fixed development diagnostic](evidence/2026-10-20-jolt-arrival-reference.md)
+tracks whether it improves the teaching trajectories. It is not a learned
+policy and cannot satisfy the morphology prerequisite by itself.
+
 ## Use an authored skill
 
 After [host setup](HOST_ADAPTER.md), with a reset Jolt `CybersandEnv`:

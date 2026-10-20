@@ -166,3 +166,32 @@ source/configuration/test/tool bytes equal accepted main. Next: publish the
 documentation-only PR #33 final head, require its four workflows, then merge
 and verify the final repository state. Earlier checkpoints and recorded cadence
 gaps remain unchanged. Next checkpoint within 30 minutes if work continues.
+
+
+## 2026-10-20 06:46 UTC — Two concrete advancement fixes under review
+
+Reconciled live main `3db02bcb0bbe7703162d8ff597f965af3f1bf50f`, all original
+programme issues and current PRs. Nine of ten programme scopes are accepted;
+there were no open PRs. The remaining morphology prerequisite still fails its
+unchanged75% mean /50% every-seed threshold.
+
+Two independent audits established concrete next work. Issue #42 addresses
+exported decisions that remain dispatchable after local cancellation/replacement
+and helper leases extending past an explicit goal deadline. Its isolated
+implementation now binds decisions to live controller authority and is undergoing
+negative-control review. Historical qualified bundle receipts remain unchanged.
+
+Issue #43 adds the separate `authored-jolt-arrival@1` reference. Read-only replay
+of the preserved primary teacher found13/24 training and4/8 evaluation successes,
+with near-target repeat hops causing large airborne overshoot. The new fixed
+reference admits one room-aware launch and then approaches/settles on support.
+The original baseline, task/reward, configuration and failed learned evidence
+remain untouched. Eighteen new controller checks and eight diagnostic admission,
+accounting and immutable-output checks pass. No new physical diagnostic or
+training has executed.
+
+The sole prospective teacher diagnostic is capped at64 episodes,2560 six-tick
+decisions,15360 requested ticks and600 seconds. All32 matched cases are already
+open development cases. Review, public source freeze, actual bounded execution
+and final-head checks remain. The pinned CPU dependencies and independently
+verified isolated host are prepared; no new compute or model service was acquired.
