@@ -220,6 +220,10 @@ Its NumPy and Torch CPU backends preserve source, ownership, deadline and profil
 fences. The ordinary converter requires complete T105 evidence; the staged
 converter retains interrupted training and requires separate candidate evaluation.
 
+The [dispatch authority follow-up](evidence/2026-10-20-t109-dispatch-authority.md) binds
+unused decisions to the producing controller, confirmed native cleanup and capped deadlines.
+Six native cases have passing coverage; original artifact qualification keeps its original source.
+
 The current fixed BC1103 artifact came from the interrupted reproduction of the
 accepted learner implementation. Its [separate evaluation](evidence/2026-10-19-t109-candidate-evaluation.md)
 at public source `4510347e` completed all eight fixed cases with three successes
@@ -290,11 +294,7 @@ Owner feel and unsupported physical topology changes remain unmeasured.
 
 ## Host authority
 
-The refreshed Cybersand source at
-`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497` includes ACT-004 articulated actors
-merged through PR #181. Its owner API has configure, reset, observation, submit,
-cancel, step and snapshot operations. T-102 owns qualification of that boundary.
-No Cybersand source mutation is part of T-101.
-
-Package tests and a recorded protocol example establish no gameplay success,
-learned-policy value or owner feel acceptance. GPU qualification is unmeasured.
+The ACT-004 host accepted through Cybersand PR #181 is pinned at
+`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497`; T-102 qualifies its configure/reset,
+observation, submit/cancel, step and snapshot API, with no host changes by T-101.
+Package/recorded tests do not measure gameplay, learned-policy value, owner feel or GPU qualification.

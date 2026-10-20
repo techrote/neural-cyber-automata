@@ -45,7 +45,10 @@ def _environment(host, case, config, *, ticks=None, model="jev", decision_ticks=
 def _cancel(controller, env):
     """No replacement wire command can accidentally release a held charge."""
     controller.cancel()
-    return env.cancel()
+    receipt = env.cancel()
+    if isinstance(controller, ExportController):
+        controller.confirm_owner_cancel(receipt)
+    return receipt
 
 
 def _sources(root: Path):
@@ -150,9 +153,10 @@ def _episode(host, case, config, controller, kind, *, ticks=None, generator=None
             if kind == "numpy":
                 if result.status != "accepted":
                     raise ContractError("deployment_fallback", result.reason)
-                view, _, terminated, truncated, info = dispatch(env, result, issued)
+                view, _, terminated, truncated, info = dispatch(env, controller, result, issued)
             else:
-                packet = env.command(result.action.to_dict(), observation=issued)
+                lease = min(12, initial["tick"] + round(goal.timeout_seconds * 60) - issued["tick"])
+                packet = env.command(result.action.to_dict(), observation=issued, lease_ticks=lease)
                 view, _, terminated, truncated, info = env.step_packet(packet)
             steps.append({"issued_observation_id": issued["observation_id"], "issued_tick": issued["tick"],
                           "action": result.action.to_dict(), "features": result.features,
@@ -274,7 +278,7 @@ def _negative_contracts(host, bundle, config):
         except ContractError as exc:
             error = exc.code
         fallback = ExportDecision(WireAction(effort=0), "fallback", error or "unexpected_acceptance", True)
-        cancelled = dispatch(env, fallback, view)
+        cancelled = env.cancel()
         after, _, _, _, info = env.step_packet(None)
         zero_impulses = all(row["applied"].get("linear_impulse") == [0.0, 0.0]
                             and row["applied"].get("angular_impulse") == 0 for row in info["trace"])
@@ -290,7 +294,7 @@ def _negative_contracts(host, bundle, config):
         controller = ExportController(bundle)
         goal = _goal(case, config)
         decision = controller.step(first, goal)
-        view, _, _, _, _ = dispatch(env, decision, first)
+        view, _, _, _, _ = dispatch(env, controller, decision, first)
         if name == "old_actor_epoch":
             view, _ = env.reset()
             controller.step(view, goal)
@@ -303,7 +307,7 @@ def _negative_contracts(host, bundle, config):
             result = controller.step(first, goal, current_tick=view["tick"])
         else:
             result = controller.step(first, goal)
-        cancelled = dispatch(env, result, view)
+        cancelled = dispatch(env, controller, result, view)
         results.append({"case": name, "passed": result.cancel_owner and pose(view) == pose(cancelled),
                         "reason": result.reason, "source_tick": first["tick"], "current_tick": view["tick"],
                         "fallback": result.action.to_dict(), "requested_packets_after_refusal": 0,
@@ -323,7 +327,7 @@ def _variant(host, bundle, config, *, model="jev", decision_ticks=6):
         RuntimeBundle(bundle.value, candidate)
     except ContractError as exc:
         reason = exc.code
-    cancelled = dispatch(env, ExportDecision(WireAction(effort=0), "fallback", reason or "unexpected_acceptance", True), view)
+    cancelled = env.cancel()
     frames, trace = [pose(view)], []
     while view["tick"] < 24:
         view, _, terminal, truncated, info = env.step_packet(None, ticks=min(6, 24-view["tick"]))
@@ -428,7 +432,7 @@ def _realtime(host_path, godot_path, bundle, config):
         calls += 1
         before_response = host.request("observe")
         before = before_response["observation"]
-        cancelled = dispatch(env, result, before)
+        cancelled = dispatch(env, controller, result, before)
         # A realtime request can straddle a tick. The immutable cancellation
         # result is compared to the last available receipt at its own tick.
         after_response = host.request("observe")
@@ -446,11 +450,11 @@ def _realtime(host_path, godot_path, bundle, config):
         calls += 1
         if launched.status != "accepted":
             raise ContractError("realtime_fresh_invocation", launched.reason)
-        fresh, _, _, _, fresh_info = dispatch(env, launched, fresh)
+        fresh, _, _, _, fresh_info = dispatch(env, controller, launched, fresh)
         takeover = controller.step(fresh, next_goal, source_generation=2)
         calls += 1
         transfer_before = host.request("observe")
-        transferred = dispatch(env, takeover, fresh)
+        transferred = dispatch(env, controller, takeover, fresh)
         transfer_after = host.request("observe")
         transfer_candidates = [transfer_before["observation"]]
         transfer_candidates.extend(row["observation"] for response in (transfer_before, transfer_after)
@@ -509,7 +513,7 @@ def _throughput(host, bundle, config):
             if result.status != "accepted":
                 raise ContractError("throughput_fallback", result.reason)
             before = time.perf_counter_ns()
-            view, _, terminal, truncated, info = dispatch(env, result, view)
+            view, _, terminal, truncated, info = dispatch(env, controller, result, view)
             transport_times.append(time.perf_counter_ns() - before)
             trace_hash.update(sha256_json(info["trace"]).encode())
             ticks += info["actual_ticks"]

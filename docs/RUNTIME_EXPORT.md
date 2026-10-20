@@ -24,6 +24,11 @@ qualification from separately recorded physical work and completed pose evidence
 Its original `f3bf96fa` clips-stage no-go is preserved; this NumPy lane remains unqualified.
 Both exports are external Python loops; other runtimes and devices need separate evidence.
 
+The [issue #42 correction](evidence/2026-10-20-t109-dispatch-authority.md) changes
+the owner boundary while preserving numerical operators. Current runtime bytes
+refuse the older bundle's source hashes. New conversion and physical qualification
+are required; historical qualification remains attached to its original source.
+
 ## Bundle contract
 
 | Content | Meaning |
@@ -34,7 +39,7 @@ Both exports are external Python loops; other runtimes and devices need separate
 | Action identity | `physical_wire_action/v2`; move X and trim use tanh, effort uses sigmoid, three binary channels use a 0.5 threshold, and aim uses the declared normalized goal displacement |
 | Assistance identity | Full authored profile plus a separate digest of all physical tunes and joints; profile changes cannot retain an old qualification |
 | Recurrence | Reset/update/new gates with the reset applied after the hidden candidate affine map; zero state on episode, actor, profile, mount, goal or source/control change |
-| Timing | 60 base ticks per second, six-tick decisions and twelve-tick motor leases; expiry at `now >= observed_tick + lease_ticks` |
+| Timing | 60 base ticks per second, six-tick decisions, at most twelve-tick motor leases capped by the goal deadline; expiry at `now >= observed_tick + lease_ticks` |
 | Runtime | CPython 3.12.14, NumPy 2.3.5, Linux x86_64, CPU FP32; the Torch 2.8.0+cpu reference is confined to conversion and comparison |
 | Evidence | Checkpoint, numeric source, configuration, dataset, original learner source, manifest, complete evaluation summary and selected episode hashes; accepted dependency commit remains separate from original training revision |
 
@@ -54,34 +59,39 @@ Changing those bytes requires another explicit conversion and screen.
 
 ## Ownership and fallback
 
-`ExportController.step` accepts an issued ACT004 view and a typed `SkillGoal`.
-Every accepted result carries an immutable `SourceStamp` with the original run,
-actor, epoch, control generation, tick and observation ID, plus a digest of the
-local inputs and part/mount boundary. `dispatch` verifies this stamp before
-constructing a packet. Supplying a newer view for an old result is refused and
-attempts real-owner cancellation; it cannot refresh the result's motor lease.
+`ExportController.step` accepts an issued ACT004 view and typed `SkillGoal`.
+`dispatch(env, controller, decision, issued)` consumes that controller's single
+pending decision before transport. Its immutable source stamp binds the original
+run, actor, epoch, generation, tick, observation ID and local part/mount inputs.
+A newer view, copied result or retired decision cannot refresh its authority.
 
-Malformed, stale, reordered, unavailable or incompatible input produces a
-zero-effort fallback with `cancel_owner=True`. Dispatch sends the ACT004 cancel
-operation, which revokes pending intent while preserving already applied motion
-and effects. It does not send a neutral wire step that could release a charge.
-Command-construction and transport exceptions also attempt owner cancellation
-and preserve the original exception if cleanup fails.
+Malformed, stale, reordered or incompatible input produces a zero-effort fallback
+with `cancel_owner=True`. Dispatch revokes actual native intent while preserving
+applied motion and effects. Command or transport failures attempt the same cleanup
+and preserve the original exception. No neutral wire step releases a held charge.
 
-Cancellation zeros recurrence and the previous-request history, clears the
-old cadence cursor and retires the invocation ID. A fresh invocation can begin
-from a fresh completed view; an old goal cannot silently resume. Physical actor
-lifetimes remain retired separately. The highest observed tick and owner/source
-generations survive cancellation, so a new goal ID cannot revive an older view
-or a revoked grant. An actual new actor lifetime resets these counters. An ongoing invocation requires exact
-six-tick feedback spacing. A source/control or mount change takes precedence
-over a cadence error and retires the old invocation. Source grants belong to
-the [asynchronous ownership layer](ASYNC_CONTROL.md); this runtime receives the
-explicit source generation and preserves it across numeric decisions.
+Cancellation/reset clears recurrence, request history, cadence and pending state,
+and retires the goal. Actor lifetimes and observed tick/control/source high-water
+marks survive local cancellation. Ongoing feedback is spaced six ticks apart;
+source or mount changes retire the invocation before cadence is considered.
+Source grants come from the [asynchronous ownership layer](ASYNC_CONTROL.md).
 
-The host's final admission remains authoritative. Callers retain refusal
-receipts and cancel their local controller before starting a new invocation.
-An arithmetic match does not authorize a delayed or foreign request.
+A live helper requires native cancellation before a new source or invocation.
+`controller.confirm_owner_cancel(env.cancel())` validates the revocation receipt;
+missing, foreign, stale or unchanged-generation receipts retain the cleanup latch.
+Local reset cannot clear it. A validated new host reset can retire the old world;
+same-run epochs must advance. Dispatch confirms its own fallback cancellation.
+
+Inference and dispatch check supplied `current_tick` against the absolute goal
+deadline. The original-source lease is capped by that deadline, and a final repeat
+can be shorter than six ticks. Native delay cannot re-stamp the source. The full
+returned interval must fit the source lease and deadline, preserve part/mount
+identity, and prove original admission and consumption before dispatch succeeds.
+
+The host's admission remains authoritative. Refused, mixed, incomplete or expired
+intervals cancel. A terminal result retains its unavailable final action, retires
+local state and requires cleanup or a new host reset. See the linked correction
+record for failure cases and the separate echo/readback numeric tolerances.
 
 ## Use the runtime
 
@@ -110,15 +120,15 @@ with GodotHost(host_checkout, godot_executable) as host:
             issued = view
             decision = controller.step(issued, goal, source_generation=1)
             if decision.cancel_owner:
-                dispatch(env, decision, issued)
+                dispatch(env, controller, decision, issued)
                 break
-            view, _, terminated, truncated, info = dispatch(env, decision, issued)
+            view, _, terminated, truncated, info = dispatch(env, controller, decision, issued)
             refused = any(not item["accepted"] for row in info["trace"] for item in row["admission"])
             if terminated or truncated or refused:
                 break
     finally:
         controller.cancel()
-        env.cancel()
+        controller.confirm_owner_cancel(env.cancel())
 ```
 
 The example preserves `issued` through inference and dispatch. A realtime
@@ -129,18 +139,13 @@ task performance or the 120-tick planner lifetime.
 
 ## Convert and reproduce the screen
 
-Conversion requires the complete T105 artifact collection, its accepted merge
-commit and the exact CPU Torch reference environment. The training checkpoint
-and numeric source must match; all eight fixed evaluation families must be
-present and identify the selected checkpoint. An evaluated unsuccessful
-checkpoint is exportable with that unsuccessful outcome retained.
+Conversion requires complete T105 artifacts, their accepted merge and the exact
+CPU Torch reference environment. Checkpoint and numeric source must match; all
+eight fixed evaluation families must identify it and retain unsuccessful outcomes.
 
-The converter checks the actual manifest configuration, original learner
-revision and source map against their declared identities. It also requires the
-matching dataset receipt and every selected evaluation episode file. Missing,
-changed, duplicated or externally redirected episode files are refused. The
-screen freezes those file-byte identities before execution and verifies them
-again afterwards.
+The converter pins manifest configuration, original learner revision/source map,
+dataset receipt and every selected episode. Missing, changed, duplicate or redirected
+files are refused. The screen verifies frozen file-byte identities before and after execution.
 
 ```bash
 python tools/export_policy.py convert \
@@ -205,10 +210,9 @@ establish whole-game determinism or owner acceptance of game feel.
 
 ## Separately evaluated candidate from an interrupted prerequisite
 
-The separately commissioned [BC1103 continuation](evidence/2026-10-19-t109-staged-candidate.md)
-has a strict additional input contract. Its original three-seed run remains
-`interrupted_no_summary` with unconfirmed termination. The ordinary `convert`
-command continues to require a complete T105 experiment.
+The [BC1103 continuation](evidence/2026-10-19-t109-staged-candidate.md) preserves
+`interrupted_no_summary` and unconfirmed original termination. Ordinary `convert`
+still requires a complete T105 experiment; the continuation uses a separate contract.
 
 After the candidate declaration and evaluator source are published, its one
 bounded evaluation can be invoked with:
@@ -222,21 +226,15 @@ python tools/export_policy.py evaluate-candidate \
   --output artifacts/t105-interrupted-snapshot/candidate-evaluation-v1
 ```
 
-The learner checkout must be the unchanged original revision recorded in the
-declaration. The command requires the exact immutable snapshot; it does not
-create a missing original summary. A failed or censored evaluation invocation
-cannot be converted. Unsuccessful uncensored task cases remain valid members
-of a complete invocation. A complete eight-family result remains a
-single-candidate evaluation and does not establish a three-seed method comparison.
+The exact declared learner revision and immutable snapshot are required. Failed
+or censored invocations cannot convert; complete unsuccessful cases remain valid.
+Eight families establish a single-candidate evaluation, not a three-seed comparison
+or a missing original summary.
 
-Before conversion, publish a second declaration with schema
-`nca-fixed-candidate-export-declaration/v1`, naming the exact completed
-candidate evaluation manifest, summary and artifact file identities. The
-converter verifies that declaration against the actual receipts and the
-committed source. Then use `convert-candidate` with `--training-root`,
-`--evaluation-root`, `--declaration`, `--accepted-t105-commit` and `--output`.
-The resulting bundle uses the same `screen` command and the unchanged CPU
-criteria above. A failed screen remains unqualified.
+Conversion requires a published `nca-fixed-candidate-export-declaration/v1`
+binding the completed evaluation manifest, summary and artifact identities.
+The converter checks actual receipts and committed source. The resulting bundle
+uses `screen` with unchanged CPU criteria; a failed screen remains unqualified.
 
 The declared continuation completed its eight-family evaluation from public
 revision `4510347e02d08093f1b86bef4583f0282b7cf903`; the actual receipts and
@@ -292,9 +290,11 @@ PYTHONPATH=src python -m unittest discover -s tests -p 'test_export*.py' -v
 python tools/check_docs.py --strict
 ```
 
-Optional NumPy/Torch absences and missing actual-host artifacts are explicit
-skips. Actual export integration additionally requires `NCA_EXPORT_BUNDLE` and
-`NCA_EXPORT_BUNDLE_SHA256`; those checks use evaluated weights rather than a
-synthetic qualification flag. The regular contract fixtures are portable;
-their successful execution on another OS does not qualify the deployed bundle
-for that OS.
+Optional dependencies and unconfigured actual-host artifacts cause explicit skips.
+Evaluated export integration needs `NCA_EXPORT_BUNDLE` and `NCA_EXPORT_BUNDLE_SHA256`.
+Portable fixtures passing on another OS do not qualify deployment there.
+
+`ExportOwnerBoundaryTests` needs just the pinned host and uses synthetic weights
+for actual-owner receipts, single-use dispatch, takeover, delayed sources,
+deadline-capped leases and terminal readback. That conformance does not establish
+useful learned behaviour or qualify an evaluated deployment artifact.
