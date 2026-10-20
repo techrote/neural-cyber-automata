@@ -1,12 +1,12 @@
 ---
-title: Numeric CPU policy export and deployment screen
+title: NumPy CPU policy export and deployment screen
 kind: reference
 summary: Independent NumPy GRU, exact gameplay and timing admission, original-source dispatch, bounded qualification and fresh-episode checkpoint resume.
 owns: [export.runtime, export.qualification]
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
-# Numeric CPU policy export
+# NumPy CPU policy export
 
 The optional `nca.export` package implements a small, independent NumPy FP32
 runtime for the fixed T105 Jolt behavior-cloning policy. Its first target is an
@@ -15,14 +15,14 @@ bundle carries the trained weights and their evaluated lineage; a separate
 immutable screen receipt determines whether the declared deployment passed.
 Conversion alone leaves `runtime_qualified` false.
 
-The [staged deployment screen](evidence/2026-10-19-t109-deployment-no-go.md)
-completed with `runtime_qualified: false`: trajectory limits failed and the full
-ten-minute throughput observation remains outstanding (79.033537896 seconds
-were measured). The prospective realtime checker correction and passing
-engineering tests do not change that no-go; [T109 evidence](evidence/2026-10-19-t109.md) preserves its lineage.
-Unmeasured runtime combinations are rejected rather than inheriting a measured
-lane's status. This first export does not execute inside Godot and does not
-qualify a residual policy, accelerator, Windows runtime or legacy device. The [Torch CPU follow-up](TORCH_RUNTIME_EXPORT.md) has separate evidence.
+The [staged NumPy screen](evidence/2026-10-19-t109-deployment-no-go.md) remains
+`runtime_qualified: false`: both trajectory comparisons failed, and its
+79.033537896 seconds did not complete the full ten-minute timing gate.
+Passing engineering checks do not change that result or its [lineage](evidence/2026-10-19-t109.md).
+The [Torch CPU runtime](TORCH_RUNTIME_EXPORT.md) now has an exact-bundle composite
+qualification from separately recorded physical work and completed pose evidence.
+Its original `f3bf96fa` clips-stage no-go is preserved; this NumPy lane remains unqualified.
+Both exports are external Python loops; other runtimes and devices need separate evidence.
 
 ## Bundle contract
 
