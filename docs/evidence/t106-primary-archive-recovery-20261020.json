@@ -1,0 +1,36 @@
+{
+  "created_utc": "2026-10-20T00:44:46.880223+00:00",
+  "game_requests": 0,
+  "gate_passed": false,
+  "host_starts": 0,
+  "mismatched_original_members": [],
+  "missing_original_members": [],
+  "observed_truncated_archive": {
+    "bytes": 18451815,
+    "failure": "gzip stream ends before end-of-stream marker",
+    "sha256": "1ded998e869083df14be5c81ab66afbe76f66cdb341feb7a841325a451e5058d"
+  },
+  "optimizer_updates": 0,
+  "original_archive": {
+    "bytes": 18708060,
+    "file": "t106-direction-frame-evidence-v1.tar.gz",
+    "sha256": "291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4"
+  },
+  "original_index_content_sha256": "11b94d6d53c77cdc6d1efdf452d9ca1f0d867907b6224d70429d306b6e103443",
+  "original_index_file_sha256": "130a945f2b0c6b3d0e98ead3eec4db59ee036be9dfce26e24bf0da6dbb1d9e50",
+  "original_member_inventory_sha256": "fc5cb0aece612a34dee2627ed3a7be74f2b5e4ef3580f4a85c0cda3125ce2e72",
+  "recovered_archive": {
+    "bytes": 18730255,
+    "file": "t106-primary-evidence-recovered-20261020.tar.gz",
+    "members": 440,
+    "sha256": "c6a857e7fdc036939b47a8861d48bb0bae2cc57935fd878cb2c082c193b31fb1"
+  },
+  "result_complete": true,
+  "schema": "nca-primary-evidence-transport-recovery/v1",
+  "scope": "New transport container only; all original indexed member bytes and the original index are unchanged. No result, source, candidate selection, threshold or budget receipt is replaced.",
+  "source_revision": "1222d2e8dc30b87bb58de2326711fc3df361ac5e",
+  "summary_content_sha256": "ed1c999a935a5a308f6d63ca64676b15000e4ecee511ccb8df10a0f0fe23a5e9",
+  "summary_file_sha256": "574a51108903484977629804bc9be9a54d348b8bf929c594eeee169584a30f78",
+  "verified_original_member_bytes": 19621988,
+  "verified_original_members": 438
+}

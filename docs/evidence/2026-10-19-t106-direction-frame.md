@@ -3,7 +3,7 @@ title: Fixed Jolt direction-frame prerequisite follow-up
 kind: evidence
 summary: Separate commissioned per-rig BC experiment with fresh policy seeds and sealed geometry; the designated local run and later concurrent GitHub run both failed the unchanged prerequisite.
 owns: []
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Jolt direction-frame prerequisite follow-up
@@ -175,6 +175,23 @@ The primary local run overlapped a separately coordinated staged export-candidat
 uncontended latency qualification or isolated timing cause is claimed. The reliability thresholds
 failed independently of latency. Removing a latency concern would not admit either family.
 
+A 20 October read-only recovery audit found the available TAR copy truncated at
+18,451,815 bytes. Its observed hash differs from the original container identity
+above; that damaged copy is not a valid complete archive. Every one of the
+438 originally indexed member files survives and matches its original byte
+length and SHA-256. The original index and summary identities also match.
+
+The separate transport archive `t106-primary-evidence-recovered-20261020.tar.gz`
+contains those unchanged 438 files, the unchanged original index and a new
+transport-recovery receipt: 440 members, 18,730,255 bytes, SHA-256
+`c6a857e7fdc036939b47a8861d48bb0bae2cc57935fd878cb2c082c193b31fb1`.
+The [compact recovery record](t106-primary-archive-recovery-20261020.json)
+preserves both container identities and the complete member audit. This is
+packaging recovery only, with zero host starts, game requests or optimizer
+updates. It does not change the primary selection, failed result, original
+budget accounting or any morphology admission gate.
+
+
 ### Concurrent alternate execution
 
 A later concurrent change added a push-triggered GitHub workflow after the primary
@@ -228,9 +245,14 @@ Windows runtime qualification and owner feel remain unmeasured.
 The [conditional morphology preparation](2026-10-19-t106-learning.md) now includes distinct complete
 local-input capture, masked recurrent BC/PPO, immutable checkpoint lineage, a separate semantic waypoint
 teacher, a guarded orchestrator and the exact 148-row comparison summary. Its expanded software suite
-passes 99 tests with no skips. A full read-only primary-artifact admission verified the actual files,
-source and episode/metric/checkpoint links, then returned the expected failed-gate refusal in 282.603
-seconds without importing Torch or the morphology capture module.
+passes 99 tests with no skips. The development admission verified the actual primary files, source
+and episode/metric/checkpoint links, then returned the expected failed-gate refusal in 282.603 seconds.
+The subsequent public-source admission at `eb488674475e3d13e8e6e4511ddfbe66192552bb` completed in
+217.304178604 seconds with the same refusal, CLI exit 2 and zero host, model, checkpoint, policy, game
+or optimizer work. Its exact source and receipt hashes are recorded in the
+[conditional preparation evidence](2026-10-19-t106-learning.md). Torch and the morphology capture,
+learner and checkpoint modules remained absent. Source verification imported generic
+`nca.data.capture` and host adapter definitions; it constructed no host.
 
 The separate [selection declaration](../../configs/morphology/prerequisite-selection-v1.json) binds the
 designated public `1222d2e8` source, manifest and exact original summary bytes. A valid concurrent repeat
