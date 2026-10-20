@@ -19,36 +19,110 @@ from typing import Any, Mapping
 import zlib
 
 from nca.adapters.godot import CybersandEnv, GodotHost, inspect_host, physical_config
-from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads
+from nca.contracts import ContractError, WireAction, canonical_json, sha256_json, strict_json_loads
 from nca.controllers.baseline import AuthoredController, FeedbackObservation, SkillGoal
 from nca.controllers.morphology import MorphologyAdapter
 from nca.controllers.morphology.conformance import cancellation_receipt, validate_interval
-from nca.data import ActionSource, EpisodeRecorder, PolicyContext, write_episode
+from nca.data import ActionSource, EpisodeRecorder, PolicyContext, read_episode, write_episode
 from nca.data.capture import source_identity
 from nca.runs import RunBudget
 from nca.train.task import HopTask
+from nca.evaluation.durable_journal import (DurableJournal, file_identity, publish_json,
+    seal_owner_journal, sync_directory, verify_sealed_journal)
+from nca.evaluation.jolt_character import character_metrics, summarize_character
 
 
 DECLARATION_SHA256 = "269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a"
 FAMILIES = ("authored-balanced-v1", "jolt-arrival-v1")
+RECOVERY_FAMILIES = (*FAMILIES, "jolt-recovery-v1")
+PRESERVED_SOURCES = {
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec",
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+}
 
 
 def write_json(path: Path, value: Mapping[str, Any]) -> str:
     """Exclusive, durable publication; an existing result is never replaced."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = (canonical_json(value) + "\n").encode()
-    with path.open("xb") as target:
-        target.write(payload)
-        target.flush()
-        os.fsync(target.fileno())
-    return hashlib.sha256(payload).hexdigest()
+    return publish_json(path, value)
 
 
-def read_declaration(path: Path):
+def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
     value = strict_json_loads(path.read_bytes())
-    if sha256_json(value) != DECLARATION_SHA256:
+    if (not isinstance(expected_sha256, str) or len(expected_sha256) != 64
+            or sha256_json(value) != expected_sha256):
         raise ContractError("arrival_declaration", "the frozen prospective diagnostic declaration is required")
+    if expected_sha256 != DECLARATION_SHA256:
+        # A separately published continuation changes only named controllers
+        # and the explicit allocation. It cannot repurpose opened cases or
+        # silently loosen mechanics, task outcomes or execution semantics.
+        if (value.get("schema") != "nca-jolt-recovery-diagnostic/v1"
+                or value.get("families") != list(RECOVERY_FAMILIES)):
+            raise ContractError("arrival_declaration", "the separately declared three-family recovery diagnostic is required")
+        if (value.get("case_source", {}).get("path") != "configs/first-skill/jolt-direction-frame-v1.json"
+                or value["case_source"].get("sha256") != "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687"
+                or any(value.get("preserved_sources", {}).get(path) != digest
+                       for path, digest in PRESERVED_SOURCES.items())):
+            raise ContractError("arrival_declaration", "the original cases, controller, task and host bridge must remain pinned")
+        limits = value.get("budget", {})
+        maximums = {"maximum_episodes": 96, "maximum_decisions": 3840,
+                    "maximum_requested_ticks": 23040, "maximum_host_requests": 4226,
+                    "maximum_wall_seconds": 900, "maximum_host_starts": 1,
+                    "maximum_episode_decisions": 40, "maximum_episode_ticks": 240}
+        if (any(type(limits.get(key)) is not int or not 0 < limits[key] <= cap
+                for key, cap in maximums.items())
+                or limits.get("automatic_retry") is not False
+                or limits.get("automatic_budget_extension") is not False
+                or any(type(limits.get(key)) is not int or limits[key] != 0
+                       for key in ("optimizer_updates", "checkpoint_executions"))):
+            raise ContractError("arrival_declaration", "bounded one-invocation authored-only allocation is required")
+        physics = value.get("physics", {})
+        if any(type(physics.get(key)) is not type(expected) or physics[key] != expected for key, expected in {
+                "mode": "stepped", "base_hz": 60, "decision_ticks": 6,
+                "helper_lease_ticks": 12, "host_mechanics_changed": False}.items()):
+            raise ContractError("arrival_declaration", "the original physical cadence and assistance are required")
+        if (value.get("goal") != {"pace": .8, "tolerance_cells": 4., "deadline_ticks": 240,
+                "quiet_ticks": 12, "maximum_arrival_speed": 6.,
+                "maximum_arrival_angle": .32, "require_support": True}
+                or value["goal"].get("require_support") is not True):
+            raise ContractError("arrival_declaration", "the original task success predicate is required")
     return value
+
+
+def _controller(family):
+    if family == FAMILIES[0]:
+        return AuthoredController("jev")
+    if family == FAMILIES[1]:
+        from nca.controllers.jolt_arrival import JoltArrivalController
+        return JoltArrivalController()
+    if family == RECOVERY_FAMILIES[2]:
+        from nca.controllers.jolt_recovery import JoltRecoveryController
+        return JoltRecoveryController()
+    raise ContractError("arrival_family", "undeclared authored controller")
+
+
+def replay_task_metrics(episode):
+    """Recompute the unchanged task from retained physical receipts only."""
+    events = [event for event in episode.events if event.kind == "step"]
+    frames = episode.evaluation.get("controller_frames", ())
+    if not events or len(frames) != len(events) or events[0].context is None:
+        raise ContractError("arrival_task_replay", "complete retained goal, decisions and physical receipts are required")
+    context = events[0].context
+    goal = SkillGoal(context.goal_id, context.skill, context.target, context.pace,
+                     context.tolerance, context.timeout_seconds)
+    task = HopTask(goal, episode.initial_observation, deadline_ticks=240, quiet_ticks_required=12)
+    terms = []
+    for event, frame in zip(events, frames):
+        if (event.context != context or type(frame.get("inference_ns")) is not int
+                or frame["inference_ns"] < 0):
+            raise ContractError("arrival_task_replay", "retained goal or measured inference identity differs")
+        raw = [{"tick_before": tick.tick_before, "failed": not tick.valid,
+                "observation": tick.observation, "admission": tick.admission, "applied": tick.applied}
+               for tick in event.ticks]
+        terms.append(task.consume(WireAction.from_dict(frame["action"]), raw,
+                                  inference_ns=frame["inference_ns"]))
+    return task.metrics(administratively_capped=not task.done), terms
 
 
 def diagnostic_cases(original):
@@ -143,7 +217,8 @@ class MeteredHost:
         return response
 
 
-def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows):
+def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
+                                  families=FAMILIES, artifact_root: Path | None = None):
     """Replay the closed gzip completely before trusting its in-memory summary.
 
     This is an offline accounting check, not a repair or a host invocation. A
@@ -171,12 +246,12 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
     require(expected_rows and all(isinstance(row, Mapping) for row in expected_rows),
             "episodes", "the complete expected episode rows are required")
     keys = [(row.get("case_id"), row.get("family")) for row in expected_rows]
-    require(all(type(case) is str and case and family in FAMILIES for case, family in keys)
+    require(all(type(case) is str and case and family in families for case, family in keys)
         and len(keys) == len(set(keys)) and len(keys) == expected_counts["episodes_started"],
         "episodes", "unique expected case/family rows must match episode accounting")
     counts = dict.fromkeys(counters, 0)
     active, pending, native_close, host_closed = None, None, False, False
-    completed, records, last_elapsed = 0, 0, 0.
+    completed, records, last_elapsed, bound_ticks = 0, 0, 0., 0
     try:
         with gzip.open(path, "rb") as source:
             while True:
@@ -209,6 +284,34 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
                         "episodes", "episodes must start once in the declared result order")
                     counts["episodes_started"] += 1
                     active = {"key": key, "stage": "reset", "decisions": 0, "ticks": 0}
+                    if artifact_root is not None:
+                        row = expected_rows[completed]
+                        relative = row.get("artifact")
+                        require(type(relative) is str and relative
+                            and not Path(relative).is_absolute() and ".." not in Path(relative).parts,
+                            "artifact", "episode artifact must be a relative retained path")
+                        episode_path = artifact_root / relative
+                        require(file_identity(episode_path)["sha256"] == row.get("artifact_sha256"),
+                                "artifact", "episode artifact bytes differ from their indexed hash")
+                        episode = read_episode(episode_path)
+                        require(episode.sha256 == row.get("record_sha256")
+                            and sha256_json(episode.evaluation.get("metrics")) == sha256_json(row.get("metrics"))
+                            and sha256_json(episode.evaluation.get("character_metrics")) == sha256_json(row.get("character_metrics")),
+                            "artifact", "episode content and evaluation differ from the indexed row")
+                        active["episode"] = episode
+                        active["step_events"] = [event for event in episode.events if event.kind == "step"]
+                        first_step = next(iter(active["step_events"]), None)
+                        require(first_step is not None and first_step.context is not None,
+                                "artifact", "retained episode lacks its explicit caller goal")
+                        recomputed = character_metrics(episode.initial_observation, first_step.context.target,
+                            episode.events, episode.evaluation.get("controller_frames", ()))
+                        require(sha256_json(recomputed) == sha256_json(row.get("character_metrics")),
+                                "artifact", "retained character metrics differ from physical receipt replay")
+                        task_metrics, task_terms = replay_task_metrics(episode)
+                        require(episode.evaluation.get("task_reward_schema") == "jolt-arrival-best-progress/v1"
+                            and sha256_json(task_metrics) == sha256_json(row.get("metrics"))
+                            and sha256_json(task_terms) == sha256_json(episode.evaluation.get("reward_terms")),
+                            "artifact", "retained task metrics or rewards differ from physical receipt replay")
                 elif event == "request_reserved":
                     serial, operation = record.get("serial"), record.get("operation")
                     fields, ticks = record.get("fields"), record.get("requested_ticks")
@@ -235,7 +338,8 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
                         if operation == "cancel":
                             require(active["decisions"] > 0, "close", "episode closure needs a physical interval")
                     counts["host_requests"] += 1
-                    pending = {"serial": serial, "operation": operation, "requested_ticks": ticks}
+                    pending = {"serial": serial, "operation": operation, "requested_ticks": ticks,
+                               "fields": fields}
                 elif event == "response_received":
                     response, serial = record.get("response"), record.get("serial")
                     require(pending is not None and type(serial) is int and serial == pending["serial"],
@@ -260,6 +364,9 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
                                     "response", "an active native reset observation is required")
                             active["stage"] = "profile"
                             active["view"] = view
+                            if artifact_root is not None:
+                                require(sha256_json(view) == sha256_json(active["episode"].initial_observation),
+                                        "artifact", "journal reset differs from the retained episode")
                         elif operation == "cancel":
                             require(response.get("cancelled") is True
                                 and view["tick"] == active["ticks"],
@@ -286,6 +393,28 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
                             terminal = response["terminated"] or response["truncated"]
                             require(response["finished"] is terminal and view.get("suspended") is terminal,
                                     "close", "native terminal status and ownership closure must agree")
+                            if artifact_root is not None:
+                                require(active["decisions"] < len(active["step_events"]),
+                                        "artifact", "journal has a step absent from the episode")
+                                event = active["step_events"][active["decisions"]]
+                                require(event.source_observation is not None
+                                    and sha256_json(event.source_observation) == sha256_json(active["view"])
+                                    and sha256_json(event.issued_observation) == sha256_json(active["view"]),
+                                    "artifact", "synchronous controller source and issued views must match the preceding native observation")
+                                require(sha256_json(pending["fields"].get("commands"))
+                                    == sha256_json([event.requested_packet])
+                                    and sha256_json(view) == sha256_json(event.next_observation)
+                                    and len(event.ticks) == len(traces),
+                                    "artifact", "journal request or returned view differs from the episode")
+                                for raw, retained in zip(traces, event.ticks):
+                                    shared = ("tick_before", "tick_after", "world_tick", "received_monotonic_usec",
+                                              "completed_monotonic_usec", "requested", "admission", "applied",
+                                              "passive", "actual_motion", "observation", "cellular_sample_tick")
+                                    defaults = {"requested": [], "admission": [], "actual_motion": {}}
+                                    require(all(sha256_json(raw.get(key, defaults.get(key))) == sha256_json(getattr(retained, key))
+                                                for key in shared),
+                                            "artifact", "journal physical receipt differs from the retained episode")
+                                    bound_ticks += 1
                             counts["confirmed_step_ticks"] += actual
                             active["decisions"] += 1
                             active["ticks"] = end
@@ -321,7 +450,8 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows)
         and counts["requested_step_ticks"] == counts["confirmed_step_ticks"],
         "counts", "replayed owner accounting differs from the expected complete counters")
     return {"verified": True, "records": records, "counts": counts,
-            "episodes_completed": completed, "native_close_confirmed": True, "gzip_eof_verified": True}
+            "episodes_completed": completed, "native_close_confirmed": True, "gzip_eof_verified": True,
+            "episode_receipts_bound": artifact_root is not None, "bound_episode_ticks": bound_ticks}
 
 
 def _error(exc):
@@ -343,13 +473,12 @@ def validate_owner_interval(adapter, source, following, *, terminal):
 
 
 def _capture(host, budget, case, family, output, original, declaration, root):
-    from nca.controllers.jolt_arrival import JoltArrivalController
     budget.start_episode(case["id"], family)
     identifier = f"{family}-{case['id']}"
     settings = physical_config("jev", ticks=240, seed=case["host_seed"])
     settings["actors"][0]["position"] = list(case["spawn"])
     env = CybersandEnv(host, settings, decision_ticks=6, lease_ticks=12)
-    controller = AuthoredController("jev") if family == FAMILIES[0] else JoltArrivalController()
+    controller = _controller(family)
     policy_hash = (original["baseline_source_sha256"] if family == FAMILIES[0]
                    else controller.specification_sha256)
     goal = SkillGoal(identifier, "directed_hop", tuple(case["target"]), .8, 4., 4.)
@@ -370,8 +499,19 @@ def _capture(host, budget, case, family, output, original, declaration, root):
             frame = controller.step(FeedbackObservation.from_host(view), goal)
             inference_ns = time.perf_counter_ns() - started
             phases.append({"tick": view["tick"], "phase": frame.phase, "status": frame.status,
-                           "reason": frame.reason, "action": frame.action.to_dict()})
-            after, _, terminated, truncated, info = recorder.step(frame.action.to_dict())
+                           "reason": frame.reason, "action": frame.action.to_dict(),
+                           "inference_ns": inference_ns,
+                           "diagnostic_state": (controller.diagnostic_state()
+                               if callable(getattr(controller, "diagnostic_state", None)) else None)})
+            if family == RECOVERY_FAMILIES[2]:
+                lease_ticks = phases[-1]["diagnostic_state"].get("action_lease_ticks")
+                if (type(lease_ticks) is not int or not 6 <= lease_ticks <= 12
+                        or view["tick"] + lease_ticks > 240):
+                    raise ContractError("arrival_supervisor_lease", "recovery supervisor must admit a deadline-capped original-source lease")
+                packet = env.command(frame.action.to_dict(), observation=view, lease_ticks=lease_ticks)
+                after, _, terminated, truncated, info = recorder.step_packet(packet)
+            else:
+                after, _, terminated, truncated, info = recorder.step(frame.action.to_dict())
             event = recorder.events[-1]
             validate_interval(event.requested_packet, event.source_observation, after,
                               terminated, truncated, info, allow_terminal=True)
@@ -406,26 +546,33 @@ def _capture(host, budget, case, family, output, original, declaration, root):
     finally:
         controller.cancel()
     metrics = task.metrics(administratively_capped=not task.done)
+    character = None
+    try:
+        character = character_metrics(recorder.initial, goal.target, recorder.events, phases)
+    except Exception as exc:
+        error = error or _error(exc)
     evaluation = {"diagnostic_only": True, "previous_case_origin": case["origin"],
         "task_reward_schema": "jolt-arrival-best-progress/v1", "metrics": metrics,
+        "character_metrics": character,
         "reward_terms": terms, "controller_frames": phases, "error": error,
         "owner_closure_confirmed": closure, "declaration_sha256": sha256_json(declaration)}
     episode = recorder.finish("failed" if error else "completed", metrics["reason"], evaluation=evaluation)
     path = output / "episodes" / f"{identifier}.json.gz"
     artifact_sha = write_episode(path, episode)
+    sync_directory(path.parent)
     row = {"case_id": case["id"], "family": family, "origin": case["origin"],
         "host_seed": case["host_seed"], "profile_sha256": episode.profile_sha256,
         "record_sha256": episode.sha256, "artifact": path.relative_to(output).as_posix(),
         "artifact_sha256": artifact_sha, "decisions": episode.decisions,
-        "consumed_ticks": episode.consumed_ticks, "metrics": metrics,
+        "consumed_ticks": episode.consumed_ticks, "metrics": metrics, "character_metrics": character,
         "owner_closure_confirmed": closure, "error": error}
     write_json(output / "metrics" / f"{identifier}.json", row)
     budget.note("episode_completed", case=case["id"], family=family, row=row)
     return row
 
 
-def summarize(rows, cases):
-    expected = {(case["id"], family) for case in cases for family in FAMILIES}
+def summarize(rows, cases, *, families=FAMILIES):
+    expected = {(case["id"], family) for case in cases for family in families}
     keys = [(row["case_id"], row["family"]) for row in rows]
     if len(keys) != len(set(keys)) or not set(keys).issubset(expected):
         raise ContractError("arrival_pairing", "duplicate or foreign diagnostic outcomes")
@@ -435,8 +582,8 @@ def summarize(rows, cases):
     metrics = ("overshoot_cells", "final_distance_cells", "capped_completion_seconds",
         "peak_toward_speed_cells_per_second", "mean_absolute_angle_radians",
         "ordinary_trim_reversals_per_second", "purposeful_launch", "primary_edges")
-    families = {}
-    for family in FAMILIES:
+    family_results = {}
+    for family in families:
         selected = [row for row in rows if row["family"] == family]
         n = len(selected)
         if not n:
@@ -444,34 +591,38 @@ def summarize(rows, cases):
         if any(type(row["metrics"].get(name)) not in (float, int, bool)
                or not math.isfinite(row["metrics"][name]) for row in selected for name in metrics):
             raise ContractError("arrival_metrics", "finite complete recorded metrics are required")
-        families[family] = {"episodes": n, "successes": sum(row["metrics"]["success"] for row in selected),
+        family_results[family] = {"episodes": n, "successes": sum(row["metrics"]["success"] for row in selected),
             "mean": {name: sum(row["metrics"][name] for row in selected) / n for name in metrics},
             "failed_cases": [row["case_id"] for row in selected if not row["metrics"]["success"]]}
         for origin in ("previously_open_training", "previously_open_evaluation"):
             partition = [row for row in selected if row["origin"] == origin]
-            families[family][origin] = {"episodes": len(partition),
+            family_results[family][origin] = {"episodes": len(partition),
                 "successes": sum(row["metrics"]["success"] for row in partition)}
-    return {"complete_valid_pairing": valid, "families": families,
+    return {"complete_valid_pairing": valid, "families": family_results,
             "interpretation": "descriptive paired development diagnostic; no sealed learned-policy inference",
             "morphology_admitted": False, "learned_skill_qualified": False, "owner_feel_accepted": False}
 
 
 def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path: Path,
-                   output: Path, expected_revision: str):
+                   output: Path, expected_revision: str, expected_declaration_sha256=DECLARATION_SHA256):
     """Single source-frozen invocation; stop on uncertain consumption or cost."""
-    declaration = read_declaration(declaration_path)
-    from nca.controllers.jolt_arrival import JoltArrivalController
-    candidate = JoltArrivalController()
-    if candidate.specification() != declaration["candidate_specification"]:
-        raise ContractError("arrival_candidate", "candidate specification differs from its declaration")
+    declaration = read_declaration(declaration_path, expected_sha256=expected_declaration_sha256)
+    families = tuple(declaration["families"])
+    specifications = declaration.get("candidate_specifications", {FAMILIES[1]: declaration.get("candidate_specification")})
+    if set(specifications) != set(families) - {FAMILIES[0]}:
+        raise ContractError("arrival_candidate", "every declared candidate needs its complete frozen specification")
+    for family, specification in specifications.items():
+        if _controller(family).specification() != specification:
+            raise ContractError("arrival_candidate", "candidate specification differs from its declaration")
     original_path = root / declaration["case_source"]["path"]
     original = strict_json_loads(original_path.read_bytes())
     if sha256_json(original) != declaration["case_source"]["sha256"]:
         raise ContractError("arrival_case_source", "original open case/configuration bytes changed")
     cases = diagnostic_cases(original)
     output.mkdir(parents=True, exist_ok=False)
+    sync_directory(output.parent)
     rows, failure, identity, manifest, host = [], None, None, None, None
-    with gzip.open(output / "owner-journal.jsonl.gz", "xb") as journal:
+    with DurableJournal(output / "owner-journal.jsonl") as journal:
         budget = DiagnosticBudget(declaration["budget"], journal)
         try:
             revision, files, _ = source_identity(root)
@@ -505,7 +656,7 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
             host = GodotHost(checkout, godot, lane="act004", mode="stepped", timeout=15.)
             metered = MeteredHost(host, budget)
             for case in cases:
-                for family in FAMILIES:
+                for family in families:
                     row = _capture(metered, budget, case, family, output, original, declaration, root)
                     rows.append(row)
                     print(canonical_json({"case": case["id"], "family": family,
@@ -540,12 +691,16 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
                     failure = failure or _error(exc)
             measured = budget.snapshot()
     try:
-        journal_validation = validate_closed_owner_journal(output / "owner-journal.jsonl.gz",
-            expected_counts=measured, expected_rows=rows)
+        journal_validation = seal_owner_journal(output / "owner-journal.jsonl",
+            expected_counts=measured, expected_rows=rows, durability=journal.durability_receipt(),
+            validate_owner=validate_closed_owner_journal, families=families, artifact_root=output)
+        budget.check()
     except Exception as exc:
         journal_validation = {"verified": False, "error": _error(exc)}
         failure = failure or _error(exc)
-    comparison = summarize(rows, cases)
+    comparison = summarize(rows, cases, families=families)
+    character_comparison = summarize_character(
+        [row for row in rows if row.get("character_metrics") is not None], families)
     completed = (failure is None and journal_validation["verified"]
         and comparison["complete_valid_pairing"] and not measured["unconfirmed_tail"]
         and measured["host_start_attempts"] == measured["host_terminations"] == 1
@@ -555,8 +710,48 @@ def run_diagnostic(*, root: Path, checkout: Path, godot: Path, declaration_path:
                  for path in sorted(output.rglob("*")) if path.is_file()}
     result = {"schema": "nca-jolt-arrival-diagnostic-result/v1", "status": "completed" if completed else "incomplete",
         "source_revision": expected_revision, "declaration_sha256": sha256_json(declaration),
-        "counts": measured, "comparison": comparison, "rows": rows, "error": failure,
+        "counts": measured, "comparison": comparison, "character_comparison": character_comparison,
+        "rows": rows, "error": failure, "families": list(families),
+        "worker_wall_seconds_through_seal": budget.clock() - budget.started,
         "artifact_sha256": artifacts, "host_identity": identity, "owner_journal_validation": journal_validation,
         "evidence_limit": "already-open authored development cases; unchanged learned prerequisite remains blocked"}
     write_json(output / "summary.json", result)
     return result
+
+
+def verify_diagnostic_output(output: Path, *, expected_revision: str, expected_declaration_sha256: str):
+    """Independently bind final files after worker exit, with zero owner calls."""
+    summary_path = output / "summary.json"
+    summary = strict_json_loads(summary_path.read_bytes(), max_bytes=8 * 1024 * 1024)
+    manifest = strict_json_loads((output / "manifest.json").read_bytes())
+    if (summary.get("status") != "completed" or summary.get("error") is not None
+            or summary.get("source_revision") != expected_revision
+            or manifest.get("source_revision") != expected_revision
+            or summary.get("declaration_sha256") != expected_declaration_sha256
+            or manifest.get("declaration_sha256") != expected_declaration_sha256
+            or sha256_json(manifest.get("declaration")) != expected_declaration_sha256):
+        raise ContractError("arrival_final_output", "complete source/declaration-bound worker evidence is required")
+    families = tuple(manifest["declaration"]["families"])
+    if summary.get("families") != list(families):
+        raise ContractError("arrival_final_output", "summary families differ from the source-frozen declaration")
+    identities = summary.get("artifact_sha256")
+    current = {path.relative_to(output).as_posix() for path in output.rglob("*")
+               if path.is_file() and path != summary_path}
+    if not isinstance(identities, dict) or current != set(identities):
+        raise ContractError("arrival_final_output", "final artifact inventory is incomplete or changed")
+    for relative, expected in identities.items():
+        if (Path(relative).is_absolute() or ".." in Path(relative).parts
+                or file_identity(output / relative)["sha256"] != expected):
+            raise ContractError("arrival_final_output", "final artifact bytes differ from the closed inventory")
+    validation = verify_sealed_journal(output, expected_counts=summary["counts"], expected_rows=summary["rows"],
+        validate_owner=validate_closed_owner_journal, families=families)
+    if validation != summary.get("owner_journal_validation"):
+        raise ContractError("arrival_final_output", "independent sealed journal replay differs from the worker")
+    comparison = summarize(summary["rows"], manifest["cases"], families=families)
+    if not comparison["complete_valid_pairing"] or comparison != summary.get("comparison"):
+        raise ContractError("arrival_final_output", "independent diagnostic pairing differs from the worker")
+    if summarize_character(summary["rows"], families) != summary.get("character_comparison"):
+        raise ContractError("arrival_final_output", "independent character aggregation differs from the worker")
+    return {"verified": True, "summary_sha256": file_identity(summary_path)["sha256"],
+            "manifest_sha256": file_identity(output / "manifest.json")["sha256"],
+            "artifact_count": len(identities), "owner_journal_validation": validation}
