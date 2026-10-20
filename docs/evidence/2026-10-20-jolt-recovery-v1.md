@@ -46,7 +46,7 @@ unused budget does not authorize a retry or a resumed dataset.
 The last case was `demo-floor-right-36-1`, recovery v1. It consumed 39 decisions
 and 234 ticks before the next proposed decision was refused.
 
-| Observation | Controller's sampled interpretation | Unchanged native task evidence |
+| Observation | Controller's sampled interpretation | Unchanged task / physical receipts |
 | --- | --- | --- |
 | Tick 222 | Supported, inside tolerance, quiet | An ordinary observed sample |
 | Tick 223 | No decision at this tick | Speed 7.5989 cells/s exceeds the 6 cells/s limit; quiet dwell resets |

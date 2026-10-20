@@ -17,7 +17,9 @@ the game's authored gyro, joints, grip, resource costs or physics owner.
 The controller reads only copied local feedback, keeps a goal invocation and
 returns a bounded `WireAction`. It does not have access to evaluator snapshots.
 Unknown actor/profile mappings require an explicit implementation. An arrival
-result ends an invocation; it does not promise sustained holding or hovering.
+result in the original controllers ends an invocation; it does not promise
+sustained holding or hovering. The recovery v2 extension below keeps its local
+settling estimate advisory until the caller retires the invocation.
 
 The separate `authored-jolt-arrival@1` candidate in
 [`jolt_arrival.py`](../src/nca/controllers/jolt_arrival.py) adds a single
@@ -66,17 +68,57 @@ motion, missing support/floor information, sample gaps or changed authority
 disarm that witness. Cooldown expiry alone never triggers another launch.
 
 Landing resumes ordinary feedback after the fresh support observation; there
-is no unconditional rebound. Local arrival still requires raw support, speed
-at most six cells/s, wrapped angle at most 0.32 radians and 12 observed quiet
-ticks with gaps no larger than six. Unknown support and sparse samples cannot
-prove arrival. Deliberate posture lean and shared request shaping retain
-bounded play; they do not promise perfectly still settling.
+is no unconditional rebound. The v1 local arrival estimate requires raw
+support, speed at most six cells/s, wrapped angle at most 0.32 radians and a
+12-tick span of quiet samples with gaps no larger than six. These samples cannot
+prove that every intervening physical tick was quiet. Deliberate posture lean
+and shared request shaping retain bounded play; they do not promise perfectly
+still settling.
 
 `specification()` and `specification_sha256` expose the fixed policy, supervisor,
 constants and preserved dependencies. `diagnostic_state()` copies the latest
 local pulse/recovery reason, progress window, support state, recovery epoch and
 supervisor intervention flag. Its pulse count counts requests. Actual impulses,
 airborne duration and whether a recovery worked come from native receipts.
+
+## Advisory arrival in recovery v2
+
+[`JoltRecoveryControllerV2`](../src/nca/controllers/jolt_recovery_v2.py), registered
+as `authored-jolt-recovery@2`, changes only the sampled-arrival lifecycle. It
+inherits the preserved v1 movement, launch, contact-recovery and emergency
+supervisor behavior. Both v1 source modules retain their published bytes and
+remain registered for historical replay; no kinetic constants or original
+diagnostic declaration change.
+
+The first recovery diagnostic stopped in `demo-floor-right-36-1`: samples at
+ticks 222, 228 and 234 met the local quiet predicate, but the retained physical
+speed at tick 223 was about 7.599 cells/s. The unchanged task therefore counted
+only eleven consecutive quiet ticks by 234. V1 retired its invocation from the
+sampled estimate; the dispatcher correctly refused its zero lease before any
+new transport. The failed experiment and its unconsumed terminal decision
+remain evidence. No unobserved continuation establishes arrival.
+
+V2 reports `phase="settle_hold"`, `reason="supported_arrival_advisory"` and
+`status="running"` after the same sampled quiet span. Its neutral request keeps
+the valid original-observation lease, capped by the original goal deadline.
+`diagnostic_state()["arrival_advisory"]` explicitly marks this estimate. Fresh
+disturbance, unknown support or a sample gap ends the advisory; ordinary
+correction resumes. Invalid state, stale input, lost authority, explicit
+emergency and deadline boundaries keep their original refusal behavior.
+
+The policy receives no task outcome as an observation. After independently
+establishing its required outcome and validating the current invocation and
+native ownership, the caller uses `controller.cancel()` and cancels the native
+owner. Local cancellation returns a zero lease; neither operation fabricates a
+physical outcome or removes momentum. A delayed result from a previous physical
+lifetime cannot authorize completion of the current invocation merely because
+its goal values happen to match. There is no new goal-only completion API.
+
+The small retained kinematic excerpt and synthetic lifecycle checks in
+[`test_jolt_recovery_v2.py`](../tests/test_jolt_recovery_v2.py) exercise this
+boundary without consuming physics. The correction does not establish teacher
+qualification, preserved vigor, or success in any unobserved case. Those claims
+require their separately declared complete physical comparison.
 
 ## Minimal physical recovery supervisor
 

@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from nca.contracts import ContractError, sha256_json
 from nca.evaluation.jolt_recovery_acceptance import (
-    CANDIDATE, REFERENCE, HISTORICAL_FAILURES, HISTORICAL_MISSING_AIRBORNE,
+    CANDIDATE, CANDIDATE_V2, REFERENCE, HISTORICAL_FAILURES, HISTORICAL_MISSING_AIRBORNE,
     UNSUPPORTED_FAILURE, acceptance_specification, assess_teacher, verify_replay_source,
 )
 
@@ -117,6 +117,21 @@ class RecoveryAcceptanceTests(unittest.TestCase):
         changed["historical_failures"].clear()
         self.assertEqual(len(acceptance_specification()["historical_failures"]), 5)
 
+    def test_v2_uses_identical_numeric_rules_without_relabeling_v1_rows(self):
+        old, new = acceptance_specification(), acceptance_specification(CANDIDATE_V2)
+        self.assertEqual({k: v for k, v in old.items() if k not in ("schema", "candidate")},
+                         {k: v for k, v in new.items() if k not in ("schema", "candidate")})
+        rows = fixture()
+        with self.assertRaises(ContractError):
+            assess_teacher(rows, pulse_authority_verified=True, candidate_family=CANDIDATE_V2)
+        for row in rows:
+            if row["family"] == CANDIDATE:
+                row["family"] = CANDIDATE_V2
+        self.assertTrue(assess_teacher(rows, pulse_authority_verified=True,
+                                      candidate_family=CANDIDATE_V2)["teacher_accepted"])
+        with self.assertRaises(ContractError):
+            acceptance_specification("unpublished-candidate")
+
     def test_replay_refuses_source_drift_despite_unchanged_revision_label(self):
         frozen = {"src/nca/controllers/jolt_recovery.py": "a" * 64,
                   "src/nca/controllers/recovery_supervisor.py": "b" * 64}
@@ -144,7 +159,8 @@ class RecoveryAcceptanceTests(unittest.TestCase):
         frozen = {relative: hashlib.sha256(body).hexdigest()}
         revision = "c" * 40
         manifest = {"source_files": frozen, "source_files_sha256": sha256_json(frozen),
-                    "declaration": {"candidate_specifications": {
+                    "declaration": {"families": ["authored-balanced-v1", REFERENCE, CANDIDATE],
+                        "candidate_specifications": {
                         CANDIDATE: JoltRecoveryController().specification()}}}
         with patch("nca.data.capture.source_identity", return_value=(revision, frozen, sha256_json(frozen))), \
                 patch("nca.evaluation.jolt_recovery_acceptance.subprocess.check_output", return_value=body), \

@@ -16,103 +16,10 @@ verified: 2026-10-20
   interrupted-run, export and guarded-preparation checkpoints.
 - [20 October, 00:29–01:51 UTC](progress/2026-10-20-early.md): evidence
   reconciliation and accepted Linux Torch CPU export.
+- [20 October, 06:46–07:30 UTC](progress/2026-10-20-morning.md): runtime authority,
+  native CI and preserved original arrival evidence.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
-
-## 2026-10-20 06:46 UTC — Two concrete advancement fixes under review
-
-Reconciled live main `3db02bcb0bbe7703162d8ff597f965af3f1bf50f`, all original
-programme issues and current PRs. Nine of ten programme scopes are accepted;
-there were no open PRs. The remaining morphology prerequisite still fails its
-unchanged75% mean /50% every-seed threshold.
-
-Two independent audits established concrete next work. Issue #42 addresses
-exported decisions that remain dispatchable after local cancellation/replacement
-and helper leases extending past an explicit goal deadline. Its isolated
-implementation now binds decisions to live controller authority and is undergoing
-negative-control review. Historical qualified bundle receipts remain unchanged.
-
-Issue #43 adds the separate `authored-jolt-arrival@1` reference. Read-only replay
-of the preserved primary teacher found13/24 training and4/8 evaluation successes,
-with near-target repeat hops causing large airborne overshoot. The new fixed
-reference admits one room-aware launch and then approaches/settles on support.
-The original baseline, task/reward, configuration and failed learned evidence
-remain untouched. Eighteen new controller checks and eight diagnostic admission,
-accounting and immutable-output checks pass. No new physical diagnostic or
-training has executed.
-
-The sole prospective teacher diagnostic is capped at64 episodes,2560 six-tick
-decisions,15360 requested ticks and600 seconds. All32 matched cases are already
-open development cases. Review, public source freeze, actual bounded execution
-and final-head checks remain. The pinned CPU dependencies and independently
-verified isolated host are prepared; no new compute or model service was acquired.
-
-## 2026-10-20 07:16 UTC — Runtime authority merged; authored diagnostic audit retained
-
-[PR #45](https://github.com/techrote/neural-cyber-automata/pull/45) merged at
-`aa47e36bde7900f2a3a980a0bb59ebefb05e2fe1`; its accepted tree exactly matches
-reviewed tree `279c44b2fd46e3db3c4fc68adde30def74cc46c5`. All four required
-workflows passed on public head `997377e744c8e4c8213af67f911662cb93702e09`.
-A subsequent detailed log check found the six new native owner tests skipped
-without NumPy in the host job. Local passing coverage remains as recorded; a
-separate narrow CI follow-up will require their execution.
-
-The single authored Jolt comparison in [PR #44](https://github.com/techrote/neural-cyber-automata/pull/44)
-ran frozen source `5d9d6a13d2f273ee1b4fd3ce0b50a6482c807382`. All 64 episode
-records are complete: new teacher 27/32 quiet arrivals versus 17/32 for its
-contemporaneous baseline; already-open evaluation is 5/8 versus 4/8. The runner
-reports 1,549 decisions / 9,294 ticks, one host and 221.63055612800235 complete
-supervisor seconds. Source, host and supervisor identities pass independent checks.
-
-The separate owner journal is truncated despite matching its indexed hash. Its
-recoverable prefix ends at reserved call 843, with 739 confirmed steps / 4,434
-ticks and no closing host record. The runner's original completed status is
-preserved, but full-journal acceptance is blocked. The complete episode records
-support the descriptive arrival counts; they do not replace missing owner calls.
-An explicit closed-journal completion check is being added and tested offline.
-The one declared physical invocation will not be repeated automatically.
-
-The original prerequisite and this candidate's three regressions, five remaining
-failures and launch/contact tradeoffs remain visible. No training, checkpoint
-execution or morphology work occurred. Next: preserve the full original evidence
-and labelled journal prefix, finish the audit and CI correction, then verify the
-scoped merges. Next checkpoint within 30 minutes if work continues.
-
-## 2026-10-20 07:30 UTC — Native CI execution verified; original diagnostic fully preserved
-
-[PR #47](https://github.com/techrote/neural-cyber-automata/pull/47) merged at
-`e202bf8f0fe07f132f36fd9edddf5bd2724582d5`; the accepted tree equals reviewed
-`de48f9531a7cea9a67a63e2ea67bfaa69dab6413`. All four workflows passed on
-`8714fba3dbd3bd34efce5015a86c2610ee32b6df`: docs `39385697965`, Linux/Windows
-CPU `39385698077`, pinned host `39385698378`, optional learning `39385697899`.
-Host job `118504896295` explicitly records all six export owner-boundary cases
-passing without skips. The full job ran 437 tests with 110 other expected optional
-skips. The earlier green-but-skipped result remains identified in issue #46.
-
-The original authored diagnostic has a completed independent episode/source audit:
-all 130 indexed hashes, 86 frozen source files, 64 episode records and 1,549
-authored decisions agree, with 9,294 trace-confirmed ticks, 44 cancellations and
-20 terminal closures. The separate owner-journal cutoff remains an acceptance
-blocker. The original `completed` flag is retained beside an explicit incomplete
-audit; no missing exchanges are reconstructed and no physical diagnostic is rerun.
-
-The 11,501,074-byte evidence archive preserves all 134 original files plus four
-labelled derived files, with every member byte-verified. Its SHA-256 is
-`55d8be5e14ca7aeeeb42bdbf7d2e58d6e970806017e19d9fedd965c8e68ed4d4`.
-It contains the original truncated journal, its separately readable recoverable
-prefix, the independent audit and explanatory receipt. All original identities
-remain unchanged in the public result/index and run ledger.
-
-The current runner now validates the closed gzip journal, native serials, full
-counts, episode bindings and native close before permitting completion. Fifteen
-offline regressions pass, and the unchanged original prefix is rejected without
-new host/model/optimizer work. Independent review is complete. PR #44 now
-integrates accepted main. The integrated software suite ran 482 tests in 46.827
-seconds: 425 passed and 57 expected host/artifact-dependent checks skipped. Strict
-documentation validation passed 58 files with no warnings or errors; final hosted
-checks remain next.
-Issue #43 remains open for its unmet complete-journal requirement, and the
-original learned reliability gate still blocks morphology issue #16.
 
 ## 2026-10-20 17:19 UTC — Jolt recovery and evidence work started in parallel
 
@@ -204,6 +111,38 @@ it cannot resume the failed v1 attempt or spend its unused budget. V1's lower
 observed prefix vigor remains a risk. All learning and morphology gates remain
 unchanged and blocked pending complete evidence and useful teacher behavior.
 
+## 2026-10-20 18:22 UTC — Corrective v2 integrated and independently reviewed
+
+PR #58 and [PR #59](https://github.com/techrote/neural-cyber-automata/pull/59)
+passed all five final-head checks and are merged. Accepted main is
+`7fee91b18dd0a6bba7089870fb34c515cf2e9f5a`; its tree matches the reviewed
+implementation and preserved negative evidence. Teacher qualification remains
+open. Neither merge changes the frozen v1 result or its failed acceptance.
+
+The separately versioned controller keeps sampled arrival advisory and retains
+the original observation lease until the caller validates its outcome and
+cancels current local/native intent. V1 controller and supervisor source hashes
+remain pinned; every one of the 189 previously consumed candidate actions replays
+unchanged. All kinetic constants and physical/task contracts are preserved.
+
+The [recorder correction](evidence/2026-10-20-evidence-refused-decisions.md)
+separately retains an undispatched decision, exact source, reservation uncertainty
+and native error cleanup. Legacy extra-frame records remain rejected, and a
+refusal cannot become a completed diagnostic. Independent controller, recorder,
+acceptance and declaration reviews found no remaining source blocker.
+
+The integrated Jolt suite passed 127 checks in 18.287 seconds with consistent
+process visibility, including the unchanged process-group cleanup assertion.
+No physical diagnostic ran during these tests. The prospective
+[v2 declaration](../configs/baselines/jolt-recovery-diagnostic-v2.json) has
+canonical SHA-256
+`d7cc13335b453a755e9b7d950ac52d982aff553c025cbe0fbd47b81b5b0729eb`.
+It independently permits one fresh 96-episode invocation, at most 3,840 decisions,
+23,040 ticks, 4,226 owner calls and 900 whole-process seconds. It carries the full
+prior v1 cost ledger, reuses zero rows, resumes no attempt and changes no numeric
+teacher gate. Public source freezing precedes this one new invocation. Learning
+and morphology remain blocked until their respective acceptance requirements.
+
 ## 2026-10-20 18:37 UTC — IK contracts implemented and independently reviewed
 
 The owner began the [CUDA IK chain / #49](https://github.com/techrote/neural-cyber-automata/issues/49).
@@ -237,3 +176,78 @@ The [contract guide](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and
 [host handoff](IK_HOST_HANDOFF.md) describe the implemented and missing pieces.
 Next is the scoped PR, required final-head checks and verified merge. Existing
 morphology, Jolt recovery and evidence gates remain unchanged.
+
+## 2026-10-20 18:40 UTC — Full v2 evidence; teacher qualification remains failed
+
+The independently declared public `8da294ae` invocation completed all 96 rows in
+444.46566076900126 whole-process seconds, including startup, sealing and independent
+post-exit verification. It used 2,449 decisions, 14,694 requested/confirmed ticks,
+2,711 answered owner calls and one terminated host, with no pending tail, failed
+admission, controller refusal, learned call, checkpoint or optimizer execution.
+The complete raw journal has 85,438,519 bytes and 5,616 linked records; all 196
+indexed artifacts and final native close verify. No v1 row was reused.
+
+[The full result](evidence/2026-10-20-jolt-recovery-v2.md) has original/arrival/
+recovery successes 17/32, 27/32 and 25/32. Recovery restores purposeful airborne
+movement in 32/32 and passes the complete 0.727556 vigor ratio, posture, trim,
+latency and two-pulse/fresh-observation gates. Independent replay reproduces all
+900 candidate decisions and 42 pulses, including ten second pulses. It fails
+strict arrival improvement, at least three historical rescues, the required
+unsupported/drop rescue and the at-most-one-regression gate. Two failures are
+rescued and four previous successes regress. The opened evaluation subset is
+4/8, 5/8 and 6/8; none of these cases becomes sealed learning evaluation.
+
+All remaining failures are ordinary 240-tick deadlines. Three regressions are
+inside tolerance but lack continuous quiet settling; four others remain short
+after the second landing. The old v1 lifecycle failure succeeds at new native
+tick 235, with a valid advisory hold and no extension beyond the original deadline.
+Original v1 bytes still stop at 234. Independent durability review and archival
+publication are being finalized before final-head CI and merge verification.
+
+The [learning design](design/LEARN_JOLT_002.md),
+[interface checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) and
+[conditional issue #62](https://github.com/techrote/neural-cyber-automata/issues/62)
+now specify learned aim/buttons, a learned BC residual base, immutable invocation
+time across recurrent segments, matched supervision/history masks, three seeds,
+fresh geometry/start fingerprints and complete prospective compute counters.
+Collection remains blocked by the teacher result. No architecture or training
+experiment follows automatically.
+
+A live state check found #43 and #48 closed after PR #58/#59 despite their stated
+incomplete requirements. Both were reopened, with issue reconciliation comments;
+PR wording now avoids a closing-keyword phrase inside a negative statement.
+The evidence requirement and teacher requirement retain independent outcomes.
+
+## 2026-10-20 19:00 UTC — Independent acceptance and archive readback complete
+
+Independent evidence review accepts the complete v2 diagnostic: all 93 frozen
+source inputs, 196 indexed output artifacts, 5,616 linked journal records and
+2,711 native exchanges bind correctly. Raw/compressed journal identity, durable
+writer synchronization, final native close and process termination are verified.
+The [evidence audit](evidence/jolt-recovery-v2-independent-evidence-audit-20261020.json)
+and [behavior audit](evidence/jolt-recovery-v2-independent-behavior-audit-20261020.json)
+remain separate. The latter reproduces all 900 candidate decisions and confirms
+four failed teacher requirements; evidence acceptance does not qualify behavior.
+
+The 206-member archive is saved and a fresh readback verifies every member and
+the full 27,852,949-byte SHA-256
+`7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53`.
+Two shorter direct-transfer states are preserved with their hashes in the
+[delivery audit](evidence/jolt-recovery-v2-delivery-audit-20261020.json).
+Their cause remains unestablished. Atomic staging and guarded replacement
+completed delivery without altering any original diagnostic file or rerunning
+physics. The failed v1 archive is also rechecked at its original byte identity.
+
+Accepted concurrent main `a265ca79` adds the independently commissioned IK
+contracts. Integration preserves that work and passes all 163 combined Jolt/IK
+offline tests in 20.153 seconds. No host source, frozen diagnostic source,
+physical threshold, learning gate or morphology gate changed during integration.
+Final publication, required final-head CI and merge verification follow in PR #61.
+
+The next narrow teacher task is [#64](https://github.com/techrote/neural-cyber-automata/issues/64):
+support loss during launch anticipation, useful progress after the second
+landing and enough quiet settling before the existing deadline. No third
+physical allocation is opened. Conditional [#62](https://github.com/techrote/neural-cyber-automata/issues/62)
+retains three training seeds, fresh geometry/start evaluation, meaningful learned
+aim/buttons and a learned residual base; its collection and execution remain
+blocked until teacher acceptance. Morphology #16 remains blocked independently.

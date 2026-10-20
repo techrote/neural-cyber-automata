@@ -42,10 +42,13 @@ Each issue contains an execution prompt, read-set, write-set, checks, limits and
 The current prerequisite path is contact-aware [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
 and [complete evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43),
 then [LEARN-JOLT-002](design/LEARN_JOLT_002.md), then T-106. Evidence software is
-accepted in PR #58. The first recovery diagnostic is an immutable incomplete
-24-row result; [#60](https://github.com/techrote/neural-cyber-automata/issues/60)
-separately corrects advisory arrival and declares a new full comparison. It does
-not resume the failed invocation or weaken the original learned gates.
+accepted in PR #58. [The separate v2 result](evidence/2026-10-20-jolt-recovery-v2.md)
+fully verifies 96 rows and native closure, preserving the incomplete v1 attempt.
+Recovery restores airborne character but fails the teacher gate at 25/32 arrivals
+versus 27/32, with two rescues and four regressions. Correct those remaining
+movement failures in [#64](https://github.com/techrote/neural-cyber-automata/issues/64)
+before the [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
+can admit collection. All learned reliability and morphology gates stay unchanged.
 
 ## Dependency gates
 

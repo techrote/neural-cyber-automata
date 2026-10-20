@@ -27,7 +27,8 @@ def main():
                                expected_declaration_sha256=args.expected_declaration_sha256,
                                source_root=ROOT)
     except Exception as exc:
-        result = {"schema": "nca-jolt-recovery-behavior-review/v1", "teacher_accepted": False,
+        # This versions the refusal record, not an unverified controller family.
+        result = {"schema": "nca-jolt-recovery-audit-refusal/v1", "teacher_accepted": False,
                   "evidence_verification": {"verified": False},
                   "source_revision": args.expected_revision,
                   "declaration_sha256": args.expected_declaration_sha256,

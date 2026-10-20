@@ -17,6 +17,7 @@ from nca.contracts import ContractError, sha256_json, strict_json_loads
 
 REFERENCE = "jolt-arrival-v1"
 CANDIDATE = "jolt-recovery-v1"
+CANDIDATE_V2 = "jolt-recovery-v2"
 HISTORICAL_FAILURES = (
     "demo-floor-left-60-1", "demo-floor-left-60-2",
     "reference-floor-left-63", "reference-drop28-left-57",
@@ -33,10 +34,11 @@ RECOVERY_REASONS = {
 }
 
 
-def acceptance_specification():
+def acceptance_specification(candidate_family=CANDIDATE):
+    _require(candidate_family in (CANDIDATE, CANDIDATE_V2), "unknown recovery candidate version")
     return {
-        "schema": "nca-jolt-recovery-acceptance/v1",
-        "reference": REFERENCE, "candidate": CANDIDATE,
+        "schema": "nca-jolt-recovery-acceptance/" + ("v1" if candidate_family == CANDIDATE else "v2"),
+        "reference": REFERENCE, "candidate": candidate_family,
         "paired_cases": 32,
         "minimum_extra_arrivals": 1,
         "minimum_historical_rescues": 3,
@@ -70,10 +72,11 @@ def _number(value):
     return value
 
 
-def assess_teacher(rows, *, pulse_authority_verified):
+def assess_teacher(rows, *, pulse_authority_verified, candidate_family=CANDIDATE):
     """Compute the published rule from complete receipt-verified result rows."""
+    _require(candidate_family in (CANDIDATE, CANDIDATE_V2), "unknown recovery candidate version")
     paired = {}
-    for family in (REFERENCE, CANDIDATE):
+    for family in (REFERENCE, candidate_family):
         selected = [row for row in rows if row["family"] == family]
         mapped = {row["case_id"]: row for row in selected}
         _require(len(selected) == len(mapped) == 32, "all32 distinct paired cases are required")
@@ -94,7 +97,7 @@ def assess_teacher(rows, *, pulse_authority_verified):
                           "peak_toward_speed_cells_per_second", "inference_p95_ms"):
                 _number(metrics[field])
         paired[family] = mapped
-    reference, candidate = paired[REFERENCE], paired[CANDIDATE]
+    reference, candidate = paired[REFERENCE], paired[candidate_family]
     _require(set(reference) == set(candidate)
              and set(HISTORICAL_FAILURES + HISTORICAL_MISSING_AIRBORNE) <= set(reference),
              "the paired cases must retain all historical failures and character cases")
@@ -118,7 +121,7 @@ def assess_teacher(rows, *, pulse_authority_verified):
             "maximum_case_inference_p95_ms": max(row["metrics"]["inference_p95_ms"] for row in selected.values()),
             "maximum_requested_primary_edges": max(row["character_metrics"]["requested_primary_edges"] for row in selected.values()),
         }
-    before, after = measurements[REFERENCE], measurements[CANDIDATE]
+    before, after = measurements[REFERENCE], measurements[candidate_family]
     speed = before["mean_peak_toward_speed_cells_per_second"]
     ratio = None if speed <= 0 else after["mean_peak_toward_speed_cells_per_second"] / speed
     checks = {
@@ -137,7 +140,7 @@ def assess_teacher(rows, *, pulse_authority_verified):
         "fresh_physical_pulse_authority": pulse_authority_verified is True,
     }
     return {
-        "schema": "nca-jolt-recovery-behavior-review/v1",
+        "schema": "nca-jolt-recovery-behavior-review/" + ("v1" if candidate_family == CANDIDATE else "v2"),
         "teacher_accepted": all(checks.values()), "checks": checks,
         "measurements": measurements, "toward_speed_ratio": ratio,
         "historical_rescues": rescued, "regressions": regressions,
@@ -149,7 +152,17 @@ def assess_teacher(rows, *, pulse_authority_verified):
     }
 
 
-def verify_controller_replay(output, rows):
+def _candidate_controller(candidate_family):
+    if candidate_family == CANDIDATE:
+        from nca.controllers.jolt_recovery import JoltRecoveryController
+        return JoltRecoveryController()
+    if candidate_family == CANDIDATE_V2:
+        from nca.controllers.jolt_recovery_v2 import JoltRecoveryControllerV2
+        return JoltRecoveryControllerV2()
+    raise ContractError("jolt_recovery_acceptance", "unknown recovery candidate version")
+
+
+def verify_controller_replay(output, rows, *, candidate_family=CANDIDATE):
     """Replay the frozen authored policy on retained local observations only.
 
     This issues no owner request and consumes no new physics. It independently
@@ -157,12 +170,11 @@ def verify_controller_replay(output, rows):
     count, readiness and declared reasons without trusting a phase label.
     """
     from nca.controllers.baseline import FeedbackObservation, SkillGoal
-    from nca.controllers.jolt_recovery import JoltRecoveryController
     from nca.data import read_episode
 
     decisions = pulses = second_pulses = 0
     for row in rows:
-        if row["family"] != CANDIDATE:
+        if row["family"] != candidate_family:
             continue
         episode = read_episode(output / row["artifact"])
         events = [event for event in episode.events if event.kind == "step"]
@@ -171,7 +183,7 @@ def verify_controller_replay(output, rows):
         context = events[0].context
         goal = SkillGoal(context.goal_id, context.skill, context.target,
                          context.pace, context.tolerance, context.timeout_seconds)
-        controller = JoltRecoveryController()
+        controller = _candidate_controller(candidate_family)
         previous, count = False, 0
         for event, frame in zip(events, frames):
             observation = FeedbackObservation.from_host(event.source_observation)
@@ -204,7 +216,6 @@ def verify_controller_replay(output, rows):
 
 def verify_replay_source(manifest, *, expected_revision: str, source_root: Path | None = None):
     """Require the replay's imported package and Git blobs to match the run."""
-    from nca.controllers.jolt_recovery import JoltRecoveryController
     from nca.data.capture import source_identity
 
     package = Path(__file__).resolve().parents[1]
@@ -229,8 +240,9 @@ def verify_replay_source(manifest, *, expected_revision: str, source_root: Path 
         _require(hashlib.sha256(committed).hexdigest() == digest
                  and hashlib.sha256((root / relative).read_bytes()).hexdigest() == digest,
                  "replay source or declared input differs from its published Git blob")
-    _require(manifest["declaration"]["candidate_specifications"].get(CANDIDATE)
-             == JoltRecoveryController().specification(),
+    candidate_family = manifest["declaration"]["families"][-1]
+    _require(manifest["declaration"]["candidate_specifications"].get(candidate_family)
+             == _candidate_controller(candidate_family).specification(),
              "replay controller specification differs from the prospectively frozen candidate")
     return {"verified": True, "source_revision": revision,
             "source_files_sha256": manifest["source_files_sha256"]}
@@ -244,7 +256,8 @@ def audit_recovery(output: Path, *, expected_revision: str, expected_declaration
     manifest = strict_json_loads((output / "manifest.json").read_bytes())
     replay_source = verify_replay_source(manifest, expected_revision=expected_revision, source_root=source_root)
     summary = strict_json_loads((output / "summary.json").read_bytes(), max_bytes=8 * 1024 * 1024)
-    _require(manifest["declaration"].get("teacher_acceptance") == acceptance_specification(),
+    candidate_family = manifest["declaration"]["families"][-1]
+    _require(manifest["declaration"].get("teacher_acceptance") == acceptance_specification(candidate_family),
              "the prospective teacher acceptance rule cannot be changed after the run")
     supervisor_path = output.with_name(output.name + "-supervisor.json")
     supervisor = strict_json_loads(supervisor_path.read_bytes())
@@ -256,8 +269,9 @@ def audit_recovery(output: Path, *, expected_revision: str, expected_declaration
              and supervisor.get("final_output_verification") == verified
              and _number(supervisor.get("wall_seconds")) <= manifest["declaration"]["budget"]["maximum_wall_seconds"],
              "the full invocation and independent final verification must close within the declared budget")
-    pulse_audit = verify_controller_replay(output, summary["rows"])
-    result = assess_teacher(summary["rows"], pulse_authority_verified=pulse_audit["verified"])
+    pulse_audit = verify_controller_replay(output, summary["rows"], candidate_family=candidate_family)
+    result = assess_teacher(summary["rows"], pulse_authority_verified=pulse_audit["verified"],
+                            candidate_family=candidate_family)
     result.update(source_revision=expected_revision, declaration_sha256=expected_declaration_sha256,
                   evidence_verification=verified, pulse_authority=pulse_audit,
                   replay_source=replay_source,

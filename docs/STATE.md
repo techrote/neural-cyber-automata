@@ -15,8 +15,8 @@ CUDA learning, inverse-solver implementation, CPU IK export and physical joint-t
 
 [Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
 The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
-Its historical complete-journal audit remains incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58).
-The [recovery v1 diagnostic](evidence/2026-10-20-jolt-recovery-v1.md) stopped at 24/96 rows; corrective [#60](https://github.com/techrote/neural-cyber-automata/issues/60), #43 and morphology #16 remain open.
+Its historical journal stays incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58); the separate [v2 comparison](evidence/2026-10-20-jolt-recovery-v2.md) fully verifies all 96 rows and closure in 444.465661 seconds.
+The [v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) remains preserved. [PR #61](https://github.com/techrote/neural-cyber-automata/pull/61) records v2 arrivals 25/32 versus 27/32, despite 32/32 purposeful airborne cases; teacher #48, [LEARN-JOLT-002](design/LEARN_JOLT_002.md) and morphology #16 remain blocked on their respective gates.
 
 ## T-100 — Accepted research baseline
 

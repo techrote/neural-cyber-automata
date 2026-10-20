@@ -15,7 +15,7 @@ import unittest
 from unittest import mock
 
 from nca.contracts import ContractError, sha256_json
-from nca.evaluation.jolt_arrival import (DiagnosticBudget, FAMILIES, RECOVERY_FAMILIES, diagnostic_cases,
+from nca.evaluation.jolt_arrival import (DiagnosticBudget, FAMILIES, RECOVERY_FAMILIES, RECOVERY_V2_FAMILIES, diagnostic_cases,
                                        read_declaration, summarize, validate_owner_interval, write_json)
 from test_morphology import fixture
 
@@ -83,6 +83,24 @@ class ArrivalDiagnosticTests(unittest.TestCase):
         self.assertTrue(snapshot["unconfirmed_tail"])
         self.assertEqual(snapshot["pending_requests"][0]["serial"], serial)
         self.assertIn(b'request_reserved', journal.getvalue())
+
+    def test_v2_declaration_cannot_reinterpret_the_frozen_v1_family(self):
+        recovery = copy.deepcopy(self.config)
+        recovery.update(schema="nca-jolt-recovery-diagnostic/v2", families=list(RECOVERY_V2_FAMILIES))
+        recovery["budget"].update(maximum_episodes=96, maximum_decisions=3840,
+            maximum_requested_ticks=23040, maximum_host_requests=4226, maximum_wall_seconds=900)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "v2.json"
+            path.write_text(json.dumps(recovery))
+            self.assertEqual(read_declaration(path, expected_sha256=sha256_json(recovery)), recovery)
+            with self.assertRaisesRegex(ContractError, "arrival_declaration"):
+                read_declaration(path)
+            for schema, families in (("nca-jolt-recovery-diagnostic/v1", RECOVERY_V2_FAMILIES),
+                                     ("nca-jolt-recovery-diagnostic/v2", RECOVERY_FAMILIES)):
+                changed = {**recovery, "schema": schema, "families": list(families)}
+                path.write_text(json.dumps(changed))
+                with self.subTest(schema=schema), self.assertRaisesRegex(ContractError, "arrival_declaration"):
+                    read_declaration(path, expected_sha256=sha256_json(changed))
 
     def test_malformed_confirmation_cannot_erase_uncertain_tail(self):
         budget = DiagnosticBudget(self.config["budget"], io.BytesIO())
