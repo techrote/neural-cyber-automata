@@ -1,24 +1,33 @@
 ---
 title: Compute lanes and measurement requirements
 kind: reference
-summary: Proposed compute roles and the absence of qualified training or performance evidence.
+summary: Measured CPU learning and host lanes, with explicit limits for unqualified devices and deployment.
 owns: [hardware.lanes]
-verified: 2026-10-18
+verified: 2026-10-20
 ---
 
 # Compute lanes
 
-No learner environment, GPU lane or training throughput has been qualified for this repository. Device availability does not establish software compatibility or useful throughput.
+The Linux CPU learning and physical-host lanes have executed the bounded
+[T105 learning screen](evidence/2026-10-19-t105.md),
+[host pilots](evidence/2026-10-19-t102.md) and subsequent immutable runs in the
+[run ledger](RUNS.md). These establish scoped software and workload evidence.
+The exact [Torch CPU deployment bundle](TORCH_RUNTIME_EXPORT.md) has composite
+qualification from the original physical run and separate completed pose evidence.
+GPU/accelerator lanes, Windows physical runtime and owner feel remain unmeasured.
+Device availability alone does not establish compatibility or useful throughput.
 
-| Lane | Proposed role | Evidence required |
+| Lane | Role | Current evidence or remaining requirement |
 |---|---|---|
-| CPU | Protocol tests, baseline control, small inference, hosted CI | Pinned environment, successful conformance and measured cost |
+| Linux CPU package and learning | Protocols, authored control, bounded training and inference | Pinned Python/Torch/NumPy, actual host runs and scoped cost measurements in the ledger |
+| Linux Torch CPU deployment | Exact evaluated BC1103 external controller | 600.521 active seconds: 95.163 ticks/s with one learned actor; 77.673 with one learned plus one authored actor. Standalone full-decision p95 2.713 ms; continuous realtime pacing remains unqualified |
+| Windows CPU package | Installation and protocol conformance | Package CI passes; physical Windows gameplay and pacing remain unmeasured |
 | Compatible accelerator | Batched network updates after host profiling | Device/driver/runtime report, supported operations, actual smoke training and memory/time |
 | Legacy K80 | Optional independent experiments if a compatible stack is justified | Separate environment/architecture verification and workload benchmark |
 | Target game platform | Final inference and feel qualification | Exact host/profile, measured latency and gameplay comparison |
 
-D-006 records the historical two-environment idea. D-010 removes legacy hardware qualification from the actor-control critical path; it does not claim that any legacy lane works. T-101 provides a CPU baseline and environment report. T-109 measures the complete pipeline and optional lanes.
+D-006 records the historical two-environment idea. D-010 removes legacy hardware qualification from the actor-control critical path; it does not claim that any legacy lane works. T-101 provides the CPU baseline and environment report. T-109 qualifies the exact Linux Torch CPU bundle separately from learning and package conformance; both original physical and NumPy no-go records remain unchanged. Additional device qualification requires its own evidence.
 
 Record host stepping, reset, transport, learner updates and inference separately. Use aggregate base ticks/s and decision cadence to estimate experiment duration. A small neural model does not imply a fast cellular/Rapier environment.
 
-Avoid prescribing a specific Python/PyTorch/CUDA version until installation and supported operations are verified for the chosen lane. “Unavailable” or “not measured” is explicit; no substitution is reported as success for another device. No driver/BIOS changes belong to this prepass.
+Use the exact versions and build hashes from each qualified lane’s manifest. The recent CPU runs use Python 3.12.14, Torch 2.8.0+cpu and NumPy 2.3.5; package CI has its separately pinned environment. “Unavailable” or “not measured” is explicit; a result on one device does not qualify another. No driver/BIOS changes are commissioned here.

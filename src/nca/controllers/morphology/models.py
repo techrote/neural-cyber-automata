@@ -278,7 +278,7 @@ class MorphologyRuntime:
                 self._clear_owner_fence()
             with torch.no_grad():
                 output = self.model.forward_frame(frame, self.hidden)
-            request = deterministic_action(output.logits)
+            request = self.select_action(output, frame)
             action, masked = map_action(self.adapter, request, view, goal)
             self.hidden, self.previous = output.hidden.detach().clone(), request
             deadline = self.fence.start_tick + goal.deadline_ticks
@@ -288,6 +288,15 @@ class MorphologyRuntime:
             return self.pending
         except (ContractError, ValueError, TypeError, KeyError, RuntimeError) as exc:
             return self.cancel(exc.code if isinstance(exc, ContractError) else "invalid_candidate_input")
+
+    def select_action(self, output: CandidateOutput, frame: MorphologyFrame) -> SemanticAction:
+        """The preparation runtime uses the unchanged deterministic readout.
+
+        A separately declared training sampler can specialize only this action
+        choice while retaining the same source, lifetime and owner fences.
+        """
+        del frame
+        return deterministic_action(output.logits)
 
 
 def dispatch(env, runtime: MorphologyRuntime, decision: MorphologyDecision, view: Mapping[str, Any]):

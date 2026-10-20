@@ -1,0 +1,135 @@
+{
+  "schema": "nca-export-clips-completion/v1",
+  "id": "bc1103-torch-cpu-clips-completion-20261020",
+  "reason": "Complete only omitted variant profile metadata from the exact captured live responses and render the four unchanged pose pairs. Preserve the original clips-stage no-go and all physical work.",
+  "original_runtime_source": {
+    "revision": "f3bf96fa402fc3131ce871b5bd23e65855722ade",
+    "tree": "f4689432475ce10042fa0d1072cec6777532bd84",
+    "status": "no_go",
+    "runtime_qualified": false,
+    "external_wall_seconds": 642.057584872
+  },
+  "inputs": {
+    "runtime": {
+      "arithmetic.json": "5eb1b8fb7ba5765695ae6aa50d4da606589b2f603b92ba419644c23a71744617",
+      "bc-seed1103-torch-cpu.json": "1345c35582bbd16f7f6474996976dc3b0fac3dd775a2f83f916347b43e5fb96c",
+      "clip-spec.json": "ceb76af37329a4e1b6aa6f69863bed15072f9d976185321f9134e164f08d6905",
+      "clips/floor-left-24.gif": "af7a8bbf13cf3c5bc8204ac9fce1ad55e3de12ceb87afa0ce4f3e2b7ac9a7270",
+      "clips/floor-right-24.gif": "40c8dd200427c68faef47753a00e9202ae665303a588793132698f25b6d5d22c",
+      "comparison-floor-left-24.json": "8d70014897b22500315c7ff85470528fdc20393d72fab878267bcbb2a65b618c",
+      "comparison-floor-right-24.json": "01f9096e9ddee91ec176ac2df14fc0776728ac7b5247a775d2ce3ffb53063655",
+      "inference-cost.json": "fa6544e9068129043d47dab364ab0c649cf2ac7fd9625362439e79da28d99dda",
+      "inference-inputs.json": "f9f4253ec04e46da2683e03407e1ab7603ac5088356f6934a898c21d7a21650f",
+      "manifest.json": "e178cfc74c7115e0aaa17b706e65738d88a91f05af4d3382ee14191101b52c4b",
+      "negative-contracts.json": "003739792a0b8a55c6e7419e4a08fceca50b83b1d2212bae92934add9c10d6d4",
+      "owner-exchanges.jsonl.gz": "72d58c24deb2bd31720528f43b34ef2f54540ff1e1eaa13921434f6621c70b02",
+      "realtime.json.gz": "1cb9e674058ee1ecd2d5876d03d2f8c74f148775bab73925f1d41b9947385765",
+      "summary.json": "3fa3cb781d0ab2a5416f81541e77dee19c11f8fd1ba5364897a8430eb5a75eba",
+      "throughput-0-receipts.jsonl.gz": "a94192c698f6159c1b32cb41c4e9501f2935d54b4249e980194d7179d78df475",
+      "throughput-1-receipts.jsonl.gz": "3fc8d1b2ed1db9f5ec7383c4ddb7fb388d0614f2a7e220085cd8e8b0d1c2a5f5",
+      "throughput-configuration-0.json": "2b249474144179c54b0e160c8bcc42a9cd6d2b4d4c6a03e86f524638b04f8988",
+      "throughput-configuration-1.json": "bbe7bfa015000c7900a0d060cc85927a0aeff422258e3ffb844de0971081ae6c",
+      "throughput.json": "94e24bed744c783604356df3d86b12b0ead79e279e97c8d22874b077270c28ec",
+      "trajectories/astra-profile-refused.json.gz": "5f25908d450e5ab5449301e441054f7ec31cfa7af1bf044cb7d8b4889ce31038",
+      "trajectories/decision-12-refused.json.gz": "3e60f010187bbf1c9837867ca643e8dc769d0996ef3166b6cf67a0705d0206e3",
+      "trajectories/floor-left-24-reference.json.gz": "3c624806ec8f364f3cb4e689ee0837d39f0137c9d18f96d518ea56997f6b8440",
+      "trajectories/floor-left-24-torch-export.json.gz": "587797591891c7dd285f608bc792e3062ed9d035ca290f4700bebf68bcf9a4c9",
+      "trajectories/floor-right-24-reference.json.gz": "0dd48d15208716c8a018c075a7a086304e999d2c5c6d3133b24497b7dd7e329e",
+      "trajectories/floor-right-24-torch-export.json.gz": "bb180a977af672d820f158536e97f31e46328d6f3e28c3f50d9867090fc17517",
+      "work-journal.jsonl": "28e6f5752d2c635617370de69f39109466888fe1bcaa3e65c4e38b85a5073754"
+    },
+    "launcher": {
+      "launch.json": "1beaa3b0df26faa469f52b155876c769d0cd5b493f23dfc1436114c4c124c787",
+      "completion.json": "72bd2fc27e48ea7db046e95ea8a4cd358161c47483489e04e7b48937a3d2b27c"
+    },
+    "retained": {
+      "screen-v1/summary.json": "f2625739e7d05e86d2de6d955209452173ff2d0c72acbd64dae4cee2add2f62d",
+      "screen-v1/resume.json": "0cbfe8733e39499e01722f1c7a70578c582be0e53a2b993087346fce99125c97",
+      "screen-v1/learner-cost.json": "0225a76c7c3d55b95207d28229717f02c12150a1b77e95577793952b98d95d55"
+    }
+  },
+  "unchanged_sources": {
+    "src/nca/__init__.py": "8a2260eff8ec09d88acd7ae28bd4cd65e7b5769e23280de3baf33054e8bcb766",
+    "src/nca/contracts.py": "0e5873a0f0dab3990c8ba4abe5ebef90af792d90d5ac68aa51be3bf4974e0892",
+    "src/nca/randomness.py": "5657c03da1621383c19108272cc49aad871e717eb7fef75e03f586994a4235c8",
+    "src/nca/runs.py": "738b82ddc1e3f97a999f17bf6dcd9583d5851d7b7f8f3e0e0d4877a9d1d6ddc7",
+    "src/nca/export/__init__.py": "25896ac09ec77cd4e5c89733b1a165a64a4527b5e9d179e1b271cce0a8657a55",
+    "src/nca/export/runtime.py": "48a815bcf8ad36bf7a639bacd6b5a8d54193bd604e1449e01ca5379c0cba56d3",
+    "src/nca/export/spec.py": "ff9785c2351b7ad59b31de8666091d3998b53faca92595c09cb5ffcf6aae9f87",
+    "src/nca/controllers/__init__.py": "427bc77952ae229ce7f12b49be5da9daada3d26bb721080153f1e0798d56a22c",
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/data/__init__.py": "1db5b3cc1397ad0784d0d13d2e6f6a1168a00cc3ba6e1c393da895a5bcd43d62",
+    "src/nca/data/records.py": "c368b23f69daa543621bf85ee125274aaf2d84f3d4db13c5e524d2323bf7d020",
+    "src/nca/data/capture.py": "437dd099171f5803c6776b821e0d1ab53749d902feae08c2f54159c21ec82b0b",
+    "src/nca/data/replay.py": "2856943f54bfa5ceefae484c1eb4415ea3723c489ee440f7c233c2193b6d217d",
+    "src/nca/data/storage.py": "da194eef8f5b0249f7cc78ec2a36beccc39ebe0af29c9419aaff74746fa21abd",
+    "src/nca/adapters/__init__.py": "9a738dce03d9e0c7346bcc7febb6420f953754d29b66f581c321e0eb28a39599",
+    "src/nca/adapters/godot.py": "47ff63a5ee81fcc35b46f6f2c1d7e66e8bf4d4cf725e1640df246dfd1ca14ac2",
+    "src/nca/adapters/protocol.py": "21a1c8b2cf5a124bd1e854ff05ed12e99579ca10dc5850e47beda614a95df761",
+    "src/nca/export/torch_runtime.py": "af699010e798d3f771a447d8bc00b2c33c949588989f3d0792bde2489030ad51",
+    "src/nca/export/build.py": "cc0dda972c80b5b048eb058d87be403378cd4f69fe4fd96548f3f4027e433eb5",
+    "src/nca/bench/__init__.py": "01e87b0b8aeda58d48cbf7f970ab01afae39f0dde4e45027d1b36fddff6eae22",
+    "src/nca/bench/pose_clip.py": "8e592ad086274ea0a430f8d1b2c390b8c5e0d24612e0017ca23d0c1d3e684d5b"
+  },
+  "profile_recovery": [
+    {
+      "file": "trajectories/decision-12-refused.json.gz",
+      "reset_serial": 186,
+      "profile_serial": 187,
+      "cancel_serial": 188,
+      "step_serials": [
+        189,
+        190
+      ],
+      "model": "jev",
+      "decision_ticks": 12,
+      "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc"
+    },
+    {
+      "file": "trajectories/astra-profile-refused.json.gz",
+      "reset_serial": 191,
+      "profile_serial": 192,
+      "cancel_serial": 193,
+      "step_serials": [
+        194,
+        195,
+        196,
+        197
+      ],
+      "model": "astra",
+      "decision_ticks": 6,
+      "profile_sha256": "28b3665b5ecb695aa58e10a557af79f499f927152fe233c8abe74d4867ab71b0"
+    }
+  ],
+  "renderer": {
+    "python": "3.12.14",
+    "pillow": "12.3.0",
+    "pairs": [
+      "floor-right-24",
+      "floor-left-24",
+      "decision-12-refused",
+      "astra-profile-refused"
+    ],
+    "nominal_gif_bytes_must_match_original": true,
+    "camera_and_frame_spec_unchanged": true
+  },
+  "budget": {
+    "maximum_invocations": 1,
+    "maximum_offline_wall_seconds": 60.0,
+    "maximum_aggregate_wall_seconds": 900.0,
+    "host_starts": 0,
+    "host_requests": 0,
+    "new_simulation_ticks": 0,
+    "policy_evaluations": 0,
+    "training_updates": 0,
+    "automatic_retries": 0
+  },
+  "acceptance": "All original non-rendering gates, exact standalone1000 receipt, complete unchanged-source/input identities, clean terminated original processes, pinned original passing fresh-episode resume and retained costs, all four clips and matching nominal GIF bytes. Derived composite result only; original no-go remains unchanged.",
+  "limits": [
+    "The original physical invocation is not rerun or replaced.",
+    "Only profile, profile hash and explicit recovery provenance may be added to the two derived variant envelopes.",
+    "No Torch or learner import, model construction, checkpoint loading, host construction, optimization or new gameplay.",
+    "The unchanged renderer imports existing NumPy and owner-adapter definitions but invokes only pose rendering."
+  ]
+}

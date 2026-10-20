@@ -20,6 +20,10 @@ T-101 can start from this repository immediately after the prepass lands. T-102 
 
 ## Active task definitions
 
+Nine of ten programme tasks have accepted results. Morphology transfer in
+[#16](https://github.com/techrote/neural-cyber-automata/issues/16) is the remaining
+programme task; its fixed reliability prerequisite and continuation gates still apply.
+
 | Task | Status | Scope | Depends on | Issue |
 |---|---|---|---|---|
 | T-101 | Merged [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22) | Package, gameplay-profile contracts and reproducible run records | T-100 | [#11](https://github.com/techrote/neural-cyber-automata/issues/11) |
@@ -27,10 +31,10 @@ T-101 can start from this repository immediately after the prepass lands. T-102 
 | T-103 | Merged [PR #24](https://github.com/techrote/neural-cyber-automata/pull/24) | Authored feedback baselines, compliant response and actor feel fixtures | T-102 | [#13](https://github.com/techrote/neural-cyber-automata/issues/13) |
 | T-104 | Merged [PR #25](https://github.com/techrote/neural-cyber-automata/pull/25) | Demonstration capture, consumed-action replay and intervention datasets | T-101, T-102 | [#14](https://github.com/techrote/neural-cyber-automata/issues/14) |
 | T-105 | Merged [PR #26](https://github.com/techrote/neural-cyber-automata/pull/26) | First learned actor skill: imitation and recurrent residual control | T-102, T-103, T-104 | [#15](https://github.com/techrote/neural-cyber-automata/issues/15) |
-| T-106 | Preparation merged in [PR #30](https://github.com/techrote/neural-cyber-automata/pull/30); guarded follow-up [PR #38](https://github.com/techrote/neural-cyber-automata/pull/38) pending; transfer blocked | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |
+| T-106 | Preparation merged in [PR #30](https://github.com/techrote/neural-cyber-automata/pull/30), primary provenance/recovery in [PR #36](https://github.com/techrote/neural-cyber-automata/pull/36), and guarded preparation in [PR #38](https://github.com/techrote/neural-cyber-automata/pull/38); transfer blocked | Morphology sharing, articulation and recovery generalization | T-105 | [#16](https://github.com/techrote/neural-cyber-automata/issues/16) |
 | T-107 | Merged [PR #27](https://github.com/techrote/neural-cyber-automata/pull/27) | Usable skills and feedback-driven task composition | T-103, T-104 | [#17](https://github.com/techrote/neural-cyber-automata/issues/17) |
-| T-108 | Merged [PR #31](https://github.com/techrote/neural-cyber-automata/pull/31) | Human takeover and asynchronous decision-model or LLM adapter | T-102, T-107 | [#18](https://github.com/techrote/neural-cyber-automata/issues/18) |
-| T-109 | Export implementation/no-go merged in [PR #29](https://github.com/techrote/neural-cyber-automata/pull/29); deployment qualification open | Runtime export, end-to-end throughput and deployment qualification | T-105 | [#19](https://github.com/techrote/neural-cyber-automata/issues/19) |
+| T-108 | Merged [PR #31](https://github.com/techrote/neural-cyber-automata/pull/31); native-lease conformance corrected in [PR #40](https://github.com/techrote/neural-cyber-automata/pull/40) | Human takeover and asynchronous decision-model or LLM adapter | T-102, T-107 | [#18](https://github.com/techrote/neural-cyber-automata/issues/18) |
+| T-109 | Export implementation/no-go in [PR #29](https://github.com/techrote/neural-cyber-automata/pull/29); exact Linux Torch CPU bundle qualified by separate composite evidence in [PR #41](https://github.com/techrote/neural-cyber-automata/pull/41); original no-go runs preserved | Runtime export, end-to-end throughput and deployment qualification | T-105 | [#19](https://github.com/techrote/neural-cyber-automata/issues/19) |
 | T-110 | Bounded no-go merged in [PR #28](https://github.com/techrote/neural-cyber-automata/pull/28); cancellation and repeated-run accounting corrected in [PR #35](https://github.com/techrote/neural-cyber-automata/pull/35) | Conditional distributed NCA and coordination experiments for Cybersand | T-101, T-102, T-104 | [#20](https://github.com/techrote/neural-cyber-automata/issues/20) |
 
 Each issue contains an execution prompt, read-set, write-set, checks, limits and budget. No task may claim trained/physical/live-model evidence from a schema, mock or metadata flag.
@@ -47,13 +51,13 @@ Each issue contains an execution prompt, read-set, write-set, checks, limits and
 
 **T-105:** Requires actual game adapter, stable baseline/profile, datasets and frozen evaluation criteria. Run only when this implementation/experiment task is commissioned.
 
-**T-106:** Starts only after one useful per-rig learned skill and accepted additional actor profiles exist.
+**T-106:** Software preparation and read-only admission are implemented. Physical teacher qualification, learning and transfer comparison require the designated per-rig prerequisite to pass the fixed **75% mean / 50% every-seed success** thresholds together with the original gain, character and runtime gates, and require accepted additional actor profiles. The current designated primary fails. A passing separately commissioned prerequisite, a distinct continuation declaration and a qualified semantic waypoint reference are required before morphology learning.
 
 **T-107:** Requires accepted ACT-004 mount/usable capabilities. An authored skill implementation can precede learned skill replacement.
 
 **T-108:** Deterministic mock providers first. A live provider requires an explicit chosen service and bounded call/spend budget in the commissioned task.
 
-**T-109:** Requires a trained/evaluated candidate; additional platforms and accelerators are separately qualified lanes.
+**T-109:** The exact evaluated Linux Torch CPU bundle has [composite qualification](evidence/2026-10-20-t109-torch-cpu.md), with its interrupted training lineage and original no-go runs retained. Additional platforms, accelerators, multiple learned actors and continuous realtime pacing remain separately qualified lanes.
 
 **T-110:** Off the first actor-control critical path. Commission one named behaviour and topology before implementation; no open-ended cellular engine programme.
 
@@ -64,7 +68,7 @@ The host adapter uses the accepted Cybersand mechanics, including deliberate ass
 
 After T-101, transport/conformance and dataset-format preparation can proceed independently, provided full T-104 completion still uses an accepted T-102 adapter. After T-102, baseline tuning (T-103) and capture/replay (T-104) have separate primary write-sets.
 
-After the baseline and dataset, one learned skill (T-105) and authored usable composition (T-107) can proceed separately. T-108 does not require the low-level policy to be neural: the same skill interface can use authored control. After a useful learned candidate, morphology work (T-106) and export/performance (T-109) can be independent.
+After the baseline and dataset, one learned skill (T-105) and authored usable composition (T-107) can proceed separately. T-108 does not require the low-level policy to be neural: the same skill interface can use authored control. Morphology software preparation and read-only admission (T-106) can proceed independently of qualification of a separately evaluated export candidate (T-109). Physical morphology work retains the fixed 75% mean / 50% every-seed prerequisite and its separate continuation gates.
 
 T-110 is a conditional side track with one named behaviour/topology at a time. It does not block the actor-control milestone.
 

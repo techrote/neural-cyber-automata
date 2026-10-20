@@ -12,248 +12,10 @@ verified: 2026-10-20
 
 - [19 October, 00:09–19:09 UTC](progress/2026-10-19-early.md): initial programme,
   accepted implementation tasks and resumed declarations.
+- [19 October, 19:23–22:13 UTC](progress/2026-10-19-late.md): retained execution,
+  interrupted-run, export and guarded-preparation checkpoints.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
-
-## 2026-10-19 19:23 UTC — Bounded execution and conformance recovery
-
-Accepted main remains `adde5a881744c1c6cf585ecd7985c746fef604dc`. The corrected
-[combined hosted gate](https://github.com/techrote/neural-cyber-automata/actions/runs/39308475927)
-passed all 228 tests on T110 public source `9facc2f`, including the actual learned-host
-case. CPU, pinned-host and strict documentation workflows also passed. T109 source
-`33a4aa2` passed its applicable hosted workflows; evaluated-bundle qualification remains separate.
-
-The fresh T105 reproduction launched at 19:12:46 UTC from original learner
-`745578947a6f1ac2159830c4ae4de5de5593f32f`. Its 24 demonstrations are collected;
-seed 1103 is in the fixed residual training stage. No held-out result is available
-at this checkpoint. The unchanged aggregate cap is 13,000 decisions / 1,800 seconds.
-
-T110's sole reproduction launch failed at Python import before host startup,
-training or rollout. Resolving the virtual-environment executable symlink lost its
-package context. The failed 3.311061632-second invocation is retained. A separately
-published launcher correction is being prepared; it must charge that elapsed time
-against the original 900-second cap and preserve all sample, seed and tuning limits.
-
-The T106 [declared continuation](https://github.com/techrote/neural-cyber-automata/commit/557799ce4cf95d9d3ebcf862549cb363b5783a93)
-passed all eight profile episodes, 32 attempted/completed requests and 192 ticks.
-Its 36.551695 seconds plus the preserved 18.202958-second failed startup total
-54.754654 seconds within the original 60-second allocation. There were no errors,
-unconfirmed requests, learned-policy calls or optimizer updates. Summary hash:
-`3311fdfa3080659c8e49f0b5e64f528a2f4d2c8e3eace5979bd458e21af2d70f`.
-This qualifies the scripted interface only. The original transfer gate remains unmet;
-a separate bounded directional-input prerequisite experiment is being prepared before
-any new training. No gate relaxation, paid service or host source mutation occurred.
-
-Next: preserve complete archives, audit the fresh outputs, freeze export input hashes
-before conversion, run exclusive throughput qualification, and review/check/merge
-only the scopes supported by evidence. The next checkpoint is due within 30 minutes.
-
-## 2026-10-19 19:50 UTC — Preserved interruptions and continued qualification work
-
-The [programme checkpoint PR](https://github.com/techrote/neural-cyber-automata/pull/33)
-publishes the resumed progress file and reconciles the seven accepted implementation
-tasks. Its first head `f193ea0d` passed all applicable hosted workflows. Accepted main
-remains `adde5a881744c1c6cf585ecd7985c746fef604dc`; #16, #19 and #20 remain open.
-
-The execution connection failed around 19:38 UTC. The recovered executor exposes a
-different process environment. The old runs stopped writing artifacts; their original
-session handles now return unknown-process errors, and neither run produced a final
-summary or completion receipt. Their original exit codes and termination remain
-unconfirmed. Neither run was restarted, extended or relabelled as completed.
-
-The T105 reproduction retained 21 of 24 PPO update ledgers and 32 checkpoint files,
-with no held-out opening marker. The selected BC1103 completed its fixed training
-before the interruption. Its immutable in-progress archive has SHA-256
-`0b0326a1563681db1ce40e746cc855e36d8c600be07311bcbcdf793ebff730b6`.
-The full retained prefix is being indexed. A separate strict candidate-only evaluation
-path is under implementation, with the same fixed checkpoint and original eight
-scenarios, at most 320 decisions / 1,920 ticks / 300 seconds and no optimization.
-It requires a new public declaration and complete fresh evaluation evidence. Existing
-full-screen conversion continues to reject incomplete original-screen evidence.
-
-The corrected T110 invocation at public `1aede292` retained 356 screen files, including
-all six frozen candidates and all 90 declared held-out rows. Remaining untrained rows
-and the completion records are missing. Its immutable interrupted-prefix ZIP contains
-372 entries and has SHA-256
-`48dd01b9c084dfe435ffa69f655aebaf9c3bca3b4c5f50d6166278acabede178`.
-That archive is saved, explicitly incomplete, and includes the original import failure.
-The audit distinguishes observed work from the unconfirmed interruption boundary;
-the cross-task held-out-outcome seal remains in force for T105 training/selection.
-
-Morphology conformance evidence, its aggregate-budget ledger row and a Windows
-checkout correction are published at
-`cc5509fd5bcdafaf9d4eab2c558ed63ccaca49bd`. Windows CRLF conversion changed the
-byte-hashed failed-startup receipt; a narrow LF checkout rule preserves the original
-bytes without weakening admission. This is separate from the unknown first Godot
-startup cause. The complete conformance archive remains saved and byte-verified.
-
-The separate directional-input prerequisite implementation has 15 new contract tests
-and 85 passing learning/morphology regressions. Its fixed declaration retains the
-original reliability thresholds, fresh scenario split and 6,000-decision / 1,800-second
-cap. Independent review and public-source admission precede its sole formal run.
-No learned transfer, export compatibility or complete reproduction is claimed here.
-
-Next: save and audit both interrupted prefixes, publish the reviewed prerequisite and
-fixed-candidate evaluation declarations, complete the supported measurements, then
-review final heads and verify scoped merges. The next checkpoint is due within 30 minutes.
-
-## 2026-10-19 20:52 UTC — Reviewed follow-ups published; audited prefixes saved
-
-The [repository checkpoint](https://github.com/techrote/neural-cyber-automata/pull/33#issuecomment-6277067532)
-records the current state and the missed interval after the 19:53 publication. The
-root publication call remained yielded while component work awaited continuation.
-This entry records the actual time; it does not backdate progress or infer missing
-run completion. Seven implementation tasks remain accepted on main `adde5a88`.
-T106 / #16, T109 / #19 and T110 / #20 remain open.
-
-The reviewed direction-frame prerequisite is published at
-`1222d2e8dc30b87bb58de2326711fc3df361ac5e`, exact tree
-`fb32973085e1fbd61cec2bf0e762a5e30a26fa6c`. Its 85 focused learning/morphology
-tests passed before publication. The sole formal run had not started at the
-checkpoint; release follows a clean checkout of that public revision. Conditional
-morphology learning primitives are developed separately and remain outside its
-frozen source. Actual transfer and its four-case teacher qualification remain gated.
-
-T109's new fixed-BC1103 evaluation is reviewed and ready for publication. It admits
-the interrupted origin explicitly, verifies 538 input identities, 24 teacher records
-and 680 samples, and preserves the original complete-screen converter. The selected
-numeric policy is `8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b`.
-One fresh evaluation may use the original eight cases within 320 decisions / 1,920
-ticks / 300 seconds, without optimization. No supplemental evaluation or export
-qualification had started. Original export tolerances and the separate requirement
-for complete evaluation evidence remain unchanged.
-
-T110's retained-prefix audit verified 112 episodes, 3,096 confirmed decisions and
-18,576 ticks. Seven untrained controls and original completion records are missing;
-termination and any unrecorded tail remain unconfirmed. The current runner's
-prospective early-arrival cancellation fix passed 39 focused tests with the actual
-host. The frozen reproduction source and all 356 raw screen files remain unchanged.
-
-The final audited archives and companion indexes were saved for owner delivery:
-T105 has SHA-256 `f796b533eacce85b661162349f67641d6127b73545152d75fed75e1772ac934c`;
-T110 has SHA-256 `38905e57031da728558f10cd30569a3886f123a53330432510b445337d9c8986`.
-These are retained incomplete prefixes, not completed reproductions or public
-downloads. Next: execute the published bounded follow-ups, publish the cellular fix,
-review final-head checks, and reconcile supported acceptance. Next checkpoint: by
-21:22 UTC.
-
-## 2026-10-19 21:18 UTC — Primary result complete; deployment qualification next
-
-The [checkpoint comment](https://github.com/techrote/neural-cyber-automata/pull/33#issuecomment-6277540741)
-records the full state. Concurrently merged T110 PR #28 advanced main to
-`857fdc1f34d79e423615305608ead029bbdc04c8`: eight programme tasks are merged.
-[Follow-up #34 / PR #35](https://github.com/techrote/neural-cyber-automata/pull/35)
-adds the reviewed cancellation fix and complete reproduction accounting. Its
-public head `1d389c54` awaits final checks. T106 / #16 and T109 / #19 remain open.
-
-The designated local direction-frame run at `1222d2e8` completed at 21:14:44 UTC:
-136 rows, twelve frozen initial/final checkpoints, 4,693 attempted and confirmed
-requests, 28,158 ticks, zero unconfirmed requests, 943.605670498 internal seconds
-and a confirmed zero process exit. Both families failed the unchanged prerequisite.
-Mean/minimum-seed success was 25%/12.5% for direction-frame BC and 29.17%/0% for
-world-frame BC, below the required 75%/50%. Style and latency failures remain in
-the record. No family is selected; no morphology teacher qualification or transfer
-learning follows. The complete 438-member archive has SHA-256
-`291924eeedea0ba23ec365a9fb0f6e7ae8560eb614e53586070b3c6e64274fd4`.
-
-T109 public `4510347e` completed all eight fixed-candidate cases: 271 confirmed
-decisions, 1,626 ticks, 90.273 measured seconds, no errors or optimizer updates,
-and confirmed new-worker termination. The complete archive is saved, SHA-256
-`f6f087913cadf4487c44c95b2ed1ac53961536ad00da3edba1ff6b24deead691`.
-The second declaration at `eb953615` bound that evidence before conversion. Its
-224,501-byte bundle passed a fresh NumPy-only load with Torch absent; actual
-deployment and the full measured ten-minute throughput window remain pending.
-
-A concurrent execution added automatic formal workflows for T106 and T110 after
-the original runs had already started. The original T106 remains the designated
-primary; alternate results did not select or tune it. Its push trigger was removed
-at `a155c98b`. Browser cancellation was blocked by a signed-out session, so no
-cancellation is asserted. T110's automatic workflow was subsequently removed.
-Its additional GitHub run completed 3,297 decisions but omitted the interrupted
-3,096-decision local execution from its aggregate. At least 6,393 confirmed
-decisions exceed the original 4,000 allowance; full combined wall time and the
-local tail remain unknown. PR #35 retains both evidence sets and the deviation.
-
-Next: preserve final archives, perform exclusive T109 qualification, merge the
-checked lifecycle correction, publish the failed prerequisite and useful gated
-preparation, and reconcile final docs. Next checkpoint: by 21:48 UTC.
-
-## 2026-10-19 21:47 UTC — Verified merges, preserved no-go results and guarded preparation
-
-Accepted main is `bd9a692ccb425d798cc8499135375c81f96e5b56`. The cellular
-cancellation/accounting correction merged through PR #35 after all four
-workflows passed on final head `2b26ea7a`; the merged tree exactly matches
-`4fae9720b9675064c3a9fb7365abc4e8c673ed9a`. Its combined learning/host check
-passed 285 tests, including quiet-arrival cancellation and original-age jitter.
-The earlier failed CI attempt and successful retry remain separately recorded.
-
-Eight programme task scopes have accepted evidence. Morphology preparation is
-also merged through PR #30, but measured transfer in #16 remains blocked.
-PR #36 corrects the designated primary and retains the concurrent alternate;
-the cumulative-budget correction is published at `598221d1`, tree
-`bfe1ba0c765d29260011cc0a919f2f8ff59ced96`, pending its final checks.
-Issue #37 tracks the remaining guarded comparison implementation.
-
-The primary direction run still fails its unchanged prerequisite. Independent
-read-only admission verified its complete files, episodes, metrics, source and
-checkpoints in 282.603497256 seconds and returned
-`morphology_prerequisite_failed`: no Torch or morphology-capture import,
-host start, game request or optimizer update. The new preparation has 99
-passing focused tests and an immutable selection binding to primary `1222d2e8`.
-Its fixed comparison remains unexecuted; no alternate result can replace the
-designated prerequisite.
-
-The separate GitHub direction archive has now passed an independent audit:
-433 members, all 432 indexed hashes, 136 original episodes and all 52 declared
-source/input blobs. It contains 4,660 requests / 27,960 ticks / 11,760 updates.
-Together with the primary, this is **9,353 requests / 56,118 ticks / 23,520
-updates**, exceeding the original **6,000-decision allowance**. The complete
-aggregate wall time remains unavailable; the two internal timers exclude
-outer/startup overhead. Both archives retain distinct identities and outcomes.
-
-T109's sole fixed-source deployment screen at `eb953615` completed with a
-preserved **no-go**. Arithmetic, 13 negative contracts, both profile/cadence
-variants, count-based throughput and optimizer/RNG resume passed. Both paired
-trajectories exceeded the unchanged 0.05-cell tolerance. Their first pose
-failures were right tick 132 and left tick 29; common-input arithmetic passed
-all 160 recorded comparisons. A unique physical divergence cause or whole-game
-determinism is not established.
-
-The original realtime checker failed to recognize the pinned host's earlier
-`lease` refusal for the same expired packet (observed tick 7, submitted tick 31,
-12-tick lease). A reviewed prospective correction requires the exact packet,
-actual expiry age and correct host reason domain. It passed 11 benchmark tests;
-a separate zero-game audit of the original receipts passes the corrected check.
-The original screen summary and no-go remain unchanged.
-
-Throughput measured 500 decisions per configuration, one learned actor in
-each of the one/two-total-actor cases, in 79.0335 seconds total under the
-600-second ceiling. This did not complete the requested full ten-minute
-observation. A separate evaluated-bundle engineering gate passed all four
-actual-host tests: one host, five resets, seven NumPy forwards and 36 confirmed
-ticks, with no optimization and confirmed owned-host termination.
-
-The complete qualification archive is saved, SHA-256
-`aa5439c0fb4171a25fe28a46651f8fea396eb1598bcb7d765e0768f3320467cb`,
-along with the separately downloaded directional ZIP
-`fb008148c65f1e51887b31e4fae2987752fa58ea5c67fc13659bd5ec134b7510`.
-The additional diagnosis/conformance archive and audited companion index are
-ready for saving. T109 / #19 remains open for the unmet qualification limits.
-
-Next: publish the guarded source and corrected checker with their evidence,
-complete final-head checks and scoped merges, then reconcile the final README,
-state, roadmap and run ledger. No new formal training, morphology experiment,
-paid service or host-source modification is in progress. The next checkpoint
-is due within 30 minutes.
-
-## 2026-10-19 22:13 UTC — Export merge and guarded-preparation handoff
-
-- **Accepted source:** PR #29 merged as `43f2b765add160f6042d382b7f32b90a21794298`. Its merge tree `65aca6cd4689d0391fdab1df394049ab1334d8d6` exactly matches the independently reviewed public head; all four required workflows passed there. The runtime/export implementation and complete no-go evidence are now on main. Issue #19 remains open for failed closed-loop tolerances and the outstanding full ten-minute observation.
-- **T106 guarded preparation:** PR #38 publishes `eb488674475e3d13e8e6e4511ddfbe66192552bb`. One read-only admission from that clean public source finished at 22:05:50 UTC in 217.304178604 seconds. The expected CLI exit 2 reports `training_blocked`, `admitted=false`, and no continuation declaration. Torch, learner, capture and checkpoint modules remained absent. Evidence helpers imported host adapter definitions, but host starts, model constructions, checkpoint loads, policy calls, game requests and optimizer updates were all zero. Issue #16 remains open.
-- **CI follow-up:** PR #36's first exact-head combined check failed an existing delay-240 fixture's mandatory `retired_reply` assertion. PR #38's first combined check ran 343 tests and failed an existing human-takeover charge assertion. Source review identified realtime ownership/lease assumptions that need receipt-based fixture assertions; the precise transitions in those failing jobs are not proven by their limited logs. A scoped test-only correction is being prepared. Production source ages, native leases and experiment thresholds remain unchanged.
-- **Evidence accounting:** Both T106 direction runs and both T110 reproduction executions remain separately recorded. Their combined confirmed allocations exceed the original 6,000 and 4,000 request ceilings respectively. No extra formal screen or morphology successor run has been started.
-- **Artifact audit:** A new post-save check found that the currently available primary-direction TAR container differs from its recorded container hash, while its companion index is unchanged. Member-level comparison is in progress before delivering that archive. The original extracted evidence passed the public admission's full identity check; no substitute run or changed selection is being introduced.
-- **Next:** Complete the CI correction, integrate the provenance and guarded preparation changes with accepted main, reconcile README/state/roadmap/run records, and verify the final public checks and merge trees. The programme remains eight accepted task scopes with measured morphology transfer and runtime deployment acceptance open. Next checkpoint is due within 30 minutes if work continues.
 
 ## 2026-10-20 00:29 UTC — Resumed execution checkpoint
 
@@ -264,3 +26,143 @@ Current work has independent owners for T109 trajectory/throughput diagnosis, T1
 PR #36 and PR #38 each have one failing optional-learning realtime T108 assertion; other observed checks passed. These failures will be diagnosed before rerun or merge. The T106 primary reliability prerequisite and cumulative budget accounting remain failed; no morphology learning or transfer is being started. T109 retains its original trajectory no-go and incomplete ten-minute observation while a prospective bounded correction is prepared.
 
 Progress entries will be published at intervals no longer than 30 minutes during this execution. No activity or checkpoints are backdated across the previous session gap.
+
+## 2026-10-20 00:55 UTC — Native-lease conformance merged; evidence reconciliation underway
+
+Accepted main is `cf01664d26540781ca994c7a01a4a90618c69b3e`. [PR #40](https://github.com/techrote/neural-cyber-automata/pull/40) merged after all four required workflows passed on public head `ee81b2a709e531c27f28e9ac2912e072c43bb026`; its accepted tree exactly matches reviewed tree `48f49b58bf14dbfb0777fd91cd10a58c271d0768`. The focused 37-test suite passed without skips, including twelve actual-host cases. Exact sequences now use stepped mode; realtime cases prove independent advancement and native lease expiry from actual receipts. Production ownership and lease rules remain unchanged.
+
+[PR #36](https://github.com/techrote/neural-cyber-automata/pull/36) is reconciled with accepted main at `4fb210f151880e776811a69071fc441c048b7428`, with final checks running. The primary and alternate retain their separate outcomes and combined 9,353 requests / 56,118 ticks / 23,520 updates. All 438 original primary evidence members match the unchanged index. The separately named recovered transport archive has SHA-256 `c6a857e7fdc036939b47a8861d48bb0bae2cc57935fd878cb2c082c193b31fb1`; no experiment was repeated.
+
+The guarded morphology source passed 99 focused tests without skips. Its documentation is being corrected to record the completed 217.304178604-second public admission at `eb48867`. The earlier checkpoint’s broad capture-import wording refers specifically to the morphology capture module: generic evidence/capture and host-adapter definitions may be imported during verification. Host starts, model/checkpoint execution, policy calls and optimizer work remain zero. The fixed reliability prerequisite still fails; #16 remains open.
+
+For #19, a separate Torch CPU backend is under final review. It retains the original evaluated numeric policy, NumPy no-go and tolerances without retraining. One prospective invocation stops before throughput if physical parity or contracts fail; passing those gates admits two active 300-second host windows. No new formal qualification run has started.
+
+Next: final-head checks and scoped provenance/preparation merges, then publish the frozen export runner before its bounded run and reconcile the programme documents. Eight of ten programme scopes currently have accepted results. Next checkpoint by 01:25 UTC if work continues.
+
+## 2026-10-20 01:07 UTC — Primary evidence and guarded preparation merged; export qualification running
+
+Accepted main is `012d1342ea28fb86291d46b406bb794a335051be`. The three scoped
+merges below are complete; their accepted commit/tree identities were verified
+from the fetched repository. The earlier 00:55 checkpoint remains unchanged.
+
+| Accepted change | Merge commit | Verified tree |
+| --- | --- | --- |
+| [PR #40: native-lease conformance](https://github.com/techrote/neural-cyber-automata/pull/40) | `cf01664d26540781ca994c7a01a4a90618c69b3e` | `48f49b58bf14dbfb0777fd91cd10a58c271d0768` |
+| [PR #36: primary provenance and transport recovery](https://github.com/techrote/neural-cyber-automata/pull/36) | `e34c6f6e8e99356884d3a5caf8386bc4bca8c35c` | `f599a7cafc333d6195a74a7584eb31fa82d19e5b` |
+| [PR #38: guarded morphology preparation](https://github.com/techrote/neural-cyber-automata/pull/38) | `012d1342ea28fb86291d46b406bb794a335051be` | `0902e838195b9535f11aff501b7ad11550d28b30` |
+
+The designated T106 primary and concurrent alternate keep their separate failed
+outcomes. Their combined 9,353 requests / 56,118 ticks / 23,520 optimizer updates
+exceed the original 6,000-request declaration; full combined wall time remains
+unknown. All 438 original primary evidence members match the unchanged index.
+The separate recovered transport has SHA-256
+`c6a857e7fdc036939b47a8861d48bb0bae2cc57935fd878cb2c082c193b31fb1`
+and preserves the failed result with zero new host, game or optimizer work.
+
+The guarded morphology implementation is accepted, with 99 focused software
+checks and the complete prospective 148-row comparison. That comparison remains
+unexecuted. The public admission at `eb48867` completed in 217.304178604 seconds,
+separately from the 282.603-second development admission. It remains attributed
+to its original source/tree and reports CLI exit 2, `training_blocked`, no
+continuation declaration, and zero host/model/checkpoint/policy/game/optimizer
+work. Generic evidence/capture and adapter definitions were imported; Torch and
+the optional morphology capture, learner and checkpoint modules remained absent.
+The fixed 75% mean / 50% every-seed prerequisite still fails; #16 remains open.
+
+[PR #41](https://github.com/techrote/neural-cyber-automata/pull/41) has a frozen,
+published Torch CPU backend and a bounded qualification invocation in progress.
+It retains the same evaluated numeric policy, original operators and tolerances.
+The original NumPy screen remains no-go, and its 79.033537896-second throughput
+record remains incomplete for the requested ten minutes. The new invocation
+stops before throughput if an earlier gate fails; otherwise two active
+300-second host/controller windows are required. No final result or deployment
+acceptance is assumed; #19 remains open.
+
+The state, roadmap and run ledger now distinguish 120-tick source plans from
+twelve-tick native helper leases, and the completed historical learning screen
+from the separately evaluated checkpoint with an interrupted training origin.
+Eight of ten programme scopes have accepted results. Next: finish the frozen
+export invocation, review its complete receipts and bounds, then record its
+actual outcome and complete final publication checks. Next checkpoint by 01:37
+UTC if work continues.
+
+## 2026-10-20 01:16 UTC — Full throughput retained; rendering-only failure under repair
+
+Accepted main remains `012d1342ea28fb86291d46b406bb794a335051be`; PRs #40, #36 and #38 are merged with final-head checks and matching accepted trees verified. Eight programme scopes are accepted. #16 remains blocked by the unchanged 75%/50% reliability prerequisite.
+
+The sole PR #41 qualification at public `f3bf96fa402fc3131ce871b5bd23e65855722ade` completed in 642.057584872 external seconds within its 900-second ceiling. It preserves `status=no_go` because clip rendering failed after the measurements. Both hosts terminated, source/host bytes stayed unchanged, no signal or unconfirmed request tail occurred, and no optimization was performed.
+
+Measured gates passed: 128 arithmetic samples and both original 240-tick physical pairs with zero measured deltas; sixteen negative contracts, profile/cadence and realtime checks; two active throughput windows totaling 600.520737906 seconds, 8,650 decisions and 51,900 throughput ticks. The one-actor case measured 95.163 ticks/s and the two-total-actor case 77.673 ticks/s, each with one learned policy. Standalone full-decision inference measured median 1.494447 ms / p99 4.120924 ms over 1,000 calls, with no learner import. Full invocation accounting is 9,407 owner requests, 8,822 step requests, 52,944 requested/confirmed step ticks and two confirmed host terminations. The realtime autonomous close tail retains its separately stated 600-tick upper bound.
+
+The renderer wrote both nominal clips, then encountered variant records missing their queried profile metadata. The exact actual profile responses survive in the complete raw journal. A separately published, bounded zero-host postprocessing/review path is being prepared to reconstruct only that metadata into a new derived directory and finish the four matched clips. No physical run, policy call or optimization will be repeated, and the original no-go summary will remain unchanged. The complete original 38-member archive has been packed and fully byte-verified: SHA-256 `e71682718db199542bd07a149f67c2e6e4537a44abf383686da84f50746c0a3e`, 57,523,953 bytes.
+
+Next: audit the full receipts, publish the narrow postprocessing declaration before executing it, preserve both outcomes, complete final-head checks and merge only supported acceptance. #19 remains open pending that completeness gate. Next checkpoint within 30 minutes if work continues.
+
+## 2026-10-20 01:40 UTC — Offline clip completion recorded; final acceptance pending
+
+Accepted main remains `012d1342ea28fb86291d46b406bb794a335051be`; eight programme
+scopes are accepted. This checkpoint matches the
+[public progress record](https://github.com/techrote/neural-cyber-automata/issues/32#issuecomment-6281318337).
+The previous physical qualification and its original no-go summary remain unchanged.
+
+The single offline completion ran from public
+`78cc377b5af9e62efeb73d93cc1e16bd36a013a4`, tree
+`93b8f2182975d3726edc81ea396d9588352a8ce9`, from 01:36:42.460070 to
+01:37:06.652908 UTC. Its full outer supervisor measured
+**24.190651844997774 seconds**, including the watchdog's final receipt and
+termination. Combined with the original 642.057584872-second invocation,
+**666.2482367169978 seconds** remains within the unchanged 900-second ceiling;
+the offline invocation also stayed within its 60-second cap. Exit was zero,
+with no signal, retry or remaining owned process.
+
+All four actual-pose GIFs decoded completely. Both nominal GIFs are byte-identical
+to the original outputs. The copied refusal records retain every original field
+and add only the exact journaled profile, its hash and recovery provenance.
+Host starts, owner requests, simulation ticks, policy evaluations and optimizer
+updates were all zero. The [separate composite result](evidence/2026-10-20-t109-torch-cpu.md)
+records `complete_derived_evidence` and `composite_runtime_qualified=true` for
+the fixed Linux Torch CPU artifact. The derived summary file SHA-256 is
+`eca270599213d6049563de643274ebac22762b7a0b0d102d591639f25e8719af`.
+The original physical `no_go/runtime_qualified=false`, the NumPy no-go and the
+candidate's interrupted training origin are preserved.
+
+Independent result audit, final [PR #41](https://github.com/techrote/neural-cyber-automata/pull/41)
+publication, final-head CI and verified merge remain pending at this checkpoint.
+Issue #19 remains open until those acceptance steps complete; the prepared
+programme reconciliation will then record nine of ten accepted scopes.
+Morphology issue #16 still fails the designated primary's fixed 75% mean /
+50% every-seed prerequisite. No morphology qualification, learning or transfer
+work occurred. Next: finish review and publication, verify the accepted merge,
+then publish the reconciled state and run ledger. Next checkpoint within
+30 minutes if work continues.
+
+## 2026-10-20 01:51 UTC — Exact Linux Torch CPU export accepted
+
+[PR #41](https://github.com/techrote/neural-cyber-automata/pull/41) merged at
+`93df4b4c62068c27a8ece3a3a9382507a5735513`. A fresh fetch verified that accepted
+main exactly matches reviewed tree `b84d440c62211d2fb5ad674a769ee6bd16a22feb`.
+All four required workflows passed on final public head
+`9afb8f3fbe67897d9e9d8d40c8bb46c860453a3d`: docs `39355332060`,
+CPU `39355332136`, pinned host `39355331938`, and optional CPU learning
+`39355331956`. The final changes after the measured completion source were
+documentation and evidence only; runtime, tools, tests and declarations were unchanged.
+
+The original physical no-go and earlier NumPy no-go remain immutable.
+Acceptance uses the exact 227,186-byte Torch CPU artifact and its distinct
+composite receipt, including 600.520737906 active throughput seconds, all four
+matched pose clips and the independently audited 24.190651844997774-second
+offline completion. Complete measured runtime plus completion is
+666.2482367169978 seconds. Source/input identities, raw owner receipts,
+long latency tails, interrupted candidate lineage and all stated scope limits
+remain recorded in the [accepted evidence](evidence/2026-10-20-t109-torch-cpu.md).
+
+Nine of ten programme scopes now have accepted results. T-106/#16 remains open
+behind the unchanged designated-primary 75% mean / 50% every-seed reliability
+prerequisite. No further host, policy, morphology or optimizer work was performed.
+
+The programme documentation has been reconciled with this accepted main.
+Strict documentation validation passes 56 files with zero errors or warnings;
+source/configuration/test/tool bytes equal accepted main. Next: publish the
+documentation-only PR #33 final head, require its four workflows, then merge
+and verify the final repository state. Earlier checkpoints and recorded cadence
+gaps remain unchanged. Next checkpoint within 30 minutes if work continues.

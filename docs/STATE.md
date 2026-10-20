@@ -3,10 +3,14 @@ title: Current state
 kind: state
 summary: CPU contract implementation and explicit evidence limits for the current Cybersand control programme.
 owns: [state.summary]
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Current state
+
+Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open:
+its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite.
+[The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
 
 ## T-100 — Accepted research baseline
 
@@ -118,8 +122,7 @@ weights or wire outcomes. Owner feel remains unjudged.
 
 These are bounded exploratory improvements. Neither family met the independently
 predeclared 75% mean / 50% minimum-seed morphology entry gate. Transfer learning
-remains blocked by that result. The fixed BC seed 1103 candidate is eligible for
-a separate CPU export qualification, with its directional failures retained.
+remains blocked by that result. The separately evaluated export candidate is described below.
 
 ## Gated morphology preparation
 
@@ -127,10 +130,10 @@ The [morphology preparation](evidence/2026-10-19-t106.md) pins accepted Jolt,
 Vector, Monowheel and Ripper contracts with eight part slots, seven connection
 slots and separate presence, measurement and activity masks. Optional padded
 recurrent and two-round shared graph candidates have 13,048 and 13,192 parameters.
-Forty-one focused checks and independent review cover locality, padding,
+The initial forty-one focused checks and independent review cover locality, padding,
 source-age limits, recurrence and confirmed owner-revocation boundaries.
 
-The immutable admission runner retains the failed predeclared T105 reliability
+The original immutable admission runner retains the failed predeclared T105 reliability
 prerequisite and emits zero training, candidate-game and optimizer work. Its
 fixed conditional comparison budget is preparatory; no transfer result exists.
 A separate [32-request / 192-tick scripted profile diagnostic](evidence/2026-10-19-t106-conformance.md)
@@ -141,17 +144,45 @@ transfer, adaptation, damage recovery and owner feel remain unmeasured.
 The research question remains blocked by the stated prerequisite.
 
 The separately commissioned [Jolt direction-frame BC follow-up](evidence/2026-10-19-t106-direction-frame.md)
-completed its single fixed actual-host run with **4,660 requests / 27,960 ticks** in
-385.969869986 seconds and all six declared 40-epoch fits (11,760 optimizer updates).
-Direction-frame BC improved over its own initialization by 0.25 mean success, with a
-strictly positive 95% lower bound, but reached only **33.3% mean success / 25% minimum
-seed success**. World-frame BC reached **25% mean / 0% minimum**. Both therefore failed
-the unchanged **75% mean / 50% every-seed** prerequisite; direction-frame also failed
-the complete original character/runtime gate on two of three seeds. The immutable
-result selects no family, records `mechanical_utility_prerequisite_passed=false`,
-and performs **zero morphology-transfer evaluations**. The preparation remains useful,
-but learned transfer, adaptation and damage-recovery claims stay blocked rather than
-being manufactured from an insufficient prerequisite.
+retains two separately identified executions. The designated primary at public
+`1222d2e8` completed all 136 episodes and twelve initial/final checkpoints:
+4,693 requests / 28,158 ticks / 11,760 optimizer updates in 943.605670498
+internal seconds. Direction-frame BC reached 25% mean success and 12.5%
+minimum-seed success; world-frame BC reached 29.17% and 0%. Its original
+character/runtime failures remain in the [primary index](evidence/t106-direction-frame-result.json).
+The later concurrent GitHub alternate completed 4,660 requests / 27,960 ticks /
+11,760 updates in 385.969869986 internal seconds, with direction-frame success
+33.33% / 25% and world-frame success 25% / 0%. Both fail the unchanged 75% mean /
+50% every-seed prerequisite. Neither result is substituted for the other.
+
+The combined 9,353 requests / 56,118 ticks / 23,520 updates exceed the original
+6,000-request declaration. Full combined wall time is unknown because the internal
+timers exclude outer/startup overhead. [PR #36](https://github.com/techrote/neural-cyber-automata/pull/36)
+merged the corrected provenance and [transport recovery](evidence/t106-primary-archive-recovery-20261020.json).
+All 438 original primary members match the unchanged index. A separately named
+440-member transport preserves those bytes, the original index and a recovery
+receipt after the available original TAR copy was found truncated. The repair
+starts no experiment and changes no result or admission gate.
+
+[PR #38](https://github.com/techrote/neural-cyber-automata/pull/38) merged the
+[conditional capture and learning implementation](evidence/2026-10-19-t106-learning.md),
+including the guarded orchestrator, semantic waypoint reference and complete
+148-row comparison summary. Ninety-nine focused software checks pass; the
+148-row physical comparison remains unexecuted. The original 12,704 comparison
+requests plus 160 prospective teacher-qualification requests total 12,864 within
+the unchanged 13,000-request ceiling. The immutable primary designation prevents
+a concurrent repeat from replacing the failed prerequisite.
+
+The complete public-source admission at `eb48867` finished in 217.304178604
+seconds, separately from the earlier 282.603-second development admission. It
+returned CLI exit 2, `training_blocked` and `admitted=false`, with no continuation
+declaration and zero host starts, model constructions, checkpoint loads, policy
+calls, game requests or optimizer updates. Torch and the optional morphology
+capture, learner and checkpoint modules remained absent; generic evidence/capture
+and host adapter definitions were imported. The receipt keeps its original source
+and tree identity after integration. A separately commissioned passing prerequisite
+and a qualified semantic waypoint reference remain required before morphology
+learning or transfer; no family is selected and issue #16 remains open.
 
 ## Asynchronous source ownership
 
@@ -162,32 +193,66 @@ changes are fenced independently. Local feedback continues while retired model
 work remains busy; an unacknowledged call cannot accumulate replacement calls.
 
 The [T-108 evidence](evidence/2026-10-19-t108.md) distinguishes proposal admission,
-local skill feedback and actual owner receipts. Continuously advancing tests
-exercise delay, jitter, duplicate/reordered replies, outage, takeover, reset and
-available equipment changes. Model smart plans and their motor leases retain
-original 120-tick expiry; longer explicit typed local missions are separate.
+local skill feedback and actual owner receipts. Model smart plans expire at the
+original observation tick plus 120. Each ordinary twelve-tick motor lease is capped
+by that same plan deadline; fresh feedback cannot renew the plan. Longer explicit
+typed local missions are separate. The original frozen actual pilot passed ten cases, recording 338 owner
+operations and 790 completed native ticks in 19.169 seconds with no skips or source
+drift. It remains evidence from its original source.
+
+[PR #40](https://github.com/techrote/neural-cyber-automata/pull/40) corrects later
+conformance fixtures that assumed native leases would remain valid while a realtime
+client was delayed. Exact delay/jitter, duplicate/reordered reply, outage, takeover,
+reset and attachment sequences now use the stepped actual host. Three realtime
+cases verify independent native advancement, terminal readback and human charge
+followed by receipt-proven lease expiry. The focused 37-test suite passed without
+skips, including nine stepped and three realtime actual-host cases; all four final
+workflows passed before the reviewed tree was merged. Production ownership and
+expiry rules are unchanged. The revised two-mode pilot recorder is implemented;
+the original ten-case pilot is not relabelled as an execution of that revision.
 No live service or owner feel verdict is claimed.
-The frozen actual pilot passed ten cases, recording 338 owner operations and
-790 completed native ticks in 19.169 seconds with no skips or source drift.
 
-## Evaluated CPU export and deployment no-go
+## Qualified Torch CPU export and preserved no-go runs
 
-The optional [runtime export lane](RUNTIME_EXPORT.md) converts the fixed trained
-BC seed 1103 policy into a hash-bound NumPy GRU with declared preprocessing,
-recurrence, wire mapping and exact runtime context. It fences original source
-observations, ownership changes, deadlines and unsupported profiles. Conversion
-verifies the accepted T105 training/evaluation lineage before admitting weights.
+The optional [runtime export lane](RUNTIME_EXPORT.md) binds the fixed BC1103 policy,
+preprocessing, recurrence, action mapping and exact runtime context.
+Its NumPy and Torch CPU backends preserve source, ownership, deadline and profile
+fences. The ordinary converter requires complete T105 evidence; the staged
+converter retains interrupted training and requires separate candidate evaluation.
 
-The [single fixed-candidate screen](evidence/2026-10-19-t109-deployment-no-go.md)
-completed with an immutable no-go on published source `eb953615`. Both physical
-trajectory pairs exceeded the unchanged tolerances. The fixed-count throughput
-phase measured 79.033537896 seconds; the requested full ten-minute observation
-remains outstanding. A proven realtime reason-filter defect has a prospective
-checker correction and a separate same-receipt audit. Eleven focused checker
-tests and four actual evaluated-bundle integration tests passed, the latter
-using one host and 36 ticks. These engineering results do not qualify the
-deployment. The original interrupted training termination remains unconfirmed,
-and the complete original failure and distinct follow-up evidence are preserved.
+The current fixed BC1103 artifact came from the interrupted reproduction of the
+accepted learner implementation. Its [separate evaluation](evidence/2026-10-19-t109-candidate-evaluation.md)
+at public source `4510347e` completed all eight fixed cases with three successes
+and five retained failures. This candidate result is distinct from the completed
+historical three-seed method comparison above. Its training origin remains
+`interrupted_no_summary`, with original termination and total work unconfirmed.
+
+The [original NumPy screen](evidence/2026-10-19-t109-deployment-no-go.md) at `eb953615`
+remains no-go: both physical pairs exceeded unchanged tolerances.
+Its 79.033537896-second throughput record did not supply the requested ten minutes.
+
+[PR #41](https://github.com/techrote/neural-cyber-automata/pull/41) accepts the
+[separate composite qualification](evidence/2026-10-20-t109-torch-cpu.md) for the 227,186-byte artifact, SHA-256
+`1345c35582bbd16f7f6474996976dc3b0fac3dd775a2f83f916347b43e5fb96c`.
+This satisfies T-109/#19 for the declared Linux external Python lane with
+Torch 2.8.0+cpu, one Torch thread, the pinned ACT004 host and unchanged policy.
+The original physical invocation at `f3bf96fa` passed arithmetic, both paired
+trajectories, contract/refusal/realtime gates and 600.520737906 active seconds.
+Throughput was 95.163 ticks/s for one learned Jolt and 77.673 ticks/s with an
+additional authored Monowheel; both configurations had only one learned actor.
+
+That original summary remains `no_go/runtime_qualified=false` because variant
+profile metadata was omitted before rendering. A separate offline completion at
+`78cc377b` produced all four pose GIFs, with both nominal GIFs byte-identical,
+in 24.190651844997774 complete supervisor seconds and zero new host, policy or
+optimizer work. Combined with the original invocation, 666.2482367169978 seconds
+remained within 900. Qualification requires the distinct composite receipt;
+the artifact envelope and both original no-go results remain unchanged.
+
+Standalone full-decision cost was median 1.494447 ms / p99 4.120924 ms over
+1,000 calls. The full cost tables retain a 10.368-second maximum host/transport
+call. Average stepped throughput does not qualify desktop pacing, continuous
+realtime deadlines, multiple learned actors, other devices or owner feel.
 
 ## Conditional per-part graph result
 

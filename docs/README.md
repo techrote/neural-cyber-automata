@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-18
+verified: 2026-10-20
 ---
 
 # Documentation map
@@ -35,8 +35,10 @@ verified: 2026-10-18
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
 | What is prepared for morphology comparison and why is training gated? | [Morphology evidence](evidence/2026-10-19-t106.md) |
 | What did the bounded Jolt direction-frame prerequisite find? | [Direction-frame result](evidence/2026-10-19-t106-direction-frame.md) |
+| What conditional morphology code exists behind the failed prerequisite? | [Guarded comparison preparation](evidence/2026-10-19-t106-learning.md) |
 | How do asynchronous intent and human takeover keep local control running? | [Asynchronous control](ASYNC_CONTROL.md) |
 | How do I convert and qualify an evaluated CPU policy? | [Runtime export](RUNTIME_EXPORT.md) |
+| Which exact Linux Torch CPU bundle passed qualification, and with what limits? | [Torch CPU result](evidence/2026-10-20-t109-torch-cpu.md) |
 | What did the bounded per-part Jolt graph experiment find? | [Cellular experiment](evidence/2026-10-19-t110-screen.md) |
 | What happened during programme execution? | [Progress checkpoints](PROGRESS.md) |
 | What traps matter? | [GOTCHAS.md](GOTCHAS.md) |

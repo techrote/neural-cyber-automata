@@ -3,7 +3,7 @@ title: Human takeover and asynchronous skill intent
 kind: reference
 summary: One bounded provider call, source-anchored plans and continuously advancing local skill control.
 owns: [control.async]
-verified: 2026-10-19
+verified: 2026-10-20
 ---
 
 # Asynchronous skill control
@@ -119,7 +119,16 @@ A new source grant is refused on a completed host until an explicit reset.
 
 ## Verification and limits
 
-Run the focused router tests and actual realtime tests, or capture an immutable
+Exact feedback, proposal and terminal-effect assertions use the actual stepped
+host, where the control boundary cannot advance while the test is descheduled.
+Separate realtime cases exercise independent host advancement, delayed terminal
+readback and native lease expiry during human takeover. A native expiry is
+accepted only when consecutive owner receipts prove the admitted source lease,
+control-generation increase and disarmed charge. Explicit cancellation receipts
+cannot substitute for that evidence. Source-plan expiry remains 120 ticks, the
+native helper lease remains twelve ticks, and a lost grant never renews itself.
+
+Run the focused router and both actual-host suites, or capture an immutable
 full conformance pilot:
 
 ```sh
@@ -127,8 +136,17 @@ python -m unittest discover -s tests -p "test_decisions*.py" -v
 python tools/async_pilot.py --checkout HOST_CHECKOUT --godot GODOT_EXECUTABLE --output NEW_PILOT.json.gz
 ```
 
-The pilot has a 120-second/2,000-step hard ceiling and records the executed source,
-runtime, every owner operation and failed cases. Complete compressed receipts
+The current `nca-async-host-pilot/v2` recorder includes both suites and labels each
+host, case and operation as stepped or realtime. Both hosts share one
+120-second/2,000-step-attempt hard ceiling; an uncertain operation remains charged
+and retains its request without inventing completed ticks. It records the
+executed source, runtimes, every test-driven owner request and failed cases,
+including failed subtests. Host cleanup is recorded separately; the internal
+graceful-close exchange is not captured as a test request. The final wall-time
+check includes cleanup, and an over-budget completion cannot publish a pass.
+The earlier all-realtime v1 pilot remains immutable evidence for its original
+source; the revised suite does not rewrite its ten-case result.
+Complete compressed receipts
 stay outside Git; their compact index belongs with the
 [T-108 evidence](evidence/2026-10-19-t108.md). Missing host runtimes are explicit
 skips. Zero paid calls, zero spend and unmeasured token usage remain explicit.
