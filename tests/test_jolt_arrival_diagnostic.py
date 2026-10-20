@@ -10,10 +10,12 @@ import signal
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
-from nca.contracts import ContractError
-from nca.evaluation.jolt_arrival import (DiagnosticBudget, FAMILIES, diagnostic_cases,
+from nca.contracts import ContractError, sha256_json
+from nca.evaluation.jolt_arrival import (DiagnosticBudget, FAMILIES, RECOVERY_FAMILIES, diagnostic_cases,
                                        read_declaration, summarize, validate_owner_interval, write_json)
 from test_morphology import fixture
 
@@ -41,6 +43,31 @@ class ArrivalDiagnosticTests(unittest.TestCase):
             path.write_text(json.dumps(changed))
             with self.assertRaisesRegex(ContractError, "arrival_declaration"):
                 read_declaration(path)
+
+    def test_separately_pinned_recovery_declaration_is_additive_and_bounded(self):
+        recovery = copy.deepcopy(self.config)
+        recovery["schema"] = "nca-jolt-recovery-diagnostic/v1"
+        recovery["families"] = list(RECOVERY_FAMILIES)
+        recovery["budget"].update(maximum_episodes=96, maximum_decisions=3840,
+            maximum_requested_ticks=23040, maximum_host_requests=4226, maximum_wall_seconds=900)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "recovery.json"
+            path.write_text(json.dumps(recovery))
+            self.assertEqual(read_declaration(path, expected_sha256=sha256_json(recovery)), recovery)
+            with self.assertRaisesRegex(ContractError, "arrival_declaration"):
+                read_declaration(path)
+            for mutate in (lambda x: x["budget"].update(maximum_wall_seconds=901),
+                           lambda x: x["budget"].update(automatic_retry=True),
+                           lambda x: x["budget"].update(optimizer_updates=1),
+                           lambda x: x["goal"].update(require_support=False),
+                           lambda x: x["physics"].update(decision_ticks=12),
+                           lambda x: x["case_source"].update(sha256="a" * 64),
+                           lambda x: x["preserved_sources"].pop("src/nca/train/task.py")):
+                changed = copy.deepcopy(recovery)
+                mutate(changed)
+                path.write_text(json.dumps(changed))
+                with self.subTest(changed=sha256_json(changed)), self.assertRaisesRegex(ContractError, "arrival_declaration"):
+                    read_declaration(path, expected_sha256=sha256_json(changed))
 
     def test_uncertain_request_consumes_budget_and_remains_visible(self):
         limits = {**self.config["budget"], "maximum_decisions": 1, "maximum_requested_ticks": 6}
@@ -134,6 +161,34 @@ class ArrivalDiagnosticTests(unittest.TestCase):
     def test_import_does_not_load_neural_runtime_or_start_host(self):
         code = "import sys; import nca.evaluation.jolt_arrival; assert 'torch' not in sys.modules; assert 'numpy' not in sys.modules"
         subprocess.run([sys.executable, "-c", code], check=True, cwd=ROOT)
+
+    def test_offline_final_verifier_shares_original_wall_cap_and_cannot_auto_retry(self):
+        spec = importlib.util.spec_from_file_location("arrival_cli_budget", ROOT / "tools/jolt_arrival.py")
+        cli = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cli)
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "single-invocation"
+            args = SimpleNamespace(output=output, declaration=ROOT / "configs/baselines/jolt-arrival-diagnostic-v1.json",
+                expected_declaration_sha256="269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a",
+                expected_revision="a" * 40, host=Path("synthetic-host"), godot=Path("synthetic-godot"))
+            worker = mock.Mock(pid=123456, returncode=0)
+            worker.poll.return_value = 0
+            worker.wait.return_value = 0
+            with mock.patch.object(cli.subprocess, "Popen", return_value=worker) as spawn, \
+                 mock.patch.object(cli, "process_group_exists", return_value=False), \
+                 mock.patch.object(cli.subprocess, "run", side_effect=subprocess.TimeoutExpired("verifier", .1)) as verifier:
+                self.assertEqual(cli.supervise(args), 2)
+            self.assertEqual(spawn.call_count, 1)
+            self.assertEqual(verifier.call_count, 1)
+            self.assertLessEqual(verifier.call_args.kwargs["timeout"], 594)
+            self.assertIn("--verify-only", verifier.call_args.args[0])
+            receipt = json.loads(output.with_name(output.name + "-supervisor.json").read_text())
+            self.assertFalse(receipt["completed"])
+            self.assertTrue(receipt["timeout"])
+            self.assertEqual(receipt["attempts"], 1)
+            self.assertEqual(receipt["error_type"], "OfflineVerificationTimeout")
+            with self.assertRaisesRegex(ValueError, "automatic retry"):
+                cli.supervise(args)
 
     @unittest.skipUnless(sys.platform == "linux", "process-state inspection uses Linux procfs")
     def test_supervisor_kills_descendant_after_worker_has_already_exited(self):

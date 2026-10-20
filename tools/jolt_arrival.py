@@ -53,29 +53,39 @@ def terminate_owned_tree(process, grace_seconds=3):
 
 def supervise(args):
     """One owned worker/process tree; its output finalization is inside the cap."""
+    from nca.evaluation.jolt_arrival import read_declaration, write_json
+    declaration = read_declaration(args.declaration, expected_sha256=args.expected_declaration_sha256)
+    maximum_wall_seconds = declaration["budget"]["maximum_wall_seconds"]
     if args.output.exists():
         raise ValueError("diagnostic output already exists; a previous invocation cannot be replaced")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     receipt_path = args.output.with_name(args.output.name + "-supervisor.json")
     stdout_path = args.output.with_name(args.output.name + "-stdout.log")
     stderr_path = args.output.with_name(args.output.name + "-stderr.log")
-    if any(path.exists() for path in (receipt_path, stdout_path, stderr_path)):
+    verification_stdout = args.output.with_name(args.output.name + "-verification-stdout.log")
+    verification_stderr = args.output.with_name(args.output.name + "-verification-stderr.log")
+    if any(path.exists() for path in (receipt_path, stdout_path, stderr_path, verification_stdout, verification_stderr)):
         raise ValueError("supervision output already exists; automatic retry is not supported")
     command = [sys.executable, str(Path(__file__).resolve()), "--worker", "--host", str(args.host),
-        "--godot", str(args.godot), "--output", str(args.output), "--expected-revision", args.expected_revision]
+        "--godot", str(args.godot), "--output", str(args.output), "--expected-revision", args.expected_revision,
+        "--declaration", str(args.declaration), "--expected-declaration-sha256", args.expected_declaration_sha256]
     settings = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt"
                 else {"start_new_session": True})
     receipt = {"schema": "nca-jolt-arrival-supervisor/v1", "source_revision": args.expected_revision,
-        "maximum_wall_seconds": 600, "attempts": 1, "timeout": False, "returncode": None,
+        "declaration_sha256": args.expected_declaration_sha256,
+        "maximum_wall_seconds": maximum_wall_seconds, "attempts": 1, "timeout": False, "returncode": None,
         "worker_terminated": False, "owned_process_group_terminated": None, "error_type": None,
-        "measured_interval": "worker spawn through exit, including source admission, host startup and evidence finalization"}
+        "final_output_verification": {"verified": False},
+        "cleanup_reserve_seconds": 6,
+        "measured_interval": "worker spawn through exit and independent final artifact/journal replay, including source admission and host startup"}
     process = None
     started = time.monotonic()
     try:
         with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
             process = subprocess.Popen(command, cwd=ROOT, stdout=stdout, stderr=stderr, **settings)
             try:
-                receipt["returncode"] = process.wait(timeout=max(.001, 600 - (time.monotonic() - started)))
+                receipt["returncode"] = process.wait(timeout=max(.001,
+                    maximum_wall_seconds - receipt["cleanup_reserve_seconds"] - (time.monotonic() - started)))
             except subprocess.TimeoutExpired:
                 receipt["timeout"] = True
                 receipt["owned_process_group_terminated"] = terminate_owned_tree(process)
@@ -101,17 +111,49 @@ def supervise(args):
                 except (OSError, subprocess.SubprocessError) as cleanup:
                     receipt["cleanup_error_type"] = type(cleanup).__name__
             receipt["owned_process_group_terminated"] = not process_group_exists(process.pid)
-        receipt["wall_seconds"] = time.monotonic() - started
         receipt["worker_terminated"] = process is None or process.poll() is not None
+        if receipt["returncode"] == 0 and not receipt["timeout"] and receipt["error_type"] is None:
+            try:
+                remaining = maximum_wall_seconds - receipt["cleanup_reserve_seconds"] - (time.monotonic() - started)
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired("offline-verification", 0)
+                # The independent audit also runs under the original wall
+                # allocation. It starts no host and cannot trigger a retry.
+                verification_command = [sys.executable, str(Path(__file__).resolve()), "--verify-only",
+                    "--output", str(args.output), "--expected-revision", args.expected_revision,
+                    "--expected-declaration-sha256", args.expected_declaration_sha256]
+                with verification_stdout.open("xb") as stdout, verification_stderr.open("xb") as stderr:
+                    try:
+                        verified = subprocess.run(verification_command, cwd=ROOT, stdout=stdout, stderr=stderr,
+                            timeout=remaining, check=False)
+                    finally:
+                        stdout.flush()
+                        stderr.flush()
+                        os.fsync(stdout.fileno())
+                        os.fsync(stderr.fileno())
+                if verified.returncode != 0:
+                    raise ValueError("independent offline verification failed")
+                receipt["final_output_verification"] = json.loads(verification_stdout.read_text())
+                if receipt["final_output_verification"].get("verified") is not True:
+                    raise ValueError("independent offline verification did not confirm evidence")
+            except subprocess.TimeoutExpired:
+                receipt["timeout"] = True
+                receipt["error_type"] = "OfflineVerificationTimeout"
+                receipt["final_output_verification"] = {"verified": False, "error_type": "OfflineVerificationTimeout"}
+            except Exception as exc:
+                receipt["error_type"] = type(exc).__name__
+                receipt["final_output_verification"] = {"verified": False, "error_type": type(exc).__name__,
+                    "error_code": getattr(exc, "code", None)}
         receipt["streams"] = {path.name: {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                                          "bytes": path.stat().st_size}
-                              for path in (stdout_path, stderr_path) if path.is_file()}
+                              for path in (stdout_path, stderr_path, verification_stdout, verification_stderr) if path.is_file()}
+        receipt["wall_seconds"] = time.monotonic() - started
         receipt["completed"] = (receipt["returncode"] == 0 and receipt["worker_terminated"]
             and receipt["owned_process_group_terminated"] is True
-            and not receipt["timeout"] and receipt["error_type"] is None and receipt["wall_seconds"] <= 600)
-        with receipt_path.open("x") as target:
-            json.dump(receipt, target, sort_keys=True, allow_nan=False)
-            target.write("\n")
+            and receipt["final_output_verification"]["verified"]
+            and not receipt["timeout"] and receipt["error_type"] is None
+            and receipt["wall_seconds"] <= maximum_wall_seconds)
+        write_json(receipt_path, receipt)
     print(json.dumps({key: receipt[key] for key in ("completed", "wall_seconds", "timeout", "returncode")}))
     return 0 if receipt["completed"] else 2
 
@@ -122,16 +164,27 @@ def main():
     parser.add_argument("--godot", type=Path, default=os.environ.get("NCA_GODOT"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-revision", required=True)
+    parser.add_argument("--declaration", type=Path,
+        default=ROOT / "configs/baselines/jolt-arrival-diagnostic-v1.json")
+    parser.add_argument("--expected-declaration-sha256",
+        default="269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a")
     parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--verify-only", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.verify_only:
+        from nca.evaluation.jolt_arrival import verify_diagnostic_output
+        result = verify_diagnostic_output(args.output, expected_revision=args.expected_revision,
+            expected_declaration_sha256=args.expected_declaration_sha256)
+        print(json.dumps(result, sort_keys=True, allow_nan=False))
+        return 0
     if not args.host or not args.godot:
         parser.error("configure NCA_HOST_CHECKOUT and NCA_GODOT or supply --host and --godot")
     if not args.worker:
         return supervise(args)
     from nca.evaluation.jolt_arrival import run_diagnostic
     result = run_diagnostic(root=ROOT, checkout=args.host, godot=args.godot, output=args.output,
-        declaration_path=ROOT / "configs/baselines/jolt-arrival-diagnostic-v1.json",
-        expected_revision=args.expected_revision)
+        declaration_path=args.declaration, expected_revision=args.expected_revision,
+        expected_declaration_sha256=args.expected_declaration_sha256)
     print(result["status"])
     return 0 if result["status"] == "completed" else 2
 
