@@ -203,3 +203,35 @@ allocation needs its own public source/declaration freeze and independent review
 it cannot resume the failed v1 attempt or spend its unused budget. V1's lower
 observed prefix vigor remains a risk. All learning and morphology gates remain
 unchanged and blocked pending complete evidence and useful teacher behavior.
+
+## 2026-10-20 18:22 UTC — Corrective v2 integrated and independently reviewed
+
+PR #58 and [PR #59](https://github.com/techrote/neural-cyber-automata/pull/59)
+passed all five final-head checks and are merged. Accepted main is
+`7fee91b18dd0a6bba7089870fb34c515cf2e9f5a`; its tree matches the reviewed
+implementation and preserved negative evidence. Teacher qualification remains
+open. Neither merge changes the frozen v1 result or its failed acceptance.
+
+The separately versioned controller keeps sampled arrival advisory and retains
+the original observation lease until the caller validates its outcome and
+cancels current local/native intent. V1 controller and supervisor source hashes
+remain pinned; every one of the 189 previously consumed candidate actions replays
+unchanged. All kinetic constants and physical/task contracts are preserved.
+
+The [recorder correction](evidence/2026-10-20-evidence-refused-decisions.md)
+separately retains an undispatched decision, exact source, reservation uncertainty
+and native error cleanup. Legacy extra-frame records remain rejected, and a
+refusal cannot become a completed diagnostic. Independent controller, recorder,
+acceptance and declaration reviews found no remaining source blocker.
+
+The integrated Jolt suite passed 127 checks in 18.287 seconds with consistent
+process visibility, including the unchanged process-group cleanup assertion.
+No physical diagnostic ran during these tests. The prospective
+[v2 declaration](../configs/baselines/jolt-recovery-diagnostic-v2.json) has
+canonical SHA-256
+`d7cc13335b453a755e9b7d950ac52d982aff553c025cbe0fbd47b81b5b0729eb`.
+It independently permits one fresh 96-episode invocation, at most 3,840 decisions,
+23,040 ticks, 4,226 owner calls and 900 whole-process seconds. It carries the full
+prior v1 cost ledger, reuses zero rows, resumes no attempt and changes no numeric
+teacher gate. Public source freezing precedes this one new invocation. Learning
+and morphology remain blocked until their respective acceptance requirements.

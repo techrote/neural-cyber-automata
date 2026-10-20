@@ -25,16 +25,21 @@ from nca.controllers.morphology import MorphologyAdapter
 from nca.controllers.morphology.conformance import cancellation_receipt, validate_interval
 from nca.data import ActionSource, EpisodeRecorder, PolicyContext, read_episode, write_episode
 from nca.data.capture import source_identity
+from nca.data.records import json_copy
 from nca.runs import RunBudget
 from nca.train.task import HopTask
 from nca.evaluation.durable_journal import (DurableJournal, file_identity, publish_json,
     seal_owner_journal, sync_directory, verify_sealed_journal)
 from nca.evaluation.jolt_character import character_metrics, summarize_character
+from nca.evaluation.jolt_decisions import (SCHEMA as CONTROLLER_DECISION_SCHEMA,
+    FAILURE_SCHEMA as CONTROLLER_FAILURE_SCHEMA, CLEANUP_SCHEMA,
+    confirmed_cleanup, decision_accounting, replay_controller_frames, validate_decision_failure)
 
 
 DECLARATION_SHA256 = "269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a"
 FAMILIES = ("authored-balanced-v1", "jolt-arrival-v1")
 RECOVERY_FAMILIES = (*FAMILIES, "jolt-recovery-v1")
+RECOVERY_V2_FAMILIES = (*FAMILIES, "jolt-recovery-v2")
 PRESERVED_SOURCES = {
     "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
     "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
@@ -57,8 +62,10 @@ def read_declaration(path: Path, *, expected_sha256=DECLARATION_SHA256):
         # A separately published continuation changes only named controllers
         # and the explicit allocation. It cannot repurpose opened cases or
         # silently loosen mechanics, task outcomes or execution semantics.
-        if (value.get("schema") != "nca-jolt-recovery-diagnostic/v1"
-                or value.get("families") != list(RECOVERY_FAMILIES)):
+        declared_families = {"nca-jolt-recovery-diagnostic/v1": RECOVERY_FAMILIES,
+                             "nca-jolt-recovery-diagnostic/v2": RECOVERY_V2_FAMILIES}
+        if (type(value.get("schema")) is not str or value["schema"] not in declared_families
+                or value.get("families") != list(declared_families[value["schema"]])):
             raise ContractError("arrival_declaration", "the separately declared three-family recovery diagnostic is required")
         if (value.get("case_source", {}).get("path") != "configs/first-skill/jolt-direction-frame-v1.json"
                 or value["case_source"].get("sha256") != "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687"
@@ -99,13 +106,16 @@ def _controller(family):
     if family == RECOVERY_FAMILIES[2]:
         from nca.controllers.jolt_recovery import JoltRecoveryController
         return JoltRecoveryController()
+    if family == RECOVERY_V2_FAMILIES[2]:
+        from nca.controllers.jolt_recovery_v2 import JoltRecoveryControllerV2
+        return JoltRecoveryControllerV2()
     raise ContractError("arrival_family", "undeclared authored controller")
 
 
 def replay_task_metrics(episode):
     """Recompute the unchanged task from retained physical receipts only."""
     events = [event for event in episode.events if event.kind == "step"]
-    frames = episode.evaluation.get("controller_frames", ())
+    frames = replay_controller_frames(episode)
     if not events or len(frames) != len(events) or events[0].context is None:
         raise ContractError("arrival_task_replay", "complete retained goal, decisions and physical receipts are required")
     context = events[0].context
@@ -283,7 +293,8 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
                         and key == keys[completed],
                         "episodes", "episodes must start once in the declared result order")
                     counts["episodes_started"] += 1
-                    active = {"key": key, "stage": "reset", "decisions": 0, "ticks": 0}
+                    active = {"key": key, "stage": "reset", "decisions": 0, "ticks": 0,
+                              "decision_failed": False}
                     if artifact_root is not None:
                         row = expected_rows[completed]
                         relative = row.get("artifact")
@@ -299,12 +310,18 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
                             and sha256_json(episode.evaluation.get("character_metrics")) == sha256_json(row.get("character_metrics")),
                             "artifact", "episode content and evaluation differ from the indexed row")
                         active["episode"] = episode
+                        frames = replay_controller_frames(episode)
+                        if episode.evaluation.get("controller_decision_schema") == CONTROLLER_DECISION_SCHEMA:
+                            require(row.get("controller_decision_schema") == CONTROLLER_DECISION_SCHEMA
+                                and all(sha256_json(row.get(name)) == sha256_json(episode.evaluation.get(name))
+                                        for name in ("controller_decision_accounting", "error_cleanup")),
+                                "artifact", "versioned decision accounting and cleanup differ from the retained episode")
                         active["step_events"] = [event for event in episode.events if event.kind == "step"]
                         first_step = next(iter(active["step_events"]), None)
                         require(first_step is not None and first_step.context is not None,
                                 "artifact", "retained episode lacks its explicit caller goal")
                         recomputed = character_metrics(episode.initial_observation, first_step.context.target,
-                            episode.events, episode.evaluation.get("controller_frames", ()))
+                            episode.events, frames)
                         require(sha256_json(recomputed) == sha256_json(row.get("character_metrics")),
                                 "artifact", "retained character metrics differ from physical receipt replay")
                         task_metrics, task_terms = replay_task_metrics(episode)
@@ -333,6 +350,8 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
                                  and fields["ticks"] == 6),
                             "counts", "each step must reserve the declared six physical ticks")
                         if operation == "step":
+                            require(not active["decision_failed"], "decision",
+                                    "a failed local decision must stop further physical requests")
                             counts["step_requests"] += 1
                             counts["requested_step_ticks"] += ticks
                         if operation == "cancel":
@@ -375,6 +394,17 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
                                 cancellation_receipt(active["view"], view)
                             except (ContractError, KeyError, TypeError) as exc:
                                 raise ContractError("arrival_journal_close", "native cancellation must revoke ownership without stepping") from exc
+                            if (artifact_root is not None
+                                    and active["episode"].evaluation.get("controller_decision_schema") == CONTROLLER_DECISION_SCHEMA):
+                                cancellations = [item for item in active["episode"].events if item.kind == "cancel"]
+                                require(len(cancellations) == 1
+                                    and sha256_json(cancellations[0].issued_observation) == sha256_json(active["view"])
+                                    and sha256_json(cancellations[0].next_observation) == sha256_json(view),
+                                    "artifact", "native cancellation differs from its retained source and receipt")
+                                cleanup = active["episode"].evaluation.get("error_cleanup")
+                                if cleanup is not None and cleanup.get("confirmed") is True:
+                                    require(cleanup.get("request_serial") == serial,
+                                            "artifact", "error cleanup must identify this exact native cancellation")
                             active["stage"] = "closed"
                         else:
                             actual, start, end = (response.get(key) for key in ("actual_ticks", "start_tick", "tick"))
@@ -422,11 +452,28 @@ def validate_closed_owner_journal(path: Path, *, expected_counts, expected_rows,
                             if terminal:
                                 active["stage"] = "terminal"
                     pending = None
+                elif event == "controller_decision_failed":
+                    require(active is not None and pending is None and not active["decision_failed"]
+                        and active["stage"] in ("step", "terminal")
+                        and (record.get("case"), record.get("family")) == active["key"],
+                        "decision", "a refused local decision belongs to the active physical source")
+                    failure = record.get("decision_failure")
+                    validate_decision_failure(failure, active["view"], active["decisions"])
+                    require(failure["owner_requests_after"] == counts["host_requests"]
+                        and failure["step_requests_after"] == counts["step_requests"],
+                        "decision", "refusal reservation counters differ from the native journal")
+                    if artifact_root is not None:
+                        require(active["episode"].evaluation.get("controller_decision_schema") == CONTROLLER_DECISION_SCHEMA
+                            and sha256_json(active["episode"].evaluation.get("controller_decision_failures"))
+                                == sha256_json([failure]),
+                            "artifact", "the refused decision differs from its retained episode audit")
+                    active["decision_failed"] = True
                 elif event == "episode_completed":
                     row = record.get("row")
                     require(active is not None and pending is None and active["stage"] in ("terminal", "closed")
                         and (record.get("case"), record.get("family")) == active["key"]
                         and isinstance(row, dict) and sha256_json(row) == sha256_json(expected_rows[completed])
+                        and not active["decision_failed"]
                         and row.get("owner_closure_confirmed") is True and row.get("error") is None
                         and type(row.get("decisions")) is int and row["decisions"] == active["decisions"]
                         and type(row.get("consumed_ticks")) is int and row["consumed_ticks"] == active["ticks"],
@@ -491,6 +538,7 @@ def _capture(host, budget, case, family, output, original, declaration, root):
     adapter = MorphologyAdapter(recorder.profile, expected_sha256=original["profile_sha256"])
     task = HopTask(goal, recorder.initial, deadline_ticks=240, quiet_ticks_required=12)
     phases, terms, error, closure = [], [], None, False
+    decision_failures, pending_decision, decision_journal_error, cleanup = [], None, None, None
     try:
         for _ in range(40):
             budget.check()
@@ -498,20 +546,30 @@ def _capture(host, budget, case, family, output, original, declaration, root):
             started = time.perf_counter_ns()
             frame = controller.step(FeedbackObservation.from_host(view), goal)
             inference_ns = time.perf_counter_ns() - started
-            phases.append({"tick": view["tick"], "phase": frame.phase, "status": frame.status,
-                           "reason": frame.reason, "action": frame.action.to_dict(),
-                           "inference_ns": inference_ns,
-                           "diagnostic_state": (controller.diagnostic_state()
-                               if callable(getattr(controller, "diagnostic_state", None)) else None)})
-            if family == RECOVERY_FAMILIES[2]:
-                lease_ticks = phases[-1]["diagnostic_state"].get("action_lease_ticks")
+            frame_record = {"tick": view["tick"], "phase": frame.phase, "status": frame.status,
+                            "reason": frame.reason, "action": frame.action.to_dict(),
+                            "inference_ns": inference_ns,
+                            "diagnostic_state": (controller.diagnostic_state()
+                                if callable(getattr(controller, "diagnostic_state", None)) else None)}
+            pending_decision = {"schema": CONTROLLER_FAILURE_SCHEMA,
+                "frame": frame_record, "source_observation": json_copy(view),
+                "after_physical_decisions": len(phases), "requested_packet": None,
+                "owner_requests_before": budget.counts["host_requests"],
+                "step_requests_before": budget.counts["step_requests"]}
+            if family in (RECOVERY_FAMILIES[2], RECOVERY_V2_FAMILIES[2]):
+                lease_ticks = frame_record["diagnostic_state"].get("action_lease_ticks")
                 if (type(lease_ticks) is not int or not 6 <= lease_ticks <= 12
                         or view["tick"] + lease_ticks > 240):
                     raise ContractError("arrival_supervisor_lease", "recovery supervisor must admit a deadline-capped original-source lease")
                 packet = env.command(frame.action.to_dict(), observation=view, lease_ticks=lease_ticks)
+                pending_decision["requested_packet"] = json_copy(packet)
                 after, _, terminated, truncated, info = recorder.step_packet(packet)
             else:
                 after, _, terminated, truncated, info = recorder.step(frame.action.to_dict())
+            # A returned native step event, not a local status/lease decision,
+            # admits this frame to the physical receipt/character sequence.
+            phases.append(frame_record)
+            pending_decision = None
             event = recorder.events[-1]
             validate_interval(event.requested_packet, event.source_observation, after,
                               terminated, truncated, info, allow_terminal=True)
@@ -539,10 +597,28 @@ def _capture(host, budget, case, family, output, original, declaration, root):
             raise ContractError("arrival_owner_closure", "native owner cancellation or terminal closure was not confirmed")
     except Exception as exc:
         error = _error(exc)
+        if pending_decision is not None:
+            pending_decision.update(owner_requests_after=budget.counts["host_requests"],
+                step_requests_after=budget.counts["step_requests"], error=error)
+            pending_decision["disposition"] = ("refused_before_transport"
+                if pending_decision["owner_requests_after"] == pending_decision["owner_requests_before"]
+                and pending_decision["step_requests_after"] == pending_decision["step_requests_before"]
+                else "owner_response_unrecorded")
+            decision_failures.append(pending_decision)
+            try:
+                budget.note("controller_decision_failed", case=case["id"], family=family,
+                            decision_failure=pending_decision)
+            except Exception as journal_exc:
+                # Keep the original failure and frame even when persistence
+                # failed. The poisoned journal still prevents owner dispatch.
+                decision_journal_error = _error(journal_exc)
+        cleanup = {"schema": CLEANUP_SCHEMA, "attempted": True, "confirmed": False, "error": None}
         try:
-            recorder.cancel("diagnostic_error_cleanup")
-        except Exception:
-            pass
+            before = recorder.view
+            canceled = recorder.cancel("diagnostic_error_cleanup")
+            cleanup = confirmed_cleanup(before, canceled, budget.counts["host_requests"])
+        except Exception as cleanup_exc:
+            cleanup["error"] = _error(cleanup_exc)
     finally:
         controller.cancel()
     metrics = task.metrics(administratively_capped=not task.done)
@@ -555,6 +631,10 @@ def _capture(host, budget, case, family, output, original, declaration, root):
         "task_reward_schema": "jolt-arrival-best-progress/v1", "metrics": metrics,
         "character_metrics": character,
         "reward_terms": terms, "controller_frames": phases, "error": error,
+        "controller_decision_schema": CONTROLLER_DECISION_SCHEMA,
+        "controller_decision_failures": decision_failures,
+        "controller_decision_accounting": decision_accounting(phases, decision_failures),
+        "decision_failure_journal_error": decision_journal_error, "error_cleanup": cleanup,
         "owner_closure_confirmed": closure, "declaration_sha256": sha256_json(declaration)}
     episode = recorder.finish("failed" if error else "completed", metrics["reason"], evaluation=evaluation)
     path = output / "episodes" / f"{identifier}.json.gz"
@@ -565,6 +645,9 @@ def _capture(host, budget, case, family, output, original, declaration, root):
         "record_sha256": episode.sha256, "artifact": path.relative_to(output).as_posix(),
         "artifact_sha256": artifact_sha, "decisions": episode.decisions,
         "consumed_ticks": episode.consumed_ticks, "metrics": metrics, "character_metrics": character,
+        "controller_decision_schema": CONTROLLER_DECISION_SCHEMA,
+        "controller_decision_accounting": evaluation["controller_decision_accounting"],
+        "error_cleanup": cleanup,
         "owner_closure_confirmed": closure, "error": error}
     write_json(output / "metrics" / f"{identifier}.json", row)
     budget.note("episode_completed", case=case["id"], family=family, row=row)

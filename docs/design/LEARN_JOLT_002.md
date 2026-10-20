@@ -102,7 +102,8 @@ or idle reference on those cases.
 
 Create a hashed inventory of all previously opened geometry/start/target cases,
 including failed, partial, export, cellular and diagnostic runs. At minimum this
-covers T-103, T-104, T-105, the direction-frame follow-up and both Jolt diagnostics.
+covers T-103, T-104, T-105, the direction-frame follow-up, the original arrival
+diagnostic and every failed or completed recovery diagnostic, including v1/v2.
 An old evaluation label does not make a case sealed again. Reject any overlap
 before host construction and record the inventory/source identities.
 

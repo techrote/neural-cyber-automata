@@ -15,7 +15,7 @@ its designated primary fails the fixed 75% mean / 50% every-seed reliability pre
 [Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
 The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
 Its historical complete-journal audit remains incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58).
-The [recovery v1 diagnostic](evidence/2026-10-20-jolt-recovery-v1.md) stopped at 24/96 rows; corrective [#60](https://github.com/techrote/neural-cyber-automata/issues/60), #43 and morphology #16 remain open.
+The [recovery v1 failure](evidence/2026-10-20-jolt-recovery-v1.md), 24/96 rows, is preserved in accepted [PR #59](https://github.com/techrote/neural-cyber-automata/pull/59); the reviewed advisory correction in [#60](https://github.com/techrote/neural-cyber-automata/issues/60) has a separate pending diagnostic. #48, #43 and #16 remain open.
 
 ## T-100 — Accepted research baseline
 
