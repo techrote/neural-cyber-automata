@@ -139,18 +139,24 @@ class RecoveryAcceptanceTests(unittest.TestCase):
     def test_matching_replay_source_reaches_specification_and_refuses_substitution(self):
         from nca.controllers.jolt_recovery import JoltRecoveryController
         relative = "src/nca/controllers/jolt_recovery.py"
-        body = (Path(__file__).resolve().parents[1] / relative).read_bytes()
+        checkout = Path(__file__).resolve().parents[1]
+        body = (checkout / relative).read_bytes()
         frozen = {relative: hashlib.sha256(body).hexdigest()}
         revision = "c" * 40
         manifest = {"source_files": frozen, "source_files_sha256": sha256_json(frozen),
                     "declaration": {"candidate_specifications": {
                         CANDIDATE: JoltRecoveryController().specification()}}}
         with patch("nca.data.capture.source_identity", return_value=(revision, frozen, sha256_json(frozen))), \
-                patch("nca.evaluation.jolt_recovery_acceptance.subprocess.check_output", return_value=body):
+                patch("nca.evaluation.jolt_recovery_acceptance.subprocess.check_output", return_value=body), \
+                patch("nca.evaluation.jolt_recovery_acceptance.__file__",
+                      str(checkout / "installed/nca/evaluation/jolt_recovery_acceptance.py")), \
+                patch.dict("os.environ", {}, clear=True), patch.object(Path, "cwd", return_value=checkout):
+            self.assertTrue(verify_replay_source(manifest, expected_revision=revision,
+                                                source_root=checkout)["verified"])
             self.assertTrue(verify_replay_source(manifest, expected_revision=revision)["verified"])
             manifest["declaration"]["candidate_specifications"][CANDIDATE] = {}
             with self.assertRaisesRegex(ContractError, "specification differs"):
-                verify_replay_source(manifest, expected_revision=revision)
+                verify_replay_source(manifest, expected_revision=revision, source_root=checkout)
 
 
 if __name__ == "__main__":

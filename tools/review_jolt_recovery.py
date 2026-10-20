@@ -24,7 +24,8 @@ def main():
         parser.error("use a new review path outside the sealed original evidence directory")
     try:
         result = audit_recovery(args.evidence, expected_revision=args.expected_revision,
-                               expected_declaration_sha256=args.expected_declaration_sha256)
+                               expected_declaration_sha256=args.expected_declaration_sha256,
+                               source_root=ROOT)
     except Exception as exc:
         result = {"schema": "nca-jolt-recovery-behavior-review/v1", "teacher_accepted": False,
                   "evidence_verification": {"verified": False},

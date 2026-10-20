@@ -18,6 +18,15 @@ No dataset collection, fitting, checkpoint execution or transfer has occurred
 under this design. The final source/dependency/split declaration must precede
 any such work.
 
+The first [recovery diagnostic](../evidence/2026-10-20-jolt-recovery-v1.md)
+stopped after 24 of 96 rows. A sampled settled estimate retired its lease before
+the per-tick task had twelve quiet ticks. Its seven complete matched pairs also
+show restored short-left airborne launches but a peak-speed ratio of 0.58924;
+the full character/reliability gate remains unmeasured. The separate advisory
+arrival correction and complete diagnostic in [#60](https://github.com/techrote/neural-cyber-automata/issues/60)
+must qualify before this design can admit collection. No partial result becomes
+a teacher-acceptance substitute.
+
 ## Question and comparison
 
 Can a small recurrent policy learn expressive directed hops and contact recovery

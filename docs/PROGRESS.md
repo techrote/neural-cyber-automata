@@ -175,3 +175,31 @@ aim and launch authority, a learned BC residual base, three training seeds and
 fresh geometry/start separation. Its exact execution declaration remains future
 work after teacher/evidence acceptance. No new physics, learning or morphology
 run has started at this checkpoint.
+
+## 2026-10-20 18:02 UTC — Failed v1 preserved; separate corrective scope declared
+
+The sole public `ceb19f57` recovery diagnostic ended incomplete in
+61.76433001999976 seconds, with 24/96 rows, 479 dispatched decisions, 2,874
+requested/confirmed ticks and 549 answered owner calls. No timeout, pending
+request, new learned checkpoint or optimizer work occurred. At tick 234, sampled
+settling retired authority while an intervening native speed violation left the
+unchanged task only eleven quiet ticks. The runner correctly refused lease zero.
+
+[The complete failure record](evidence/2026-10-20-jolt-recovery-v1.md) retains
+the original summary, raw journal, pending compressed copy and undispatched
+terminal frame. Independent audit binds every physical receipt and all native
+cleanup; the original incomplete seal remains rejected. The 57-member archive,
+SHA-256 `6be1740a1a623084f431ba7ed08f39fceb8d3ee9fa416d519c48ff6b57ede439`,
+is saved and byte-verified. This result does not complete #43 or qualify #48.
+
+Initial PR #59 hosted checks exposed an installed-package checkout assumption
+in the acceptance audit. Its correction retains complete source-byte binding;
+all twelve focused tests pass. This fix does not change the frozen physical run.
+
+The separately commissioned [JOLT-RECOVERY-002 / #60](https://github.com/techrote/neural-cyber-automata/issues/60)
+adds a versioned advisory-arrival boundary and independently archives refused
+decisions. No kinetic tuning is included. Its fresh 96-episode, 900-second
+allocation needs its own public source/declaration freeze and independent review;
+it cannot resume the failed v1 attempt or spend its unused budget. V1's lower
+observed prefix vigor remains a risk. All learning and morphology gates remain
+unchanged and blocked pending complete evidence and useful teacher behavior.

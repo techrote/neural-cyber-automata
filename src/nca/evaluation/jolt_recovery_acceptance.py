@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import subprocess
 from pathlib import Path
 
@@ -201,12 +202,17 @@ def verify_controller_replay(output, rows):
             "new_owner_requests": 0, "new_simulation_ticks": 0, "optimizer_updates": 0}
 
 
-def verify_replay_source(manifest, *, expected_revision: str):
+def verify_replay_source(manifest, *, expected_revision: str, source_root: Path | None = None):
     """Require the replay's imported package and Git blobs to match the run."""
     from nca.controllers.jolt_recovery import JoltRecoveryController
     from nca.data.capture import source_identity
 
-    root = Path(__file__).resolve().parents[3]
+    package = Path(__file__).resolve().parents[1]
+    source_tree = package.parents[1]
+    selected = source_root if source_root is not None else os.environ.get("NCA_SOURCE_ROOT")
+    if selected is None:
+        selected = source_tree if (source_tree / "src/nca").resolve() == package else Path.cwd()
+    root = Path(selected).resolve()
     revision, imported, _ = source_identity(root)
     frozen = manifest.get("source_files")
     _require(revision == expected_revision and isinstance(frozen, dict)
@@ -230,12 +236,13 @@ def verify_replay_source(manifest, *, expected_revision: str):
             "source_files_sha256": manifest["source_files_sha256"]}
 
 
-def audit_recovery(output: Path, *, expected_revision: str, expected_declaration_sha256: str):
+def audit_recovery(output: Path, *, expected_revision: str, expected_declaration_sha256: str,
+                   source_root: Path | None = None):
     from nca.evaluation.jolt_arrival import verify_diagnostic_output
     verified = verify_diagnostic_output(output, expected_revision=expected_revision,
                                        expected_declaration_sha256=expected_declaration_sha256)
     manifest = strict_json_loads((output / "manifest.json").read_bytes())
-    replay_source = verify_replay_source(manifest, expected_revision=expected_revision)
+    replay_source = verify_replay_source(manifest, expected_revision=expected_revision, source_root=source_root)
     summary = strict_json_loads((output / "summary.json").read_bytes(), max_bytes=8 * 1024 * 1024)
     _require(manifest["declaration"].get("teacher_acceptance") == acceptance_specification(),
              "the prospective teacher acceptance rule cannot be changed after the run")
