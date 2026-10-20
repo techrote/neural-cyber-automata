@@ -22,7 +22,7 @@ were measured). The prospective realtime checker correction and passing
 engineering tests do not change that no-go; [T109 evidence](evidence/2026-10-19-t109.md) preserves its lineage.
 Unmeasured runtime combinations are rejected rather than inheriting a measured
 lane's status. This first export does not execute inside Godot and does not
-qualify a residual policy, accelerator, Windows runtime or legacy device.
+qualify a residual policy, accelerator, Windows runtime or legacy device. The [Torch CPU follow-up](TORCH_RUNTIME_EXPORT.md) has separate evidence.
 
 ## Bundle contract
 

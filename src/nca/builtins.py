@@ -57,6 +57,12 @@ def cpu_export_policy(*args, **kwargs):
     return ExportController(*args, **kwargs)
 
 
+def torch_cpu_export_policy(*args, **kwargs):
+    """Load the separately declared Torch CPU deployment backend explicitly."""
+    from .export.torch_runtime import torch_export_controller
+    return torch_export_controller(*args, **kwargs)
+
+
 def padded_morphology_policy(**kwargs):
     """Construct the optional untrained padded candidate explicitly."""
     from .controllers.morphology.models import MaskedRecurrentPolicy
@@ -100,6 +106,8 @@ def builtin_registry() -> Registry:
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
     registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
                       ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
+    registry.register("policy", "jolt-torch-cpu-export", 1, torch_cpu_export_policy,
+                      ("optional-torch", "evaluated-bundle", "explicit-backend", "cpu"))
     registry.register("policy", "morphology-padded-recurrent", 1, padded_morphology_policy,
                       ("optional-cpu", "gated-preparation", "masked", "recurrent"))
     registry.register("policy", "morphology-shared-graph", 1, graph_morphology_policy,

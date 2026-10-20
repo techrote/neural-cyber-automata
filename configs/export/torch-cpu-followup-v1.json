@@ -1,0 +1,50 @@
+{
+  "schema": "nca-torch-cpu-followup/v1",
+  "id": "bc1103-torch-cpu-qualification-20261020",
+  "reason": "The unchanged NumPy export failed closed-loop tolerances despite common-input arithmetic parity. Preserve that no-go and qualify an explicit original-operator CPU backend for the same evaluated numeric policy.",
+  "original": {
+    "numeric_file_sha256": "30b40a2459eafc7bdcc271b6ddce55ec1f8442113b5edc0b21c4380e2793f3bc",
+    "numeric_content_sha256": "1a9c30d267cbc9eeb6c6e44645c8ba56b25939fa6833dfcca6194a9e9f55a4e7",
+    "policy_sha256": "8196e77d5ecc6ea0ef3dff597b89e5f80e1b32804cc17eb7f305900c2c4d9a1b",
+    "manifest_file_sha256": "8bd30bbd6ceea1a670a951771ff449d8973e1c03672e010a4b8d8f69924f7a15",
+    "summary_file_sha256": "f2625739e7d05e86d2de6d955209452173ff2d0c72acbd64dae4cee2add2f62d",
+    "resume_file_sha256": "0cbfe8733e39499e01722f1c7a70578c582be0e53a2b993087346fce99125c97",
+    "learner_cost_file_sha256": "0225a76c7c3d55b95207d28229717f02c12150a1b77e95577793952b98d95d55",
+    "reference_source_sha256": "aef7ad138e6b66798bf48a019adbe3fb99d125e38aa28d7d217a54dde642f98b",
+    "criteria_content_sha256": "f499cb94ec537f5c1cc1b601cfcfa37fdaf9f5e81abe365aecb23d72ad0f1df0",
+    "status": "no_go",
+    "runtime_qualified": false
+  },
+  "backend": "torch-operators-cpu/v1",
+  "order": ["arithmetic", "paired_trajectories", "negative_contracts", "profile_and_cadence", "realtime", "throughput", "standalone_inference", "clips"],
+  "early_stop": "Any failed arithmetic, trajectory, negative-contract, variant or realtime gate prevents throughput. Preserve completed and pending work; no automatic retry.",
+  "throughput": {
+    "seconds_per_configuration": 300.0,
+    "minimum_active_window_seconds": 600.0,
+    "maximum_phase_seconds": 660.0,
+    "maximum_decisions": 20000,
+    "actor_configurations": [
+      {"total_actors": 1, "learned_controlled_actors": 1},
+      {"total_actors": 2, "learned_controlled_actors": 1, "companion_model": "monowheel", "companion_producer": "demo"}
+    ],
+    "reset_samples": 10,
+    "observe_samples": 100,
+    "standalone_inference_samples": 1000,
+    "duration_scope": "Continuously executing controller/host work, reset and capture; no idle padding. Two sequential 300-second windows. Transport, reset and inference are reported separately."
+  },
+  "budget": {
+    "maximum_invocations": 1,
+    "maximum_wall_seconds": 900.0,
+    "maximum_host_requests": 25000,
+    "maximum_step_requests": 22000,
+    "maximum_requested_step_ticks": 132000,
+    "maximum_host_starts": 2,
+    "realtime_episode_maximum_ticks": 600,
+    "training_updates": 0,
+    "paid_model_calls": 0,
+    "automatic_retries": 0,
+    "source_changes_during_run": false
+  },
+  "unchanged": ["evaluated numeric candidate", "host source and binaries", "observation/action/assist profiles", "seeds and paired scenarios", "all original arithmetic and trajectory tolerances", "fresh-episode optimizer/RNG evidence", "original NumPy failure"],
+  "limits": ["Linux x86_64 external Python CPU loop only", "one learned actor with optional one authored companion", "Torch dependency and process memory reported explicitly", "no owner feel acceptance", "no whole-game determinism", "no retraining, quantization or morphology work"]
+}
