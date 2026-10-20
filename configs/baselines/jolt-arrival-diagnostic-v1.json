@@ -1,0 +1,125 @@
+{
+  "schema": "nca-jolt-arrival-diagnostic/v1",
+  "id": "t106-jolt-arrival-reference-diagnostic-v1",
+  "authorization": "Owner instruction20 October2026 to advance the repository; separate issue43 authored development diagnostic, fixed before execution",
+  "case_source": {
+    "path": "configs/first-skill/jolt-direction-frame-v1.json",
+    "sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
+    "classification": "All24 original authored training case/seed pairs plus8 already-open evaluation cases; not a new sealed evaluation"
+  },
+  "families": [
+    "authored-balanced-v1",
+    "jolt-arrival-v1"
+  ],
+  "order": "Original case order; original teacher then candidate on each matched case and host seed",
+  "candidate_specification": {
+    "schema": "nca-jolt-arrival-reference/v1",
+    "controller_id": "authored-jolt-arrival/v1",
+    "actor": "jev",
+    "skill": "directed_hop",
+    "profile_version": 1,
+    "baseline_source_sha256": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "shaping_and_recovery": {
+      "id": "balanced/v1",
+      "shaping": {
+        "quiet_below": 0.025,
+        "activate_above": 0.055,
+        "acceleration_rate": 8.0,
+        "braking_rate": 12.0,
+        "play_width": 0.025
+      },
+      "base_hz": 60,
+      "attitude_kp": 0.55,
+      "attitude_kd": 0.2,
+      "velocity_feedback": 0.45,
+      "support_dwell": 0.05,
+      "anticipation_seconds": 0.1,
+      "pulse_period": 0.85,
+      "recovery_enter_angle": 1.05,
+      "recovery_exit_angle": 0.32,
+      "recovery_enter_speed": 4.0,
+      "recovery_exit_speed": 0.8,
+      "recovery_dwell": 0.2,
+      "stopping_acceleration": 100.0
+    },
+    "speed_cells_per_second": 48.0,
+    "jump_cells_per_second": 86.0,
+    "gravity_cells_per_second_squared": 156.0,
+    "braking_cells_per_second_squared": 100.0,
+    "position_gain_per_second": 2.5,
+    "reaction_seconds": 0.1,
+    "settling_margin_cells": 2.0,
+    "maximum_pulses_per_invocation": 1,
+    "minimum_pulse_effort": 0.35,
+    "maximum_drive_and_pulse_effort": "max(0.45, caller pace)",
+    "minimum_upward_launch_speed": 2.0,
+    "maximum_opposing_launch_speed": 6.0,
+    "pulse_aim": "unit(clamp(dx/30), min(-0.55, dy/30-0.55))",
+    "pulse_room": "abs(dx)-2; positive toward velocity and upward velocity only; same-height ballistic travel + supported stopping distance + reaction travel",
+    "pulse_effort": "positive analytic quadratic root for available room, capped by caller effort; withhold if below minimum or actual post-pulse vertical speed is not upward",
+    "airborne_horizontal_request": 0.0,
+    "supported_drive": "desired_x=clamp(position_gain*dx, +/-speed*effort); request=desired_x/(speed*effort); inside settling margin with abs(vx)>arrival_speed request -sign(vx)*near_goal_counter_request",
+    "near_goal_counter_request": 0.1,
+    "secondary_rebound": false,
+    "arrival_maximum_speed": 6.0,
+    "arrival_maximum_angle": 0.32,
+    "arrival_requires_raw_support": true,
+    "arrival_quiet_observed_span_ticks": 12,
+    "arrival_maximum_sample_gap_ticks": 6,
+    "arrival_observation_rule": "first qualifying sample starts the span; nonqualifying or over-gap samples reset it; this is a local estimate only",
+    "feedback": "issued own-root proprioception, support, cooldown, energy and ceiling ray; explicit caller goal and deadline; no evaluator inputs",
+    "lifecycle": "retire canceled/completed/replaced goals; reject duplicate/stale ticks and generation rollback; new lifetime resets state and retires prior lifetime",
+    "owner_cancellation": "caller must separately revoke the host lease"
+  },
+  "preserved_sources": {
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec",
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938"
+  },
+  "goal": {
+    "pace": 0.8,
+    "tolerance_cells": 4.0,
+    "deadline_ticks": 240,
+    "quiet_ticks": 12,
+    "maximum_arrival_speed": 6.0,
+    "maximum_arrival_angle": 0.32,
+    "require_support": true
+  },
+  "physics": {
+    "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+    "mode": "stepped",
+    "base_hz": 60,
+    "decision_ticks": 6,
+    "helper_lease_ticks": 12,
+    "host_mechanics_changed": false
+  },
+  "budget": {
+    "maximum_episodes": 64,
+    "maximum_decisions": 2560,
+    "maximum_requested_ticks": 15360,
+    "maximum_host_requests": 2818,
+    "maximum_wall_seconds": 600,
+    "maximum_host_starts": 1,
+    "maximum_episode_decisions": 40,
+    "maximum_episode_ticks": 240,
+    "optimizer_updates": 0,
+    "checkpoint_executions": 0,
+    "automatic_retry": false,
+    "automatic_budget_extension": false
+  },
+  "evidence": {
+    "metrics": "Unchanged HopTask metrics, full consumed base-tick records, complete owner journal and source/host/configuration hashes",
+    "selection": "One frozen authored candidate; no tuning, checkpoint execution or training in this invocation",
+    "publication": "Original failure histories and reliability criteria retained; all paired results including failures published",
+    "limits": [
+      "Not sealed learned-policy acceptance",
+      "No morphology admission",
+      "No training or transfer",
+      "No owner feel acceptance",
+      "No continuous realtime qualification"
+    ],
+    "wall_accounting": "Internal measurement plus an outer process receipt covering startup through finalization; a cap or uncertain tail prevents completion"
+  }
+}

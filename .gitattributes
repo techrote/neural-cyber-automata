@@ -1,2 +1,9 @@
 # This immutable receipt is admitted by its exact original bytes on every OS.
 docs/evidence/t106-conformance-startup-failed.json text eol=lf
+# The versioned Jolt reference pins these original source bytes on every OS.
+src/nca/controllers/baseline.py text eol=lf
+# Preserve the original diagnostic and derived audit receipt bytes.
+docs/evidence/jolt-arrival-reference-result-20261020.json text eol=lf
+docs/evidence/jolt-arrival-reference-supervisor-20261020.json text eol=lf
+docs/evidence/jolt-arrival-reference-audit-20261020.json text eol=lf
+docs/evidence/jolt-arrival-reference-index-20261020.json text eol=lf
