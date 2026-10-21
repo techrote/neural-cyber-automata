@@ -12,6 +12,11 @@ The ledger records bounded actual-host pilots, trained-policy screens and retain
 
 Historical artifact hashes remain identifiers even where original external bytes are unavailable to a continuation; new reproductions retain separate identities.
 
+The [IK runtime software evidence](evidence/2026-10-21-ik-runtime-software.md)
+records small CPU conformance and failure fixtures, not a measured CUDA run.
+No actual CUDA device qualification, matched throughput comparison or learned
+IK quality result is added to this ledger by that implementation.
+
 T-101 and T-104 specify immutable per-run manifests and a generated/merged ledger index. Workers do not concurrently append to a shared Markdown file. Corrections identify the prior record and retain it.
 
 | Run ID | Date | Learner and host revisions | Device/environment | Profile/config hash | Seed set and split | Suite | Result and evidence class | Artifact/evidence |

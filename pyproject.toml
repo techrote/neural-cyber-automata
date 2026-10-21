@@ -13,6 +13,7 @@ dependencies = []
 export = ["numpy==2.3.5"]
 torch-export = ["numpy==2.3.5", "torch==2.8.0"]
 learning = ["numpy==2.3.5", "torch==2.8.0"]
+ik = ["numpy==2.3.5", "torch==2.8.0"]
 evidence = ["pillow==12.3.0"]
 
 [project.scripts]

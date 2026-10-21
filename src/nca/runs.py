@@ -18,6 +18,35 @@ from .contracts import (ContractError, Record, digest, identifier, nonnegative,
 from .randomness import ScenarioSplit
 
 
+def immutable_bytes(path: str | Path, payload: bytes) -> str:
+    """Publish complete bytes without ever replacing an existing artifact.
+
+    Shared by the original learner and optional IK lane. The hard link is the
+    commit operation; a filesystem without this primitive fails visibly.
+    """
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".bundle-", delete=False) as stream:
+            temporary = stream.name
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, target)
+    except FileExistsError as exc:
+        raise ValueError(f"immutable artifact already exists: {target.name}") from exc
+    finally:
+        if temporary is not None:
+            Path(temporary).unlink(missing_ok=True)
+    return hashlib.sha256(payload).hexdigest()
+
+
+def immutable_json(path: str | Path, value: Mapping[str, Any]) -> str:
+    from .contracts import canonical_json
+    return immutable_bytes(path, (canonical_json(value) + "\n").encode())
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 

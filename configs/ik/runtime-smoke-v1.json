@@ -1,0 +1,17 @@
+{
+  "schema": "nca-ik-runtime-smoke/v1",
+  "id": "runner-ik-device-smoke-v1",
+  "profile": "runner-right-sole@1",
+  "workload": "runner-point-inverse-smoke/v1",
+  "seed": 5101,
+  "batch_size": 32,
+  "steps": 32,
+  "dataset_size": 256,
+  "hidden_width": 32,
+  "learning_rate": 0.001,
+  "memory_fraction": 0.5,
+  "max_optimizer_steps": 256,
+  "max_samples": 8192,
+  "max_wall_seconds": 120.0,
+  "max_checkpoint_bytes": 33554432
+}

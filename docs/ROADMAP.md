@@ -127,7 +127,7 @@ actual CUDA learning, exact CPU export and physical tracking evidence.
 | Issue | Deliverable | Dependency | Evidence state |
 |---|---|---|---|
 | [#50](https://github.com/techrote/neural-cyber-automata/issues/50) | Registered rig/effector/target/result contracts | Entry | Nominal profile and software fixtures |
-| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | Unimplemented; hardware unqualified |
+| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | [Software conformance](evidence/2026-10-21-ik-runtime-software.md); actual CUDA and matched measurements unqualified |
 | [#52](https://github.com/techrote/neural-cyber-automata/issues/52) | Batched FK and independent numerical IK | #50 | Unimplemented |
 | [#53](https://github.com/techrote/neural-cyber-automata/issues/53) | Branch-aware data/curriculum and sealed family splits | #52 | Unimplemented |
 | [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | Unmeasured |
