@@ -1,0 +1,53 @@
+{
+  "schema": "nca-learn-jolt-002-source-review/v1",
+  "reviewer": "independent-training-and-evidence-review",
+  "reviewed_utc_date": "2026-10-21",
+  "issue": "LEARN-JOLT-002 / #62",
+  "accepted": true,
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+  "source_file_count": 182,
+  "acceptance_scope": "Supplement the original accepted whole-source software/admission review for the exact closure containing the narrow runtime-serialization correction below. This record does not qualify a learned policy or report physical execution.",
+  "original_review": {
+    "path": "docs/evidence/jolt-learn-002-training-review-20261021.json",
+    "sha256": "ff86c998862f55e62aefb774dc94f21eca4eece91c7516adbf103714f74a22b3",
+    "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+    "accepted": true,
+    "preserved_scope": "The original authorship disclosures, independent cross-review, resolved findings, software evidence limits and remaining admission gates remain applicable. The original review is unchanged."
+  },
+  "delta": [
+    {
+      "path": "src/nca/train/jolt_screen.py",
+      "sha256": "89cecde9287cb00bec96181fbad84eb3986bd531ceeffdb0eb9b171c38c4bde3",
+      "change": "runtime_identity converts torch.__version__ from the TorchVersion subclass to a plain str before strict JSON publication. The pinned version text and strict serialization rules remain unchanged."
+    },
+    {
+      "path": "tests/test_jolt_screen.py",
+      "sha256": "2b3978793ca35a77e9244d24316dc1368a3a0fa1242ec2d369f5362ffb349a6a",
+      "change": "Publish the actual runtime identity through the production durable JSON writer, read it through the strict JSON parser, and check value, canonical hash and plain-string version preservation."
+    }
+  ],
+  "independent_verification": {
+    "source_inventory": "Independently enumerated and hashed all 182 source inputs without calling the runner inventory function. The new aggregate matches this record. Substituting the two original committed file bodies reconstructs the exact prior accepted aggregate; these are the only inventoried source changes.",
+    "failure_reproduction": "Before the correction, the installed Torch 2.8.0+cpu runtime supplies a TorchVersion subclass and strict canonical serialization fails with invalid_json at value.torch. Converting that value to plain str succeeds without changing its text.",
+    "focused_test": "test_jolt_screen.JoltOwnerTests.test_actual_runtime_identity_can_be_published_and_read_as_strict_json",
+    "focused_test_result": "1 test passed independently on the corrected frozen source.",
+    "authorship": "This reviewer did not author or edit either correction. Earlier authorship of the test module and sample/training implementation is disclosed in the original review."
+  },
+  "admission_state": {
+    "original_public_revision": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+    "original_failure_stage": "Read-only execution-declaration preparation before declaration publication or allocation opening.",
+    "physical_allocation_opened": false,
+    "automatic_retry": false,
+    "automatic_extension": false,
+    "next_gate": "Publish this reviewed closure, pass required checks on its exact head, and bind the new source revision and fresh independent review supplements in the prospective declaration before the single bounded allocation."
+  },
+  "evidence_limits": {
+    "host_started_by_this_review": false,
+    "model_constructed_by_this_review": false,
+    "experimental_fitting_performed_by_this_review": false,
+    "learning_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "claim": "This supplement verifies serialization and the unchanged accepted source closure. It provides no physical performance, policy-improvement, gameplay-feel or morphology-transfer evidence."
+  }
+}

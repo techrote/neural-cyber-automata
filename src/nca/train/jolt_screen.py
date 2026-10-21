@@ -59,7 +59,7 @@ def runtime_identity():
             if line.startswith("model name") and ":" in line:
                 cpu_model = line.split(":", 1)[1].strip()
                 break
-    return {"torch": torch.__version__, "numpy": numpy.__version__, "device": "cpu", "threads": 1,
+    return {"torch": str(torch.__version__), "numpy": numpy.__version__, "device": "cpu", "threads": 1,
             "interop_threads": 1, "python": platform.python_version(), "system": platform.system(),
             "kernel": platform.release(), "machine": platform.machine(), "libc": list(platform.libc_ver()),
             "cpu_model": cpu_model, "logical_cpus_available": os.cpu_count(),

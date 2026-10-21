@@ -23,7 +23,7 @@ if TORCH_AVAILABLE:
     from nca.contracts import WireAction, sha256_json
     from nca.controllers.jolt_learned import JoltPolicy
     from nca.train.jolt_learning import generalized_advantages
-    from nca.train.jolt_screen import MeteredOwner, capture, freeze_candidates
+    from nca.train.jolt_screen import MeteredOwner, capture, freeze_candidates, runtime_identity
 
 
 def rows():
@@ -261,6 +261,19 @@ def fixture():
 
 @unittest.skipUnless(TORCH_AVAILABLE, "optional CPU learning extra is not installed")
 class JoltOwnerTests(unittest.TestCase):
+    def test_actual_runtime_identity_can_be_published_and_read_as_strict_json(self):
+        from nca.contracts import strict_json_loads
+        from nca.evaluation.durable_journal import publish_json
+        identity = runtime_identity()
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "runtime.json"
+            publish_json(path, {"runtime": identity})
+            restored = strict_json_loads(path.read_bytes())["runtime"]
+        self.assertEqual(restored, identity)
+        self.assertEqual(sha256_json(restored), sha256_json(identity))
+        self.assertIs(type(restored["torch"]), str)
+        self.assertEqual(restored["torch"], str(torch.__version__))
+
     def test_real_teacher_capture_artifacts_replay_in_independent_auditor(self):
         owner, journal = CutoffFixtureOwner(unstable_tick=None), Journal()
         ledger = SimpleNamespace(check=lambda: None, reserve=lambda *_args, **_kwargs: None)
