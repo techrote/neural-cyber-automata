@@ -1,0 +1,133 @@
+{
+  "archive": {
+    "bytes": 106211945,
+    "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
+    "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+  },
+  "byte_readback": {
+    "archive_matches_declared_bytes": true,
+    "changed_members": [],
+    "checkpoint_files_hashed_as_opaque_bytes": 34,
+    "downloaded_archive_unchanged": true,
+    "duplicates_or_unsafe_members": [],
+    "every_member_matches_committed_inventory": true,
+    "extra_members": [],
+    "full_outer_gzip_eof_verified": true,
+    "member_bytes": 283352687,
+    "missing_members": [],
+    "nested_gzip_eofs_verified": 458,
+    "nested_gzip_uncompressed_bytes": 741304488,
+    "outer_decoded_tar": {
+      "bytes": 283944960,
+      "sha256": "02213a0eea0f49d385910583cd463c7638c947e876b5f624997e1c53be1cb745"
+    },
+    "regular_members": 765,
+    "verified": true
+  },
+  "committed_reference": {
+    "member_index": {
+      "bytes": 127318,
+      "path": "docs/evidence/jolt-learn-002-archive-members-20261021.json",
+      "sha256": "f04c225536ca31464a4cceb266e56104e8757ada183176c6df1a7ca6efab5693"
+    },
+    "publication_index": {
+      "bytes": 5103,
+      "path": "docs/evidence/jolt-learn-002-index-20261021.json",
+      "sha256": "7b739652786eb4f1f08279280bc40a10df540281cdfe57c5fcbc6a6694d0dfb3"
+    },
+    "revision": "4311d7a8a5a5d9a6cd1185b983df312454ee2ea8"
+  },
+  "copied_original_readback": {
+    "files": {
+      "jolt-learn-002-manifest-20261021.json": {
+        "archive_member": "run/manifest.json",
+        "bytes": 24766,
+        "sha256": "9459cc2292354108794e7ee6c9ae7bca2c72d3ec9999058572f97e87154c2931"
+      },
+      "jolt-learn-002-original-inventory-20261021.json": {
+        "archive_member": "run/inventory.json",
+        "bytes": 102178,
+        "sha256": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d"
+      },
+      "jolt-learn-002-original-invocation-20261021.json": {
+        "archive_member": "lifecycle/invocation.json",
+        "bytes": 257,
+        "sha256": "5e5c6af2db2ea251c3862a08565fe701bf78116815a3da1ed4f0a4e632b8d8a4"
+      },
+      "jolt-learn-002-original-readback-20261021.json": {
+        "archive_member": "run/independent-readback.json",
+        "bytes": 378,
+        "sha256": "a7d46962e3950d852d8c893c7a271d65888adcdf2da25f2c09a6ca6b1044a271"
+      },
+      "jolt-learn-002-result-20261021.json": {
+        "archive_member": "run/result.json",
+        "bytes": 14827,
+        "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+      },
+      "jolt-learn-002-training-postmortem-review-20261021.json": {
+        "archive_member": "original-review/training-postmortem.json",
+        "bytes": 13485,
+        "sha256": "d579872865d764f4ac7a647331478de3ad183843f7b7b8d47ed17843b3f4fea8"
+      }
+    },
+    "matching_archive_members": [
+      "lifecycle/invocation.json",
+      "original-review/training-postmortem.json",
+      "run/independent-readback.json",
+      "run/inventory.json",
+      "run/manifest.json",
+      "run/result.json"
+    ],
+    "verified": true
+  },
+  "later_readback_wall_seconds": 3.7177890369985107,
+  "limits": [
+    "This later readback verifies retained bytes after external preservation. It does not recreate missing owner records, final executor receipts, physical evaluation outcomes or a complete original wall interval.",
+    "The same independent archive reviewer previously built the lossless transport; this is a separate pass over a fresh downloaded copy, independent of the original executor and uploader.",
+    "Destination account identity and permissions are outside this content-only receipt and are not disclosed here."
+  ],
+  "original_experiment_verdict": {
+    "allocation_consumed": true,
+    "complete_archive_readback_repairs_failed_experiment": false,
+    "missing_original_completion_receipts": [
+      "lifecycle/executor.json",
+      "lifecycle/finalization.json"
+    ],
+    "morphology_transfer_admitted": false,
+    "original_auditor_complete": false,
+    "original_auditor_error": {
+      "code": "jolt_audit",
+      "reason": "jolt_audit: original owner journal did not durably close",
+      "type": "ContractError"
+    },
+    "original_auditor_verified": false,
+    "outer_terminal_bytes": 0,
+    "owner_feel_accepted": false,
+    "qualified": false,
+    "retry_admitted": false,
+    "status": "failed"
+  },
+  "reproducer": {
+    "bytes": 11240,
+    "filename": "verify_downloaded_jolt_archive.py",
+    "sha256": "1d3c0c709ac88d03ac7a4b7d3c1a1901eafa22e4b25e65120646e86ff4834abe"
+  },
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "downloaded_archive_mutations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "original_auditor_replays": 0,
+    "physical_ticks": 0,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "review_scope": "Read-only independent verification of a fresh separately materialized archive against the already committed original member index and six original repository copies.",
+  "reviewed_at_utc": "2026-10-21T21:31:05.933176+00:00",
+  "reviewer": "independent-archive-byte-audit",
+  "role": "Independent result-artifact reviewer; not the original experiment executor or uploader.",
+  "schema": "nca-learn-jolt-002-downloaded-archive-readback/v1"
+}

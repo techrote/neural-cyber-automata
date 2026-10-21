@@ -1,0 +1,104 @@
+{
+  "schema": "nca-learn-jolt-002-source-review/v1",
+  "created_utc": "2026-10-21T19:45:16Z",
+  "reviewer": "policy-contracts-and-learning-cross-reviewer",
+  "accepted": true,
+  "review_kind": "source acceptance supplement by the original policy-contracts reviewer",
+  "additional_independent_reviewer": false,
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+  "source_file_count": 182,
+  "reviewed_parent_revision": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+  "original_review": {
+    "path": "docs/evidence/jolt-learn-002-policy-review-20261021.json",
+    "sha256": "90e9f53299872f36244cbc82d6d9a475aa98ca9ce943df3383f6c085102406b7",
+    "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+    "unchanged": true,
+    "scope_carried_forward": "The original disclosed authorship, independent policy/training/runner/admission review, resolved findings, and software-only limits apply to the unchanged files. This record accepts the complete new inventory after separately reviewing the runtime serialization correction and its regression test."
+  },
+  "authored_scope": [],
+  "cross_review_scope": [
+    "src/nca/train/jolt_screen.py: conversion of the actual Torch runtime version object to an exact plain string in runtime_identity",
+    "tests/test_jolt_screen.py: actual-runtime immutable JSON publication and strict readback regression",
+    "Existing strict JSON, immutable publication, freeze, runtime pinning and audit paths used by that metadata"
+  ],
+  "independence_statement": "The runner contributor authored both reviewed changes. This supplement uses the same reviewer identity as the original policy review; it adds no independent reviewer. The original review bytes remain immutable.",
+  "source_delta": {
+    "src/nca/train/jolt_screen.py": {
+      "before_sha256": "30ee31ba81fb1ccfe1e6208718f235df6b4ef5d17a659e427eb0805e8f9381ab",
+      "after_sha256": "89cecde9287cb00bec96181fbad84eb3986bd531ceeffdb0eb9b171c38c4bde3",
+      "change": "Store str(torch.__version__) in the public runtime identity."
+    },
+    "tests/test_jolt_screen.py": {
+      "before_sha256": "1afa1da8930ac172cc2487416711a54dc1987ef92c9a108c6a81ca71320a9e56",
+      "after_sha256": "2b3978793ca35a77e9244d24316dc1368a3a0fa1242ec2d369f5362ffb349a6a",
+      "change": "Exercise runtime_identity with the installed runtime, publish it through publish_json, parse with strict_json_loads, and verify exact identity, canonical hash and plain-string Torch version."
+    }
+  },
+  "findings": [
+    {
+      "area": "preflight serialization defect",
+      "result": "accepted after correction",
+      "detail": "Independent reproduction before the change confirmed that pinned Torch 2.8.0+cpu exposes torch.__version__ as a TorchVersion subclass rather than an exact str. The strict canonical JSON validator rejected the original runtime identity with invalid_json: value.torch is not finite JSON. The prospective freeze revealed this before declaration publication; the freeze path constructs no physical host or policy model."
+    },
+    {
+      "area": "minimal representation correction",
+      "result": "accepted",
+      "detail": "The conversion preserves the exact version text 2.8.0+cpu while providing the plain JSON scalar required by the unchanged serializer. NumPy already supplies a plain string. Runtime equality, pinned-version checks, source and review binding, host identity, budgets, training configuration, policy semantics and qualification remain unchanged."
+    },
+    {
+      "area": "actual runtime regression",
+      "result": "accepted",
+      "detail": "The new test uses the installed runtime identity rather than a mocked string, publishes through the immutable production JSON writer and reads through the strict production reader. It verifies the full reconstructed identity and canonical hash and checks the restored Torch field's exact type and value. All 20 screen tests pass in the pinned environment."
+    },
+    {
+      "area": "complete source acceptance",
+      "result": "accepted",
+      "detail": "A separate standard-library enumeration and byte-hash reconstruction confirms 182 files at the new aggregate hash. Comparing every inventoried file with the published parent identifies exactly the two declared source/test changes; the remaining 180 source inventory entries retain their original bytes. The original policy review is unchanged. This supplement accepts the new complete source inventory subject to its own clean source publication and required hosted checks."
+    }
+  ],
+  "verification": [
+    {
+      "check": "independent reproduction of the original pinned runtime serialization failure",
+      "torch_runtime_value": "2.8.0+cpu",
+      "original_exact_type": "TorchVersion",
+      "original_strict_json_accepted": false,
+      "failure_code": "invalid_json"
+    },
+    {
+      "check": "tests/test_jolt_screen.py on the new frozen source",
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "includes_actual_runtime_publication_readback": true
+    },
+    {
+      "check": "independent complete source inventory and parent-byte comparison",
+      "source_files": 182,
+      "changed_inventory_files": 2,
+      "unchanged_inventory_files": 180,
+      "new_source_sha256_matches": true,
+      "original_review_unchanged": true
+    }
+  ],
+  "blocking_findings": [],
+  "evidence_limits": {
+    "software_only": true,
+    "physical_learning_invocation_performed_for_this_review": false,
+    "physical_retry_performed": false,
+    "declaration_publication_performed_for_this_review": false,
+    "demonstration_collection_performed_for_this_review": false,
+    "experimental_training_performed_for_this_review": false,
+    "synthetic_runtime_and_mock_owner_tests_used": true,
+    "physical_performance_or_inference_latency_accepted": false,
+    "learned_skill_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "bounded_completion_guaranteed": false,
+    "successor_hosted_checks_required": true,
+    "limitations": [
+      "This is a metadata serialization correction found during prospective freeze, not a physical retry or evidence of trained behavior.",
+      "The regression publishes a synthetic runtime metadata artifact only; it does not publish an execution declaration or acquire a host.",
+      "The one bounded physical allocation remains subject to clean source publication, fresh accepted source records, required hosted checks and exact execution admission. Original physical qualification, owner-feel and morphology requirements remain in force."
+    ]
+  }
+}

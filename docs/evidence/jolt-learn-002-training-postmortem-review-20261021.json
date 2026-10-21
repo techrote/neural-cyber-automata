@@ -1,0 +1,284 @@
+{
+  "examined_artifact_identities": {
+    "budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "closed-budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "config.json": {
+      "bytes": 54250,
+      "sha256": "4bc4720716dd3c6786b5e66c672f7b78f825c5edd404a5582a8de009c4ee7965"
+    },
+    "dataset.json": {
+      "bytes": 8169,
+      "sha256": "6eb9058b3a3f1ac2e8ff63ff19ebdbf326db3b0712279f0eb2bf63e609c2a6e6"
+    },
+    "declaration.json": {
+      "bytes": 28047,
+      "sha256": "424482c32e213e55e1984638f68842dcc678b0cbb44fab615ad50d2945953dff"
+    },
+    "episodes/ppo-seed190301-u7-e2.json.gz": {
+      "bytes": 87774,
+      "sha256": "76f138b372f94d131e797477aa523637eb4cbefb943d7b2dfad069f9bced1bfe"
+    },
+    "independent-readback.json": {
+      "bytes": 378,
+      "sha256": "a7d46962e3950d852d8c893c7a271d65888adcdf2da25f2c09a6ca6b1044a271"
+    },
+    "manifest.json": {
+      "bytes": 24766,
+      "sha256": "9459cc2292354108794e7ee6c9ae7bca2c72d3ec9999058572f97e87154c2931"
+    },
+    "metrics/ppo-seed190301-u7-e2.json": {
+      "bytes": 3974,
+      "sha256": "3871a581797a387a821af874f1d742d63be99c5e33bc38c590db8287cf5e28b6"
+    },
+    "result.json": {
+      "bytes": 14827,
+      "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+    },
+    "samples/ppo-seed190301-u7-e2.json.gz": {
+      "bytes": 134438,
+      "sha256": "67b9188440c1c6edb350cc1dc5ff952aba587d2e5205f83cb18e05b0f4c3652e"
+    },
+    "worker-result.json": {
+      "bytes": 1040705,
+      "sha256": "9c00653440113fd14a6171aed1f62427dcce719572ac40d198c6b8dd140d4943"
+    }
+  },
+  "examined_source_file_sha256": {
+    "src/nca/controllers/jolt_learned.py": "569efb93ce6710f90b67f08aacfb557f6b373a646ae87806d8ba047284630e75",
+    "src/nca/controllers/morphology/conformance.py": "384ea7611ede3f50ecc1eb4971f5102e04e5d12b78060611632e7d6e7c6142d0",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/train/jolt_screen.py": "89cecde9287cb00bec96181fbad84eb3986bd531ceeffdb0eb9b171c38c4bde3"
+  },
+  "findings": [
+    {
+      "assessment": "Retiring authority at the declared 48-tick emergency cap is intended fail-closed behavior. The frozen capture and worker intentionally end the allocation on the exception. No timing extension, supervisor weakening, continued collection or retry is justified. The missing stable exception reason is a diagnostics defect, not evidence that the safety cap malfunctioned.",
+      "classification": "Strong source-and-retained-state inference; the exception message was not recorded.",
+      "direct_evidence": {
+        "case_id": "teacher-009-right-drop24-r1-h3",
+        "controller_id": "residual-seed190301-u7",
+        "episode_id": "ppo-seed190301-u7-e2",
+        "final_override_lease_ticks": 6,
+        "final_override_tick": 108,
+        "first_override_angular_speed": 6.38692712783813,
+        "first_override_tick": 66,
+        "last_received_angular_speed": -0.264469176530838,
+        "last_received_rotation": 1.13431668281555,
+        "last_received_tick": 114,
+        "last_request_consumed_before_failure": true,
+        "no_forward_or_owner_step_between_those_reservations": true,
+        "override_decisions": 8,
+        "recorded_consumed_ticks": 114,
+        "recorded_decisions": 19,
+        "subsequent_cancel_reservation": 518336,
+        "subsequent_checkpoint_execution_reservation": 518335
+      },
+      "id": "emergency_deadline_boundary",
+      "minimal_future_correction": "Retain a stable enumerated supervisor-retirement code and reason without arbitrary exception text; distinguish this expected authority retirement from malformed input while preserving the same stop behavior and emergency deadline.",
+      "reasoning": "The unchanged emergency declaration enters at angular speed >=4.5. Recovery starts at tick 66. Every retained recovery decision and the tick 114 observation remain outside the angle <=0.32 exit condition, so the quiet exit cannot complete. At tick 114, elapsed recovery is exactly 48 ticks. PhysicalRecoverySupervisor.admit therefore returns canceled/emergency_recovery_deadline. JoltController.step raises ValueError when supervision is not running, before feature encoding or model inference. The reservation tail records the next attempted controller call followed directly by cleanup. This explains the retained ValueError without executing the controller.",
+      "recorded_exception_reason_available": false
+    },
+    {
+      "assessment": "The failure handler sets closure=bool(recorder.view.get(\"suspended\")), while the established ACT004 cancellation receipt proves authority revocation by same physical state and generation increment without requiring suspension. The saved cancellation fields satisfy those declared comparisons. The false episode closure flag therefore does not prove native cancellation failed. The missing original owner-journal suffix still prevents independent authentication of this receipt.",
+      "classification": "Concrete source/metadata inconsistency.",
+      "direct_evidence": {
+        "action_after": {},
+        "cancel_event_reason": "failed_episode_cleanup",
+        "cancel_event_valid": true,
+        "control_generation_after": 1,
+        "control_generation_before": 0,
+        "joint_physics_except_targets_unchanged": true,
+        "joint_targets_after": [
+          0.0,
+          0.0
+        ],
+        "lease_remaining_after": 0,
+        "new_observation_stamp_correct": true,
+        "pending_input_edges_after": 0,
+        "position_velocity_rotation_parts_unchanged": true,
+        "reported_owner_closure_confirmed": false,
+        "same_incarnation": true,
+        "suspended_after": false,
+        "tick_after": 114,
+        "tick_before": 114
+      },
+      "id": "failed_episode_cancellation_reporting",
+      "minimal_future_correction": "Use the same explicit cancellation_receipt comparison in both successful and exception cleanup paths, with a focused synthetic false-suspension/valid-fence test. Preserve the original failed result and its receipts unchanged."
+    },
+    {
+      "assessment": "Capture exits through its exception path before any cutoff bootstrap. Default task_terminal/valid=true fields remain in the failed row even though the task had not terminated and no bootstrap observation hash or value was produced. The row is raised as a failed capture and no eighth update for this seed is recorded; the default was not used in a completed update.",
+      "classification": "Concrete unused metadata inconsistency.",
+      "direct_evidence": {
+        "episode_task_done": false,
+        "recorded_bootstrap_observation_sha256": null,
+        "recorded_bootstrap_observation_valid": true,
+        "recorded_bootstrap_reason": "task_terminal",
+        "recorded_bootstrap_value": 0.0
+      },
+      "id": "failed_capture_default_bootstrap_metadata",
+      "minimal_future_correction": "Represent no attempted bootstrap explicitly on failed capture; do not interpret the default zero as a critic observation."
+    }
+  ],
+  "issue": "LEARN-JOLT-002 / #62",
+  "original_config_canonical_sha256": "79bf82d3fc905bf6c55bc504264792bf4b4918e508e83928908ce41ce586228d",
+  "original_declaration_canonical_sha256": "29b8db695828f7c512a86e120c596645f23d1ff520ce6dab104fc8fbf6b66d5f",
+  "original_error": {
+    "code": null,
+    "type": "ValueError"
+  },
+  "original_evidence_complete": false,
+  "original_evidence_limits": [
+    "The original independent reader returned verified=false, complete=false and qualified=false at owner-journal closure before any checkpoint loads or audit forwards.",
+    "Counts and boundary conclusions in this review are read-only retained-metadata and source consistency findings. They are not an independently authenticated complete physical result.",
+    "The final exception message is absent. emergency_recovery_deadline is inferred from the exact original source and retained state, not quoted as a retained error reason.",
+    "All three BC and two residual final checkpoint entries remain unqualified; neither open nor sealed comparison began.",
+    "No future correction may retroactively change this failed allocation, its acceptance thresholds, emergency limit, original clock, missing evidence or no-retry rule."
+  ],
+  "original_independent_readback": {
+    "audit_forward": 0,
+    "checkpoint_loads": 0,
+    "complete": false,
+    "error": {
+      "code": "jolt_audit",
+      "reason": "jolt_audit: original owner journal did not durably close",
+      "type": "ContractError"
+    },
+    "qualified": false,
+    "verified": false
+  },
+  "original_qualification": false,
+  "original_source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "original_source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+  "original_status": "failed",
+  "recommendation": "Retain and document the original failed, nonqualifying allocation. Separately consider narrowly tested diagnostic and cancellation-reporting corrections without another physical or neural run.",
+  "review_complete": true,
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "original_auditor_replays": 0,
+    "physical_ticks": 0,
+    "repository_edits": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "reviewed_utc_date": "2026-10-21",
+  "reviewer": "independent-training-and-evidence-review",
+  "schema": "nca-learn-jolt-002-postmortem-review/v1",
+  "scope": "Read-only standard-library examination of original saved JSON, compressed episode/sample records, reservation tail, file hashes and frozen source. This is a metadata postmortem, not a new allocation audit or neural replay.",
+  "training_accounting": {
+    "aggregate": {
+      "checkpoint_writes": 34,
+      "confirmed_ticks": 45054,
+      "decisions": 7509,
+      "declared_checkpoint_writes": 36,
+      "episodes_aborted": 1,
+      "episodes_completed": 228,
+      "episodes_started": 229,
+      "final_checkpoints_recorded": 5,
+      "refused_ticks": 0,
+      "requested_ticks": 45054,
+      "required_final_checkpoints": 6,
+      "saved_learning_records": 26,
+      "uncertain_ticks": 0
+    },
+    "basis": "Original configuration, manifest, result rows, all 26 saved learning JSON records, checkpoint manifest entries and reservation summary agree internally. This does not restore the missing durable owner stream or verify checkpoint tensors.",
+    "bc": {
+      "declared_epochs_per_seed": 40,
+      "eligible_rows_per_seed": 1520,
+      "limit": "Zero positive secondary demonstrations do not support a demonstrated rebound-skill claim. BC loss values alone establish no held-out improvement.",
+      "optimizer_calls_per_seed": 5440,
+      "physical_rows_per_seed": 1522,
+      "positive_class_weights": [
+        10.0,
+        1.0
+      ],
+      "positive_primary_labels_per_seed": 68,
+      "positive_secondary_labels_per_seed": 0,
+      "recorded_epoch_losses_per_seed": 40,
+      "seeds_with_final_checkpoint": 3,
+      "total_optimizer_calls": 16320
+    },
+    "declared_training_seeds": [
+      190103,
+      190207,
+      190301
+    ],
+    "evaluation": {
+      "declared_open_cases": 4,
+      "declared_sealed_cases": 16,
+      "expected_open_controller_case_rows": 32,
+      "expected_sealed_controller_case_rows": 224,
+      "frozen_finals_file_present": false,
+      "learned_vs_authored_measured": false,
+      "learned_vs_initial_measured": false,
+      "morphology_transfer_admitted": false,
+      "owner_feel_accepted": false,
+      "paired_confidence_interval_available": false,
+      "recorded_open_rows": 0,
+      "recorded_sealed_rows": 0,
+      "sealed_opened_file_present": false
+    },
+    "ppo": {
+      "collected_but_unfitted_final_group_decisions": 99,
+      "completed_update_groups": 23,
+      "decisions_in_completed_groups": 5888,
+      "declared_decisions_per_update": 256,
+      "declared_epochs_per_update": 4,
+      "declared_total_decisions": 6144,
+      "declared_updates_per_seed": 8,
+      "missing_final_group_decisions": 157,
+      "per_seed": [
+        {
+          "completed_updates": 8,
+          "decisions": 2048,
+          "episodes": 56,
+          "final_checkpoint_recorded": true,
+          "seed": 190103,
+          "ticks": 12288
+        },
+        {
+          "completed_updates": 8,
+          "decisions": 2048,
+          "episodes": 57,
+          "final_checkpoint_recorded": true,
+          "seed": 190207,
+          "ticks": 12288
+        },
+        {
+          "completed_updates": 7,
+          "decisions": 1891,
+          "episodes": 52,
+          "final_checkpoint_recorded": false,
+          "last_update_group_decisions": [
+            40,
+            40,
+            19
+          ],
+          "seed": 190301,
+          "ticks": 11346
+        }
+      ],
+      "recorded_ticks": 35922,
+      "recorded_total_decisions": 5987,
+      "total_optimizer_calls": 1772
+    },
+    "teacher": {
+      "decisions": 1522,
+      "declared_episodes": 64,
+      "distinct_declared_cases": 64,
+      "recorded_episode_errors": 0,
+      "recorded_episodes": 64,
+      "ticks": 9132
+    }
+  }
+}

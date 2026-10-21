@@ -8,23 +8,37 @@ verified: 2026-10-21
 
 # LEARN-JOLT-002
 
-This is the next experiment design commissioned by D-015 and tracked in
+This is the experiment design commissioned by D-015 and tracked in
 [LEARN-JOLT-002 / #62](https://github.com/techrote/neural-cyber-automata/issues/62).
 The [v4 recovery result](../evidence/2026-10-20-jolt-recovery-v4.md) satisfies its
 [Jolt teacher #48](https://github.com/techrote/neural-cyber-automata/issues/48)
 and [complete diagnostic evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43)
-dependency. Collection still requires the versioned implementation, fresh splits
-and final source/runtime/budget admission below.
-It does not authorize treating the earlier open diagnostic cases as sealed
-evaluation, relabel an authored result as learned, or replace the failed
+dependency. Versioned implementation, fresh splits and source/runtime/budget
+admission preceded the single allocation at clean source
+`a68e687ced52bef778375a2753b1362dea3704fa`, with a 182-file source closure.
+Later evidence publication preserves that original execution identity.
+
+**The allocation was consumed and failed.** The [retained evidence](../evidence/2026-10-21-jolt-learn-002.md)
+contains collection and fitting records, five of six final checkpoints, and zero
+open or sealed evaluation rows. Independent readback found only 6,720 original
+owner-journal records against the worker's claimed 24,195. Complete physical
+evidence and terminal execution receipts remain missing; paired learned
+reliability is unmeasured and no family is qualified. #62 remains open and
+blocked. No retry, resume, tuning or extension is admitted by that declaration.
+
+The original design and acceptance requirements below remain unchanged. Earlier
+open diagnostic cases remain open, and the authored teacher result supplies no
+learned qualification or replacement for the failed
 [morphology prerequisite](../evidence/2026-10-19-t106-direction-frame.md).
-No dataset collection, fitting, checkpoint execution or transfer has occurred
-under this design. The final source/dependency/split declaration must precede
-any such work.
+Morphology #16 remains blocked. A further physical experiment would require a
+separately commissioned prospective allocation.
 
 The [implementation checklist](LEARN_JOLT_002_IMPLEMENTATION.md) binds complete
 learned actuation, action/history masks, immutable invocation time, zero-correction
-residual parity and the remaining prospective cost and split checks.
+residual parity and the historical prospective cost and split checks.
+The separate [execution runbook](../LEARN_JOLT_002_RUNBOOK.md) records the v2
+contracts, exact counters, static split limitations and original freeze/run
+procedure for the consumed declaration.
 
 The first [recovery diagnostic](../evidence/2026-10-20-jolt-recovery-v1.md)
 stopped after 24 of 96 rows. A sampled settled estimate retired its lease before

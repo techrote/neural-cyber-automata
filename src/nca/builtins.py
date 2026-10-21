@@ -51,6 +51,18 @@ def first_skill_screen(**kwargs):
     return run_screen(**kwargs)
 
 
+def learned_jolt_policy(*args, **kwargs):
+    """Load the versioned optional learned runtime on explicit construction."""
+    from .controllers.jolt_learned import JoltController
+    return JoltController(*args, **kwargs)
+
+
+def learn_jolt_screen(**kwargs):
+    """Execute only through the new trainer's frozen admission contract."""
+    from .train.jolt_screen import run
+    return run(**kwargs)
+
+
 def cpu_export_policy(*args, **kwargs):
     """Construct the optional NumPy runtime only on explicit invocation."""
     from .export import ExportController
@@ -127,6 +139,10 @@ def builtin_registry() -> Registry:
                       ("act004", "same-runtime", "original-observation-age"))
     registry.register("trainer", "first-jolt-screen", 1, first_skill_screen,
                       ("optional-cpu", "bounded-experiment", "recurrent", "source-attribution"))
+    registry.register("policy", "jolt-learned", 2, learned_jolt_policy,
+                      ("optional-torch", "cpu", "recurrent", "learned-aim-buttons", "separate-supervisor", "cancellation"))
+    registry.register("trainer", "learn-jolt", 2, learn_jolt_screen,
+                      ("optional-cpu", "frozen-admission", "bounded-experiment", "recurrent", "source-attribution"))
     registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
                       ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
     registry.register("policy", "jolt-torch-cpu-export", 1, torch_cpu_export_policy,

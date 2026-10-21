@@ -1,0 +1,77 @@
+{
+  "additional_experiment_operations": {
+    "checkpoint_deserializations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "physical_ticks": 0
+  },
+  "archive": {
+    "bytes": 106211945,
+    "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
+    "member_bytes": 283352687,
+    "regular_members": 765,
+    "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+  },
+  "executed_source": {
+    "changed": false,
+    "revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+    "source_files": 182,
+    "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+  },
+  "external_publication": {
+    "confirmation_basis": "The upload response timed out; a subsequent exact-name search and recent-file listing identified one saved archive. A fresh download then succeeded and its bytes matched the previously published archive identity.",
+    "confirmed": true,
+    "created_at_utc": "2026-10-21T21:28:13.758529+00:00",
+    "matching_saved_files": 1,
+    "owner_approved_destination": true,
+    "private_storage_identifiers_omitted": true,
+    "repeat_upload_performed": false
+  },
+  "fresh_download": {
+    "bytes": 106211945,
+    "completed": true,
+    "identity_metadata_applied": true,
+    "independent_readback": {
+      "bytes": 5363,
+      "path": "jolt-learn-002-downloaded-readback-20261021.json",
+      "sha256": "d3eb4beb67b7c0a1a0813741ea68cc9a77b7f9c0e3e9421356875c3b3b8f5094"
+    },
+    "outer_hash_verified_at_utc": "2026-10-21T21:31:31.055489+00:00",
+    "separate_local_file": true,
+    "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+  },
+  "limits": [
+    "This content-preservation receipt does not restore missing original owner-journal records or executor/finalization receipts.",
+    "The original full process duration, exit status, timeout and independently proven process-tree closure remain unknown.",
+    "Immutable evidence identity is provided by the retained hashes and committed readback records; no storage-level write-once enforcement is claimed."
+  ],
+  "preceding_publication_review": {
+    "bytes": 9581,
+    "original_bytes_preserved": true,
+    "path": "jolt-learn-002-publication-review-20261021.json",
+    "publication_gate_resolved_by_this_receipt": true,
+    "sha256": "9e8a3a1669fb179c991387b1556d126a563b98135a7e2d0e70d12cbf7be2af79"
+  },
+  "publication_scope": "Durable preservation of retained original failed-allocation bytes in the owner-approved external artifact store, followed by a separate fresh download and independent byte readback.",
+  "qualification": {
+    "allocation_consumed": true,
+    "issue_62_remains_open": true,
+    "learned_qualified": false,
+    "morphology_transfer_admitted": false,
+    "original_complete": false,
+    "original_status": "failed",
+    "owner_feel_accepted": false,
+    "retry_resume_or_extension_admitted": false,
+    "selected_family": null
+  },
+  "recorded_at_utc": "2026-10-21T21:32:41.953623+00:00",
+  "remaining_integration_gates_at_record_time": [
+    "Independent review of the final publication supplement.",
+    "All five required CI checks on the final PR head.",
+    "Expected-head merge and verification of the accepted tree on main."
+  ],
+  "schema": "nca-learn-jolt-002-durable-publication/v1"
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "nca-learn-jolt-002-checkout-review/v1",
+  "created_utc": "2026-10-21T19:38:39Z",
+  "reviewer": "policy-contracts-and-learning-cross-reviewer",
+  "accepted": true,
+  "review_kind": "supplementary review by the original policy-contracts reviewer",
+  "additional_independent_reviewer": false,
+  "original_review": {
+    "path": "docs/evidence/jolt-learn-002-policy-review-20261021.json",
+    "sha256": "90e9f53299872f36244cbc82d6d9a475aa98ca9ce943df3383f6c085102406b7",
+    "unchanged": true
+  },
+  "reviewed_parent_revision": "0acf2c6624cc901fdbb5c57d9932405aa2839999",
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "source_file_count": 182,
+  "source_inventory_unchanged": true,
+  "attributes": {
+    "path": ".gitattributes",
+    "sha256": "080a59fce5f3f293bf80e63392bae6bbc891a25c4273ea48936eef4e8d732419",
+    "added_rule": "*.json text eol=lf",
+    "change": "One explanatory comment and the JSON LF checkout rule; existing attributes remain unchanged."
+  },
+  "reviewed_proof": {
+    "path": "docs/evidence/jolt-learn-002-checkout-proof-20261021.json",
+    "sha256": "ae4e130de6b935f0e138810a2f0dc5f2d9fc0a728a293ceb80d915209b9e692a",
+    "independently_reproduced": true
+  },
+  "independent_verification": {
+    "method": "Create two separate fresh local clones without initial checkout at the original published revision. In both, set core.autocrlf=true and core.eol=crlf and populate the index from that revision. In the second clone only, replace the indexed .gitattributes blob with the reviewed rule before materializing the fresh checkout. Compare resulting JSON and admission-bound file bytes with original committed blobs, inspect effective eol attributes, and run the admission suite in the corrected clone.",
+    "network_used_for_checkout": false,
+    "checkout_conversion_host_os": "Linux",
+    "windows_style_checkout_conversion_enabled": true,
+    "actual_windows_os_execution": false,
+    "tracked_json_count": 130,
+    "tracked_json_original_bytes_all_lf": true,
+    "tracked_json_mismatches_before": 81,
+    "tracked_json_mismatches_after": 0,
+    "bound_file_count": 129,
+    "bound_files_sha256": "455bd4453a80529afca5685f66c83625807d17fa25c779f8c35674a5d44b3b34",
+    "bound_file_definition": "Union of opened inventory source files, prerequisite source and evidence files, the main learning configuration and its prerequisite, opened inventory and static split documents.",
+    "bound_file_mismatches_before": 71,
+    "bound_file_mismatches_after": 0,
+    "bound_files_all_effective_eol_lf": true,
+    "admission_tests": {
+      "path": "tests/test_jolt_admission.py",
+      "tests": 16,
+      "passed": 16,
+      "failed": 0,
+      "includes_full_static_load_config": true
+    },
+    "source_inventory_recomputed_separately": true,
+    "all_three_original_source_reviews_unchanged": true
+  },
+  "findings": [
+    {
+      "area": "cause and correction",
+      "result": "accepted",
+      "detail": "The original attributes allow CRLF checkout conversion for 71 admission-bound files. The added JSON rule makes those checkouts preserve the original LF bytes. The independent reproduction verifies both the failure before the rule and exact-byte agreement after it."
+    },
+    {
+      "area": "unchanged evidence and admission",
+      "result": "accepted",
+      "detail": "All 130 previously tracked JSON files already have LF committed bytes. No historical receipt, learning configuration, original source review, hash normalization or admission predicate is changed. The full static admission test passes against the corrected isolated checkout."
+    },
+    {
+      "area": "review and execution binding",
+      "result": "accepted",
+      "detail": "The current execution checkout retains the original 182-file source inventory hash. This supplementary record binds the separately changed attribute bytes and the author's checkout proof. It preserves the existing three reviewer identities and their original review bytes; it does not introduce a fourth independent reviewer. A successor source commit and its required hosted checks must precede execution admission."
+    }
+  ],
+  "blocking_findings": [],
+  "evidence_limits": {
+    "software_only": true,
+    "physical_execution_started": false,
+    "training_performed": false,
+    "physical_dataset_collected": false,
+    "host_runtime_modified": false,
+    "original_reviews_modified": false,
+    "learned_skill_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "successor_hosted_checks_required": true,
+    "limitations": [
+      "This is a local Git checkout-conversion reproduction, not a Windows-hosted CI result.",
+      "Exact-byte portability is demonstrated for the 129 admission-bound paths and the 130 existing tracked JSON files. The unchanged complete source hash is verified in the execution checkout; this review does not claim that unrelated file extensions have gained an LF rule.",
+      "The check changes no physical allocation, declaration, model, training or qualification requirement and performs no physical execution."
+    ]
+  }
+}

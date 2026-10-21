@@ -1,0 +1,133 @@
+{
+  "accepted": true,
+  "bound_publication_receipts": {
+    "durable_publication": {
+      "bytes": 3381,
+      "path": "docs/evidence/jolt-learn-002-durable-publication-20261021.json",
+      "sha256": "bdc098383804abc22ef96f1ac41572aa44b26b1cb7ec0012bd283067296abc2d"
+    },
+    "fresh_download_readback": {
+      "bytes": 5363,
+      "path": "docs/evidence/jolt-learn-002-downloaded-readback-20261021.json",
+      "sha256": "d3eb4beb67b7c0a1a0813741ea68cc9a77b7f9c0e3e9421356875c3b3b8f5094"
+    },
+    "preceding_publication_review": {
+      "bytes": 9581,
+      "path": "docs/evidence/jolt-learn-002-publication-review-20261021.json",
+      "sha256": "9e8a3a1669fb179c991387b1556d126a563b98135a7e2d0e70d12cbf7be2af79"
+    }
+  },
+  "findings": [],
+  "independence": "This reviewer did not upload the archive, author the supplement prose or durable-publication receipt, or produce the new downloaded-readback receipt. It previously authored the preserved forensic review and earlier publication review; this supplement preserves those historical bytes.",
+  "integration_disposition": {
+    "final_head_ci_already_completed_by_this_review": false,
+    "integration_accepted_subject_to_final_head_ci": true,
+    "merge_already_performed_by_this_review": false,
+    "publication_hold_resolved": true,
+    "required_next_gates": [
+      "Publish this exact reviewed supplement with this review and pass strict documentation validation.",
+      "Require all five checks on the resulting final PR head: docs, Ubuntu CPU conformance, Windows CPU conformance, pinned actual-host and optional CPU learning conformance.",
+      "Merge only the expected reviewed head, then verify the resulting accepted tree on main."
+    ],
+    "successful_publication_is_not_successful_experiment": true
+  },
+  "preservation": {
+    "acceptance_thresholds_unchanged": true,
+    "all_declared_source_bytes_unchanged": true,
+    "all_index_and_script_hash_bindings_match": true,
+    "executed_source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+    "historical_files_checked": 13,
+    "historical_reviews_and_original_copies_unchanged_against_base": true,
+    "prior_pending_checkpoint_preserved_and_explicitly_superseded": true,
+    "private_identifiers_paths_and_credentials_absent_from_reviewed_public_supplement": true,
+    "readback_reference_matches_preceding_committed_index": true,
+    "source_inventory_files": 182,
+    "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+  },
+  "publication_gate": {
+    "all_765_downloaded_member_hashes_independently_verified": true,
+    "all_six_original_repository_copies_match_downloaded_members": true,
+    "archive": {
+      "bytes": 106211945,
+      "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
+      "member_bytes": 283352687,
+      "regular_members": 765,
+      "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+    },
+    "confirmation_basis": "Examined the private saved-item reconciliation receipt and successful separate-download metadata; identity metadata on the downloaded file matches the saved item. Independently hashed the fresh downloaded archive and every member against the committed inventory. No private account, destination, object identifiers or signed URLs are disclosed.",
+    "downloaded_archive_unchanged_during_review": true,
+    "duplicate_or_unsafe_members": [],
+    "durable_publication_confirmed": true,
+    "external_creation_time_utc": "2026-10-21T21:28:13.758529+00:00",
+    "fresh_download_separate_file_confirmed": true,
+    "immutable_identity_scope": "Content hashes and committed provenance authenticate the retained bytes; no storage-level write-once enforcement is asserted.",
+    "member_binding_failures": [],
+    "nested_and_outer_eof_basis": "The independently authored downloaded-readback receipt and inspected stdlib reproducer verify 458 nested gzip EOFs plus full outer EOF. This completion reviewer independently rehashed every stored member and the outer archive without duplicating nested decompression.",
+    "repeated_upload_performed": false,
+    "resolved": true,
+    "saved_item_and_download_metadata_agree": true
+  },
+  "qualification": {
+    "issue_16_remains_open_and_blocked": true,
+    "issue_62_remains_open_and_blocked": true,
+    "learned_qualified": false,
+    "missing_owner_suffix_or_terminal_receipts_reconstructed": false,
+    "morphology_transfer_admitted": false,
+    "new_experiment_retry_resume_tuning_reseeding_extension_or_checkpoint_selection_admitted": false,
+    "original_experiment_complete": false,
+    "original_full_wall_exit_timeout_and_proven_tree_closure_remain_unknown": true,
+    "original_status": "failed",
+    "owner_feel_accepted": false,
+    "selected_family": null
+  },
+  "review_base_revision": "4311d7a8a5a5d9a6cd1185b983df312454ee2ea8",
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "downloaded_archive_mutations": 0,
+    "github_mutations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "physical_ticks": 0,
+    "repository_edits": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "tests_executed": 0,
+    "torch_imports": 0
+  },
+  "reviewed_at_utc": "2026-10-21T21:34:50.945130+00:00",
+  "reviewed_file_count": 6,
+  "reviewed_files": {
+    "docs/evidence/2026-10-21-jolt-learn-002.md": {
+      "bytes": 14783,
+      "sha256": "1043e8c339c6a418e1cf9ac45e842e01affc275bf7c76d2ca3c6881be9a9635f"
+    },
+    "docs/evidence/jolt-learn-002-downloaded-readback-20261021.json": {
+      "bytes": 5363,
+      "sha256": "d3eb4beb67b7c0a1a0813741ea68cc9a77b7f9c0e3e9421356875c3b3b8f5094"
+    },
+    "docs/evidence/jolt-learn-002-durable-publication-20261021.json": {
+      "bytes": 3381,
+      "sha256": "bdc098383804abc22ef96f1ac41572aa44b26b1cb7ec0012bd283067296abc2d"
+    },
+    "docs/evidence/jolt-learn-002-index-20261021.json": {
+      "bytes": 5681,
+      "sha256": "89cf578c6775fd5f459a68236253e5f7d4c4fa4aed85b8275baf4c73a886115e"
+    },
+    "docs/evidence/jolt-learn-002-readback/verify_downloaded_jolt_archive.py": {
+      "bytes": 11240,
+      "sha256": "1d3c0c709ac88d03ac7a4b7d3c1a1901eafa22e4b25e65120646e86ff4834abe"
+    },
+    "docs/progress/2026-10-21-learning.md": {
+      "bytes": 13140,
+      "sha256": "5ed2ce3383427ea1e1ebcbe0f441f811e94000909508b7b4691acd59ee97d027"
+    }
+  },
+  "reviewed_files_canonical_sha256": "7114b44f749fd527fe973a915ab727a68aaf17152ddc71bde4528b9398c0a76b",
+  "reviewer": "independent-forensic-and-publication-completion-review",
+  "schema": "nca-learn-jolt-002-completion-publication-review/v1",
+  "scope": "Independent review of the six-file durable-publication supplement and fresh downloaded archive. Acceptance resolves the publication hold and permits integration after all final-head CI gates; it does not qualify the failed learning allocation.",
+  "self_excluded": "docs/evidence/jolt-learn-002-completion-review-20261021.json"
+}

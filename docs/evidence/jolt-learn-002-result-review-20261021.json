@@ -1,0 +1,348 @@
+{
+  "artifact_identities": {
+    "budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "closed-budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "command-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "config.json": {
+      "bytes": 54250,
+      "sha256": "4bc4720716dd3c6786b5e66c672f7b78f825c5edd404a5582a8de009c4ee7965"
+    },
+    "dataset.json": {
+      "bytes": 8169,
+      "sha256": "6eb9058b3a3f1ac2e8ff63ff19ebdbf326db3b0712279f0eb2bf63e609c2a6e6"
+    },
+    "declaration.json": {
+      "bytes": 28047,
+      "sha256": "424482c32e213e55e1984638f68842dcc678b0cbb44fab615ad50d2945953dff"
+    },
+    "independent-readback.json": {
+      "bytes": 378,
+      "sha256": "a7d46962e3950d852d8c893c7a271d65888adcdf2da25f2c09a6ca6b1044a271"
+    },
+    "inventory.json": {
+      "bytes": 102178,
+      "sha256": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d"
+    },
+    "lifecycle/invocation.json": {
+      "bytes": 257,
+      "sha256": "5e5c6af2db2ea251c3862a08565fe701bf78116815a3da1ed4f0a4e632b8d8a4"
+    },
+    "lifecycle/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lifecycle/stdout.log": {
+      "bytes": 3488,
+      "sha256": "bd9a5c2773bcb525c2499eaba951c863fc0cc9c9d9d130d264ef04426ad65cbf"
+    },
+    "manifest.json": {
+      "bytes": 24766,
+      "sha256": "9459cc2292354108794e7ee6c9ae7bca2c72d3ec9999058572f97e87154c2931"
+    },
+    "owner-journal.jsonl": {
+      "bytes": 75687705,
+      "sha256": "0df17e9885eceb41b6e42757557ebad4dfba8adafcb084199245fb8dd5c1ee9c"
+    },
+    "prior-training-postmortem-review.json": {
+      "bytes": 13485,
+      "sha256": "d579872865d764f4ac7a647331478de3ad183843f7b7b8d47ed17843b3f4fea8"
+    },
+    "result.json": {
+      "bytes": 14827,
+      "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+    },
+    "terminal-stdout.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "worker-result.json": {
+      "bytes": 1040705,
+      "sha256": "9c00653440113fd14a6171aed1f62427dcce719572ac40d198c6b8dd140d4943"
+    }
+  },
+  "direct_findings": [
+    {
+      "classification": "Direct original-artifact evidence",
+      "conclusion": "No second invocation, resume, new output pathname, checkpoint continuation, retuning or budget extension is admitted by the existing declaration.",
+      "evidence": "The manifest, declaration, worker result, saved learning records and worker stdout record the one admitted allocation at the reviewed source. Worker status is failed and counters report one attempt and one host. The zero-byte outer terminal stdout is not evidence of an unopened allocation.",
+      "id": "allocation_already_consumed"
+    },
+    {
+      "classification": "Independent byte and chain readback",
+      "conclusion": "The valid retained prefix does not reach the worker-reported closure. The original audit correctly returned unverified and incomplete before checkpoint deserialization or model replay.",
+      "evidence": {
+        "event_counts": {
+          "bc_fitting_finished": 3,
+          "bc_fitting_started": 3,
+          "checkpoint_published": 8,
+          "decision_proposed": 2034,
+          "episode_finished": 77,
+          "episode_started": 78,
+          "fitting_shape_frozen": 1,
+          "host_start_reserved": 1,
+          "host_started": 1,
+          "owner_request": 2256,
+          "owner_response": 2256,
+          "ppo_fitting_finished": 1,
+          "ppo_fitting_started": 1
+        },
+        "last_event": "owner_response",
+        "last_sequence": 6720,
+        "retained_chain_errors": [],
+        "retained_chain_sha256": "83b8db7284d1655d911726e6b22bbf61b9a40bca467c3b3d6b93cc30b0a67e14",
+        "retained_records": 6720,
+        "worker_reported_chain_sha256": "faff1e126d419440f866b53432a2ccfd58d12676bf0dc6bfad94c34507083455",
+        "worker_reported_closed": true,
+        "worker_reported_records": 24195
+      },
+      "id": "owner_journal_incomplete"
+    },
+    {
+      "classification": "Direct retained-file evidence",
+      "conclusion": "The initial lifecycle flag cannot override later physical/training artifacts. Full supervisor completion, terminal exit code, final process-tree closure and complete whole-process elapsed time are not established by these retained files. The 963.0812728359988-second worker ledger value must not be relabelled whole-process time or proof of final deadline compliance.",
+      "evidence": {
+        "executor_json_present": false,
+        "finalization_json_present": false,
+        "initial_lifecycle_physical_execution_started": false,
+        "terminal_stdout_bytes": 0,
+        "worker_reported_final_internal_seconds": 963.0812728359988
+      },
+      "id": "terminal_completion_missing"
+    },
+    {
+      "classification": "Direct retained result and manifest evidence",
+      "conclusion": "This is an incomplete, nonqualifying allocation. No family is selected, no learned success percentage or confidence interval is measured, and owner-feel and morphology acceptance remain false.",
+      "evidence": {
+        "final_checkpoints_recorded": 5,
+        "final_checkpoints_required": 6,
+        "frozen_final_receipt_name": "frozen-finals.json",
+        "frozen_final_receipt_present": false,
+        "open_rows": 0,
+        "original_qualification": false,
+        "original_qualification_conclusion": "incomplete_paired_evidence",
+        "reported_result": "failed",
+        "sealed_opened_receipt_present": false,
+        "sealed_rows": 0,
+        "sealed_rows_required": 224
+      },
+      "id": "paired_qualification_unavailable"
+    },
+    {
+      "classification": "Direct contradiction between retained execution artifacts and published status",
+      "conclusion": "Reconcile the issue, PR body, STATE, run ledger and progress record explicitly. Preserve the earlier checkpoint as history and state that the original allocation was already consumed.",
+      "evidence": {
+        "actual_manifest_created_utc": "2026-10-21T19:50:49.380041+00:00",
+        "checkpoint_claim": "The remaining bounded step is the one declared 1,800-second invocation.",
+        "superseded_checkpoint": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6325949389"
+      },
+      "id": "public_checkpoint_stale"
+    }
+  ],
+  "failure_diagnosis_limit": {
+    "emergency_deadline_diagnosis": "The prior source-and-retained-state postmortem infers emergency_recovery_deadline at tick 114 after recovery entered at tick 66. That diagnosis is not an original recorded exception message and is not independently authenticated by a complete owner stream.",
+    "retained_error": {
+      "code": null,
+      "type": "ValueError"
+    },
+    "root_cause_of_missing_journal_suffix": "Not established by the retained artifacts reviewed here."
+  },
+  "independence": "This reviewer did not author the executed implementation, training run, original receipts or original postmortem. It performed no experimental execution and did not modify any original artifact.",
+  "issue": "https://github.com/techrote/neural-cyber-automata/issues/62",
+  "original_independent_readback": {
+    "audit_forward": 0,
+    "checkpoint_loads": 0,
+    "complete": false,
+    "error": {
+      "code": "jolt_audit",
+      "reason": "jolt_audit: original owner journal did not durably close",
+      "type": "ContractError"
+    },
+    "morphology_transfer_admitted": false,
+    "owner_feel_accepted": false,
+    "partial_evidence": [],
+    "qualified": false,
+    "schema": "nca-learn-jolt-002-independent-readback/v1",
+    "verified": false,
+    "verified_episodes": []
+  },
+  "publication_and_merge_recommendation": {
+    "accept_preservation_and_negative_verdict": true,
+    "allowed_merge_scope": "Reviewed implementation plus immutable failed-allocation evidence and honest limits. A merge cannot confer learned qualification or authorize another allocation.",
+    "current_publication_status": "Durable publication of the raw archive is pending. Merge remains held until the archive is durably published, its hash index is recorded, and fresh publication readback succeeds.",
+    "durable_raw_archive_and_hash_index_required": true,
+    "final_head_independent_review_and_all_required_ci_required": true,
+    "fresh_archive_readback_required": true,
+    "future_scope": "Narrow diagnostic, cancellation-reporting and evidence-persistence corrections can be considered separately; this review does not commission a new physical or neural run.",
+    "merge_tree_verification_required": true,
+    "preserve_missing_terminal_evidence_as_missing": true,
+    "preserve_original_bytes": true,
+    "recommended_issue_disposition": "Keep issue #62 open and explicitly blocked: its prescribed paired comparison and useful learned actuation objective were not completed. Record the existing allocation as consumed and the PR as an implementation/evidence reconciliation. Any future experiment needs a separately declared scope and allocation; do not silently reopen the original allocation.",
+    "reconcile_current_status_required": true
+  },
+  "pull_request": "https://github.com/techrote/neural-cyber-automata/pull/67",
+  "qualification_verdict": {
+    "complete_evidence": false,
+    "complete_pairs": false,
+    "descriptive_failure": "failed_incomplete_allocation",
+    "morphology_transfer_admitted": false,
+    "new_physical_execution_permitted": false,
+    "owner_feel_accepted": false,
+    "qualified": false,
+    "reliability_score_available": false,
+    "selected_family": null
+  },
+  "reported_costs_not_independently_authenticated_as_complete_physical_totals": {
+    "internal_final_ledger_seconds": 963.0812728359988,
+    "stage_counts": {
+      "open": {
+        "decisions": 0,
+        "episodes_started": 0,
+        "requested_ticks": 0
+      },
+      "ppo": {
+        "decisions": 5987,
+        "episodes_started": 165,
+        "requested_ticks": 35922
+      },
+      "sealed": {
+        "decisions": 0,
+        "episodes_started": 0,
+        "requested_ticks": 0
+      },
+      "teacher": {
+        "decisions": 1522,
+        "episodes_started": 64,
+        "requested_ticks": 9132
+      }
+    },
+    "whole_process_deadline_compliance_verified": false,
+    "whole_process_seconds": null,
+    "worker_counts": {
+      "attempts": 1,
+      "audit_forward": 0,
+      "bc_burn_in": 153600,
+      "bc_eligible_samples": 182400,
+      "bc_forward": 182640,
+      "bc_optimizer": 16320,
+      "bootstrap_forward": 46,
+      "checkpoint_executions": 5988,
+      "checkpoint_loads": 0,
+      "checkpoint_writes": 34,
+      "confirmed_ticks": 45054,
+      "decisions": 7509,
+      "episodes_aborted": 1,
+      "episodes_completed": 228,
+      "episodes_started": 229,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 11790,
+      "owner_cancel": 100,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 229,
+      "owner_requests": 8068,
+      "owner_reset": 229,
+      "owner_step": 7509,
+      "ppo_actor_samples": 22704,
+      "ppo_base_burn_in": 26104,
+      "ppo_base_forward": 23216,
+      "ppo_burn_in": 26104,
+      "ppo_critic_samples": 23216,
+      "ppo_forward": 23216,
+      "ppo_optimizer": 1772,
+      "ppo_replay_base_forward": 5804,
+      "ppo_replay_forward": 5804,
+      "refused_ticks": 0,
+      "requested_ticks": 45054,
+      "uncertain_ticks": 0
+    }
+  },
+  "retained_inventory_readback": {
+    "file_hash_or_size_mismatches": [],
+    "indexed_bytes": 283205232,
+    "inventory_self_excluded": true,
+    "meaning": "Confirms the retained indexed bytes match the original inventory. It does not recover the missing journal suffix, validate physical claims, restore terminal execution receipts or make incomplete evidence complete.",
+    "original_indexed_files": 757
+  },
+  "review_complete": true,
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "elapsed_seconds": 2.379747947999931,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "original_auditor_replays": 0,
+    "physical_ticks": 0,
+    "repository_edits": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "review_scope_clarification": "This later independent review requires durable raw-artifact publication outside Git plus a hash index, as specified by the experiment contract. It does not add a release-specific storage requirement. The original declaration and execution artifacts are unchanged.",
+  "reviewed_utc_date": "2026-10-21",
+  "reviewer": "independent-admission-result-review",
+  "schema": "nca-learn-jolt-002-independent-status-review/v1",
+  "scope": "Independent standard-library-only readback of the existing failed allocation, original artifact hashes and journal chain, source/declaration identity, project acceptance contract and live issue checkpoint. This is an offline status and preservation review, not the original executor audit or an evaluation of learned weights.",
+  "source_binding": {
+    "declaration_canonical_sha256": "29b8db695828f7c512a86e120c596645f23d1ff520ce6dab104fc8fbf6b66d5f",
+    "execution_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+    "independent_canonical_source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+    "manifest_and_declaration_source_identity_agree": true,
+    "manifest_created_utc": "2026-10-21T19:50:49.380041+00:00",
+    "publication_revision": "146650695a1043f7eba44255c7c1a12545065f40",
+    "reviewed_document_identities": {
+      "AGENTS.md": {
+        "bytes": 4201,
+        "sha256": "a21b30ff343e089f889c7a1841d801ffcf9e446abde1d8cc00f1ce041525e2a3"
+      },
+      "docs/CONSTRAINTS.md": {
+        "bytes": 3431,
+        "sha256": "6088516b689d109be0d7344ee2df3691221d029352df2aa686da2c7fa4e614ac"
+      },
+      "docs/DECISIONS.md": {
+        "bytes": 17971,
+        "sha256": "389b7dbd224895f34760413028c77ef415298e53859689c7c5a75f82d8d94013"
+      },
+      "docs/LEARN_JOLT_002_RUNBOOK.md": {
+        "bytes": 19959,
+        "sha256": "c8f5832c0f3c098d1d31a2d81433ab96a6828bc84167cf521a966af20e4d122d"
+      },
+      "docs/RUNS.md": {
+        "bytes": 22217,
+        "sha256": "86ba7ecc86810e4b680edf1f17e219dcac03ce70d6c3d8997e057649f3106fc2"
+      },
+      "docs/STATE.md": {
+        "bytes": 21543,
+        "sha256": "2c31ab0a689b3eba766c963cc5eecb60f8a77dcd19bc35684db7fcfe76b4357a"
+      },
+      "docs/design/LEARN_JOLT_002.md": {
+        "bytes": 15634,
+        "sha256": "c3a3f07fb88735567534a4375eae66a40cf7d09103d40bb93a05f0cc456cd707"
+      },
+      "docs/design/LEARN_JOLT_002_IMPLEMENTATION.md": {
+        "bytes": 16219,
+        "sha256": "707b74d717c626ab061380701a2622041f20872f77c96a4cbb7f9885756e16be"
+      },
+      "docs/progress/2026-10-21-learning.md": {
+        "bytes": 8526,
+        "sha256": "2a5e3738ad8c327ccaf6d9ec3658d5da3ea88546c39ed92a4f1a1c9f3688885b"
+      }
+    },
+    "source_file_count": 182,
+    "source_file_hash_mismatches": [],
+    "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+  }
+}

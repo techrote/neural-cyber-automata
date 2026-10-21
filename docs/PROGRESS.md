@@ -20,6 +20,8 @@ verified: 2026-10-21
   native CI and preserved original arrival evidence.
 - [20 October, 17:19–19:00 UTC](progress/2026-10-20-afternoon.md): first recovery
   failure, complete negative v2 evidence and accepted archive audits.
+- [21 October learning checkpoints](progress/2026-10-21-learning.md): versioned
+  implementation, prospective admission, recovered consumed failure and publication.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
 

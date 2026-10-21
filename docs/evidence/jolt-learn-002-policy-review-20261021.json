@@ -1,0 +1,110 @@
+{
+  "schema": "nca-learn-jolt-002-source-review/v1",
+  "created_utc": "2026-10-21T19:30:32Z",
+  "reviewer": "policy-contracts-and-learning-cross-reviewer",
+  "accepted": true,
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "source_file_count": 182,
+  "source_identity_method": "Independently enumerate Python and Godot files under src/nca, Python tests and top-level tools, learning JSON configurations excluding jolt-execution declarations, and pyproject.toml. A separate standard-library script hashes every file and the canonical sorted JSON inventory; its result matches the runner inventory and the proposed frozen source hash.",
+  "authored_scope": [
+    "src/nca/controllers/jolt_learned.py and tests/test_jolt_learned.py: versioned recurrent policy, action distribution, frozen-base residual combination, runtime invocation and history contracts, checkpoint format and rejection controls",
+    "src/nca/evaluation/jolt_learning_audit.py and tests/test_jolt_learning_audit.py: offline native, policy, recurrent, stochastic, counter and qualification reconstruction",
+    "src/nca/train/jolt_admission.py: separately coordinated incremental canonical-array reservation digest and owned-copy publication optimization only"
+  ],
+  "independence_statement": "Authored work is disclosed above. Independent findings in this record concern implementation by the runner, admission and training contributors. Those contributors separately reviewed this reviewer's policy and audit implementation. This record does not represent an independent authorship review of every file in the bound inventory.",
+  "cross_review_scope": [
+    "src/nca/data/jolt_samples.py and src/nca/train/jolt_learning.py: original observation, invocation, history, proposal and density authentication; consumption eligibility; reward and boundary identity; fixed BC and PPO specifications; frozen-base and residual recurrence; burn-in, masks and pre-work reservations",
+    "src/nca/train/jolt_screen.py: matching teacher and learned supervision, dispatch-history recording, per-tick task receipts, stochastic source identity, retained bootstrap fields, fitting/checkpoint order, source admission, closure, readback and final qualification integration",
+    "tools/learn_jolt.py: source freeze, clean reviewed execution admission, original outer clock, process-tree cleanup, immutable inventory, closed reservation reconciliation and final completion verdict",
+    "src/nca/train/jolt_admission.py: prospective counter and stage ceilings, no-refund reservation semantics, declaration binding and use of the separately authored digest optimization",
+    "tests/test_jolt_learning_v2.py, tests/test_jolt_screen.py and tests/test_jolt_learning_executor.py: relevant authentication, integration, accounting and interruption controls"
+  ],
+  "findings": [
+    {
+      "area": "original learning identity and masks",
+      "result": "accepted after correction",
+      "detail": "Review demonstrated that consumed source and sequence identity alone were insufficient and that independently supplied transition reward and boundary flags could diverge from the recorded event. The final implementation binds the complete consumed request and actual applied action to the original proposal, and binds transition reward, terminal, cutoff, validity and recurrent reset to the original task event. Negative tests cover both findings. Native numeric action tolerance remains the existing conformance tolerance; boolean metadata aliases are rejected."
+    },
+    {
+      "area": "recurrent fitting and stochastic semantics",
+      "result": "accepted",
+      "detail": "Ordered fitting windows reconstruct complete available prefixes, maintain separate frozen-base and residual state, and do not bridge overridden or missing observations. BC and PPO use the fixed exported specifications. PPO densities refer to the original five-dimensional Normal draw and two Bernoulli draws; actor channels, source hashes, feature and history hashes, invocation and base identity are authenticated. Model, burn-in, loss, optimizer and checkpoint work is reserved before use."
+    },
+    {
+      "area": "physical capture and offline audit integration",
+      "result": "accepted",
+      "detail": "The capture path preserves native per-tick receipts, original requested and admitted packets, distinct proposal and dispatch histories, task rewards and termination, original policy values and the actual pre-cancel bootstrap observation. Emergency overrides do not produce invented actor draws or critic values. Synthetic capture-to-artifact-to-audit controls cover non-PPO null bootstrap and PPO emergency cutoff behavior. All six fixed final checkpoint hashes precede every sealed outcome, including authored and idle references."
+    },
+    {
+      "area": "closed costs and incomplete evidence",
+      "result": "accepted",
+      "detail": "The external standard-library reader reconstructs every final counter and stage total from the immutable reservation array, verifies the exact pre-audit prefix, and permits only cleanup audit-forward and checkpoint-load reservations in the suffix. Their deltas must equal the independent audit's reported charges. Worker, audit, configuration, declaration and final-result identities remain bound. Capped, failed or incomplete evidence cannot be promoted to completion or qualification. Final worker qualification now requires verified and complete readback together with completed worker status."
+    },
+    {
+      "area": "authoritative outer deadline and revocation",
+      "result": "accepted",
+      "detail": "The outer clock begins before substantial imports and is passed unchanged to the worker. Worker and external inventory timeouts preserve finalization reserve. BaseException and cleanup failures attempt owned-tree revocation; failed inspection uses direct known-worker revocation without asserting descendant closure. Completion requires a completed worker, verified complete readback, reconciled closed costs, zero owned descendants, confirmed cleanup and publication within the original 1,800 seconds. The terminal receipt and successful process exit remain authoritative after final receipt publication."
+    },
+    {
+      "area": "exact source and execution admission",
+      "result": "accepted",
+      "detail": "Freeze and execution require the complete matching source inventory, clean frozen source revision, exact configuration and budget, pinned host/runtime identity, and distinct accepted review identities with unchanged review bytes. Automatic retry and extension are false. Execution admission happens before model draws, fitting or host acquisition. The independently computed 182-file hash matches this record's source identity."
+    },
+    {
+      "area": "bounded evidence claims",
+      "result": "accepted",
+      "detail": "Software acceptance preserves the original physical qualification, matched reference, owner-feel and morphology boundaries. A successful software review or structurally verified partial artifact is not a trained-skill acceptance. Audit reconstruction authenticates recorded fitting and retained checkpoints without repeating optimization, and does not establish a new inference-latency measurement."
+    }
+  ],
+  "verification": [
+    {
+      "check": "independent frozen-source inventory reconstruction with a separate standard-library script",
+      "files": 182,
+      "matched_frozen_source_sha256": true
+    },
+    {
+      "check": "tests/test_jolt_learning_executor.py on the final frozen source",
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "includes": [
+        "closed prefix, counter, stage, deadline and audit-delta tampering",
+        "incomplete outcome and qualification promotion rejection",
+        "interruption and descendant-cleanup failures",
+        "late final publication rejection",
+        "fresh standard-library-only verification of a reservation artifact larger than one MiB"
+      ]
+    },
+    {
+      "check": "focused owned policy and audit tests during implementation",
+      "policy_tests_passed": 21,
+      "audit_tests_passed": 16,
+      "physical_host_used": false
+    },
+    {
+      "check": "final full offline suite reported by the integration contributor",
+      "tests": 795,
+      "host_dependent_skips": 57,
+      "result": "OK",
+      "provenance": "Separate contributor's final full-suite run in the consistent-PID execution environment; this reviewer independently reran the 20 focused final external-reader and executor tests."
+    }
+  ],
+  "blocking_findings": [],
+  "evidence_limits": {
+    "software_only": true,
+    "physical_learning_invocation_performed_for_this_review": false,
+    "demonstration_collection_performed_for_this_review": false,
+    "experimental_training_performed_for_this_review": false,
+    "synthetic_unit_optimization_used": true,
+    "physical_performance_or_inference_latency_accepted": false,
+    "learned_skill_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "bounded_completion_guaranteed": false,
+    "limitations": [
+      "Synthetic unit optimization and mocked native receipts test software contracts only; they do not substitute for the one declared physical allocation.",
+      "The review does not guarantee fitting or evidence publication will finish within the fixed allocation. Startup, host work, fitting, cleanup, replay and final publication retain their original deadlines and counters.",
+      "No new physical dataset, trained checkpoint, measured gameplay result, external CI result or owner acceptance is asserted by this review."
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "nca-learn-jolt-002-source-ci/v1",
+  "source_revision": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "all_five_required_checks_passed": true,
+  "physical_execution_started": false,
+  "required_jobs": [
+    "actual-host",
+    "check-docs",
+    "cpu (ubuntu-24.04)",
+    "cpu (windows-2022)",
+    "learning-cpu"
+  ],
+  "workflow_runs": [
+    {
+      "id": 39663580911,
+      "name": "docs",
+      "head_sha": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580911",
+      "created_at": "2026-10-21T19:39:44Z",
+      "updated_at": "2026-10-21T19:39:54Z",
+      "jobs": [
+        {
+          "id": 119442631934,
+          "name": "check-docs",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580911/job/119442631934"
+        }
+      ]
+    },
+    {
+      "id": 39663580918,
+      "name": "CPU conformance",
+      "head_sha": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580918",
+      "created_at": "2026-10-21T19:39:44Z",
+      "updated_at": "2026-10-21T19:40:50Z",
+      "jobs": [
+        {
+          "id": 119442630932,
+          "name": "cpu (windows-2022)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580918/job/119442630932"
+        },
+        {
+          "id": 119442631451,
+          "name": "cpu (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580918/job/119442631451"
+        }
+      ]
+    },
+    {
+      "id": 39663580901,
+      "name": "Pinned host conformance",
+      "head_sha": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580901",
+      "created_at": "2026-10-21T19:39:44Z",
+      "updated_at": "2026-10-21T19:41:30Z",
+      "jobs": [
+        {
+          "id": 119442630864,
+          "name": "actual-host",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580901/job/119442630864"
+        }
+      ]
+    },
+    {
+      "id": 39663580947,
+      "name": "Optional CPU learning conformance",
+      "head_sha": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580947",
+      "created_at": "2026-10-21T19:39:44Z",
+      "updated_at": "2026-10-21T19:41:37Z",
+      "jobs": [
+        {
+          "id": 119442631982,
+          "name": "learning-cpu",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39663580947/job/119442631982"
+        }
+      ]
+    }
+  ],
+  "initial_ci_failure": {
+    "source_revision": "0acf2c6624cc901fdbb5c57d9932405aa2839999",
+    "job_id": 119439018936,
+    "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39662537170/job/119439018936",
+    "cause": "Windows JSON checkout CRLF conversion changed exact admission bytes; fixed with LF checkout rule, without hash normalization.",
+    "checkout_proof": "docs/evidence/jolt-learn-002-checkout-proof-20261021.json",
+    "independent_review": "docs/evidence/jolt-learn-002-checkout-review-20261021.json"
+  }
+}

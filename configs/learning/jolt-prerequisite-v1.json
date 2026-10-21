@@ -1,0 +1,45 @@
+{
+  "acceptance_reconciliation": "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json",
+  "evidence_files": {
+    "docs/evidence/jolt-recovery-v1-result-20261020.json": "bd6c188d11876eed9390539cb168293d9ae0fdbf05c6ebb6bcfbfecc0f3a224e",
+    "docs/evidence/jolt-recovery-v2-result-20261020.json": "3ce71ed0bb9748111b3d820597c8f29afad268978c4426f18d588af99d9c4347",
+    "docs/evidence/jolt-recovery-v3-result-20261020.json": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd",
+    "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json": "efd46622676e0ef8494025e120f854941703deacdc5a63a2983b074cfc2c3351",
+    "docs/evidence/jolt-recovery-v4-archive-members-20261020.json": "56fd6563543a5aec63ffc5b59155e4255867422aedd6285267f7a2a398b49a66",
+    "docs/evidence/jolt-recovery-v4-archive-recovery-verification-20261021.json": "2cb81ddd22f203bcc50448333255a06e5688264b59c30e9523ec1a7cc8385620",
+    "docs/evidence/jolt-recovery-v4-manifest-20261020.json": "e5229ef2c9b1fa8d7e5e1ec5856cfd150c4802cc9d8e06c3bc24924fe30d0b49",
+    "docs/evidence/jolt-recovery-v4-review-20261020.json": "535be68cfcd8a368d7e0d68ed63d046b73a3d17e86542b03763e0eef62712080",
+    "docs/evidence/jolt-recovery-v4-source-review-20261020.json": "3440c29d550bf8da6783d25570384242d34b9b236c3d3bdaa0fe0da11f8e4ac6"
+  },
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "physical_source_revision": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+  "raw_evidence": {
+    "manifest.json": "e5229ef2c9b1fa8d7e5e1ec5856cfd150c4802cc9d8e06c3bc24924fe30d0b49",
+    "owner-journal-seal.json": "bb64839ea084c6bc2bc81bebe2764cee246d4ed1127debf9fbc159a0ae29afcc",
+    "summary.json": "faf163a276a40f10762eefbfedb70c2ec527c76340ee008678590bca0b5194fd"
+  },
+  "retained_limits": [
+    "two leftward teacher failures",
+    "historicalv1/v2/v3 negatives and incomplete tails remain unchanged",
+    "teacher30/32 is opened development evidence",
+    "learned skill, owner feel and morphology remain unqualified"
+  ],
+  "schema": "nca-jolt-learn-prerequisite/v1",
+  "source_files": {
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+    "src/nca/controllers/jolt_recovery_v4.py": "d7903561e37bc0845b3993d3b608ff83200021084e4d41e6f8ab19dff38edeec",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec"
+  },
+  "supervisor_specification_sha256": "791312d48171b27f1f843ed162f6fbce08dec18aa2746328434a0216552e9193",
+  "teacher_controller": "authored-jolt-recovery@4",
+  "teacher_declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+  "teacher_review": "docs/evidence/jolt-recovery-v4-review-20261020.json",
+  "teacher_specification_sha256": "2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038"
+}

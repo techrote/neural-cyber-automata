@@ -1,0 +1,34 @@
+{
+  "schema": "nca-learn-jolt-002-static-preflight-failure/v1",
+  "observed_utc": "2026-10-21T19:43:31Z",
+  "operation": "prospective declaration freeze",
+  "source_revision": "a962d4f585bff3e9d4e7ae7379f8743f6bba2ff4",
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "source_ci_all_five_passed": true,
+  "cli_exit_code": 2,
+  "error": {
+    "type": "ContractError",
+    "code": "invalid_json",
+    "field": "runtime.torch",
+    "reason": "value.torch is not finite JSON"
+  },
+  "diagnosis": {
+    "exact_runtime_value_type": "TorchVersion",
+    "required_json_type": "str",
+    "version_text": "2.8.0+cpu"
+  },
+  "declaration_file_created": false,
+  "declaration_published": false,
+  "learning_invocation_started": false,
+  "physical_host_started": false,
+  "physical_ticks_requested": 0,
+  "experimental_model_fitting": false,
+  "correction": {
+    "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+    "change": "Convert the Torch version metadata to a plain str before strict publication.",
+    "regression": "Publish and strictly read back the actual pinned runtime identity, checking its value and canonical hash.",
+    "strict_json_rules_relaxed": false,
+    "learning_configuration_changed": false
+  },
+  "evidence_limit": "Read-only software preflight failure before any physical allocation; it supplies no gameplay or learned-policy qualification."
+}
