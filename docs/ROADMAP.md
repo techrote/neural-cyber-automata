@@ -3,7 +3,7 @@ title: Cybersand behaviour implementation programme
 kind: roadmap
 summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # Implementation programme
@@ -41,18 +41,27 @@ Each issue contains an execution prompt, read-set, write-set, checks, limits and
 
 The current prerequisite path is contact-aware [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
 and [complete evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43),
-then [LEARN-JOLT-002](design/LEARN_JOLT_002.md), then T-106. Evidence software is
-accepted in PR #58. [The separate v2 result](evidence/2026-10-20-jolt-recovery-v2.md)
-fully verifies 96 rows and native closure, preserving the incomplete v1 attempt.
-Recovery v2 restores airborne character but fails the teacher gate at 25/32
-arrivals versus 27/32, with two rescues and four regressions. The separately
-bounded [v3 correction](evidence/2026-10-20-jolt-recovery-v3.md) reaches 28/32
-and the required drop rescue, but only two historical rescues and failed final
-inventory verification still prevent acceptance. Its sole allocation is closed;
-[#64](https://github.com/techrote/neural-cyber-automata/issues/64) remains open.
-A new physical attempt requires a separately commissioned prospective allocation.
+then [LEARN-JOLT-002 / #62](design/LEARN_JOLT_002.md), then T-106. Evidence software
+is accepted in PR #58. The [v1 incomplete attempt](evidence/2026-10-20-jolt-recovery-v1.md),
+[v2 negative teacher result](evidence/2026-10-20-jolt-recovery-v2.md) and
+[v3 failed qualification](evidence/2026-10-20-jolt-recovery-v3.md) remain preserved.
+
+The separately commissioned [v4 result](evidence/2026-10-20-jolt-recovery-v4.md),
+published through [PR #66](https://github.com/techrote/neural-cyber-automata/pull/66)
+for [#64](https://github.com/techrote/neural-cyber-automata/issues/64), satisfies
+all thirteen teacher checks with complete evidence: 30/32 arrivals versus 27/32,
+three historical rescues, zero success regressions and 32/32 purposeful-airborne
+cases. This releases #62's teacher dependency. Two leftward failures remain,
+including worse final distance for `reference-floor-left-63`; consistent useful
+second-coast landing progress and owner feel are not established. All 32 cases
+are opened development evidence, and no collection or learned result occurred.
+
 The [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
-cannot admit collection. All learned reliability and morphology gates stay unchanged.
+still requires versioned full actuation and sample semantics, fresh geometry/start
+splits, exact teacher evidence binding and final source/runtime/budget admission
+before collection. The learned 75% mean / 50% every-seed reliability gate and all
+separate morphology gates remain unchanged. Any additional recovery diagnostic
+would require a separately commissioned prospective allocation.
 
 ## Dependency gates
 

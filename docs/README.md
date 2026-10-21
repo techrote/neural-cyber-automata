@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # Documentation map
@@ -32,7 +32,7 @@ verified: 2026-10-20
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |
 | How do I use authored skills and repeat matched response fixtures? | [Controllers](CONTROLLERS.md) |
 | What is the separate arrival-aware Jolt teacher and how is it measured? | [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) |
-| What happened in the contact-recovery diagnostics? | [V3 improvement with failed acceptance](evidence/2026-10-20-jolt-recovery-v3.md), [complete v2 negative result](evidence/2026-10-20-jolt-recovery-v2.md), [preserved v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) |
+| What happened in the contact-recovery diagnostics? | [V4 teacher qualification and remaining limits](evidence/2026-10-20-jolt-recovery-v4.md), [v3 improvement with failed acceptance](evidence/2026-10-20-jolt-recovery-v3.md), [complete v2 negative result](evidence/2026-10-20-jolt-recovery-v2.md), [preserved v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) |
 | What must the next learned Jolt experiment prove? | [LEARN-JOLT-002 design](design/LEARN_JOLT_002.md), [implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |

@@ -1,0 +1,213 @@
+{
+  "archive": {
+    "all_member_hashes_and_sizes_verified": true,
+    "bytes": 26268108,
+    "inner_gzip_decompressed_bytes": 190153350,
+    "inner_gzip_streams": 97,
+    "member_manifest_self_hash_excluded": true,
+    "member_manifest_sha256": "56fd6563543a5aec63ffc5b59155e4255867422aedd6285267f7a2a398b49a66",
+    "name": "jolt-recovery-v4-evidence-20261020.tgz",
+    "original_evidence_files": 206,
+    "original_inner_files": 197,
+    "original_outer_files": 9,
+    "outer_and_inner_gzip_eof_crc_verified": true,
+    "raw_archive_committed_to_git": false,
+    "regular_file_members": 243,
+    "self_binding": "242 member digests plus the original separately preserved external manifest SHA-256 and full archive SHA-256 bind all 243 files.",
+    "sha256": "27afcae51f20a02fce7888b385574f92d0932dd4ab8aedd4393df0f6e2454e44",
+    "total_member_bytes": 100009955
+  },
+  "costs": {
+    "cumulative_totals": {
+      "decisions": 9044,
+      "episode_confirmed_ticks": 54264,
+      "hosts": 5,
+      "reported_owner_calls": 10081,
+      "rows": 376,
+      "whole_process_seconds": 1567.7681713780057
+    },
+    "new_physical_or_learning_work_for_recovery": 0,
+    "qualification": "The historical arrival 1,722 calls remain reported-only because its original journal ends after unanswered request 843; only its 842-response prefix was verified. The cumulative 10,081 owner calls retain that limitation. All 54,264 ticks are episode-confirmed. The v1 incomplete row 24 and failed v1/v3 original verification remain counted and failed.",
+    "time_basis": "Prior invocation durations come from their original supervisor receipts; v4 uses the original external executor interval through observed process exit. Independent offline review and CI time are outside diagnostic physical-invocation accounting.",
+    "v4": {
+      "decisions": 2264,
+      "episode_confirmed_ticks": 13584,
+      "family": "v4",
+      "hosts": 1,
+      "reported_owner_calls": 2531,
+      "rows": 96,
+      "whole_process_seconds": 544.9560992200022
+    }
+  },
+  "created_utc": "2026-10-21T18:15:11.521915Z",
+  "existing_original_prospective_reviews": [
+    {
+      "bytes": 84073,
+      "repository_path": "docs/evidence/jolt-recovery-v4-source-review-20261020.json",
+      "sha256": "3440c29d550bf8da6783d25570384242d34b9b236c3d3bdaa0fe0da11f8e4ac6"
+    },
+    {
+      "bytes": 4745,
+      "repository_path": "docs/evidence/jolt-recovery-v4-historical-costs-20261020.json",
+      "sha256": "8a6394f8b4465a498fc9ce5c13ec922ca97c5d5ba6a6c9e30ddf6e46d792f972"
+    },
+    {
+      "bytes": 20334,
+      "repository_path": "docs/evidence/jolt-recovery-v4-retained-prepass-20261020.json",
+      "sha256": "232deeb7515eb49cbbb26e185e66666f20e3d949843a242143662bf527179864"
+    }
+  ],
+  "index_self_hash_excluded": true,
+  "integration": {
+    "final_publication_head_ci_and_main_verification": "Required after publication; actual head, check links and merge verification are recorded in the PR completion record.",
+    "progress_record": "https://github.com/techrote/neural-cyber-automata/pull/66#issuecomment-6322984047",
+    "pull_request": "https://github.com/techrote/neural-cyber-automata/pull/66",
+    "required_checks": [
+      "check-docs",
+      "cpu (ubuntu-24.04)",
+      "cpu (windows-2022)",
+      "actual-host",
+      "learning-cpu"
+    ]
+  },
+  "new_recovery_reviews": [
+    {
+      "bytes": 6827,
+      "repository_path": "docs/evidence/jolt-recovery-v4-archive-recovery-verification-20261021.json",
+      "sha256": "2cb81ddd22f203bcc50448333255a06e5688264b59c30e9523ec1a7cc8385620"
+    },
+    {
+      "bytes": 18308,
+      "repository_path": "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json",
+      "sha256": "efd46622676e0ef8494025e120f854941703deacdc5a63a2983b074cfc2c3351"
+    }
+  ],
+  "original_diagnostic_date": "2026-10-20",
+  "original_files_restored_for_publication": [
+    {
+      "archive_member": "jolt-recovery-v4-20261020/reviews/independent-audit/independent-admission-v4.json",
+      "bytes": 20716,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-admission-20261020.json",
+      "sha256": "015e750b0bfbeeca35b3b364d1c77e75f284aef7cf7c580aca853b3aab57c2b4"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/MEMBER-MANIFEST.json",
+      "bytes": 72908,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-archive-members-20261020.json",
+      "sha256": "56fd6563543a5aec63ffc5b59155e4255867422aedd6285267f7a2a398b49a66"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/reviews/independent-audit/independent-auditor-schema-correction.json",
+      "bytes": 1330,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-auditor-correction-20261020.json",
+      "sha256": "f88176c3bfc7cab62938937c3d15c8695dd591557aadb56e95aeb3f37702deb2"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/reviews/four-case-comparison/v4-four-case-comparison.json",
+      "bytes": 161719,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-case-comparison-20261020.json",
+      "sha256": "03f8fbe4d84b016f8e5e5cb11eb0ae7ebe79467850e9421eb72a8f5eeb78b01b"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/reviews/evidence-costs/evidence_review_v4_20261020.json",
+      "bytes": 40204,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-evidence-review-20261020.json",
+      "sha256": "3677f9e020e1ded340138ecf32b8dfddbd05d358c4b8c6a8d383be47f8384172"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020-executor.json",
+      "bytes": 1568,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-executor-20261020.json",
+      "sha256": "6669f168d5e85558643efbd1390ce06fdf8c04d4848f6aa3f2992a7ad68929d3"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020-finalization.json",
+      "bytes": 568,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-finalization-20261020.json",
+      "sha256": "0120db365d1dfc47ab7f80253ba2ea16fb8d57b16a4121a929024a251fd0418f"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020/manifest.json",
+      "bytes": 50470,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-manifest-20261020.json",
+      "sha256": "e5229ef2c9b1fa8d7e5e1ec5856cfd150c4802cc9d8e06c3bc24924fe30d0b49"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020/summary.json",
+      "bytes": 387943,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-result-20261020.json",
+      "sha256": "faf163a276a40f10762eefbfedb70c2ec527c76340ee008678590bca0b5194fd"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/reviews/independent-audit/independent-complete-v4.json",
+      "bytes": 519770,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-review-20261020.json",
+      "sha256": "535be68cfcd8a368d7e0d68ed63d046b73a3d17e86542b03763e0eef62712080"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020/owner-journal-seal.json",
+      "bytes": 1404,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-seal-20261020.json",
+      "sha256": "bb64839ea084c6bc2bc81bebe2764cee246d4ed1127debf9fbc159a0ae29afcc"
+    },
+    {
+      "archive_member": "jolt-recovery-v4-20261020/original/jolt-recovery-v4-diagnostic-20261020-supervisor.json",
+      "bytes": 2298,
+      "provenance": "Original archive member, copied byte-for-byte; original date retained.",
+      "repository_path": "docs/evidence/jolt-recovery-v4-supervisor-20261020.json",
+      "sha256": "8c7eb475376125c417cb4453ff5f70570eb0adec7719384ed7d88e8e6a346fd6"
+    }
+  ],
+  "physical_source": {
+    "all_frozen_source_pins_unchanged": true,
+    "candidate_specification_sha256": "2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038",
+    "canonical_declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+    "commit": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+    "distinct_source_file_pins": 117,
+    "host_commit": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "host_tree": "445a185e9f9824b16953fec27bf0157dfeedca77",
+    "independent_source_review_file_pins": 115,
+    "later_publication_commit_replaces_physical_source": false,
+    "manifest_source_file_pins": 100,
+    "tree": "90e22caf259228083308c1ce23e047c3c27df63e"
+  },
+  "purpose": "Index the unchanged original diagnostic evidence and independently dated recovery verification for PR #66 publication.",
+  "reconstruction_provenance": {
+    "missing_unpublished_prior_review_bytes_recreated": false,
+    "new_reports_are_separately_dated_recovery_reviews": true,
+    "original_archive_recovered_byte_identically": true,
+    "original_artifacts_modified": false,
+    "unpublished_prior_completion_commit_published": false
+  },
+  "schema": "nca-jolt-recovery-v4-publication-index/v1",
+  "teacher_acceptance": {
+    "all_unchanged_checks_pass": true,
+    "candidate_arrivals": 30,
+    "historical_rescues": 3,
+    "learned_qualification": false,
+    "morphology_admission": false,
+    "owner_feel_acceptance": false,
+    "paired_opened_cases": 32,
+    "passed_checks": 13,
+    "purposeful_airborne_cases": 32,
+    "reference_arrivals": 27,
+    "release_scope": "Only the authored-teacher dependency for issue #62.",
+    "remaining_failure_cases": [
+      "demo-floor-left-60-1",
+      "reference-floor-left-63"
+    ],
+    "sealed_evaluation": false,
+    "success_regressions": 0
+  }
+}

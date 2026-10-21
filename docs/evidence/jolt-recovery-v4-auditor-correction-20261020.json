@@ -1,0 +1,19 @@
+{
+  "completed_before_failure": "All96 retained policy/task/character replays and source/output/hash/inventory/receipt checks reached before the native journal correlation loop.",
+  "controller_or_teacher_predicates_changed": false,
+  "corrected_audit_script_sha256": "a043a5ec8f42aaf7a6a37b993fdea93e58775820cfb868b2012a9b43b4ebc5e8",
+  "correction": "Pinned runner observation has no required top-level mount_generation. Preserve required run_id/epoch/actor_id/profile_version comparisons and compare optional mount_generation with get on both before/after, matching frozen owner-validation schema.",
+  "duration_limit": "The unsuccessful auditor invocation was not externally timed; it incurred offline analysis time only.",
+  "error_field": "mount_generation",
+  "error_type": "KeyError",
+  "failure_location": "Independent native-cancellation identity assertion at original script line394, response serial63.",
+  "new_host_starts": 0,
+  "new_owner_calls": 0,
+  "new_physical_ticks": 0,
+  "original_artifacts_modified": false,
+  "original_audit_script_sha256": "7ea9e2e6961d51748a1557c03b64de251022b5e9590da6d286f2f6390ad9ffe3",
+  "original_independent_audit_wall_seconds": null,
+  "original_invocation_exit_code": 1,
+  "original_script_preserved": true,
+  "schema": "nca-jolt-recovery-v4-independent-auditor-correction/v1"
+}

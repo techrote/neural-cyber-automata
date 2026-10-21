@@ -1,0 +1,411 @@
+{
+  "cost_reconciliation": {
+    "all_counts_and_durations_equal_original_cost_review": true,
+    "archived_independent_cost_review_sha256": "3677f9e020e1ded340138ecf32b8dfddbd05d358c4b8c6a8d383be47f8384172",
+    "checkpoint_executions": 0,
+    "cumulative_owner_call_count_fully_verified": false,
+    "cumulative_totals": {
+      "decisions": 9044,
+      "episode_confirmed_ticks": 54264,
+      "hosts": 5,
+      "reported_owner_calls": 10081,
+      "rows": 376,
+      "whole_process_seconds": 1567.7681713780057
+    },
+    "historical_ledger_sha256": "8a6394f8b4465a498fc9ce5c13ec922ca97c5d5ba6a6c9e30ddf6e46d792f972",
+    "learned_policy_calls": 0,
+    "optimizer_updates": 0,
+    "prior_invocations": [
+      {
+        "decisions": 1549,
+        "episode_confirmed_ticks": 9294,
+        "family": "arrival",
+        "hosts": 1,
+        "original_supervisor_completed": true,
+        "preserved_qualification": "Historical journal ends with unanswered request843; full call count is reported only.",
+        "reported_owner_calls": 1722,
+        "rows": 64,
+        "source_revision": "5d9d6a13d2f273ee1b4fd3ce0b50a6482c807382",
+        "summary_sha256": "baf2ae6aea26c6478053c7a33d1cc36f2b73f6297d86f05fada4c0698ed7ae4a",
+        "supervisor_sha256": "31687034f2da4c2329256401d9a75c6cdf91d769214613a1b3102e2df274843a",
+        "teacher_admitted": false,
+        "whole_process_seconds": 221.63055612800235
+      },
+      {
+        "decisions": 479,
+        "episode_confirmed_ticks": 2874,
+        "family": "v1",
+        "hosts": 1,
+        "original_supervisor_completed": false,
+        "preserved_qualification": "Incomplete24/96 rows, one lease-refusal episode and unsuccessful original verification.",
+        "reported_owner_calls": 549,
+        "rows": 24,
+        "source_revision": "ceb19f5742a782299197557fa53e2208523eb7f7",
+        "summary_sha256": "bd6c188d11876eed9390539cb168293d9ae0fdbf05c6ebb6bcfbfecc0f3a224e",
+        "supervisor_sha256": "e032bf3ae3fd78409b4224f487d427872032ada8697bfb82cd2a54a174536d9e",
+        "teacher_admitted": false,
+        "whole_process_seconds": 61.76433001999976
+      },
+      {
+        "decisions": 2449,
+        "episode_confirmed_ticks": 14694,
+        "family": "v2",
+        "hosts": 1,
+        "original_supervisor_completed": true,
+        "preserved_qualification": "Complete verified96 rows; numeric teacher acceptance failed25/32 vs27.",
+        "reported_owner_calls": 2711,
+        "rows": 96,
+        "source_revision": "8da294ae4a263dd95c34b181abb795b906060c2d",
+        "summary_sha256": "3ce71ed0bb9748111b3d820597c8f29afad268978c4426f18d588af99d9c4347",
+        "supervisor_sha256": "0eb9ee220e65c14c875b8691ccf38b726b24cd5e464ff58b828eaded283345fb",
+        "teacher_admitted": false,
+        "whole_process_seconds": 444.46566076900126
+      },
+      {
+        "decisions": 2303,
+        "episode_confirmed_ticks": 13818,
+        "family": "v3",
+        "hosts": 1,
+        "original_supervisor_completed": false,
+        "preserved_qualification": "Original final-inventory failure and only2 of3 required historical rescues.",
+        "reported_owner_calls": 2568,
+        "rows": 96,
+        "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+        "summary_sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd",
+        "supervisor_sha256": "cc95f0c89c76006bdb7128c0d6010da7e9c0fe0daa2d71db54a6cfffa1e22cd8",
+        "teacher_admitted": false,
+        "whole_process_seconds": 294.9515252410001
+      }
+    ],
+    "prior_totals": {
+      "decisions": 6780,
+      "episode_confirmed_ticks": 40680,
+      "hosts": 4,
+      "reported_owner_calls": 7550,
+      "rows": 280,
+      "whole_process_seconds": 1022.8120721580035
+    },
+    "qualification": "The historical arrival 1,722 calls remain reported-only because its original journal ends after unanswered request 843; only its 842-response prefix was verified. The cumulative 10,081 owner calls retain that limitation. All 54,264 ticks are episode-confirmed. The v1 incomplete row 24 and failed v1/v3 original verification remain counted and failed.",
+    "time_basis": "Prior invocation durations come from their original supervisor receipts; v4 uses the original external executor interval through observed process exit. Independent offline review and CI time are outside diagnostic physical-invocation accounting.",
+    "v4": {
+      "decisions": 2264,
+      "episode_confirmed_ticks": 13584,
+      "family": "v4",
+      "hosts": 1,
+      "reported_owner_calls": 2531,
+      "rows": 96,
+      "whole_process_seconds": 544.9560992200022
+    },
+    "v4_owner_call_count_fully_native_journal_verified": true
+  },
+  "created_utc": "2026-10-21T18:12:44.394204Z",
+  "earlier_unpublished_completion_reviews_recovered": false,
+  "fresh_reconstruction_review": true,
+  "independent_acceptance_reconciliation": {
+    "acceptance_equal_across_v1_v2_v3_v4_except_schema_and_candidate": true,
+    "acceptance_specification": {
+      "aggregation": "equal weight over32 already-open paired development cases",
+      "candidate": "jolt-recovery-v4",
+      "every_case_inference_p95_maximum_ms": 5.0,
+      "historical_failures": [
+        "demo-floor-left-60-1",
+        "demo-floor-left-60-2",
+        "reference-floor-left-63",
+        "reference-drop28-left-57",
+        "reference-drop12-right-45"
+      ],
+      "historical_missing_airborne": [
+        "demo-floor-left-24-0",
+        "demo-floor-left-24-1",
+        "demo-floor-left-24-2",
+        "demo-floor-left-36-0",
+        "demo-floor-left-36-1",
+        "demo-floor-left-36-2",
+        "reference-floor-left-27"
+      ],
+      "learned_qualification": false,
+      "maximum_absolute_angle_increase_radians": 0.1,
+      "maximum_regressions": 1,
+      "maximum_requested_primary_edges": 2,
+      "maximum_toward_speed_ratio": 1.5,
+      "maximum_trim_reversal_increase_per_second": 0.5,
+      "minimum_extra_arrivals": 1,
+      "minimum_historical_rescues": 3,
+      "minimum_overall_purposeful_launch_change": 0,
+      "minimum_restored_airborne_cases": 1,
+      "minimum_toward_speed_ratio": 0.7,
+      "paired_cases": 32,
+      "reference": "jolt-arrival-v1",
+      "require_supported_failure_rescue": true,
+      "required_unsupported_rescue": "reference-drop12-right-45",
+      "schema": "nca-jolt-recovery-acceptance/v4",
+      "second_primary_requires_fresh_physical_reason": true
+    },
+    "all96_native_arrival_outcomes_match": true,
+    "all96_rows_complete_owner_closed_uncapped_and_without_admission_or_integrity_failure": true,
+    "checks": {
+      "angle_limit": true,
+      "at_least_three_historical_rescues": true,
+      "at_most_one_regression": true,
+      "at_most_two_requested_primary_edges": true,
+      "every_case_latency_limit": true,
+      "fresh_physical_pulse_authority": true,
+      "ordinary_trim_limit": true,
+      "restore_airborne_character": true,
+      "retain_overall_airborne_character": true,
+      "strict_arrival_improvement": true,
+      "supported_failure_rescued": true,
+      "unsupported_drop_rescued": true,
+      "vigor_limit": true
+    },
+    "goal": {
+      "deadline_ticks": 240,
+      "maximum_arrival_angle": 0.32,
+      "maximum_arrival_speed": 6.0,
+      "pace": 0.8,
+      "quiet_ticks": 12,
+      "require_support": true,
+      "tolerance_cells": 4.0
+    },
+    "historical_rescues": [
+      "demo-floor-left-60-2",
+      "reference-drop12-right-45",
+      "reference-drop28-left-57"
+    ],
+    "measurements": {
+      "jolt-arrival-v1": {
+        "arrivals": 27,
+        "cases": 32,
+        "maximum_case_inference_p95_ms": 2.9242404499999974,
+        "maximum_requested_primary_edges": 1,
+        "mean_absolute_angle_radians": 0.02636844418701584,
+        "mean_ordinary_trim_reversals_per_second": 0.49019007154518524,
+        "mean_peak_toward_speed_cells_per_second": 53.97427606582642,
+        "purposeful_airborne_cases": 25
+      },
+      "jolt-recovery-v4": {
+        "arrivals": 30,
+        "cases": 32,
+        "maximum_case_inference_p95_ms": 3.0292253499999893,
+        "maximum_requested_primary_edges": 2,
+        "mean_absolute_angle_radians": 0.026197143134569712,
+        "mean_ordinary_trim_reversals_per_second": 0.2587636748550782,
+        "mean_peak_toward_speed_cells_per_second": 42.97924745082854,
+        "purposeful_airborne_cases": 32
+      }
+    },
+    "method": "Separately decode all 96 episode gzips, verify canonical records and compressed hashes, reconstruct every native-tick quiet streak, check pulse readiness/native impulse, then aggregate gate inputs directly from the receipt-verified rows without invoking assess_teacher.",
+    "native_arrivals_by_family": {
+      "authored-balanced-v1": 17,
+      "jolt-arrival-v1": 27,
+      "jolt-recovery-v4": 30
+    },
+    "passed_checks": 13,
+    "pulse_authority": {
+      "all_fresh_readiness_and_maximum_two_edge_checks_pass": true,
+      "candidate_leases": {
+        "12": 708,
+        "6": 7
+      },
+      "fresh_second_pulses": 5,
+      "native_upward_confirmed": 37,
+      "requested": 37,
+      "second_pulse_reasons": {
+        "supported_no_progress": 5
+      },
+      "supported_or_unsupported_witness_progress_and_anticipation_replayed": true
+    },
+    "raw_native_ticks_reconciled": 13584,
+    "regressions": [],
+    "restored_airborne_cases": [
+      "demo-floor-left-24-0",
+      "demo-floor-left-24-1",
+      "demo-floor-left-24-2",
+      "demo-floor-left-36-0",
+      "demo-floor-left-36-1",
+      "demo-floor-left-36-2",
+      "reference-floor-left-27"
+    ],
+    "teacher_behavior_identical_to_original_complete_review": true,
+    "total_checks": 13,
+    "toward_speed_ratio": 0.7962913184497654,
+    "unchanged_acceptance_sha256_without_candidate_identity": "1d20379d7a724c87b7d16845c1f5043e253ec7640a3b208a008240665383afa2"
+  },
+  "original_execution_closure": {
+    "executor_completed": true,
+    "external_whole_process_seconds": 544.9560992200022,
+    "finalization_completed": true,
+    "input_sha256": {
+      "manifest.json": "e5229ef2c9b1fa8d7e5e1ec5856cfd150c4802cc9d8e06c3bc24924fe30d0b49",
+      "owner-journal-seal.json": "bb64839ea084c6bc2bc81bebe2764cee246d4ed1127debf9fbc159a0ae29afcc",
+      "summary.json": "faf163a276a40f10762eefbfedb70c2ec527c76340ee008678590bca0b5194fd"
+    },
+    "maximum_whole_process_seconds": 900,
+    "native_close_and_owned_process_termination_confirmed": true,
+    "no_pending_or_unconfirmed_tail": true,
+    "observed_reserve_admission": {
+      "last_episode_admission_seconds": 255.6578519370014,
+      "last_normal_owner_reservation_seconds": 257.294725396001,
+      "last_normal_owner_response_seconds": 257.32438347900097,
+      "normal_reservation_ceiling_seconds": 765,
+      "normal_response_ceiling_seconds": 780,
+      "shared_whole_process_origin": true
+    },
+    "original_final_output_verification_passed": true,
+    "receipt_sha256": {
+      "executor": "6669f168d5e85558643efbd1390ce06fdf8c04d4848f6aa3f2992a7ad68929d3",
+      "finalization": "0120db365d1dfc47ab7f80253ba2ea16fb8d57b16a4121a929024a251fd0418f",
+      "supervisor": "8c7eb475376125c417cb4453ff5f70570eb0adec7719384ed7d88e8e6a346fd6"
+    },
+    "supervisor_completed": true,
+    "supervisor_seconds": 544.893780182003,
+    "through_original_primary_receipt_publication_seconds": 544.898435156003
+  },
+  "provenance": "The original 20 October archive and reviews were restored. This new 21 October review reproduces their conclusions; it does not claim to recover the lost unpublished completion-review bytes.",
+  "qualification": {
+    "all13_unchanged_gates_pass": true,
+    "authored_teacher_accepted_on_opened_development_cases": true,
+    "complete_original_evidence": true,
+    "learned_skill_qualified": false,
+    "morphology_admitted": false,
+    "owner_feel_accepted": false,
+    "repository_delivery_scope": "Final PR-head CI, merge and main verification are separate repository receipts; this report does not claim they have occurred.",
+    "sealed_evaluation_established": false,
+    "teacher_scope": "Authored jolt-recovery-v4 teacher for the matched opened development corpus only."
+  },
+  "read_only_replay": {
+    "all_original_report_fields_equal_except": [
+      "independent_offline_review_wall_seconds"
+    ],
+    "command_shape": "python audit_v4_complete_schema_corrected.py --source REPOSITORY --output RESTORED_DIAGNOSTIC --revision FROZEN_REVISION --declaration FROZEN_DECLARATION --report TEMPORARY_REVIEW --prior-v3 PRESERVED_V3 --prior-v2 PRESERVED_V2",
+    "correction_limit": "The correction is confined to optional mount_generation correlation in the later offline auditor. The original diagnostic, original successful in-window verifier, controller, acceptance gates and all original artifacts remain unchanged.",
+    "equal_report_payload_sha256_excluding_review_seconds": "e6e516eb351f00ad38e0a411b096b99bd46e4856f7704b2d423c664ae387896b",
+    "exit_code": 0,
+    "indexed_output_hashes_verified": 196,
+    "native_journal": {
+      "chain_sha256": "7c839b45ecc258b53f2579c5ed14a3db68012b1fc7d3443d7437840a51c0e572",
+      "independently_replayed_counts": {
+        "confirmed_step_ticks": 13584,
+        "episodes_started": 96,
+        "host_requests": 2531,
+        "host_start_attempts": 1,
+        "host_terminations": 1,
+        "native_closes": 1,
+        "requested_step_ticks": 13584,
+        "step_requests": 2264,
+        "terminal_episodes": 22
+      },
+      "no_pending_tail": true,
+      "operations": {
+        "cancel": 74,
+        "close": 1,
+        "profile": 96,
+        "reset": 96,
+        "step": 2264
+      },
+      "records": 5256,
+      "source_packet_native_tick_and_closure_bound": true
+    },
+    "offline_auditor_wall_seconds": 76.16297367399989,
+    "original_corrected_auditor_sha256": "a043a5ec8f42aaf7a6a37b993fdea93e58775820cfb868b2012a9b43b4ebc5e8",
+    "original_optional_field_correction": {
+      "change": "Compare this optional schema field with get on both observations; required identity fields stay required. No input evidence, controller, behavior predicate, timing/budget gate or original verifier verdict is changed.",
+      "field": "mount_generation",
+      "original_failure": "KeyError at first cancel response serial63 after all96 policy/task/character replays; original script retained byte-for-byte."
+    },
+    "original_optional_field_failure_and_script_preserved": true,
+    "original_review_sha256": "535be68cfcd8a368d7e0d68ed63d046b73a3d17e86542b03763e0eef62712080",
+    "policy_decisions_replayed": {
+      "authored-balanced-v1": 878,
+      "jolt-arrival-v1": 671,
+      "jolt-recovery-v4": 715
+    },
+    "strict_final_inventory_exact": true,
+    "task_and_character_metrics_recomputed": 96
+  },
+  "remaining_failures_and_limits": {
+    "ground_correction_cases": 2,
+    "interior_neutral_quiet_hold_observed_decisions": 0,
+    "interpretation": [
+      "Both remaining failures use the full deadline of 240 ticks and both available primary pulses. reference-floor-left-63 worsens from 8.131479724495415 to 12.503336093724585 cells against v3.",
+      "Aggregate actuator impulses and observed motion do not identify passive contact forces or establish a causal recovery mechanism.",
+      "The five coast requests and two ground-correction cases do not establish consistent coast or landing improvement.",
+      "No interior neutral quiet-hold decision occurred in this physical diagnostic.",
+      "The matched 32 cases were already open development evidence; no sealed learned generalization, owner-feel acceptance or morphology transfer follows."
+    ],
+    "remaining_leftward_failures": [
+      {
+        "case_id": "demo-floor-left-60-1",
+        "elapsed_ticks": 240,
+        "final_distance_worsened_from_v3": false,
+        "final_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "requested_primary_edges": 2,
+        "success": false,
+        "v3_final_distance_cells": 5.055274426763328,
+        "v4_final_distance_cells": 4.939331762513135
+      },
+      {
+        "case_id": "reference-floor-left-63",
+        "elapsed_ticks": 240,
+        "final_distance_worsened_from_v3": true,
+        "final_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "requested_primary_edges": 2,
+        "success": false,
+        "v3_final_distance_cells": 8.131479724495415,
+        "v4_final_distance_cells": 12.503336093724585
+      }
+    ],
+    "special_phase_decisions": {
+      "ground_correction": 3,
+      "post_pulse_coast": 5,
+      "settle_capture": 70
+    },
+    "supervisor_intervention_case_outcomes": {
+      "arrivals": 3,
+      "failures": 2
+    },
+    "supervisor_intervention_cases": {
+      "demo-floor-left-60-0": 4,
+      "demo-floor-left-60-1": 4,
+      "demo-floor-left-60-2": 4,
+      "reference-floor-left-27": 3,
+      "reference-floor-left-63": 4
+    },
+    "supervisor_intervention_decisions": 19
+  },
+  "review_activity": {
+    "new_host_starts": 0,
+    "new_owner_requests": 0,
+    "new_physical_ticks": 0,
+    "new_training_runs": 0,
+    "optimizer_updates": 0,
+    "original_artifacts_modified": false,
+    "outcome_driven_tuning": false
+  },
+  "schema": "nca-jolt-recovery-v4-acceptance-reconciliation/v1",
+  "scope": "Fresh independent offline reconciliation of the restored original JOLT-RECOVERY-004 evidence for PR #66; no physical diagnostic or outcome-driven change.",
+  "source_identity": {
+    "all_pins_match_working_files_and_frozen_git_blobs": true,
+    "declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+    "distinct_inputs_in_union_of_manifest_and_source_review": 117,
+    "independent_source_test_configuration_pins_verified": 115,
+    "manifest_pinned_source_inputs_verified": 100,
+    "manifest_source_files_sha256": "f84cb0a2aed7f49ebc8dbe588cb274502394abd5249acbe32f3e27dad788f91f",
+    "preserved_source_inputs_verified": 9,
+    "production_source_config_tests_modified_by_review": false,
+    "revision": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+    "source_review_pin_categories": {
+      ".gitattributes": 1,
+      "configs": 2,
+      "pyproject.toml": 1,
+      "src": 93,
+      "tests": 16,
+      "tools": 2
+    },
+    "source_review_sha256": "3440c29d550bf8da6783d25570384242d34b9b236c3d3bdaa0fe0da11f8e4ac6",
+    "tree": "90e22caf259228083308c1ce23e047c3c27df63e"
+  },
+  "verified": true
+}

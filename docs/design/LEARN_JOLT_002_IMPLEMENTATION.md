@@ -3,26 +3,37 @@ title: LEARN-JOLT-002 — implementation admission checklist
 kind: reference
 summary: Conditional checks for complete learned actuation, honest action labels, fresh physical holdouts and bounded learning costs.
 owns: [learning.jolt002-implementation]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # LEARN-JOLT-002 implementation checklist
 
 This appendix makes the [experiment design](LEARN_JOLT_002.md) operational.
 It proposes implementation checks and budget arithmetic. It authorizes no
-collection, fitting, checkpoint execution or transfer. Bind accepted recovery
-teacher and complete evidence results, then publish the final source, runtime,
-split and compute declaration before any learning execution.
+collection, fitting, checkpoint execution or transfer. The v4 recovery result
+satisfies the teacher and complete diagnostic evidence dependency. Bind that
+accepted result into the new implementation, then publish the final source,
+runtime, split and compute declaration before any learning execution.
 
 ## Admission and scope
 
-- [ ] Accept the complete teacher and evidence gates for recovery
+- [x] Meet the complete teacher and evidence gates for recovery
   [#48](https://github.com/techrote/neural-cyber-automata/issues/48), evidence
-  [#43](https://github.com/techrote/neural-cyber-automata/issues/43) and advisory
-  [#60](https://github.com/techrote/neural-cyber-automata/issues/60). Bind exact
-  controller/supervisor specs, declaration, source, raw evidence and audit hashes.
-- [ ] Preserve the failed recovery v1 experiment. The advisory v2 source approval
-  alone supplies no physical reliability, character or evidence qualification.
+  [#43](https://github.com/techrote/neural-cyber-automata/issues/43) and the advisory
+  lifecycle from [#60](https://github.com/techrote/neural-cyber-automata/issues/60).
+  The [v4 result](../evidence/2026-10-20-jolt-recovery-v4.md) at frozen source
+  `46a22f98dce78be3c4ba534d955e58d5691c7d96` passes all thirteen checks:
+  30/32 arrivals versus 27/32, three rescues, zero success regressions and 32/32
+  purposeful-airborne cases. The two remaining failures and coast limitations
+  remain part of the accepted scope.
+- [ ] Bind the exact v4 controller/supervisor specifications, declaration, frozen
+  physical source, raw evidence and independent audit hashes in the new learner's
+  prerequisite record. Use the [design binding](LEARN_JOLT_002.md) and
+  [complete review](../evidence/jolt-recovery-v4-review-20261020.json); a later
+  documentation publication commit cannot replace the physical source identity.
+- [ ] Preserve the failed recovery v1/v2/v3 experiments in the learner's evidence
+  lineage. Teacher qualification supplies no learned reliability, sealed evaluation
+  or owner-feel acceptance, and does not release morphology #16.
 - [ ] Retain one 32-wide GRU family, three seeds and the authored/BC/residual/idle
   comparison. Give changed feature, action, sample and bundle semantics new
   versions; keep historical implementations and declarations replayable.
@@ -117,7 +128,7 @@ base. The new residual must use each seed's independently trained, frozen BC-fin
 
 ### 5. Sparse launches and absent rebound labels need explicit treatment
 
-The [recovery teacher](../../src/nca/controllers/jolt_recovery.py) always requests
+The [qualified v4 recovery teacher](../../src/nca/controllers/jolt_recovery_v4.py) always requests
 `secondary=False`; scarce primary launches also make an undifferentiated aim loss
 vulnerable to domination by arbitrary no-launch aims.
 
@@ -152,7 +163,8 @@ sequence shape and host resets depend on episode length.
   policy/optimizer/RNG streams remain independent. No seed/checkpoint selection.
 - [ ] Hash an inventory of every opened geometry/start/target case: T-103/T-104/T-105,
   direction-frame, export, cellular and **all arrival and recovery diagnostics**,
-  including failed recovery v1, advisory v2 and every partial/capped attempt.
+  including recovery v1/v2/v3/v4 and every partial/capped attempt. All 32 v4 cases,
+  including the eight historically labelled evaluation cases, are already open.
   Reject sealed overlap before host construction; old evaluation labels do not seal.
 - [ ] Freeze whole-layout and contact-relevant encounter fingerprints, starting
   regions/poses and target approaches. A new seed or distant changed pile alone

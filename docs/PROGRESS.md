@@ -3,7 +3,7 @@ title: Implementation progress checkpoints
 kind: evidence
 summary: Timestamped checkpoints for the commissioned behaviour and IK implementation programmes.
 owns: [evidence.programme-progress]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # Implementation progress
@@ -160,3 +160,69 @@ correction preserves exact bytes and models POSIX supervision explicitly without
 skipping the tests or changing production behavior. Targeted tests pass. The
 first checkpoint has spent no physical allocation; a revised published source,
 clean execution checkout, independent admission and CI precede the sole run.
+
+## 2026-10-21 18:10 UTC — V4 result publication and archive recovery checkpoint
+
+The completed 20 October physical result is retained at frozen source
+`46a22f98dce78be3c4ba534d955e58d5691c7d96`, source tree
+`90e22caf259228083308c1ce23e047c3c27df63e`, with the unchanged pinned host
+`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497`. The [original result](evidence/jolt-recovery-v4-result-20261020.json)
+and [independent complete review](evidence/jolt-recovery-v4-review-20261020.json)
+record **30/32 arrivals versus 27/32**, three historical rescues, zero success
+regressions, 32/32 purposeful-airborne cases and all thirteen teacher checks
+passing. Original supervisor completion, the complete native journal and closure
+remain part of that evidence. No publication commit replaces the physical source.
+
+One host produced 96 complete rows, 2,264 decisions, 13,584 confirmed ticks and
+2,531 independently verified owner calls in 544.9560992200022 whole-process
+seconds. The [cumulative cost review](evidence/jolt-recovery-v4-evidence-review-20261020.json)
+retains five hosts, 376 rows, 9,044 decisions, 54,264 episode-confirmed ticks,
+10,081 reported owner calls and 1,567.7681713780057 seconds across the original
+arrival diagnostic and recovery v1–v4. The original arrival journal still cannot
+verify its full reported call count, and v1's incomplete final row remains in
+the totals. All earlier negative outcomes and closed allocations are preserved.
+
+The [four-case review](evidence/jolt-recovery-v4-case-comparison-20261020.json)
+retains both remaining leftward failures. `reference-floor-left-63` worsens from
+8.131480 to 12.503336 cells final distance; consistent useful second-coast landing
+progress is not established. Teacher qualification satisfies only #62's teacher
+dependency. It establishes no learned, sealed-evaluation or owner-feel acceptance.
+Versioned learner interfaces, exact teacher/evidence binding, fresh geometry/start
+splits and final source/runtime/budget admission remain required. The learned
+75% mean / 50% every-seed gate and separate morphology continuation gates remain
+unchanged; #16 is blocked.
+
+The [posted PR progress record](https://github.com/techrote/neural-cyber-automata/pull/66#issuecomment-6322984047)
+records the earlier unpublished completion, stalled publication and subsequent
+loss of that local checkout during workspace maintenance. The branch has been
+restored at the same frozen public source. The original 26,268,108-byte archive
+was recovered with its unchanged SHA-256
+`27afcae51f20a02fce7888b385574f92d0932dd4ab8aedd4393df0f6e2454e44`;
+its 243 regular-file members were safely extracted. Fresh member-by-member
+verification against the [original inventory](evidence/jolt-recovery-v4-archive-members-20261020.json)
+is in progress, while the final result, independent reviews, status/design pages
+and cost ledger are being restored for publication. This recovery changes no
+archived bytes and adds no physical diagnostic, host start, owner request,
+native tick, learned execution or optimizer update.
+
+At this checkpoint the final documentation/evidence commit, all five CI checks
+on its final PR head, merge and verification of `main`, closure of #64 and the
+teacher-qualification update in #48 are still outstanding. They must be recorded
+against their actual final revisions and observed results.
+
+## 2026-10-21 18:15 UTC — Original archive verified and publication prepared
+
+The [independent archive recovery verification](evidence/jolt-recovery-v4-archive-recovery-verification-20261021.json)
+passes all 243 original member identities, all 206 original evidence files,
+outer and 97 inner gzip integrity checks, the complete 5,256-record journal,
+13,584 native tick receipts and all 117 distinct frozen source pins. All original
+bytes remain unchanged. The [fresh acceptance reconciliation](evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json)
+reproduces all 96 outcomes and 2,264 decisions, confirms all thirteen unchanged
+teacher checks and reconciles the cumulative costs. These are newly dated
+recovery reviews, distinct from the byte-identical original reviews.
+
+The [publication index](evidence/jolt-recovery-v4-index-20261021.json) binds the
+restored originals and new verification records. Final publication, all five CI
+checks on that exact PR head, merge/main verification and issue completion remain
+the next integration steps. No additional diagnostic, collection, training or
+source tuning occurred during recovery.

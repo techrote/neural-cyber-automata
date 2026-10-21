@@ -1,0 +1,4949 @@
+{
+  "derived": true,
+  "limits": [
+    "All motion is from actual retained native receipts. No counterfactual rollout or physical calls are made.",
+    "Observed progress following a request does not isolate actuator, contact, or passive causes.",
+    "Grounded-interval progress sums measured horizontal displacements only while both consecutive samples report support.",
+    "Historical v3 execution/evidence failures remain failed; this derived comparison does not revise their original verdict."
+  ],
+  "new_owner_requests": 0,
+  "new_physical_host_starts": 0,
+  "optimizer_updates": 0,
+  "pairs": [
+    {
+      "case_id": "demo-floor-right-36-1",
+      "final_distance_change_cells": -0.6962904330434498,
+      "first_pulse_timing_unchanged": true,
+      "v3_arrived": false,
+      "v3_final": {
+        "absolute_angle_radians": 0.122448913753033,
+        "distance_cells": 3.7656810408098367,
+        "position": [
+          208.517578125,
+          347.932861328125
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 6.843072875776793,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          6.8415699005127,
+          -0.143414363265038
+        ]
+      },
+      "v3_first_pulse_source_tick": 18,
+      "v3_longest_quiet_ticks": 9,
+      "v3_quiet_spans": [
+        {
+          "end_tick": 141,
+          "start_tick": 140,
+          "ticks": 2
+        },
+        {
+          "end_tick": 149,
+          "start_tick": 145,
+          "ticks": 5
+        },
+        {
+          "end_tick": 162,
+          "start_tick": 155,
+          "ticks": 8
+        },
+        {
+          "end_tick": 170,
+          "start_tick": 170,
+          "ticks": 1
+        },
+        {
+          "end_tick": 180,
+          "start_tick": 172,
+          "ticks": 9
+        },
+        {
+          "end_tick": 205,
+          "start_tick": 199,
+          "ticks": 7
+        },
+        {
+          "end_tick": 207,
+          "start_tick": 207,
+          "ticks": 1
+        },
+        {
+          "end_tick": 231,
+          "start_tick": 223,
+          "ticks": 9
+        },
+        {
+          "end_tick": 239,
+          "start_tick": 238,
+          "ticks": 2
+        }
+      ],
+      "v3_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": null,
+        "first_subsequent_landing": null,
+        "native_linear_impulse": [
+          9.73521423339844,
+          -62.6080017089844
+        ],
+        "native_tick": 121,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          0.15364832920281418,
+          -0.9881255947161695
+        ],
+        "source": {
+          "absolute_angle_radians": 0.00932152196764946,
+          "distance_cells": 5.271517017860794,
+          "position": [
+            207.110580444336,
+            348.470397949219
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 0.4240798154989113,
+          "supported": true,
+          "tick": 120,
+          "velocity": [
+            -0.283401817083359,
+            -0.315479159355164
+          ]
+        },
+        "source_tick": 120,
+        "source_to_final": {
+          "distance_reduction_cells": 1.5058359770509573,
+          "end": {
+            "absolute_angle_radians": 0.122448913753033,
+            "distance_cells": 3.7656810408098367,
+            "position": [
+              208.517578125,
+              347.932861328125
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 6.843072875776793,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              6.8415699005127,
+              -0.143414363265038
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.00932152196764946,
+            "distance_cells": 5.271517017860794,
+            "position": [
+              207.110580444336,
+              348.470397949219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.4240798154989113,
+            "supported": true,
+            "tick": 120,
+            "velocity": [
+              -0.283401817083359,
+              -0.315479159355164
+            ]
+          },
+          "toward_horizontal_cells": 1.4069976806640057
+        },
+        "source_to_first_landing": null,
+        "subsequent_airborne_spans": [],
+        "subsequent_airborne_ticks": 0
+      },
+      "v4_arrived": true,
+      "v4_final": {
+        "absolute_angle_radians": 0.217114418745041,
+        "distance_cells": 3.069390607766387,
+        "position": [
+          209.076202392578,
+          347.434112548828
+        ],
+        "quiet": true,
+        "speed_cells_per_second": 2.750083642650294,
+        "supported": true,
+        "tick": 162,
+        "velocity": [
+          2.48669123649597,
+          1.17444741725922
+        ]
+      },
+      "v4_first_pulse_source_tick": 18,
+      "v4_longest_quiet_ticks": 12,
+      "v4_quiet_spans": [
+        {
+          "end_tick": 162,
+          "start_tick": 151,
+          "ticks": 12
+        }
+      ],
+      "v4_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": null,
+        "first_subsequent_landing": null,
+        "native_linear_impulse": [
+          9.73521423339844,
+          -62.6080017089844
+        ],
+        "native_tick": 121,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          0.15364832920281418,
+          -0.9881255947161695
+        ],
+        "source": {
+          "absolute_angle_radians": 0.00932152196764946,
+          "distance_cells": 5.271517017860794,
+          "position": [
+            207.110580444336,
+            348.470397949219
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 0.4240798154989113,
+          "supported": true,
+          "tick": 120,
+          "velocity": [
+            -0.283401817083359,
+            -0.315479159355164
+          ]
+        },
+        "source_tick": 120,
+        "source_to_final": {
+          "distance_reduction_cells": 2.202126410094407,
+          "end": {
+            "absolute_angle_radians": 0.217114418745041,
+            "distance_cells": 3.069390607766387,
+            "position": [
+              209.076202392578,
+              347.434112548828
+            ],
+            "quiet": true,
+            "speed_cells_per_second": 2.750083642650294,
+            "supported": true,
+            "tick": 162,
+            "velocity": [
+              2.48669123649597,
+              1.17444741725922
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.00932152196764946,
+            "distance_cells": 5.271517017860794,
+            "position": [
+              207.110580444336,
+              348.470397949219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.4240798154989113,
+            "supported": true,
+            "tick": 120,
+            "velocity": [
+              -0.283401817083359,
+              -0.315479159355164
+            ]
+          },
+          "toward_horizontal_cells": 1.965621948242017
+        },
+        "source_to_first_landing": null,
+        "subsequent_airborne_spans": [],
+        "subsequent_airborne_ticks": 0
+      }
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "final_distance_change_cells": -0.36899647478782915,
+      "first_pulse_timing_unchanged": true,
+      "v3_arrived": false,
+      "v3_final": {
+        "absolute_angle_radians": 0.0102975806221366,
+        "distance_cells": 3.8984015509773577,
+        "position": [
+          210.36735534668,
+          348.464294433594
+        ],
+        "quiet": true,
+        "speed_cells_per_second": 0.9570607097629447,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          -0.955206990242004,
+          -0.0595382899045944
+        ]
+      },
+      "v3_first_pulse_source_tick": 54,
+      "v3_longest_quiet_ticks": 10,
+      "v3_quiet_spans": [
+        {
+          "end_tick": 162,
+          "start_tick": 153,
+          "ticks": 10
+        },
+        {
+          "end_tick": 182,
+          "start_tick": 178,
+          "ticks": 5
+        },
+        {
+          "end_tick": 194,
+          "start_tick": 191,
+          "ticks": 4
+        },
+        {
+          "end_tick": 207,
+          "start_tick": 202,
+          "ticks": 6
+        },
+        {
+          "end_tick": 220,
+          "start_tick": 214,
+          "ticks": 7
+        },
+        {
+          "end_tick": 233,
+          "start_tick": 225,
+          "ticks": 9
+        },
+        {
+          "end_tick": 240,
+          "start_tick": 236,
+          "ticks": 5
+        }
+      ],
+      "v3_second_pulse": null,
+      "v4_arrived": true,
+      "v4_final": {
+        "absolute_angle_radians": 0.010720549151301398,
+        "distance_cells": 3.5294050761895286,
+        "position": [
+          209.933380126953,
+          348.462646484375
+        ],
+        "quiet": true,
+        "speed_cells_per_second": 0.7471954395714243,
+        "supported": true,
+        "tick": 168,
+        "velocity": [
+          -0.0823402851819992,
+          -0.742644667625427
+        ]
+      },
+      "v4_first_pulse_source_tick": 54,
+      "v4_longest_quiet_ticks": 16,
+      "v4_quiet_spans": [
+        {
+          "end_tick": 168,
+          "start_tick": 153,
+          "ticks": 16
+        }
+      ],
+      "v4_second_pulse": null
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "final_distance_change_cells": -0.11594266425019217,
+      "first_pulse_timing_unchanged": true,
+      "v3_arrived": false,
+      "v3_final": {
+        "absolute_angle_radians": 0.00916663277894258,
+        "distance_cells": 5.055274426763328,
+        "position": [
+          208.65625,
+          348.468536376953
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 0.30448707700847666,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          0.270707726478577,
+          -0.139390483498573
+        ]
+      },
+      "v3_first_pulse_source_tick": 12,
+      "v3_longest_quiet_ticks": 0,
+      "v3_quiet_spans": [],
+      "v3_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": {
+          "distance_reduction_cells": 0.49522147384935433,
+          "end": {
+            "absolute_angle_radians": 0.00916663277894258,
+            "distance_cells": 5.055274426763328,
+            "position": [
+              208.65625,
+              348.468536376953
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.30448707700847666,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.270707726478577,
+              -0.139390483498573
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.165073543787003,
+            "distance_cells": 5.550495900612682,
+            "position": [
+              209.524978637695,
+              345.968383789062
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.738830740305264,
+            "supported": true,
+            "tick": 168,
+            "velocity": [
+              7.89836835861206,
+              5.69742059707642
+            ]
+          },
+          "toward_horizontal_cells": 0.8687286376949999
+        },
+        "first_subsequent_landing": {
+          "absolute_angle_radians": 0.165073543787003,
+          "distance_cells": 5.550495900612682,
+          "position": [
+            209.524978637695,
+            345.968383789062
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 9.738830740305264,
+          "supported": true,
+          "tick": 168,
+          "velocity": [
+            7.89836835861206,
+            5.69742059707642
+          ]
+        },
+        "grounded_interval_toward_motion_after_first_landing_cells": 0.8687286376949999,
+        "native_linear_impulse": [
+          -11.0231838226318,
+          -62.6080017089844
+        ],
+        "native_tick": 157,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          -0.17339954130540244,
+          -0.9848515619498586
+        ],
+        "source": {
+          "absolute_angle_radians": 0.0044810944236815,
+          "distance_cells": 5.447320968112206,
+          "position": [
+            209.072067260742,
+            348.48681640625
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 1.2474350138717063,
+          "supported": true,
+          "tick": 156,
+          "velocity": [
+            0.761558353900909,
+            -0.987989366054535
+          ]
+        },
+        "source_tick": 156,
+        "source_to_final": {
+          "distance_reduction_cells": 0.3920465413488783,
+          "end": {
+            "absolute_angle_radians": 0.00916663277894258,
+            "distance_cells": 5.055274426763328,
+            "position": [
+              208.65625,
+              348.468536376953
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.30448707700847666,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.270707726478577,
+              -0.139390483498573
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0044810944236815,
+            "distance_cells": 5.447320968112206,
+            "position": [
+              209.072067260742,
+              348.48681640625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.2474350138717063,
+            "supported": true,
+            "tick": 156,
+            "velocity": [
+              0.761558353900909,
+              -0.987989366054535
+            ]
+          },
+          "toward_horizontal_cells": 0.41581726074198855
+        },
+        "source_to_first_landing": {
+          "distance_reduction_cells": -0.10317493250047605,
+          "end": {
+            "absolute_angle_radians": 0.165073543787003,
+            "distance_cells": 5.550495900612682,
+            "position": [
+              209.524978637695,
+              345.968383789062
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.738830740305264,
+            "supported": true,
+            "tick": 168,
+            "velocity": [
+              7.89836835861206,
+              5.69742059707642
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0044810944236815,
+            "distance_cells": 5.447320968112206,
+            "position": [
+              209.072067260742,
+              348.48681640625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.2474350138717063,
+            "supported": true,
+            "tick": 156,
+            "velocity": [
+              0.761558353900909,
+              -0.987989366054535
+            ]
+          },
+          "toward_horizontal_cells": -0.4529113769530113
+        },
+        "subsequent_airborne_spans": [
+          {
+            "end_tick": 167,
+            "start_tick": 163,
+            "ticks": 5
+          }
+        ],
+        "subsequent_airborne_ticks": 5
+      },
+      "v4_arrived": false,
+      "v4_final": {
+        "absolute_angle_radians": 0.00887343008071184,
+        "distance_cells": 4.939331762513135,
+        "position": [
+          208.529296875,
+          348.470397949219
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 0.26406534125837344,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          0.264051169157028,
+          -0.00273578520864248
+        ]
+      },
+      "v4_first_pulse_source_tick": 12,
+      "v4_longest_quiet_ticks": 0,
+      "v4_quiet_spans": [],
+      "v4_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": {
+          "distance_reduction_cells": 0.8755766454431404,
+          "end": {
+            "absolute_angle_radians": 0.00887343008071184,
+            "distance_cells": 4.939331762513135,
+            "position": [
+              208.529296875,
+              348.470397949219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.26406534125837344,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.264051169157028,
+              -0.00273578520864248
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.180059611797333,
+            "distance_cells": 5.814908407956276,
+            "position": [
+              209.78923034668,
+              345.954132080078
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 12.353857414716272,
+            "supported": true,
+            "tick": 168,
+            "velocity": [
+              10.1716442108154,
+              7.01109457015991
+            ]
+          },
+          "toward_horizontal_cells": 1.2599334716800001
+        },
+        "first_subsequent_landing": {
+          "absolute_angle_radians": 0.180059611797333,
+          "distance_cells": 5.814908407956276,
+          "position": [
+            209.78923034668,
+            345.954132080078
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 12.353857414716272,
+          "supported": true,
+          "tick": 168,
+          "velocity": [
+            10.1716442108154,
+            7.01109457015991
+          ]
+        },
+        "grounded_interval_toward_motion_after_first_landing_cells": 1.2599334716800001,
+        "native_linear_impulse": [
+          -11.0231838226318,
+          -62.6080017089844
+        ],
+        "native_tick": 157,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          -0.17339954130540244,
+          -0.9848515619498586
+        ],
+        "source": {
+          "absolute_angle_radians": 0.0044810944236815,
+          "distance_cells": 5.447320968112206,
+          "position": [
+            209.072067260742,
+            348.48681640625
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 1.2474350138717063,
+          "supported": true,
+          "tick": 156,
+          "velocity": [
+            0.761558353900909,
+            -0.987989366054535
+          ]
+        },
+        "source_tick": 156,
+        "source_to_final": {
+          "distance_reduction_cells": 0.5079892055990705,
+          "end": {
+            "absolute_angle_radians": 0.00887343008071184,
+            "distance_cells": 4.939331762513135,
+            "position": [
+              208.529296875,
+              348.470397949219
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.26406534125837344,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.264051169157028,
+              -0.00273578520864248
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0044810944236815,
+            "distance_cells": 5.447320968112206,
+            "position": [
+              209.072067260742,
+              348.48681640625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.2474350138717063,
+            "supported": true,
+            "tick": 156,
+            "velocity": [
+              0.761558353900909,
+              -0.987989366054535
+            ]
+          },
+          "toward_horizontal_cells": 0.5427703857419885
+        },
+        "source_to_first_landing": {
+          "distance_reduction_cells": -0.36758743984406994,
+          "end": {
+            "absolute_angle_radians": 0.180059611797333,
+            "distance_cells": 5.814908407956276,
+            "position": [
+              209.78923034668,
+              345.954132080078
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 12.353857414716272,
+            "supported": true,
+            "tick": 168,
+            "velocity": [
+              10.1716442108154,
+              7.01109457015991
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0044810944236815,
+            "distance_cells": 5.447320968112206,
+            "position": [
+              209.072067260742,
+              348.48681640625
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.2474350138717063,
+            "supported": true,
+            "tick": 156,
+            "velocity": [
+              0.761558353900909,
+              -0.987989366054535
+            ]
+          },
+          "toward_horizontal_cells": -0.7171630859380116
+        },
+        "subsequent_airborne_spans": [
+          {
+            "end_tick": 167,
+            "start_tick": 163,
+            "ticks": 5
+          }
+        ],
+        "subsequent_airborne_ticks": 5
+      }
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "final_distance_change_cells": 4.371856369229169,
+      "first_pulse_timing_unchanged": true,
+      "v3_arrived": false,
+      "v3_final": {
+        "absolute_angle_radians": 0.009509740397334099,
+        "distance_cells": 8.131479724495415,
+        "position": [
+          208.889495849609,
+          348.468963623047
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 0.3710051284307798,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          0.288564264774323,
+          -0.233185485005379
+        ]
+      },
+      "v3_first_pulse_source_tick": 12,
+      "v3_longest_quiet_ticks": 0,
+      "v3_quiet_spans": [],
+      "v3_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": {
+          "distance_reduction_cells": 1.289974688737738,
+          "end": {
+            "absolute_angle_radians": 0.009509740397334099,
+            "distance_cells": 8.131479724495415,
+            "position": [
+              208.889495849609,
+              348.468963623047
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.3710051284307798,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.288564264774323,
+              -0.233185485005379
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.15615738928318,
+            "distance_cells": 9.421454413233153,
+            "position": [
+              210.410202026367,
+              346.039672851562
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.03334570474203,
+            "supported": true,
+            "tick": 163,
+            "velocity": [
+              5.42765331268311,
+              7.2209358215332
+            ]
+          },
+          "toward_horizontal_cells": 1.520706176757983
+        },
+        "first_subsequent_landing": {
+          "absolute_angle_radians": 0.15615738928318,
+          "distance_cells": 9.421454413233153,
+          "position": [
+            210.410202026367,
+            346.039672851562
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 9.03334570474203,
+          "supported": true,
+          "tick": 163,
+          "velocity": [
+            5.42765331268311,
+            7.2209358215332
+          ]
+        },
+        "grounded_interval_toward_motion_after_first_landing_cells": 1.520706176757983,
+        "native_linear_impulse": [
+          -25.9086303710938,
+          -62.6080017089844
+        ],
+        "native_tick": 151,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          -0.3823753617508846,
+          -0.9240070793700015
+        ],
+        "source": {
+          "absolute_angle_radians": 0.0116460602730513,
+          "distance_cells": 10.200980542410289,
+          "position": [
+            211.010467529297,
+            348.462280273438
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 1.143612863856425,
+          "supported": true,
+          "tick": 150,
+          "velocity": [
+            1.03888475894928,
+            0.478088736534119
+          ]
+        },
+        "source_tick": 150,
+        "source_to_final": {
+          "distance_reduction_cells": 2.0695008179148733,
+          "end": {
+            "absolute_angle_radians": 0.009509740397334099,
+            "distance_cells": 8.131479724495415,
+            "position": [
+              208.889495849609,
+              348.468963623047
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 0.3710051284307798,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              0.288564264774323,
+              -0.233185485005379
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0116460602730513,
+            "distance_cells": 10.200980542410289,
+            "position": [
+              211.010467529297,
+              348.462280273438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.143612863856425,
+            "supported": true,
+            "tick": 150,
+            "velocity": [
+              1.03888475894928,
+              0.478088736534119
+            ]
+          },
+          "toward_horizontal_cells": 2.120971679687983
+        },
+        "source_to_first_landing": {
+          "distance_reduction_cells": 0.7795261291771354,
+          "end": {
+            "absolute_angle_radians": 0.15615738928318,
+            "distance_cells": 9.421454413233153,
+            "position": [
+              210.410202026367,
+              346.039672851562
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 9.03334570474203,
+            "supported": true,
+            "tick": 163,
+            "velocity": [
+              5.42765331268311,
+              7.2209358215332
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0116460602730513,
+            "distance_cells": 10.200980542410289,
+            "position": [
+              211.010467529297,
+              348.462280273438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.143612863856425,
+            "supported": true,
+            "tick": 150,
+            "velocity": [
+              1.03888475894928,
+              0.478088736534119
+            ]
+          },
+          "toward_horizontal_cells": 0.6002655029300001
+        },
+        "subsequent_airborne_spans": [
+          {
+            "end_tick": 162,
+            "start_tick": 157,
+            "ticks": 6
+          }
+        ],
+        "subsequent_airborne_ticks": 6
+      },
+      "v4_arrived": false,
+      "v4_final": {
+        "absolute_angle_radians": 0.00852996949106455,
+        "distance_cells": 12.503336093724585,
+        "position": [
+          213.347122192383,
+          348.470275878906
+        ],
+        "quiet": false,
+        "speed_cells_per_second": 2.6890658899964333,
+        "supported": true,
+        "tick": 240,
+        "velocity": [
+          -2.68857026100159,
+          0.0516266636550426
+        ]
+      },
+      "v4_first_pulse_source_tick": 12,
+      "v4_longest_quiet_ticks": 0,
+      "v4_quiet_spans": [],
+      "v4_second_pulse": {
+        "confirmed_upward_actuation": true,
+        "first_landing_to_final": {
+          "distance_reduction_cells": 1.3132789763432289,
+          "end": {
+            "absolute_angle_radians": 0.00852996949106455,
+            "distance_cells": 12.503336093724585,
+            "position": [
+              213.347122192383,
+              348.470275878906
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 2.6890658899964333,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              -2.68857026100159,
+              0.0516266636550426
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.10141254216432599,
+            "distance_cells": 13.816615070067813,
+            "position": [
+              214.816162109375,
+              346.388122558594
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 22.696272454985433,
+            "supported": true,
+            "tick": 179,
+            "velocity": [
+              20.0439910888672,
+              10.6470279693604
+            ]
+          },
+          "toward_horizontal_cells": 1.4690399169919885
+        },
+        "first_subsequent_landing": {
+          "absolute_angle_radians": 0.10141254216432599,
+          "distance_cells": 13.816615070067813,
+          "position": [
+            214.816162109375,
+            346.388122558594
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 22.696272454985433,
+          "supported": true,
+          "tick": 179,
+          "velocity": [
+            20.0439910888672,
+            10.6470279693604
+          ]
+        },
+        "grounded_interval_toward_motion_after_first_landing_cells": 1.4690399169919885,
+        "native_linear_impulse": [
+          -25.9086303710938,
+          -62.6080017089844
+        ],
+        "native_tick": 151,
+        "reason": "supported_no_progress",
+        "requested_aim": [
+          -0.3823753617508846,
+          -0.9240070793700015
+        ],
+        "source": {
+          "absolute_angle_radians": 0.0116460602730513,
+          "distance_cells": 10.200980542410289,
+          "position": [
+            211.010467529297,
+            348.462280273438
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 1.143612863856425,
+          "supported": true,
+          "tick": 150,
+          "velocity": [
+            1.03888475894928,
+            0.478088736534119
+          ]
+        },
+        "source_tick": 150,
+        "source_to_final": {
+          "distance_reduction_cells": -2.302355551314296,
+          "end": {
+            "absolute_angle_radians": 0.00852996949106455,
+            "distance_cells": 12.503336093724585,
+            "position": [
+              213.347122192383,
+              348.470275878906
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 2.6890658899964333,
+            "supported": true,
+            "tick": 240,
+            "velocity": [
+              -2.68857026100159,
+              0.0516266636550426
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0116460602730513,
+            "distance_cells": 10.200980542410289,
+            "position": [
+              211.010467529297,
+              348.462280273438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.143612863856425,
+            "supported": true,
+            "tick": 150,
+            "velocity": [
+              1.03888475894928,
+              0.478088736534119
+            ]
+          },
+          "toward_horizontal_cells": -2.3366546630860228
+        },
+        "source_to_first_landing": {
+          "distance_reduction_cells": -3.615634527657525,
+          "end": {
+            "absolute_angle_radians": 0.10141254216432599,
+            "distance_cells": 13.816615070067813,
+            "position": [
+              214.816162109375,
+              346.388122558594
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 22.696272454985433,
+            "supported": true,
+            "tick": 179,
+            "velocity": [
+              20.0439910888672,
+              10.6470279693604
+            ]
+          },
+          "source": {
+            "absolute_angle_radians": 0.0116460602730513,
+            "distance_cells": 10.200980542410289,
+            "position": [
+              211.010467529297,
+              348.462280273438
+            ],
+            "quiet": false,
+            "speed_cells_per_second": 1.143612863856425,
+            "supported": true,
+            "tick": 150,
+            "velocity": [
+              1.03888475894928,
+              0.478088736534119
+            ]
+          },
+          "toward_horizontal_cells": -3.8056945800780113
+        },
+        "subsequent_airborne_spans": [
+          {
+            "end_tick": 178,
+            "start_tick": 157,
+            "ticks": 22
+          }
+        ],
+        "subsequent_airborne_ticks": 22
+      }
+    }
+  ],
+  "quiet_rule": {
+    "continuous_ticks": 12,
+    "maximum_absolute_angle_radians": 0.32,
+    "maximum_euclidean_distance_cells": 4,
+    "maximum_speed_cells_per_second": 6,
+    "supported": true
+  },
+  "schema": "nca-jolt-v4-four-case-native-comparison/v1",
+  "scope": "Four predeclared problem cases only; full teacher/action and inventory/cost reviews are separate.",
+  "v3": {
+    "cases": {
+      "demo-floor-left-60-1": {
+        "arrived": false,
+        "artifact_sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a",
+        "continuous_quiet_spans": [],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.00916663277894258,
+          "distance_cells": 5.055274426763328,
+          "position": [
+            208.65625,
+            348.468536376953
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 0.30448707700847666,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            0.270707726478577,
+            -0.139390483498573
+          ]
+        },
+        "final_quiet_ticks": 0,
+        "first_pulse_native_tick": 13,
+        "first_pulse_source_tick": 12,
+        "first_toward_motion_seconds": 0.21666666666666667,
+        "host_seed": 621212,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 28.823582022420084,
+              "end": {
+                "absolute_angle_radians": 0.00916663277894258,
+                "distance_cells": 5.055274426763328,
+                "position": [
+                  208.65625,
+                  348.468536376953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.30448707700847666,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.270707726478577,
+                  -0.139390483498573
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 33.87885644918341,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "toward_horizontal_cells": 29.214767456055
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0392654351890087,
+              "distance_cells": 33.87885644918341,
+              "position": [
+                237.871017456055,
+                347.228759765625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 63.94025828004406,
+              "supported": true,
+              "tick": 40,
+              "velocity": [
+                -54.9234085083008,
+                32.7379875183105
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 29.681945800780994,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 13,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.000147004189784639,
+              "distance_cells": 60.04891295729508,
+              "position": [
+                264.015563964844,
+                348.501007080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.0719118118286104,
+              "supported": true,
+              "tick": 12,
+              "velocity": [
+                -1.07191181182861,
+                -2.97527353865235e-08
+              ]
+            },
+            "source_tick": 12,
+            "source_to_final": {
+              "distance_reduction_cells": 54.993638530531754,
+              "end": {
+                "absolute_angle_radians": 0.00916663277894258,
+                "distance_cells": 5.055274426763328,
+                "position": [
+                  208.65625,
+                  348.468536376953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.30448707700847666,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.270707726478577,
+                  -0.139390483498573
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 60.04891295729508,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 55.35931396484398
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 26.17005650811167,
+              "end": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 33.87885644918341,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 60.04891295729508,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 26.144546508788977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 39,
+                "start_tick": 17,
+                "ticks": 23
+              },
+              {
+                "end_tick": 167,
+                "start_tick": 163,
+                "ticks": 5
+              }
+            ],
+            "subsequent_airborne_ticks": 28
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 0.49522147384935433,
+              "end": {
+                "absolute_angle_radians": 0.00916663277894258,
+                "distance_cells": 5.055274426763328,
+                "position": [
+                  208.65625,
+                  348.468536376953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.30448707700847666,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.270707726478577,
+                  -0.139390483498573
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.165073543787003,
+                "distance_cells": 5.550495900612682,
+                "position": [
+                  209.524978637695,
+                  345.968383789062
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 9.738830740305264,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  7.89836835861206,
+                  5.69742059707642
+                ]
+              },
+              "toward_horizontal_cells": 0.8687286376949999
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.165073543787003,
+              "distance_cells": 5.550495900612682,
+              "position": [
+                209.524978637695,
+                345.968383789062
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 9.738830740305264,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                7.89836835861206,
+                5.69742059707642
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 0.8687286376949999,
+            "native_linear_impulse": [
+              -11.0231838226318,
+              -62.6080017089844
+            ],
+            "native_tick": 157,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              -0.17339954130540244,
+              -0.9848515619498586
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0044810944236815,
+              "distance_cells": 5.447320968112206,
+              "position": [
+                209.072067260742,
+                348.48681640625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.2474350138717063,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                0.761558353900909,
+                -0.987989366054535
+              ]
+            },
+            "source_tick": 156,
+            "source_to_final": {
+              "distance_reduction_cells": 0.3920465413488783,
+              "end": {
+                "absolute_angle_radians": 0.00916663277894258,
+                "distance_cells": 5.055274426763328,
+                "position": [
+                  208.65625,
+                  348.468536376953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.30448707700847666,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.270707726478577,
+                  -0.139390483498573
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0044810944236815,
+                "distance_cells": 5.447320968112206,
+                "position": [
+                  209.072067260742,
+                  348.48681640625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.2474350138717063,
+                "supported": true,
+                "tick": 156,
+                "velocity": [
+                  0.761558353900909,
+                  -0.987989366054535
+                ]
+              },
+              "toward_horizontal_cells": 0.41581726074198855
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": -0.10317493250047605,
+              "end": {
+                "absolute_angle_radians": 0.165073543787003,
+                "distance_cells": 5.550495900612682,
+                "position": [
+                  209.524978637695,
+                  345.968383789062
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 9.738830740305264,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  7.89836835861206,
+                  5.69742059707642
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0044810944236815,
+                "distance_cells": 5.447320968112206,
+                "position": [
+                  209.072067260742,
+                  348.48681640625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.2474350138717063,
+                "supported": true,
+                "tick": 156,
+                "velocity": [
+                  0.761558353900909,
+                  -0.987989366054535
+                ]
+              },
+              "toward_horizontal_cells": -0.4529113769530113
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 167,
+                "start_tick": 163,
+                "ticks": 5
+              }
+            ],
+            "subsequent_airborne_ticks": 5
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "8678c43c1c54e24ff61ea7376e30c9cc5d08ed23f4d102dfd7dbfb7b6bb37906",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.00926885381340981,
+              "distance_cells": 5.214317513217784,
+              "position": [
+                208.828628540039,
+                348.468109130859
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.4811715416477809,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                0.465695410966873,
+                -0.121053032577038
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.0092295603826642,
+              "distance_cells": 5.24204622222987,
+              "position": [
+                208.858657836914,
+                348.467864990234
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.2884009319493983,
+              "supported": true,
+              "tick": 198,
+              "velocity": [
+                0.282099306583405,
+                -0.0599589757621288
+              ]
+            },
+            "source_tick": 198
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00889820046722889,
+              "distance_cells": 5.185203557337205,
+              "position": [
+                208.796798706055,
+                348.469024658203
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.32074083778240403,
+              "supported": true,
+              "tick": 210,
+              "velocity": [
+                0.300396114587784,
+                -0.112413786351681
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.00926885381340981,
+              "distance_cells": 5.214317513217784,
+              "position": [
+                208.828628540039,
+                348.468109130859
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.4811715416477809,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                0.465695410966873,
+                -0.121053032577038
+              ]
+            },
+            "source_tick": 204
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00916663277894258,
+              "distance_cells": 5.055274426763328,
+              "position": [
+                208.65625,
+                348.468536376953
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.30448707700847666,
+              "supported": true,
+              "tick": 240,
+              "velocity": [
+                0.270707726478577,
+                -0.139390483498573
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 6,
+            "requested_move_x": -0.9750000000000001,
+            "source": {
+              "absolute_angle_radians": 0.00945281982421875,
+              "distance_cells": 5.076139926006742,
+              "position": [
+                208.679306030273,
+                348.467559814453
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.37811797892853777,
+              "supported": true,
+              "tick": 234,
+              "velocity": [
+                0.369826674461365,
+                -0.0787492021918297
+              ]
+            },
+            "source_tick": 234
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          204.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "demo-floor-right-36-1": {
+        "arrived": false,
+        "artifact_sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08",
+        "continuous_quiet_spans": [
+          {
+            "end_tick": 141,
+            "start_tick": 140,
+            "ticks": 2
+          },
+          {
+            "end_tick": 149,
+            "start_tick": 145,
+            "ticks": 5
+          },
+          {
+            "end_tick": 162,
+            "start_tick": 155,
+            "ticks": 8
+          },
+          {
+            "end_tick": 170,
+            "start_tick": 170,
+            "ticks": 1
+          },
+          {
+            "end_tick": 180,
+            "start_tick": 172,
+            "ticks": 9
+          },
+          {
+            "end_tick": 205,
+            "start_tick": 199,
+            "ticks": 7
+          },
+          {
+            "end_tick": 207,
+            "start_tick": 207,
+            "ticks": 1
+          },
+          {
+            "end_tick": 231,
+            "start_tick": 223,
+            "ticks": 9
+          },
+          {
+            "end_tick": 239,
+            "start_tick": 238,
+            "ticks": 2
+          }
+        ],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.122448913753033,
+          "distance_cells": 3.7656810408098367,
+          "position": [
+            208.517578125,
+            347.932861328125
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 6.843072875776793,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            6.8415699005127,
+            -0.143414363265038
+          ]
+        },
+        "final_quiet_ticks": 0,
+        "first_pulse_native_tick": 19,
+        "first_pulse_source_tick": 18,
+        "first_toward_motion_seconds": 0.31666666666666665,
+        "host_seed": 621062,
+        "in_tolerance_but_not_quiet_ticks": 36,
+        "longest_quiet_ticks": 9,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 12.819971311915337,
+              "end": {
+                "absolute_angle_radians": 0.122448913753033,
+                "distance_cells": 3.7656810408098367,
+                "position": [
+                  208.517578125,
+                  347.932861328125
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 6.843072875776793,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  6.8415699005127,
+                  -0.143414363265038
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0333095341920853,
+                "distance_cells": 16.585652352725173,
+                "position": [
+                  195.41471862793,
+                  346.610931396484
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 32.00987442105624,
+                "supported": true,
+                "tick": 55,
+                "velocity": [
+                  28.8590526580811,
+                  13.8487234115601
+                ]
+              },
+              "toward_horizontal_cells": 13.10285949707
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0333095341920853,
+              "distance_cells": 16.585652352725173,
+              "position": [
+                195.41471862793,
+                346.610931396484
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 32.00987442105624,
+              "supported": true,
+              "tick": 55,
+              "velocity": [
+                28.8590526580811,
+                13.8487234115601
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 13.10285949707,
+            "native_linear_impulse": [
+              64.6256713867188,
+              -94.1594543457031
+            ],
+            "native_tick": 19,
+            "reason": "initial_contact_loss_launch",
+            "requested_aim": [
+              0.5658808390299498,
+              -0.8244870381144631
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0016526257386431102,
+              "distance_cells": 35.9528521341464,
+              "position": [
+                176.047149658203,
+                346.488647460938
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.9677882980226836,
+              "supported": false,
+              "tick": 18,
+              "velocity": [
+                0.103528544306755,
+                0.962234914302826
+              ]
+            },
+            "source_tick": 18,
+            "source_to_final": {
+              "distance_reduction_cells": 32.18717109333656,
+              "end": {
+                "absolute_angle_radians": 0.122448913753033,
+                "distance_cells": 3.7656810408098367,
+                "position": [
+                  208.517578125,
+                  347.932861328125
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 6.843072875776793,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  6.8415699005127,
+                  -0.143414363265038
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0016526257386431102,
+                "distance_cells": 35.9528521341464,
+                "position": [
+                  176.047149658203,
+                  346.488647460938
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.9677882980226836,
+                "supported": false,
+                "tick": 18,
+                "velocity": [
+                  0.103528544306755,
+                  0.962234914302826
+                ]
+              },
+              "toward_horizontal_cells": 32.47042846679699
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 19.367199781421224,
+              "end": {
+                "absolute_angle_radians": 0.0333095341920853,
+                "distance_cells": 16.585652352725173,
+                "position": [
+                  195.41471862793,
+                  346.610931396484
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 32.00987442105624,
+                "supported": true,
+                "tick": 55,
+                "velocity": [
+                  28.8590526580811,
+                  13.8487234115601
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0016526257386431102,
+                "distance_cells": 35.9528521341464,
+                "position": [
+                  176.047149658203,
+                  346.488647460938
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.9677882980226836,
+                "supported": false,
+                "tick": 18,
+                "velocity": [
+                  0.103528544306755,
+                  0.962234914302826
+                ]
+              },
+              "toward_horizontal_cells": 19.36756896972699
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 54,
+                "start_tick": 19,
+                "ticks": 36
+              }
+            ],
+            "subsequent_airborne_ticks": 36
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": null,
+            "first_subsequent_landing": null,
+            "native_linear_impulse": [
+              9.73521423339844,
+              -62.6080017089844
+            ],
+            "native_tick": 121,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              0.15364832920281418,
+              -0.9881255947161695
+            ],
+            "source": {
+              "absolute_angle_radians": 0.00932152196764946,
+              "distance_cells": 5.271517017860794,
+              "position": [
+                207.110580444336,
+                348.470397949219
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.4240798154989113,
+              "supported": true,
+              "tick": 120,
+              "velocity": [
+                -0.283401817083359,
+                -0.315479159355164
+              ]
+            },
+            "source_tick": 120,
+            "source_to_final": {
+              "distance_reduction_cells": 1.5058359770509573,
+              "end": {
+                "absolute_angle_radians": 0.122448913753033,
+                "distance_cells": 3.7656810408098367,
+                "position": [
+                  208.517578125,
+                  347.932861328125
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 6.843072875776793,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  6.8415699005127,
+                  -0.143414363265038
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.00932152196764946,
+                "distance_cells": 5.271517017860794,
+                "position": [
+                  207.110580444336,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.4240798154989113,
+                "supported": true,
+                "tick": 120,
+                "velocity": [
+                  -0.283401817083359,
+                  -0.315479159355164
+                ]
+              },
+              "toward_horizontal_cells": 1.4069976806640057
+            },
+            "source_to_first_landing": null,
+            "subsequent_airborne_spans": [],
+            "subsequent_airborne_ticks": 0
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "43e54b8e8596947e8455c3296987f76cb3458f8f8cc516f0e2e764138667586c",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.20098575949668904,
+              "distance_cells": 3.676129283350309,
+              "position": [
+                208.511749267578,
+                347.660186767578
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 7.656106754695255,
+              "supported": true,
+              "tick": 144,
+              "velocity": [
+                -4.64217329025269,
+                6.08820152282715
+              ]
+            },
+            "native_quiet_ticks_in_interval": 2,
+            "phase": "settle_brake",
+            "reason": "supported_arrival_braking",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.07500000000000001,
+            "source": {
+              "absolute_angle_radians": 0.26231837272644,
+              "distance_cells": 3.419980927817724,
+              "position": [
+                208.668518066406,
+                347.272979736328
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 14.654708592797723,
+              "supported": true,
+              "tick": 138,
+              "velocity": [
+                10.9724311828613,
+                9.71422863006592
+              ]
+            },
+            "source_tick": 138
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.12155977636575699,
+              "distance_cells": 3.168812895801538,
+              "position": [
+                209.125244140625,
+                347.833099365234
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 5.773629104825315,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                -5.4040994644165,
+                2.03236365318298
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.12243141978979101,
+              "distance_cells": 2.983792702709488,
+              "position": [
+                209.32568359375,
+                347.823272705078
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 5.214827919646298,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                5.21011066436768,
+                0.221759095788002
+              ]
+            },
+            "source_tick": 156
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.133339256048203,
+              "distance_cells": 3.848091623229243,
+              "position": [
+                208.402114868164,
+                347.864929199219
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 8.755225320095926,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                -8.56326675415039,
+                1.82330274581909
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.12155977636575699,
+              "distance_cells": 3.168812895801538,
+              "position": [
+                209.125244140625,
+                347.833099365234
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 5.773629104825315,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                -5.4040994644165,
+                2.03236365318298
+              ]
+            },
+            "source_tick": 162
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.14636319875717202,
+              "distance_cells": 3.8560804946524616,
+              "position": [
+                208.405151367188,
+                347.895141601562
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.9931569478600832,
+              "supported": true,
+              "tick": 174,
+              "velocity": [
+                3.6294801235199,
+                1.6649854183197
+              ]
+            },
+            "native_quiet_ticks_in_interval": 4,
+            "phase": "settle_brake",
+            "reason": "supported_arrival_braking",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.125,
+            "source": {
+              "absolute_angle_radians": 0.133339256048203,
+              "distance_cells": 3.848091623229243,
+              "position": [
+                208.402114868164,
+                347.864929199219
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 8.755225320095926,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                -8.56326675415039,
+                1.82330274581909
+              ]
+            },
+            "source_tick": 168
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.136116549372673,
+              "distance_cells": 3.934648114329017,
+              "position": [
+                208.321823120117,
+                347.897308349609
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.17722066264643,
+              "supported": true,
+              "tick": 180,
+              "velocity": [
+                -2.9253294467926,
+                1.23983013629913
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.14636319875717202,
+              "distance_cells": 3.8560804946524616,
+              "position": [
+                208.405151367188,
+                347.895141601562
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.9931569478600832,
+              "supported": true,
+              "tick": 174,
+              "velocity": [
+                3.6294801235199,
+                1.6649854183197
+              ]
+            },
+            "source_tick": 174
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.146599069237709,
+              "distance_cells": 4.355720398672568,
+              "position": [
+                207.882629394531,
+                347.921112060547
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 5.227902824449024,
+              "supported": true,
+              "tick": 186,
+              "velocity": [
+                -5.0376124382019,
+                1.39765119552612
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.136116549372673,
+              "distance_cells": 3.934648114329017,
+              "position": [
+                208.321823120117,
+                347.897308349609
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.17722066264643,
+              "supported": true,
+              "tick": 180,
+              "velocity": [
+                -2.9253294467926,
+                1.23983013629913
+              ]
+            },
+            "source_tick": 180
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.117672860622406,
+              "distance_cells": 3.6612849353061963,
+              "position": [
+                208.631362915039,
+                347.934326171875
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 5.3723654490185995,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                -4.04515886306763,
+                3.53539252281189
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_brake",
+            "reason": "supported_arrival_braking",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.07500000000000004,
+            "source": {
+              "absolute_angle_radians": 0.111535780131817,
+              "distance_cells": 3.390725038225069,
+              "position": [
+                208.900527954102,
+                347.874877929688
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 7.389136816545747,
+              "supported": true,
+              "tick": 198,
+              "velocity": [
+                7.28622627258301,
+                1.22892212867737
+              ]
+            },
+            "source_tick": 198
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.132896423339844,
+              "distance_cells": 4.224235042375862,
+              "position": [
+                208.032852172852,
+                347.951171875
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 7.688286602294152,
+              "supported": true,
+              "tick": 210,
+              "velocity": [
+                -7.0924334526062,
+                2.96768236160278
+              ]
+            },
+            "native_quiet_ticks_in_interval": 2,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.117672860622406,
+              "distance_cells": 3.6612849353061963,
+              "position": [
+                208.631362915039,
+                347.934326171875
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 5.3723654490185995,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                -4.04515886306763,
+                3.53539252281189
+              ]
+            },
+            "source_tick": 204
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.117805421352386,
+              "distance_cells": 3.5188916194851427,
+              "position": [
+                208.800537109375,
+                347.964935302734
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 4.568320999441643,
+              "supported": true,
+              "tick": 228,
+              "velocity": [
+                -3.66678357124329,
+                2.7247486114502
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_brake",
+            "reason": "supported_arrival_braking",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.07499999999999998,
+            "source": {
+              "absolute_angle_radians": 0.10165484994649901,
+              "distance_cells": 3.323477347510247,
+              "position": [
+                209.006362915039,
+                347.943481445312
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 7.988189926251799,
+              "supported": true,
+              "tick": 222,
+              "velocity": [
+                7.44093751907349,
+                2.90579199790955
+              ]
+            },
+            "source_tick": 222
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.13630269467830697,
+              "distance_cells": 4.011318516968946,
+              "position": [
+                208.274795532227,
+                347.98779296875
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 6.822765461701105,
+              "supported": true,
+              "tick": 234,
+              "velocity": [
+                -6.17787981033325,
+                2.89550161361694
+              ]
+            },
+            "native_quiet_ticks_in_interval": 3,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.117805421352386,
+              "distance_cells": 3.5188916194851427,
+              "position": [
+                208.800537109375,
+                347.964935302734
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 4.568320999441643,
+              "supported": true,
+              "tick": 228,
+              "velocity": [
+                -3.66678357124329,
+                2.7247486114502
+              ]
+            },
+            "source_tick": 228
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          212.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "reference-drop28-left-57": {
+        "arrived": false,
+        "artifact_sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef",
+        "continuous_quiet_spans": [
+          {
+            "end_tick": 162,
+            "start_tick": 153,
+            "ticks": 10
+          },
+          {
+            "end_tick": 182,
+            "start_tick": 178,
+            "ticks": 5
+          },
+          {
+            "end_tick": 194,
+            "start_tick": 191,
+            "ticks": 4
+          },
+          {
+            "end_tick": 207,
+            "start_tick": 202,
+            "ticks": 6
+          },
+          {
+            "end_tick": 220,
+            "start_tick": 214,
+            "ticks": 7
+          },
+          {
+            "end_tick": 233,
+            "start_tick": 225,
+            "ticks": 9
+          },
+          {
+            "end_tick": 240,
+            "start_tick": 236,
+            "ticks": 5
+          }
+        ],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.0102975806221366,
+          "distance_cells": 3.8984015509773577,
+          "position": [
+            210.36735534668,
+            348.464294433594
+          ],
+          "quiet": true,
+          "speed_cells_per_second": 0.9570607097629447,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            -0.955206990242004,
+            -0.0595382899045944
+          ]
+        },
+        "final_quiet_ticks": 5,
+        "first_pulse_native_tick": 55,
+        "first_pulse_source_tick": 54,
+        "first_toward_motion_seconds": 0.8,
+        "host_seed": 625008,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 10,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 25.86960225030873,
+              "end": {
+                "absolute_angle_radians": 0.0102975806221366,
+                "distance_cells": 3.8984015509773577,
+                "position": [
+                  210.36735534668,
+                  348.464294433594
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 0.9570607097629447,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -0.955206990242004,
+                  -0.0595382899045944
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.09031918644905089,
+                "distance_cells": 29.76800380128609,
+                "position": [
+                  236.757568359375,
+                  347.288146972656
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 66.16968153866141,
+                "supported": true,
+                "tick": 84,
+                "velocity": [
+                  -55.0742683410645,
+                  36.6776733398438
+                ]
+              },
+              "toward_horizontal_cells": 26.390213012695
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.09031918644905089,
+              "distance_cells": 29.76800380128609,
+              "position": [
+                236.757568359375,
+                347.288146972656
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 66.16968153866141,
+              "supported": true,
+              "tick": 84,
+              "velocity": [
+                -55.0742683410645,
+                36.6776733398438
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 26.390213012695,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 55,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0294893775135279,
+              "distance_cells": 58.209852825359775,
+              "position": [
+                265.178894042969,
+                348.398223876953
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 3.321980972597786,
+              "supported": true,
+              "tick": 54,
+              "velocity": [
+                -2.27591180801392,
+                -2.41987252235413
+              ]
+            },
+            "source_tick": 54,
+            "source_to_final": {
+              "distance_reduction_cells": 54.31145127438242,
+              "end": {
+                "absolute_angle_radians": 0.0102975806221366,
+                "distance_cells": 3.8984015509773577,
+                "position": [
+                  210.36735534668,
+                  348.464294433594
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 0.9570607097629447,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -0.955206990242004,
+                  -0.0595382899045944
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0294893775135279,
+                "distance_cells": 58.209852825359775,
+                "position": [
+                  265.178894042969,
+                  348.398223876953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 3.321980972597786,
+                "supported": true,
+                "tick": 54,
+                "velocity": [
+                  -2.27591180801392,
+                  -2.41987252235413
+                ]
+              },
+              "toward_horizontal_cells": 54.81153869628898
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 28.441849024073687,
+              "end": {
+                "absolute_angle_radians": 0.09031918644905089,
+                "distance_cells": 29.76800380128609,
+                "position": [
+                  236.757568359375,
+                  347.288146972656
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 66.16968153866141,
+                "supported": true,
+                "tick": 84,
+                "velocity": [
+                  -55.0742683410645,
+                  36.6776733398438
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0294893775135279,
+                "distance_cells": 58.209852825359775,
+                "position": [
+                  265.178894042969,
+                  348.398223876953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 3.321980972597786,
+                "supported": true,
+                "tick": 54,
+                "velocity": [
+                  -2.27591180801392,
+                  -2.41987252235413
+                ]
+              },
+              "toward_horizontal_cells": 28.421325683593977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 83,
+                "start_tick": 59,
+                "ticks": 25
+              }
+            ],
+            "subsequent_airborne_ticks": 25
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "732bff4aee768ac2120e1ee76ac1757dc44c286bb0713e40a2baa8bd7959cf9c",
+        "requested_primary_pulses": 1,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.00409003859385848,
+              "distance_cells": 3.9913144660562607,
+              "position": [
+                210.460968017578,
+                348.488037109375
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 1.3272495230525523,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                0.995642900466919,
+                0.877659678459167
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.00389439798891544,
+              "distance_cells": 3.837231701087899,
+              "position": [
+                210.283004760742,
+                348.486511230469
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.2482764679437963,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                -2.65659928321838,
+                1.86916565895081
+              ]
+            },
+            "source_tick": 156
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.000526985095348209,
+              "distance_cells": 4.08592666313778,
+              "position": [
+                210.562393188477,
+                348.501037597656
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.4739623817759273,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                0.386419594287872,
+                -0.274445325136185
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.00409003859385848,
+              "distance_cells": 3.9913144660562607,
+              "position": [
+                210.460968017578,
+                348.488037109375
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 1.3272495230525523,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                0.995642900466919,
+                0.877659678459167
+              ]
+            },
+            "source_tick": 162
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00316891795955598,
+              "distance_cells": 4.0690981074737635,
+              "position": [
+                210.548645019531,
+                348.491149902344
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.6106173815223512,
+              "supported": true,
+              "tick": 186,
+              "velocity": [
+                0.430149644613266,
+                0.433387666940689
+              ]
+            },
+            "native_quiet_ticks_in_interval": 2,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.00651228660717607,
+              "distance_cells": 3.9685287579654798,
+              "position": [
+                210.441299438477,
+                348.476531982422
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.5630975387478243,
+              "supported": true,
+              "tick": 180,
+              "velocity": [
+                -0.398934155702591,
+                -0.397404551506042
+              ]
+            },
+            "source_tick": 180
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00428721122443676,
+              "distance_cells": 4.065162988443222,
+              "position": [
+                210.546340942383,
+                348.487213134766
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.5276055973250714,
+              "supported": true,
+              "tick": 198,
+              "velocity": [
+                0.299737364053726,
+                0.43419486284256
+              ]
+            },
+            "native_quiet_ticks_in_interval": 2,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.00751963211223483,
+              "distance_cells": 3.9690199169083122,
+              "position": [
+                210.443634033203,
+                348.473449707031
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.8456354193909625,
+              "supported": true,
+              "tick": 192,
+              "velocity": [
+                -0.733459770679474,
+                -0.420875310897827
+              ]
+            },
+            "source_tick": 192
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00582665717229247,
+              "distance_cells": 4.050354497722354,
+              "position": [
+                210.532272338867,
+                348.482025146484
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.5296938785556442,
+              "supported": true,
+              "tick": 210,
+              "velocity": [
+                0.482177287340164,
+                0.219273045659065
+              ]
+            },
+            "native_quiet_ticks_in_interval": 3,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.009347111918032168,
+              "distance_cells": 3.9481090058033534,
+              "position": [
+                210.4228515625,
+                348.467651367188
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.9967881506832335,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                -0.935130715370178,
+                -0.345133543014526
+              ]
+            },
+            "source_tick": 204
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.0071554291062057,
+              "distance_cells": 4.02569786495181,
+              "position": [
+                210.506591796875,
+                348.477386474609
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.6859702220024061,
+              "supported": true,
+              "tick": 222,
+              "velocity": [
+                0.674853444099426,
+                0.12299583107233
+              ]
+            },
+            "native_quiet_ticks_in_interval": 4,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.0107485251501203,
+              "distance_cells": 3.9253062673771084,
+              "position": [
+                210.399383544922,
+                348.462707519531
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.9789368147339196,
+              "supported": true,
+              "tick": 216,
+              "velocity": [
+                -0.939179837703705,
+                -0.276149451732635
+              ]
+            },
+            "source_tick": 216
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.006268822122365239,
+              "distance_cells": 4.020372211282551,
+              "position": [
+                210.498733520508,
+                348.48046875
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.5089260684610439,
+              "supported": true,
+              "tick": 234,
+              "velocity": [
+                0.411948323249817,
+                0.298838287591934
+              ]
+            },
+            "native_quiet_ticks_in_interval": 5,
+            "phase": "settle_hold",
+            "reason": "supported_quiet_hold",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.00973797682672739,
+              "distance_cells": 3.919791419139911,
+              "position": [
+                210.391052246094,
+                348.466094970703
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.7495003226665127,
+              "supported": true,
+              "tick": 228,
+              "velocity": [
+                -0.740663886070251,
+                0.114750780165195
+              ]
+            },
+            "source_tick": 228
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          207.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "reference-floor-left-63": {
+        "arrived": false,
+        "artifact_sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177",
+        "continuous_quiet_spans": [],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.009509740397334099,
+          "distance_cells": 8.131479724495415,
+          "position": [
+            208.889495849609,
+            348.468963623047
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 0.3710051284307798,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            0.288564264774323,
+            -0.233185485005379
+          ]
+        },
+        "final_quiet_ticks": 0,
+        "first_pulse_native_tick": 13,
+        "first_pulse_source_tick": 12,
+        "first_toward_motion_seconds": 0.21666666666666667,
+        "host_seed": 625004,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 28.746739037271084,
+              "end": {
+                "absolute_angle_radians": 0.009509740397334099,
+                "distance_cells": 8.131479724495415,
+                "position": [
+                  208.889495849609,
+                  348.468963623047
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.3710051284307798,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.288564264774323,
+                  -0.233185485005379
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 36.8782187617665,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "toward_horizontal_cells": 28.981521606445995
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0392654351890087,
+              "distance_cells": 36.8782187617665,
+              "position": [
+                237.871017456055,
+                347.228759765625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 63.94025828004406,
+              "supported": true,
+              "tick": 40,
+              "velocity": [
+                -54.9234085083008,
+                32.7379875183105
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 29.069732666015994,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 13,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.000147004189784639,
+              "distance_cells": 63.04732612206377,
+              "position": [
+                264.015563964844,
+                348.501007080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.0719118118286104,
+              "supported": true,
+              "tick": 12,
+              "velocity": [
+                -1.07191181182861,
+                -2.97527353865235e-08
+              ]
+            },
+            "source_tick": 12,
+            "source_to_final": {
+              "distance_reduction_cells": 54.91584639756836,
+              "end": {
+                "absolute_angle_radians": 0.009509740397334099,
+                "distance_cells": 8.131479724495415,
+                "position": [
+                  208.889495849609,
+                  348.468963623047
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.3710051284307798,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.288564264774323,
+                  -0.233185485005379
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 63.04732612206377,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 55.12606811523497
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 26.169107360297275,
+              "end": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 36.8782187617665,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 63.04732612206377,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 26.144546508788977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 39,
+                "start_tick": 17,
+                "ticks": 23
+              },
+              {
+                "end_tick": 162,
+                "start_tick": 157,
+                "ticks": 6
+              }
+            ],
+            "subsequent_airborne_ticks": 29
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 1.289974688737738,
+              "end": {
+                "absolute_angle_radians": 0.009509740397334099,
+                "distance_cells": 8.131479724495415,
+                "position": [
+                  208.889495849609,
+                  348.468963623047
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.3710051284307798,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.288564264774323,
+                  -0.233185485005379
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.15615738928318,
+                "distance_cells": 9.421454413233153,
+                "position": [
+                  210.410202026367,
+                  346.039672851562
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 9.03334570474203,
+                "supported": true,
+                "tick": 163,
+                "velocity": [
+                  5.42765331268311,
+                  7.2209358215332
+                ]
+              },
+              "toward_horizontal_cells": 1.520706176757983
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.15615738928318,
+              "distance_cells": 9.421454413233153,
+              "position": [
+                210.410202026367,
+                346.039672851562
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 9.03334570474203,
+              "supported": true,
+              "tick": 163,
+              "velocity": [
+                5.42765331268311,
+                7.2209358215332
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 1.520706176757983,
+            "native_linear_impulse": [
+              -25.9086303710938,
+              -62.6080017089844
+            ],
+            "native_tick": 151,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              -0.3823753617508846,
+              -0.9240070793700015
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0116460602730513,
+              "distance_cells": 10.200980542410289,
+              "position": [
+                211.010467529297,
+                348.462280273438
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.143612863856425,
+              "supported": true,
+              "tick": 150,
+              "velocity": [
+                1.03888475894928,
+                0.478088736534119
+              ]
+            },
+            "source_tick": 150,
+            "source_to_final": {
+              "distance_reduction_cells": 2.0695008179148733,
+              "end": {
+                "absolute_angle_radians": 0.009509740397334099,
+                "distance_cells": 8.131479724495415,
+                "position": [
+                  208.889495849609,
+                  348.468963623047
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.3710051284307798,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.288564264774323,
+                  -0.233185485005379
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0116460602730513,
+                "distance_cells": 10.200980542410289,
+                "position": [
+                  211.010467529297,
+                  348.462280273438
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.143612863856425,
+                "supported": true,
+                "tick": 150,
+                "velocity": [
+                  1.03888475894928,
+                  0.478088736534119
+                ]
+              },
+              "toward_horizontal_cells": 2.120971679687983
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 0.7795261291771354,
+              "end": {
+                "absolute_angle_radians": 0.15615738928318,
+                "distance_cells": 9.421454413233153,
+                "position": [
+                  210.410202026367,
+                  346.039672851562
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 9.03334570474203,
+                "supported": true,
+                "tick": 163,
+                "velocity": [
+                  5.42765331268311,
+                  7.2209358215332
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0116460602730513,
+                "distance_cells": 10.200980542410289,
+                "position": [
+                  211.010467529297,
+                  348.462280273438
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.143612863856425,
+                "supported": true,
+                "tick": 150,
+                "velocity": [
+                  1.03888475894928,
+                  0.478088736534119
+                ]
+              },
+              "toward_horizontal_cells": 0.6002655029300001
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 162,
+                "start_tick": 157,
+                "ticks": 6
+              }
+            ],
+            "subsequent_airborne_ticks": 6
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "87e01efa70a49d3b1de2ca521f42107edb64261384119217c3ed176766bb19f3",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.00910460203886032,
+              "distance_cells": 8.203669562727649,
+              "position": [
+                208.963607788086,
+                348.470062255859
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.3980271384460747,
+              "supported": true,
+              "tick": 216,
+              "velocity": [
+                0.321985334157944,
+                -0.233989417552948
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.00873846188187599,
+              "distance_cells": 8.218570990684736,
+              "position": [
+                208.978912353516,
+                348.470245361328
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.48154359294999255,
+              "supported": true,
+              "tick": 210,
+              "velocity": [
+                0.387567937374115,
+                -0.285788953304291
+              ]
+            },
+            "source_tick": 210
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00904612615704536,
+              "distance_cells": 8.187502022462393,
+              "position": [
+                208.946838378906,
+                348.470520019531
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.37543717528521303,
+              "supported": true,
+              "tick": 222,
+              "velocity": [
+                0.318893909454346,
+                -0.198140725493431
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.00910460203886032,
+              "distance_cells": 8.203669562727649,
+              "position": [
+                208.963607788086,
+                348.470062255859
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.3980271384460747,
+              "supported": true,
+              "tick": 216,
+              "velocity": [
+                0.321985334157944,
+                -0.233989417552948
+              ]
+            },
+            "source_tick": 216
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          201.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      }
+    },
+    "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+    "family": "jolt-recovery-v3",
+    "manifest_sha256": "808dea3d9ad1e52ab5c40a73d4375135a4ac7f4f5c290d827e06af0426471fa7",
+    "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+    "status": "completed",
+    "summary_sha256": "0abbf8aad973956c26dde9a04450f62408dc87a12f302eafc3c30eb3d1b203dd"
+  },
+  "v4": {
+    "cases": {
+      "demo-floor-left-60-1": {
+        "arrived": false,
+        "artifact_sha256": "9807625a3f7a47e98ed1a839ad2e4040b09e349ccc4c92531bd30d0746d29223",
+        "continuous_quiet_spans": [],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.00887343008071184,
+          "distance_cells": 4.939331762513135,
+          "position": [
+            208.529296875,
+            348.470397949219
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 0.26406534125837344,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            0.264051169157028,
+            -0.00273578520864248
+          ]
+        },
+        "final_quiet_ticks": 0,
+        "first_pulse_native_tick": 13,
+        "first_pulse_source_tick": 12,
+        "first_toward_motion_seconds": 0.21666666666666667,
+        "host_seed": 621212,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 28.939524686670275,
+              "end": {
+                "absolute_angle_radians": 0.00887343008071184,
+                "distance_cells": 4.939331762513135,
+                "position": [
+                  208.529296875,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.26406534125837344,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.264051169157028,
+                  -0.00273578520864248
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 33.87885644918341,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "toward_horizontal_cells": 29.341720581055
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0392654351890087,
+              "distance_cells": 33.87885644918341,
+              "position": [
+                237.871017456055,
+                347.228759765625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 63.94025828004406,
+              "supported": true,
+              "tick": 40,
+              "velocity": [
+                -54.9234085083008,
+                32.7379875183105
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 30.073150634765994,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 13,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.000147004189784639,
+              "distance_cells": 60.04891295729508,
+              "position": [
+                264.015563964844,
+                348.501007080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.0719118118286104,
+              "supported": true,
+              "tick": 12,
+              "velocity": [
+                -1.07191181182861,
+                -2.97527353865235e-08
+              ]
+            },
+            "source_tick": 12,
+            "source_to_final": {
+              "distance_reduction_cells": 55.109581194781946,
+              "end": {
+                "absolute_angle_radians": 0.00887343008071184,
+                "distance_cells": 4.939331762513135,
+                "position": [
+                  208.529296875,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.26406534125837344,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.264051169157028,
+                  -0.00273578520864248
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 60.04891295729508,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 55.48626708984398
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 26.17005650811167,
+              "end": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 33.87885644918341,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 60.04891295729508,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 26.144546508788977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 39,
+                "start_tick": 17,
+                "ticks": 23
+              },
+              {
+                "end_tick": 167,
+                "start_tick": 163,
+                "ticks": 5
+              }
+            ],
+            "subsequent_airborne_ticks": 28
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 0.8755766454431404,
+              "end": {
+                "absolute_angle_radians": 0.00887343008071184,
+                "distance_cells": 4.939331762513135,
+                "position": [
+                  208.529296875,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.26406534125837344,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.264051169157028,
+                  -0.00273578520864248
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.180059611797333,
+                "distance_cells": 5.814908407956276,
+                "position": [
+                  209.78923034668,
+                  345.954132080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 12.353857414716272,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  10.1716442108154,
+                  7.01109457015991
+                ]
+              },
+              "toward_horizontal_cells": 1.2599334716800001
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.180059611797333,
+              "distance_cells": 5.814908407956276,
+              "position": [
+                209.78923034668,
+                345.954132080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 12.353857414716272,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                10.1716442108154,
+                7.01109457015991
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 1.2599334716800001,
+            "native_linear_impulse": [
+              -11.0231838226318,
+              -62.6080017089844
+            ],
+            "native_tick": 157,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              -0.17339954130540244,
+              -0.9848515619498586
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0044810944236815,
+              "distance_cells": 5.447320968112206,
+              "position": [
+                209.072067260742,
+                348.48681640625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.2474350138717063,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                0.761558353900909,
+                -0.987989366054535
+              ]
+            },
+            "source_tick": 156,
+            "source_to_final": {
+              "distance_reduction_cells": 0.5079892055990705,
+              "end": {
+                "absolute_angle_radians": 0.00887343008071184,
+                "distance_cells": 4.939331762513135,
+                "position": [
+                  208.529296875,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.26406534125837344,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  0.264051169157028,
+                  -0.00273578520864248
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0044810944236815,
+                "distance_cells": 5.447320968112206,
+                "position": [
+                  209.072067260742,
+                  348.48681640625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.2474350138717063,
+                "supported": true,
+                "tick": 156,
+                "velocity": [
+                  0.761558353900909,
+                  -0.987989366054535
+                ]
+              },
+              "toward_horizontal_cells": 0.5427703857419885
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": -0.36758743984406994,
+              "end": {
+                "absolute_angle_radians": 0.180059611797333,
+                "distance_cells": 5.814908407956276,
+                "position": [
+                  209.78923034668,
+                  345.954132080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 12.353857414716272,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  10.1716442108154,
+                  7.01109457015991
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0044810944236815,
+                "distance_cells": 5.447320968112206,
+                "position": [
+                  209.072067260742,
+                  348.48681640625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.2474350138717063,
+                "supported": true,
+                "tick": 156,
+                "velocity": [
+                  0.761558353900909,
+                  -0.987989366054535
+                ]
+              },
+              "toward_horizontal_cells": -0.7171630859380116
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 167,
+                "start_tick": 163,
+                "ticks": 5
+              }
+            ],
+            "subsequent_airborne_ticks": 5
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "76951ae27097e72719776c72a23b0fc4bf941d3320207a4a93b8dbc5b3a6ad8a",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.180059611797333,
+              "distance_cells": 5.814908407956276,
+              "position": [
+                209.78923034668,
+                345.954132080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 12.353857414716272,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                10.1716442108154,
+                7.01109457015991
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "post_pulse_coast",
+            "reason": "fresh_rising_second_pulse",
+            "requested_lease_ticks": 6,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.0628049895167351,
+              "distance_cells": 5.073388461959163,
+              "position": [
+                209.057800292969,
+                346.102600097656
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 13.358970100881,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                3.42383456230164,
+                -12.9127626419067
+              ]
+            },
+            "source_tick": 162
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00942539051175117,
+              "distance_cells": 5.027040245126003,
+              "position": [
+                208.625411987305,
+                348.468933105469
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.3939675270352686,
+              "supported": true,
+              "tick": 222,
+              "velocity": [
+                0.375164389610291,
+                -0.120258443057537
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.00921543221920729,
+              "distance_cells": 5.056945549416499,
+              "position": [
+                208.657638549805,
+                348.469543457031
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.31942617020482195,
+              "supported": true,
+              "tick": 216,
+              "velocity": [
+                0.289650827646255,
+                -0.13466802239418
+              ]
+            },
+            "source_tick": 216
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.00914536230266094,
+              "distance_cells": 5.002275068534551,
+              "position": [
+                208.59814453125,
+                348.4697265625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.3299278337912041,
+              "supported": true,
+              "tick": 228,
+              "velocity": [
+                0.296741455793381,
+                -0.144211247563362
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.00942539051175117,
+              "distance_cells": 5.027040245126003,
+              "position": [
+                208.625411987305,
+                348.468933105469
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.3939675270352686,
+              "supported": true,
+              "tick": 222,
+              "velocity": [
+                0.375164389610291,
+                -0.120258443057537
+              ]
+            },
+            "source_tick": 222
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          204.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "demo-floor-right-36-1": {
+        "arrived": true,
+        "artifact_sha256": "f3031c657f45cde7a37708cbc7538f19f0b699b99eeee81007c0c1cc7e0a5662",
+        "continuous_quiet_spans": [
+          {
+            "end_tick": 162,
+            "start_tick": 151,
+            "ticks": 12
+          }
+        ],
+        "decisions": 27,
+        "final": {
+          "absolute_angle_radians": 0.217114418745041,
+          "distance_cells": 3.069390607766387,
+          "position": [
+            209.076202392578,
+            347.434112548828
+          ],
+          "quiet": true,
+          "speed_cells_per_second": 2.750083642650294,
+          "supported": true,
+          "tick": 162,
+          "velocity": [
+            2.48669123649597,
+            1.17444741725922
+          ]
+        },
+        "final_quiet_ticks": 12,
+        "first_pulse_native_tick": 19,
+        "first_pulse_source_tick": 18,
+        "first_toward_motion_seconds": 0.31666666666666665,
+        "host_seed": 621062,
+        "in_tolerance_but_not_quiet_ticks": 3,
+        "longest_quiet_ticks": 12,
+        "native_ticks": 162,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 13.516261744958786,
+              "end": {
+                "absolute_angle_radians": 0.217114418745041,
+                "distance_cells": 3.069390607766387,
+                "position": [
+                  209.076202392578,
+                  347.434112548828
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 2.750083642650294,
+                "supported": true,
+                "tick": 162,
+                "velocity": [
+                  2.48669123649597,
+                  1.17444741725922
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0333095341920853,
+                "distance_cells": 16.585652352725173,
+                "position": [
+                  195.41471862793,
+                  346.610931396484
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 32.00987442105624,
+                "supported": true,
+                "tick": 55,
+                "velocity": [
+                  28.8590526580811,
+                  13.8487234115601
+                ]
+              },
+              "toward_horizontal_cells": 13.661483764648011
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0333095341920853,
+              "distance_cells": 16.585652352725173,
+              "position": [
+                195.41471862793,
+                346.610931396484
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 32.00987442105624,
+              "supported": true,
+              "tick": 55,
+              "velocity": [
+                28.8590526580811,
+                13.8487234115601
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 13.661483764648011,
+            "native_linear_impulse": [
+              64.6256713867188,
+              -94.1594543457031
+            ],
+            "native_tick": 19,
+            "reason": "initial_contact_loss_launch",
+            "requested_aim": [
+              0.5658808390299498,
+              -0.8244870381144631
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0016526257386431102,
+              "distance_cells": 35.9528521341464,
+              "position": [
+                176.047149658203,
+                346.488647460938
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.9677882980226836,
+              "supported": false,
+              "tick": 18,
+              "velocity": [
+                0.103528544306755,
+                0.962234914302826
+              ]
+            },
+            "source_tick": 18,
+            "source_to_final": {
+              "distance_reduction_cells": 32.88346152638001,
+              "end": {
+                "absolute_angle_radians": 0.217114418745041,
+                "distance_cells": 3.069390607766387,
+                "position": [
+                  209.076202392578,
+                  347.434112548828
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 2.750083642650294,
+                "supported": true,
+                "tick": 162,
+                "velocity": [
+                  2.48669123649597,
+                  1.17444741725922
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0016526257386431102,
+                "distance_cells": 35.9528521341464,
+                "position": [
+                  176.047149658203,
+                  346.488647460938
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.9677882980226836,
+                "supported": false,
+                "tick": 18,
+                "velocity": [
+                  0.103528544306755,
+                  0.962234914302826
+                ]
+              },
+              "toward_horizontal_cells": 33.029052734375
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 19.367199781421224,
+              "end": {
+                "absolute_angle_radians": 0.0333095341920853,
+                "distance_cells": 16.585652352725173,
+                "position": [
+                  195.41471862793,
+                  346.610931396484
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 32.00987442105624,
+                "supported": true,
+                "tick": 55,
+                "velocity": [
+                  28.8590526580811,
+                  13.8487234115601
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0016526257386431102,
+                "distance_cells": 35.9528521341464,
+                "position": [
+                  176.047149658203,
+                  346.488647460938
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.9677882980226836,
+                "supported": false,
+                "tick": 18,
+                "velocity": [
+                  0.103528544306755,
+                  0.962234914302826
+                ]
+              },
+              "toward_horizontal_cells": 19.36756896972699
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 54,
+                "start_tick": 19,
+                "ticks": 36
+              }
+            ],
+            "subsequent_airborne_ticks": 36
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": null,
+            "first_subsequent_landing": null,
+            "native_linear_impulse": [
+              9.73521423339844,
+              -62.6080017089844
+            ],
+            "native_tick": 121,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              0.15364832920281418,
+              -0.9881255947161695
+            ],
+            "source": {
+              "absolute_angle_radians": 0.00932152196764946,
+              "distance_cells": 5.271517017860794,
+              "position": [
+                207.110580444336,
+                348.470397949219
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 0.4240798154989113,
+              "supported": true,
+              "tick": 120,
+              "velocity": [
+                -0.283401817083359,
+                -0.315479159355164
+              ]
+            },
+            "source_tick": 120,
+            "source_to_final": {
+              "distance_reduction_cells": 2.202126410094407,
+              "end": {
+                "absolute_angle_radians": 0.217114418745041,
+                "distance_cells": 3.069390607766387,
+                "position": [
+                  209.076202392578,
+                  347.434112548828
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 2.750083642650294,
+                "supported": true,
+                "tick": 162,
+                "velocity": [
+                  2.48669123649597,
+                  1.17444741725922
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.00932152196764946,
+                "distance_cells": 5.271517017860794,
+                "position": [
+                  207.110580444336,
+                  348.470397949219
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 0.4240798154989113,
+                "supported": true,
+                "tick": 120,
+                "velocity": [
+                  -0.283401817083359,
+                  -0.315479159355164
+                ]
+              },
+              "toward_horizontal_cells": 1.965621948242017
+            },
+            "source_to_first_landing": null,
+            "subsequent_airborne_spans": [],
+            "subsequent_airborne_ticks": 0
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "aacc6f642ea45c7380f46a194a2d7f62b041fb712e0624dcbbae44f665a828dd",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.194157257676125,
+              "distance_cells": 5.298869932714794,
+              "position": [
+                206.701873779297,
+                346.588775634766
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 10.300350967306343,
+              "supported": true,
+              "tick": 132,
+              "velocity": [
+                -7.95437145233154,
+                6.54409694671631
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "post_pulse_coast",
+            "reason": "fresh_rising_second_pulse",
+            "requested_lease_ticks": 6,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.0552826970815659,
+              "distance_cells": 4.754367418104863,
+              "position": [
+                207.245788574219,
+                346.461486816406
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 8.202847928984275,
+              "supported": true,
+              "tick": 126,
+              "velocity": [
+                -1.6175445318222,
+                -8.04178237915039
+              ]
+            },
+            "source_tick": 126
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.21526132524013497,
+              "distance_cells": 3.328168086498625,
+              "position": [
+                208.802963256836,
+                347.425018310547
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 2.7403228777140782,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                2.45565867424011,
+                1.21618664264679
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_capture",
+            "reason": "supported_interior_capture",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.125,
+            "source": {
+              "absolute_angle_radians": 0.221638783812523,
+              "distance_cells": 3.636725080635153,
+              "position": [
+                208.486328125,
+                347.438018798828
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 9.876951007657695,
+              "supported": true,
+              "tick": 150,
+              "velocity": [
+                9.60098075866699,
+                2.3184757232666
+              ]
+            },
+            "source_tick": 150
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.217114418745041,
+              "distance_cells": 3.069390607766387,
+              "position": [
+                209.076202392578,
+                347.434112548828
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 2.750083642650294,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                2.48669123649597,
+                1.17444741725922
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_capture",
+            "reason": "supported_interior_capture",
+            "requested_lease_ticks": 12,
+            "requested_move_x": 0.125,
+            "source": {
+              "absolute_angle_radians": 0.21526132524013497,
+              "distance_cells": 3.328168086498625,
+              "position": [
+                208.802963256836,
+                347.425018310547
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 2.7403228777140782,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                2.45565867424011,
+                1.21618664264679
+              ]
+            },
+            "source_tick": 156
+          }
+        ],
+        "success_native_tick": 162,
+        "target": [
+          212.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "reference-drop28-left-57": {
+        "arrived": true,
+        "artifact_sha256": "c69ca9fea4e274b9a053b8670726679672428409d4beaf6314f701eae8c8a7cb",
+        "continuous_quiet_spans": [
+          {
+            "end_tick": 168,
+            "start_tick": 153,
+            "ticks": 16
+          }
+        ],
+        "decisions": 28,
+        "final": {
+          "absolute_angle_radians": 0.010720549151301398,
+          "distance_cells": 3.5294050761895286,
+          "position": [
+            209.933380126953,
+            348.462646484375
+          ],
+          "quiet": true,
+          "speed_cells_per_second": 0.7471954395714243,
+          "supported": true,
+          "tick": 168,
+          "velocity": [
+            -0.0823402851819992,
+            -0.742644667625427
+          ]
+        },
+        "final_quiet_ticks": 16,
+        "first_pulse_native_tick": 55,
+        "first_pulse_source_tick": 54,
+        "first_toward_motion_seconds": 0.8,
+        "host_seed": 625008,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 16,
+        "native_ticks": 168,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 26.23859872509656,
+              "end": {
+                "absolute_angle_radians": 0.010720549151301398,
+                "distance_cells": 3.5294050761895286,
+                "position": [
+                  209.933380126953,
+                  348.462646484375
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 0.7471954395714243,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  -0.0823402851819992,
+                  -0.742644667625427
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.09031918644905089,
+                "distance_cells": 29.76800380128609,
+                "position": [
+                  236.757568359375,
+                  347.288146972656
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 66.16968153866141,
+                "supported": true,
+                "tick": 84,
+                "velocity": [
+                  -55.0742683410645,
+                  36.6776733398438
+                ]
+              },
+              "toward_horizontal_cells": 26.82418823242199
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.09031918644905089,
+              "distance_cells": 29.76800380128609,
+              "position": [
+                236.757568359375,
+                347.288146972656
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 66.16968153866141,
+              "supported": true,
+              "tick": 84,
+              "velocity": [
+                -55.0742683410645,
+                36.6776733398438
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 26.82418823242199,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 55,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0294893775135279,
+              "distance_cells": 58.209852825359775,
+              "position": [
+                265.178894042969,
+                348.398223876953
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 3.321980972597786,
+              "supported": true,
+              "tick": 54,
+              "velocity": [
+                -2.27591180801392,
+                -2.41987252235413
+              ]
+            },
+            "source_tick": 54,
+            "source_to_final": {
+              "distance_reduction_cells": 54.68044774917025,
+              "end": {
+                "absolute_angle_radians": 0.010720549151301398,
+                "distance_cells": 3.5294050761895286,
+                "position": [
+                  209.933380126953,
+                  348.462646484375
+                ],
+                "quiet": true,
+                "speed_cells_per_second": 0.7471954395714243,
+                "supported": true,
+                "tick": 168,
+                "velocity": [
+                  -0.0823402851819992,
+                  -0.742644667625427
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0294893775135279,
+                "distance_cells": 58.209852825359775,
+                "position": [
+                  265.178894042969,
+                  348.398223876953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 3.321980972597786,
+                "supported": true,
+                "tick": 54,
+                "velocity": [
+                  -2.27591180801392,
+                  -2.41987252235413
+                ]
+              },
+              "toward_horizontal_cells": 55.245513916015966
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 28.441849024073687,
+              "end": {
+                "absolute_angle_radians": 0.09031918644905089,
+                "distance_cells": 29.76800380128609,
+                "position": [
+                  236.757568359375,
+                  347.288146972656
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 66.16968153866141,
+                "supported": true,
+                "tick": 84,
+                "velocity": [
+                  -55.0742683410645,
+                  36.6776733398438
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0294893775135279,
+                "distance_cells": 58.209852825359775,
+                "position": [
+                  265.178894042969,
+                  348.398223876953
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 3.321980972597786,
+                "supported": true,
+                "tick": 54,
+                "velocity": [
+                  -2.27591180801392,
+                  -2.41987252235413
+                ]
+              },
+              "toward_horizontal_cells": 28.421325683593977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 83,
+                "start_tick": 59,
+                "ticks": 25
+              }
+            ],
+            "subsequent_airborne_ticks": 25
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "8bc8bd7be741f666ec10faabdc14e40c1d7a8d52aba732cbf91bc6a843fe814e",
+        "requested_primary_pulses": 1,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.0111927902325988,
+              "distance_cells": 3.6644620662582836,
+              "position": [
+                210.095565795898,
+                348.461059570312
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 2.020987235925056,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                -2.0125617980957,
+                0.184348627924919
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_capture",
+            "reason": "supported_interior_capture",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.125,
+            "source": {
+              "absolute_angle_radians": 0.00389439798891544,
+              "distance_cells": 3.837231701087899,
+              "position": [
+                210.283004760742,
+                348.486511230469
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 3.2482764679437963,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                -2.65659928321838,
+                1.86916565895081
+              ]
+            },
+            "source_tick": 156
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.010720549151301398,
+              "distance_cells": 3.5294050761895286,
+              "position": [
+                209.933380126953,
+                348.462646484375
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 0.7471954395714243,
+              "supported": true,
+              "tick": 168,
+              "velocity": [
+                -0.0823402851819992,
+                -0.742644667625427
+              ]
+            },
+            "native_quiet_ticks_in_interval": 6,
+            "phase": "settle_capture",
+            "reason": "supported_interior_capture",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.125,
+            "source": {
+              "absolute_angle_radians": 0.0111927902325988,
+              "distance_cells": 3.6644620662582836,
+              "position": [
+                210.095565795898,
+                348.461059570312
+              ],
+              "quiet": true,
+              "speed_cells_per_second": 2.020987235925056,
+              "supported": true,
+              "tick": 162,
+              "velocity": [
+                -2.0125617980957,
+                0.184348627924919
+              ]
+            },
+            "source_tick": 162
+          }
+        ],
+        "success_native_tick": 164,
+        "target": [
+          207.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      },
+      "reference-floor-left-63": {
+        "arrived": false,
+        "artifact_sha256": "7265df4922380af9952533ee9738f791387d33324834dc0af4216fc2c21579ea",
+        "continuous_quiet_spans": [],
+        "decisions": 40,
+        "final": {
+          "absolute_angle_radians": 0.00852996949106455,
+          "distance_cells": 12.503336093724585,
+          "position": [
+            213.347122192383,
+            348.470275878906
+          ],
+          "quiet": false,
+          "speed_cells_per_second": 2.6890658899964333,
+          "supported": true,
+          "tick": 240,
+          "velocity": [
+            -2.68857026100159,
+            0.0516266636550426
+          ]
+        },
+        "final_quiet_ticks": 0,
+        "first_pulse_native_tick": 13,
+        "first_pulse_source_tick": 12,
+        "first_toward_motion_seconds": 0.21666666666666667,
+        "host_seed": 625004,
+        "in_tolerance_but_not_quiet_ticks": 0,
+        "longest_quiet_ticks": 0,
+        "native_ticks": 240,
+        "pulses": [
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 24.374882668041913,
+              "end": {
+                "absolute_angle_radians": 0.00852996949106455,
+                "distance_cells": 12.503336093724585,
+                "position": [
+                  213.347122192383,
+                  348.470275878906
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 2.6890658899964333,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -2.68857026100159,
+                  0.0516266636550426
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 36.8782187617665,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "toward_horizontal_cells": 24.52389526367199
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.0392654351890087,
+              "distance_cells": 36.8782187617665,
+              "position": [
+                237.871017456055,
+                347.228759765625
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 63.94025828004406,
+              "supported": true,
+              "tick": 40,
+              "velocity": [
+                -54.9234085083008,
+                32.7379875183105
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 29.01806640625,
+            "native_linear_impulse": [
+              -102.677116394043,
+              -71.6690673828125
+            ],
+            "native_tick": 13,
+            "reason": "initial_supported_launch",
+            "requested_aim": [
+              -0.82,
+              -0.5723635208501675
+            ],
+            "source": {
+              "absolute_angle_radians": 0.000147004189784639,
+              "distance_cells": 63.04732612206377,
+              "position": [
+                264.015563964844,
+                348.501007080078
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.0719118118286104,
+              "supported": true,
+              "tick": 12,
+              "velocity": [
+                -1.07191181182861,
+                -2.97527353865235e-08
+              ]
+            },
+            "source_tick": 12,
+            "source_to_final": {
+              "distance_reduction_cells": 50.54399002833919,
+              "end": {
+                "absolute_angle_radians": 0.00852996949106455,
+                "distance_cells": 12.503336093724585,
+                "position": [
+                  213.347122192383,
+                  348.470275878906
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 2.6890658899964333,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -2.68857026100159,
+                  0.0516266636550426
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 63.04732612206377,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 50.668441772460966
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": 26.169107360297275,
+              "end": {
+                "absolute_angle_radians": 0.0392654351890087,
+                "distance_cells": 36.8782187617665,
+                "position": [
+                  237.871017456055,
+                  347.228759765625
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 63.94025828004406,
+                "supported": true,
+                "tick": 40,
+                "velocity": [
+                  -54.9234085083008,
+                  32.7379875183105
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.000147004189784639,
+                "distance_cells": 63.04732612206377,
+                "position": [
+                  264.015563964844,
+                  348.501007080078
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.0719118118286104,
+                "supported": true,
+                "tick": 12,
+                "velocity": [
+                  -1.07191181182861,
+                  -2.97527353865235e-08
+                ]
+              },
+              "toward_horizontal_cells": 26.144546508788977
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 39,
+                "start_tick": 17,
+                "ticks": 23
+              },
+              {
+                "end_tick": 178,
+                "start_tick": 157,
+                "ticks": 22
+              }
+            ],
+            "subsequent_airborne_ticks": 45
+          },
+          {
+            "confirmed_upward_actuation": true,
+            "first_landing_to_final": {
+              "distance_reduction_cells": 1.3132789763432289,
+              "end": {
+                "absolute_angle_radians": 0.00852996949106455,
+                "distance_cells": 12.503336093724585,
+                "position": [
+                  213.347122192383,
+                  348.470275878906
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 2.6890658899964333,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -2.68857026100159,
+                  0.0516266636550426
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.10141254216432599,
+                "distance_cells": 13.816615070067813,
+                "position": [
+                  214.816162109375,
+                  346.388122558594
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 22.696272454985433,
+                "supported": true,
+                "tick": 179,
+                "velocity": [
+                  20.0439910888672,
+                  10.6470279693604
+                ]
+              },
+              "toward_horizontal_cells": 1.4690399169919885
+            },
+            "first_subsequent_landing": {
+              "absolute_angle_radians": 0.10141254216432599,
+              "distance_cells": 13.816615070067813,
+              "position": [
+                214.816162109375,
+                346.388122558594
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 22.696272454985433,
+              "supported": true,
+              "tick": 179,
+              "velocity": [
+                20.0439910888672,
+                10.6470279693604
+              ]
+            },
+            "grounded_interval_toward_motion_after_first_landing_cells": 1.4690399169919885,
+            "native_linear_impulse": [
+              -25.9086303710938,
+              -62.6080017089844
+            ],
+            "native_tick": 151,
+            "reason": "supported_no_progress",
+            "requested_aim": [
+              -0.3823753617508846,
+              -0.9240070793700015
+            ],
+            "source": {
+              "absolute_angle_radians": 0.0116460602730513,
+              "distance_cells": 10.200980542410289,
+              "position": [
+                211.010467529297,
+                348.462280273438
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 1.143612863856425,
+              "supported": true,
+              "tick": 150,
+              "velocity": [
+                1.03888475894928,
+                0.478088736534119
+              ]
+            },
+            "source_tick": 150,
+            "source_to_final": {
+              "distance_reduction_cells": -2.302355551314296,
+              "end": {
+                "absolute_angle_radians": 0.00852996949106455,
+                "distance_cells": 12.503336093724585,
+                "position": [
+                  213.347122192383,
+                  348.470275878906
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 2.6890658899964333,
+                "supported": true,
+                "tick": 240,
+                "velocity": [
+                  -2.68857026100159,
+                  0.0516266636550426
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0116460602730513,
+                "distance_cells": 10.200980542410289,
+                "position": [
+                  211.010467529297,
+                  348.462280273438
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.143612863856425,
+                "supported": true,
+                "tick": 150,
+                "velocity": [
+                  1.03888475894928,
+                  0.478088736534119
+                ]
+              },
+              "toward_horizontal_cells": -2.3366546630860228
+            },
+            "source_to_first_landing": {
+              "distance_reduction_cells": -3.615634527657525,
+              "end": {
+                "absolute_angle_radians": 0.10141254216432599,
+                "distance_cells": 13.816615070067813,
+                "position": [
+                  214.816162109375,
+                  346.388122558594
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 22.696272454985433,
+                "supported": true,
+                "tick": 179,
+                "velocity": [
+                  20.0439910888672,
+                  10.6470279693604
+                ]
+              },
+              "source": {
+                "absolute_angle_radians": 0.0116460602730513,
+                "distance_cells": 10.200980542410289,
+                "position": [
+                  211.010467529297,
+                  348.462280273438
+                ],
+                "quiet": false,
+                "speed_cells_per_second": 1.143612863856425,
+                "supported": true,
+                "tick": 150,
+                "velocity": [
+                  1.03888475894928,
+                  0.478088736534119
+                ]
+              },
+              "toward_horizontal_cells": -3.8056945800780113
+            },
+            "subsequent_airborne_spans": [
+              {
+                "end_tick": 178,
+                "start_tick": 157,
+                "ticks": 22
+              }
+            ],
+            "subsequent_airborne_ticks": 22
+          }
+        ],
+        "purposeful_launch": true,
+        "record_sha256": "a6943f6f9473850472ce300c0f02618e10712d9e5d5865c7b74c8ed6d20108a7",
+        "requested_primary_pulses": 2,
+        "special_decision_intervals": [
+          {
+            "end": {
+              "absolute_angle_radians": 0.136181280016899,
+              "distance_cells": 9.597130211627489,
+              "position": [
+                210.573501586914,
+                345.826965332031
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 7.046989330201435,
+              "supported": false,
+              "tick": 162,
+              "velocity": [
+                6.35521602630615,
+                3.04487895965576
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "post_pulse_coast",
+            "reason": "fresh_rising_second_pulse",
+            "requested_lease_ticks": 6,
+            "requested_move_x": 0.0,
+            "source": {
+              "absolute_angle_radians": 0.0449635237455368,
+              "distance_cells": 9.33019724793407,
+              "position": [
+                210.321990966797,
+                346.108764648438
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 14.260632215737676,
+              "supported": true,
+              "tick": 156,
+              "velocity": [
+                -2.74367713928223,
+                -13.9942083358765
+              ]
+            },
+            "source_tick": 156
+          },
+          {
+            "end": {
+              "absolute_angle_radians": 0.000385692692361772,
+              "distance_cells": 14.617827352179203,
+              "position": [
+                215.480163574219,
+                348.501434326172
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 3.28531455993652,
+              "supported": true,
+              "tick": 204,
+              "velocity": [
+                -3.28531455993652,
+                2.97527353865235e-08
+              ]
+            },
+            "native_quiet_ticks_in_interval": 0,
+            "phase": "ground_correction",
+            "reason": "supported_stall_ground_correction",
+            "requested_lease_ticks": 12,
+            "requested_move_x": -0.975,
+            "source": {
+              "absolute_angle_radians": 0.000914659874979407,
+              "distance_cells": 15.042267143012527,
+              "position": [
+                215.908752441406,
+                348.499725341797
+              ],
+              "quiet": false,
+              "speed_cells_per_second": 3.2901929703692208,
+              "supported": true,
+              "tick": 198,
+              "velocity": [
+                -3.26181864738464,
+                -0.431171536445618
+              ]
+            },
+            "source_tick": 198
+          }
+        ],
+        "success_native_tick": null,
+        "target": [
+          201.0,
+          346.5
+        ],
+        "tolerance_cells": 4.0
+      }
+    },
+    "declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+    "family": "jolt-recovery-v4",
+    "manifest_sha256": "e5229ef2c9b1fa8d7e5e1ec5856cfd150c4802cc9d8e06c3bc24924fe30d0b49",
+    "source_revision": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+    "status": "completed",
+    "summary_sha256": "faf163a276a40f10762eefbfedb70c2ec527c76340ee008678590bca0b5194fd"
+  }
+}
