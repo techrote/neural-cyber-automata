@@ -226,14 +226,25 @@ class SnapshotTests(unittest.TestCase):
                 self.git("update-index", "--no-" + flag, relative)
 
     def test_crlf_normalization_matches_head_but_raw_identity_is_preserved(self):
+        # Copied files can already use CRLF on Windows. Keep their existing
+        # committed-byte policy while changing only the synthetic source's
+        # checkout policy; a global autocrlf flip would reinterpret their HEAD
+        # blobs and correctly fail the production committed-source check.
+        setup = self.root / "tools/setup_ik.ps1"
+        setup_crlf = setup.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+        setup.write_bytes(setup_crlf)
+        (self.root / ".gitattributes").write_bytes(b"src/nca/ik/declaration.py text eol=crlf\n")
+        self.commit()
         initial = source_snapshot(self.root)
-        self.git("config", "core.autocrlf", "true")
         target = self.root / "src/nca/ik/declaration.py"
+        self.assertNotIn(b"\r", target.read_bytes())
         target.unlink()
         self.git("checkout", "--", "src/nca/ik/declaration.py")
         self.assertIn(b"\r\n", target.read_bytes())
         self.assertFalse(self.git("status", "--porcelain"))
         converted = source_snapshot(self.root)
+        self.assertEqual(setup.read_bytes(), setup_crlf)
+        self.assertEqual(converted["files"]["tools/setup_ik.ps1"], initial["files"]["tools/setup_ik.ps1"])
         self.assertEqual(converted["revision"], initial["revision"])
         self.assertNotEqual(converted["source_sha256"], initial["source_sha256"])
         self.assertEqual(converted["files"]["src/nca/ik/declaration.py"], hashlib.sha256(target.read_bytes()).hexdigest())

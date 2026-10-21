@@ -99,6 +99,13 @@ fixtures before publication. The existing Jolt process-tree check initially
 failed inside a sandbox with inconsistent process namespaces; its unchanged
 14-case module passes outside that sandbox. No gate was weakened.
 
+The initial hosted Windows check exposed a test fixture that committed CRLF
+setup files before switching the temporary repository's global normalization
+policy. The fixture now applies an explicit checkout rule only to its synthetic
+Python source and retains a pre-existing CRLF setup-file control. Production
+source verification remains unchanged and strict; final-head hosted checks
+record the corrected fixture's platform results.
+
 The integrated local optional CPU suite passes 857 cases: 799 passed and 58
 explicit skips, including the unrequested manual CUDA fixture. This includes the
 real CLI subprocess test and the repeated environment-refusal regressions. The
