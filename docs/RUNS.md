@@ -3,7 +3,7 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Run ledger
@@ -11,6 +11,11 @@ verified: 2026-10-21
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
 Historical artifact hashes remain identifiers even where original external bytes are unavailable to a continuation; new reproductions retain separate identities.
+
+The [Jolt execution reliability repair](evidence/2026-10-22-jolt-learning-reliability.md)
+adds synthetic software tests and no experimental run row. The consumed
+LEARN-JOLT-002 allocation and its unknown complete wall time remain unchanged;
+no replacement physical invocation, resumed checkpoint or learned comparison is recorded.
 
 The [IK runtime software evidence](evidence/2026-10-21-ik-runtime-software.md)
 records small CPU conformance and failure fixtures, not a measured CUDA run.

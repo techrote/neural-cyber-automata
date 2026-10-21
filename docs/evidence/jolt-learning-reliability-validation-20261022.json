@@ -1,0 +1,80 @@
+{
+  "base_revision": "1c19c5aa7e715575d867675babd19bb08ae58e25",
+  "command": "env -u NCA_HOST_CHECKOUT -u NCA_GODOT -u NCA_EXPORT_BUNDLE -u NCA_EXPORT_BUNDLE_SHA256 PYTHONPATH=src:tests python -m unittest discover -s tests -q",
+  "final_full_suite": {
+    "elapsed_seconds": 44.756,
+    "environment_change": "consistent PID namespace visibility",
+    "exit_code": 0,
+    "failures": 0,
+    "log_sha256": "1e4d24a294da15db4cdbaf2c6b87500245992394ca60aded072bb9a01689cecb",
+    "passed": 929,
+    "skipped": 59,
+    "skips": "Expected environment-dependent actual-host, export and CUDA qualification tests remain skipped when their prerequisites are absent.",
+    "tests": 988
+  },
+  "historical_preservation": {
+    "all_preexisting_evidence_files_unchanged": true,
+    "explicit_byte_identical_checks": [
+      "src/nca/evaluation/durable_journal.py",
+      "src/nca/controllers/recovery_supervisor.py",
+      "src/nca/evaluation/jolt_learning.py",
+      "src/nca/train/jolt_admission.py",
+      "configs/learning/jolt-learn-002-v1.json",
+      "docs/evidence/2026-10-21-jolt-learn-002.md"
+    ],
+    "original_failed_allocation_unchanged": true
+  },
+  "initial_full_suite": {
+    "elapsed_seconds": 45.971,
+    "failure_reason": "executor and /proc must share a consistent PID namespace",
+    "failure_test": "test_jolt_recovery_v4_executor.RecoveryV4ExecutorTests.test_isolated_python_tree_closes_a_separately_sessioned_descendant",
+    "failures": 1,
+    "log_sha256": "e3e5f8a994a311f6f4215ebc3c1623fea5ee90eaa41e59065c8c9248a2846347",
+    "passed": 923,
+    "skipped": 59,
+    "source_stage": "before final boundary and regression refinements",
+    "tests": 983
+  },
+  "isolated_rerun": {
+    "elapsed_seconds": 0.084,
+    "environment_change": "consistent PID namespace visibility; source unchanged",
+    "failures": 0,
+    "passed": 1,
+    "test": "test_jolt_recovery_v4_executor.RecoveryV4ExecutorTests.test_isolated_python_tree_closes_a_separately_sessioned_descendant"
+  },
+  "limits": [
+    "Unit tests include small fresh CPU models and optimizer fixtures; they are not an experiment or archived checkpoint continuation.",
+    "Raw transient test logs are not published because fixtures emit temporary paths; their identities and summarized outcomes are retained here.",
+    "Required hosted CI on the final PR head and verified merge are separate publication gates recorded on the PR and issue.",
+    "No physical experiment, execution declaration, new allocation, learned qualification, owner-feel approval or morphology admission is established."
+  ],
+  "offline_scope_only": true,
+  "prospective_experiment_admitted": false,
+  "reviews": {
+    "docs/evidence/jolt-learning-reliability-executor-review-20261022.json": {
+      "bytes": 7362,
+      "sha256": "0795272607a50040fdb9e7fc75f6043e0d842a012670731064ad8cf38acce026"
+    },
+    "docs/evidence/jolt-learning-reliability-journal-review-20261022.json": {
+      "bytes": 28225,
+      "sha256": "892713ba681ca0c1c535c3c5f1837379dcdcd18fae9ac1aff480e1e5979aab2e"
+    },
+    "docs/evidence/jolt-learning-reliability-worker-review-20261022.json": {
+      "bytes": 7115,
+      "sha256": "3cb7a6591540e6c781dbba1c92a33b9a4844fe906bee2b11c6950061fa1b7fd0"
+    }
+  },
+  "runtime": {
+    "device": "cpu",
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "torch": "2.8.0+cpu"
+  },
+  "schema": "nca-learn-jolt-002-offline-reliability-validation/v1",
+  "scope": "offline software regression and publication; no prospective experiment admission",
+  "source_inventory_file_count": 207,
+  "source_inventory_method": "nca.train.jolt_screen.source_inventory; canonical SHA-256",
+  "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb"
+}

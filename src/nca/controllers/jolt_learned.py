@@ -19,7 +19,7 @@ import torch
 from torch import Tensor, nn
 from torch.nn import functional as F
 
-from nca.contracts import WireAction, canonical_json, sha256_json
+from nca.contracts import ContractError, WireAction, canonical_json, sha256_json
 from nca.data.records import policy_view
 from .baseline import FeedbackObservation, SkillGoal
 from .recovery_supervisor import PhysicalRecoverySupervisor, Supervision
@@ -363,12 +363,27 @@ class JoltDecision:
         return self.supervision.override is not None
 
 
+class SupervisorRetirement(ContractError):
+    """Stable v2 execution diagnostic; the original authority stop is unchanged."""
+
+    REASONS = frozenset({
+        "emergency_recovery_deadline", "skill_deadline", "owner_generation_changed",
+        "unavailable_observation", "expired_observation", "observation_gap",
+        "canceled", "caller_confirmed_complete", "supported_arrival_estimate",
+    })
+
+    def __init__(self, reason: str):
+        self.reason = reason if reason in self.REASONS else "other_supervisor_retirement"
+        super().__init__("jolt_supervisor_retired", "physical supervision retired this invocation")
+
+
 class JoltController:
     """Owned sequential inference with shared supervision and explicit history."""
 
     def __init__(self, policy: JoltPolicy, *, base_policy: JoltPolicy | None = None,
                  generator: torch.Generator | None = None,
-                 reserve: Callable[[str, int], None] | None = None):
+                 reserve: Callable[[str, int], None] | None = None,
+                 structured_retirement: bool = False):
         if not isinstance(policy, JoltPolicy):
             raise ValueError("v2 runtime requires the v2 model contract")
         if (policy.kind == "residual") != (base_policy is not None):
@@ -379,6 +394,9 @@ class JoltController:
         self.base_policy = None if base_policy is None else copy.deepcopy(base_policy).eval().requires_grad_(False)
         self.generator = generator
         self.reserve = reserve
+        if type(structured_retirement) is not bool:
+            raise ValueError("structured retirement is an explicit execution-version choice")
+        self.structured_retirement = structured_retirement
         self.policy_sha256 = policy_state_sha256(policy)
         self.base_sha256 = None if self.base_policy is None else policy_state_sha256(self.base_policy)
         self.context: InvocationContext | None = None
@@ -460,8 +478,15 @@ class JoltController:
                 raise ValueError("original invocation deadline or observation lease expired")
             supervision = self.supervisor.admit(view, goal, current_tick=now, emergency=emergency_request(view))
             if supervision.status != "running":
+                if self.structured_retirement:
+                    self.cancel(supervision.reason)
+                    raise SupervisorRetirement(supervision.reason)
                 raise ValueError(f"physical supervisor retired invocation: {supervision.reason}")
             encoded = features(observation, goal, context=self.context, history=self.history)
+        except SupervisorRetirement:
+            # The same invocation is already retired. Do not replace its
+            # declared reason with a generic malformed-context diagnostic.
+            raise
         except (ValueError, TypeError):
             self.cancel("invalid_context")
             raise

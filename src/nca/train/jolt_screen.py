@@ -30,7 +30,7 @@ from nca.controllers.baseline import FeedbackObservation, SkillGoal
 from nca.controllers.jolt_recovery_v4 import JoltRecoveryControllerV4
 from nca.controllers.recovery_supervisor import PhysicalRecoverySupervisor
 from nca.controllers.jolt_learned import (
-    ActionHistory, InvocationContext, JoltController, JoltPolicy, emergency_request,
+    ActionHistory, InvocationContext, JoltController, JoltPolicy, SupervisorRetirement, emergency_request,
     features, load_policy, policy_state_sha256, save_policy,
 )
 from nca.data import ActionSource, EpisodeRecorder, PolicyContext, read_episode, write_episode
@@ -48,6 +48,8 @@ from nca.train.task import HopTask, REWARD_SCHEMA
 
 DECLARATION_SCHEMA = "nca-learn-jolt-002-execution/v1"
 RUN_SCHEMA = "nca-learn-jolt-002-run/v1"
+DECLARATION_SCHEMA_V2 = "nca-learn-jolt-002-execution/v2"
+RUN_SCHEMA_V2 = "nca-learn-jolt-002-run/v2"
 
 
 def runtime_identity():
@@ -68,7 +70,10 @@ def runtime_identity():
 
 def error_record(exc):
     # Exception text may include an absolute path or private process details.
-    return {"type": type(exc).__name__, "code": getattr(exc, "code", None)}
+    record = {"type": type(exc).__name__, "code": getattr(exc, "code", None)}
+    if isinstance(exc, SupervisorRetirement):
+        record["reason"] = exc.reason
+    return record
 
 
 def note(journal, event, **fields):
@@ -85,9 +90,16 @@ def source_inventory(root):
             if not path.name.startswith("jolt-execution-")}
 
 
-def validate_execution(root, declaration, *, config, host_identity):
-    if declaration.get("schema") != DECLARATION_SCHEMA or declaration.get("attempts") != 1:
+def validate_execution(root, declaration, *, config, host_identity, execution_version=1):
+    if type(execution_version) is not int or execution_version not in (1, 2):
+        raise ContractError("jolt_execution_version", "unknown execution version")
+    schema = DECLARATION_SCHEMA if execution_version == 1 else DECLARATION_SCHEMA_V2
+    if (declaration.get("schema") != schema or declaration.get("attempts") != 1
+            or (execution_version == 2 and type(declaration.get("attempts")) is not int)):
         raise ContractError("jolt_execution", "exactly one versioned prospective invocation is required")
+    if execution_version == 2:
+        from nca.train.jolt_execution_contract import validate_v2_allocation_identity
+        validate_v2_allocation_identity(declaration)
     inventory = source_inventory(root)
     if declaration.get("source_files") != inventory or declaration.get("source_sha256") != sha256_json(inventory):
         raise ContractError("jolt_execution_sources", "executing source differs from the prospective declaration")
@@ -117,6 +129,9 @@ def validate_execution(root, declaration, *, config, host_identity):
         if file_identity(Path(root) / relative)["sha256"] != review.get("sha256"):
             raise ContractError("jolt_execution_review", "review bytes changed after prospective admission")
         record = json.loads((Path(root) / relative).read_text())
+        if execution_version == 2:
+            from nca.train.jolt_execution_contract import require_prospective_review
+            require_prospective_review(record)
         if record.get("accepted") is not True or record.get("source_sha256") != declaration["source_sha256"]:
             raise ContractError("jolt_execution_review", "reviews must accept exactly the executing source closure")
         reviewer = record.get("reviewer")
@@ -255,7 +270,7 @@ def _draw(decision, source_sha256):
 
 def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, stage,
             output, root, config, source_sha256, policy=None, base=None, generator=None,
-            maximum_decisions=40):
+            maximum_decisions=40, execution_version=1):
     """One invocation; preserve every unsuccessful label and partial tail."""
     from nca.train.jolt_learning import rollout_sequence
     split = {"teacher": "training", "ppo": "training", "open": "open", "sealed": "sealed"}[stage]
@@ -268,7 +283,8 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
     goal = SkillGoal(identifier, "directed_hop", tuple(case["target"]), .8, 4., 4.)
     controller = (JoltRecoveryControllerV4() if kind == "authored" else
                   JoltController(policy, base_policy=base, generator=generator,
-                                 reserve=lambda counter, amount=1: ledger.reserve(counter, amount, stage=stage))
+                                 reserve=lambda counter, amount=1: ledger.reserve(counter, amount, stage=stage),
+                                 structured_retirement=execution_version == 2)
                   if policy is not None else None)
     supervisor = PhysicalRecoverySupervisor() if kind == "idle" else None
     policy_sha = (controller.specification_sha256 if kind == "authored" else
@@ -280,6 +296,9 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
     history = ActionHistory()
     closure, error, bootstrap, task, caught = False, None, 0., None, None
     bootstrap_valid, bootstrap_observation_sha256, bootstrap_reason = True, None, "task_terminal"
+    cancellation_error = None
+    if execution_version == 2:
+        bootstrap_valid, bootstrap_reason = False, "not_attempted"
     try:
         recorder = EpisodeRecorder(env, identifier, source,
             context=PolicyContext(goal.id, goal.skill, goal.target, goal.pace, goal.tolerance, goal.timeout_seconds),
@@ -322,6 +341,8 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
                 phase, reason, diagnostic = "learned", supervision.reason, {}
             inference_ns = time.perf_counter_ns() - begin
             overridden = supervision.override is not None
+            if execution_version == 2 and supervision.status != "running":
+                raise SupervisorRetirement(supervision.reason)
             if supervision.status != "running" or not 6 <= lease <= 12 or view["tick"] + lease > context.deadline_tick:
                 raise ContractError("jolt_supervisor_lease", "shared supervision must preserve original authority and deadline")
             packet = env.command(action.to_dict(), observation=view, lease_ticks=lease)
@@ -359,12 +380,16 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
                 raise ContractError("jolt_early_terminal", "native host ended before the fixed task deadline")
         if not task.done and stage != "ppo":
             raise ContractError("jolt_evaluation_cutoff", "uncompleted diagnostic cases are retained as incomplete")
+        if execution_version == 2 and task.done:
+            bootstrap_valid, bootstrap_reason = True, "task_terminal"
         if not task.done:
             # This observation was physically received before cancellation. Bootstrap
             # inference is charged and cannot advance the original controller/history.
             original_callback = controller.reserve
             peek = copy.deepcopy(controller, memo={id(original_callback): original_callback})
             peek.reserve = lambda counter, amount=1: ledger.reserve("bootstrap_forward", amount, stage=stage)
+            if execution_version == 2:
+                bootstrap_reason = "attempt_failed"
             bootstrap_decision = peek.step(recorder.view, goal, deterministic=True)
             bootstrap_observation_sha256 = sha256_json(recorder.view)
             bootstrap_valid = bootstrap_decision.proposal is not None and bootstrap_decision.value is not None
@@ -385,10 +410,19 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
         error = error_record(exc)
         if recorder is not None:
             try:
-                recorder.cancel("failed_episode_cleanup")
-                closure = bool(recorder.view.get("suspended"))
-            except Exception:
-                pass
+                before = recorder.view
+                after = recorder.cancel("failed_episode_cleanup")
+                if execution_version == 2:
+                    from nca.controllers.morphology.conformance import cancellation_receipt
+                    cancellation_receipt(before, after)
+                    closure = True
+                else:
+                    closure = bool(recorder.view.get("suspended"))
+            except Exception as cleanup_exc:
+                if execution_version == 2:
+                    closure = False
+                    recorded = error_record(cleanup_exc)
+                    cancellation_error = {key: recorded[key] for key in ("type", "code")}
     finally:
         if controller is not None:
             controller.cancel()
@@ -408,9 +442,12 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
     status = "capped" if capped else "failed" if error else "completed" if task.done else "capped"
     sample_episode = JoltEpisode(identifier, split, tuple(decisions), status, metrics["reason"])
     validate_history(sample_episode)
-    raw_episode = recorder.finish(status, metrics["reason"], evaluation={"metrics": metrics,
+    evaluation = {"metrics": metrics,
         "character_metrics": character, "reward_terms": rewards, "controller_frames": frames,
-        "task_reward_schema": REWARD_SCHEMA, "owner_closure_confirmed": closure, "error": error})
+        "task_reward_schema": REWARD_SCHEMA, "owner_closure_confirmed": closure, "error": error}
+    if execution_version == 2:
+        evaluation["cancellation_error"] = cancellation_error
+    raw_episode = recorder.finish(status, metrics["reason"], evaluation=evaluation)
     raw_path = output / "episodes" / f"{identifier}.json.gz"
     raw_sha = write_episode(raw_path, raw_episode)
     sync_directory(raw_path.parent)
@@ -429,6 +466,8 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
         "bootstrap_reason": bootstrap_reason,
         "metrics": metrics, "character_metrics": character, "supervisor_interventions": sum(record.overridden for record in decisions),
         "owner_closure_confirmed": closure, "error": error}
+    if execution_version == 2:
+        row["cancellation_error"] = cancellation_error
     publish_json(output / "metrics" / f"{identifier}.json", row)
     ledger.reserve("episodes_aborted" if error else "episodes_completed", stage=stage, cleanup=True)
     note(journal, "episode_finished", row=row)
@@ -468,7 +507,41 @@ def freeze_candidates(checkpoints, *, destination, source_sha256, journal):
     return receipt
 
 
-def run(*, root, checkout, godot, output, config_path, declaration_path, whole_started):
+def close_worker_v2(native, owner, ledger, journal, *, status, failure, recording_errors):
+    """Revoke the worker even when its journal can no longer record a note.
+
+    Each cleanup action is independent. Failures remain explicit in the worker
+    result and cannot become a verified journal or successful allocation.
+    """
+    def attempt(stage, action):
+        nonlocal status, failure
+        try:
+            return action()
+        except BaseException as exc:
+            error = error_record(exc)
+            recording_errors.append({"stage": stage, "error": error})
+            status, failure = "failed", failure or error
+            return None
+
+    if native is not None:
+        if owner is not None:
+            attempt("owner_close", lambda: owner.request("close"))
+        attempt("host_termination_reservation", lambda: ledger.reserve("host_terminations", cleanup=True))
+        attempt("host_termination", lambda: native.close(graceful=False))
+        exited = attempt("host_exit_readback", lambda: native._process.poll() is not None)
+        attempt("host_terminated_note", lambda: note(journal, "host_terminated",
+            native_close_confirmed=bool(owner and owner.closed_native), process_exited=exited is True))
+    attempt("worker_closed_note", lambda: note(journal, "worker_closed", status=status, counters=ledger.snapshot()))
+    attempt("journal_close", journal.close)
+    durable = journal.durability_receipt()
+    if not (durable.get("closed_verified") is True and durable.get("poisoned") is False):
+        status = "failed"
+        failure = failure or {"type": "ContractError", "code": "journal_closure_unverified"}
+    return status, failure
+
+
+def run(*, root, checkout, godot, output, config_path, declaration_path, whole_started,
+        execution_version=1):
     from nca.train.jolt_admission import BudgetLedger, validate_config
     from nca.train.jolt_learning import BC_SPEC, PPO_SPEC, clone_sequences, train_clone, ppo_update
     root, output = Path(root).resolve(), Path(output).resolve()
@@ -477,7 +550,8 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     # Strict read-only admission precedes host construction and any model draw.
     validate_config(root, config)
     identity = inspect_host(checkout, godot)
-    validate_execution(root, declaration, config=config, host_identity=identity)
+    validate_execution(root, declaration, config=config, host_identity=identity,
+                       execution_version=execution_version)
     if config["bc"] != BC_SPEC or config["ppo"] != PPO_SPEC:
         raise ContractError("jolt_learning_spec", "fitting/loss/sampling rules differ from their prospective configuration")
     if output.exists():
@@ -491,7 +565,8 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     ledger.reserve("attempts")
     publish_json(output / "declaration.json", declaration)
     publish_json(output / "config.json", config)
-    manifest = {"schema": RUN_SCHEMA, "source_revision": declaration["source_revision"],
+    run_schema = RUN_SCHEMA if execution_version == 1 else RUN_SCHEMA_V2
+    manifest = {"schema": run_schema, "source_revision": declaration["source_revision"],
         "source_sha256": declaration["source_sha256"], "source_files": declaration["source_files"],
         "declaration_sha256": sha256_json(declaration), "config_sha256": sha256_json(config),
         "host_identity": identity, "runtime": declaration["runtime"],
@@ -499,7 +574,12 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     publish_json(output / "manifest.json", manifest)
     results, checkpoints, training_results, demos = [], [], [], []
     status, failure, native, owner = "incomplete", None, None, None
-    journal = DurableJournal(output / "owner-journal.jsonl")
+    recording_errors = []
+    if execution_version == 2:
+        from nca.evaluation.verified_journal import VerifiedDurableJournal
+        journal = VerifiedDurableJournal(output / "owner-journal.jsonl")
+    else:
+        journal = DurableJournal(output / "owner-journal.jsonl")
     try:
         ledger.reserve_many({"host_starts": 1, "host_start_attempts": 1}, allowance_seconds=15)
         note(journal, "host_start_reserved", counts=ledger.snapshot())
@@ -509,7 +589,7 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
         for case in config["cases"]["teacher"]:
             episode, row, _ = capture(owner, ledger, journal, case, identifier=f"teacher-{case['id']}",
                 controller_id="authored", kind="authored", stage="teacher", output=output, root=root,
-                config=config, source_sha256=declaration["source_sha256"])
+                config=config, source_sha256=declaration["source_sha256"], execution_version=execution_version)
             demos.append(episode)
             results.append(row)
             print(f"teacher episodes={len(demos)}/{len(config['cases']['teacher'])} decisions={ledger.counts['decisions']}", flush=True)
@@ -567,7 +647,7 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                         controller_id=f"residual-seed{seed}-initial" if update == 0 else f"residual-seed{seed}-u{update}",
                         kind="residual", stage="ppo", output=output, root=root, config=config,
                         source_sha256=declaration["source_sha256"], policy=residual, base=base, generator=generator,
-                        maximum_decisions=min(40, 256 - decision_count))
+                        maximum_decisions=min(40, 256 - decision_count), execution_version=execution_version)
                     if row["decisions"] <= 0 or sequence is None:
                         raise ContractError("jolt_ppo_empty", "a counted rollout must contain retained physical decisions")
                     results.append(row)
@@ -606,18 +686,30 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                 for name, kind, policy, base in candidates:
                     _, row, _ = capture(owner, ledger, journal, case, identifier=f"{stage}-{case['id']}-{name}",
                         controller_id=name, kind=kind, stage=stage, output=output, root=root, config=config,
-                        source_sha256=declaration["source_sha256"], policy=policy, base=base)
+                        source_sha256=declaration["source_sha256"], policy=policy, base=base,
+                        execution_version=execution_version)
                     results.append(row)
                 print(f"{stage} case={case['id']} complete decisions={ledger.counts['decisions']}", flush=True)
         status = "completed"
-    except Exception as exc:
+    except BaseException as exc:
+        if execution_version == 1 and not isinstance(exc, Exception):
+            raise
         failure = error_record(exc)
         if getattr(exc, "row", None) is not None:
             results.append(exc.row)
         status = "capped" if type(exc).__name__ == "AdmissionError" else "failed"
-        note(journal, "allocation_stopped", status=status, error=failure, counters=ledger.snapshot())
+        try:
+            note(journal, "allocation_stopped", status=status, error=failure, counters=ledger.snapshot())
+        except BaseException as recording_exc:
+            if execution_version == 1:
+                raise
+            recording_errors.append({"stage": "allocation_stopped_note", "error": error_record(recording_exc)})
+            status = "failed"
     finally:
-        if native is not None:
+        if execution_version == 2:
+            status, failure = close_worker_v2(native, owner, ledger, journal, status=status,
+                                             failure=failure, recording_errors=recording_errors)
+        elif native is not None:
             try:
                 if owner is not None:
                     owner.request("close")
@@ -635,8 +727,9 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                 native.close(graceful=False)
             note(journal, "host_terminated", native_close_confirmed=bool(owner and owner.closed_native),
                  process_exited=native._process.poll() is not None)
-        note(journal, "worker_closed", status=status, counters=ledger.snapshot())
-        journal.close()
+        if execution_version == 1:
+            note(journal, "worker_closed", status=status, counters=ledger.snapshot())
+            journal.close()
     closure = {"native_close_confirmed": bool(owner and owner.closed_native),
                "pending_owner_request": None if owner is None else owner.pending,
                "uncertain_owner_requests": [] if owner is None else owner.uncertain,
@@ -646,9 +739,11 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                "refused_ticks": 0 if owner is None else owner.refused_ticks,
                "uncertain_ticks": 0 if owner is None else owner.uncertain_ticks,
                "durability": journal.durability_receipt()}
+    if execution_version == 2:
+        closure["recording_errors"] = recording_errors
     publish_json(output / "budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
                                                        "reservations": ledger.reservations})
-    candidate = {"schema": RUN_SCHEMA, "status": status, "error": failure, "manifest": manifest,
+    candidate = {"schema": run_schema, "status": status, "error": failure, "manifest": manifest,
         "results": results, "checkpoints": checkpoints, "learning": training_results,
         "costs_before_readback": ledger.snapshot(), "closure": closure,
         "qualification": qualify(results, config["cases"]["sealed"], evidence_complete=False)}
@@ -661,7 +756,7 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     publish_json(output / "closed-budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
                                                               "reservations": ledger.reservations})
     closed_costs = ledger.close()
-    final = {"schema": RUN_SCHEMA, "status": status, "error": failure,
+    final = {"schema": run_schema, "status": status, "error": failure,
              "worker_result_sha256": file_identity(output / "worker-result.json")["sha256"],
              "audit_sha256": file_identity(output / "independent-readback.json")["sha256"],
              "costs": closed_costs, "closure": closure,
