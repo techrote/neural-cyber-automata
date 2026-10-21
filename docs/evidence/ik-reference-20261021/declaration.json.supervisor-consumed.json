@@ -1,0 +1,1 @@
+{"aggregate_max_seconds":30.0,"attempt":1,"child_timeout_max_seconds":25.0,"declaration_sha256":"001c9fb4423f16d2deb3a2e1dd8e8de8d39fa1dabfc9fd446ef04d7e208a063f","publication_reserve_seconds":5.0,"retry_or_resume":false,"run_id":"ik-reference-5d10108f7cf44cbc967d5ffd9091dae3","schema":"nca-ik-reference-supervisor-start/v1","started_utc":"2026-10-21T23:09:30Z"}

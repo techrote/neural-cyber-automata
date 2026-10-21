@@ -249,3 +249,51 @@ Actual CUDA execution, matched CUDA/CPU timing and peak memory remain unmeasured
 The issue retains its hardware acceptance gates; CPU fixtures and skipped manual
 GPU tests do not clear them. The concurrent Jolt PR #67 landed during this work;
 integration preserves its original failed allocation and separate issue gates.
+
+## 2026-10-21 — Independent IK geometry and reference
+
+Issue #52 starts from accepted main `a1d71a58e87042649d7483131118a6acff5f94bf`.
+Independent source auditing confirms the unchanged Runner profile against both
+pinned host blobs. Separate work streams implement generic planar FK, bounded
+numerical/analytic solving and independent conformance fixtures. The
+[owning reference](IK_KINEMATICS.md) records interfaces and evidence boundaries.
+
+Independent review corrected float32 limits rounded outside exact bounds,
+delta-emission roundoff, an equal-link folded continuum and current-angle
+normalization for analytic branch choice. Focused geometry/reference checks
+cover the fixes. The [evidence page](evidence/2026-10-21-ik-kinematics.md)
+records source identities, conformance and the separately declared finite
+reference-performance allocation. Actual CUDA, learned IK and physical tracking
+remain unmeasured; no Jolt or morphology gate changes.
+
+## 2026-10-21 23:09 UTC — Bounded CPU reference measurement completed
+
+The [prospective declaration](https://github.com/techrote/neural-cyber-automata/issues/52#issuecomment-6328585303)
+was published and read back at 23:09:01 UTC before the single allocation started
+at 23:09:30 UTC. Frozen source is
+`f801577b38cafe4a9f1a0e00ab5d6bcd67935972`, tree
+`c026a669d4b3ebb5ad7e6c28269f387061ea4a3f`. Later documentation/publication changes
+retain that measured source identity.
+
+Run `ik-reference-5d10108f7cf44cbc967d5ffd9091dae3` completed all 502 calls with
+zero failures: 243 measured calls and eight warmups for each of numerical DLS
+and independent analytic IK. Both pass the fixed `1e-6-cell` endpoint gate.
+Numerical work totals 1,598 of 16,064 permitted iterations and 148 projection
+events, including warmups. The journal has 502 matched starts/finishes and no
+incomplete call. The child exits zero; supervisor checks pass without timeout.
+Recorded durations are 1.409384175 child seconds, 1.632817047 seconds through
+readback and 1.671319562 outer seconds, within the declared 30-second allocation.
+No retry, resume or enlarged allocation occurred.
+
+On the identified Linux CPU environment, numerical/analytic core p95 times are
+1.628497 / 0.177437 ms. The faster analytic baseline is retained as a legitimate
+comparison; these core times exclude target/lifecycle validation, transport and
+host motion. The [evidence page](evidence/2026-10-21-ik-kinematics.md),
+[result](evidence/ik-reference-20261021/result.json) and
+[run ledger](RUNS.md) record exact identities, timing boundaries and costs.
+
+Independent publication readback passes all 29 checks without findings. Hosted
+final-head CI was pending at evidence publication; [issue #52](https://github.com/techrote/neural-cyber-automata/issues/52) records final CI and merge acceptance.
+The pre-benchmark local suite's unrelated Jolt process-isolation failure, also
+reproduced on unchanged main, remains recorded. No CUDA execution, learned
+comparison, physical tracking or Jolt/morphology gate change is claimed.

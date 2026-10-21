@@ -12,8 +12,10 @@ verified: 2026-10-21
 implements the first contract milestone of [the CUDA IK programme](ROADMAP.md#cuda-ik-programme).
 `runner-right-sole@1` is a registered, dependency-free nominal profile. It
 describes a two-joint point task, strict observation/target/result records and
-small hand-checkable geometry fixtures. It includes no inverse solver, learned
-weights, CUDA execution or physical joint-target interface.
+small hand-checkable geometry fixtures. The separate [kinematics/reference
+increment](IK_KINEMATICS.md) implements independent FK, Jacobians, bounded inverse
+solving and analytic comparison. Learned weights, CUDA execution and physical
+joint-target capability remain separately qualified stages.
 
 The separate [IK runtime](IK_RUNTIME.md) now supplies optional device support,
 a bounded fixed-profile inverse-workload smoke and complete optimizer-boundary
@@ -202,7 +204,8 @@ host admission. Each record exposes `json_schema()` for structural interchange;
 the Python validators additionally enforce semantic bounds and identities.
 The profile JSON ships in the wheel and imports without NumPy or PyTorch.
 
-These fixtures establish nominal geometry and contract conformance. Batched
-FK/reference IK belongs to #52; CUDA qualification to #51; dataset/training to
+These fixtures establish nominal geometry and contract conformance. The
+[batched FK/reference implementation](IK_KINEMATICS.md) and its independent
+checks belong to #52; CUDA qualification to #51; dataset/training to
 #53/#54; host tracking to #55; exact CPU export to #56; and physical qualification
 of that exported artifact to #57. No learning or physical experiment runs here.

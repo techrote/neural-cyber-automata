@@ -93,6 +93,26 @@ def ik_runner_profile():
     return runner_right_sole_profile()
 
 
+def ik_cpu_fk(**kwargs):
+    from .ik.kinematics import CPUFK
+    return CPUFK(**kwargs)
+
+
+def ik_torch_fk(**kwargs):
+    from .ik.kinematics import TorchFK
+    return TorchFK(**kwargs)
+
+
+def ik_reference_solver(**kwargs):
+    from .ik.reference import DampedLeastSquares
+    return DampedLeastSquares(**kwargs)
+
+
+def ik_analytic_solver(**kwargs):
+    from .ik.reference import AnalyticTwoLink
+    return AnalyticTwoLink(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -114,6 +134,14 @@ def builtin_registry() -> Registry:
                       ("recorded_fixture", "wire", "local-observation"))
     registry.register("profile", "runner-right-sole", 1, ik_runner_profile,
                       ("nominal-geometry", "point-ik-2d", "root-local", "fixed-chain"))
+    registry.register("kinematics", "planar-cpu-f64", 1, ik_cpu_fk,
+                      ("nominal-geometry", "point-ik-2d", "jacobian", "binary64"))
+    registry.register("kinematics", "planar-torch", 1, ik_torch_fk,
+                      ("nominal-geometry", "point-ik-2d", "jacobian", "differentiable", "explicit-device"))
+    registry.register("ik_solver", "runner-dls", 1, ik_reference_solver,
+                      ("nominal-geometry", "bounded-reference", "source-bound", "point-ik-2d"))
+    registry.register("ik_solver", "planar-analytic-2r", 1, ik_analytic_solver,
+                      ("nominal-geometry", "independent-comparator", "multiple-branches"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
     registry.register("adapter", "recorded-playback", 1, RecordedEnv,
                       ("recorded_fixture", "reset-step", "owned-observation"))
