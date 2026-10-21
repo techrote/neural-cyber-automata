@@ -1,0 +1,91 @@
+{
+  "schema": "nca-learn-jolt-002-source-review/v1",
+  "created_utc": "2026-10-21T19:29:24Z",
+  "reviewer": "admission-executor-cross-reviewer",
+  "accepted": true,
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "source_file_count": 182,
+  "source_identity_method": "Independently enumerate every Python and Godot source under src/nca, Python tools and tests, learning configuration JSON excluding jolt-execution declarations, and pyproject.toml; hash each file and the canonical sorted JSON inventory.",
+  "authored_scope": [
+    "src/nca/train/jolt_admission.py: prospective prerequisite, split and budget implementation, excluding the separately authored incremental reservation digest optimization",
+    "configs/learning/jolt-learn-002-v1.json and its prerequisite, historical opened inventory and static split inputs",
+    "tests/test_jolt_admission.py",
+    "tools/learn_jolt.py: final pure-stdlib closed-inventory cost and qualification reconciliation",
+    "tests/test_jolt_learning_executor.py: interruption, direct worker revocation and closed-inventory negative controls",
+    "docs/LEARN_JOLT_002_RUNBOOK.md and implementation-status documentation"
+  ],
+  "independence_statement": "Authored work is disclosed above. The cross-review findings concern the runner, original supervisor, learning and audit integrations written by other contributors. Acceptance also depends on their reciprocal review of this reviewer's authored admission and inventory code; this record is not a claim of independent authorship review for every file.",
+  "cross_review_scope": [
+    "src/nca/train/jolt_screen.py: source/runtime admission, metered owner requests, capture, bootstrap, checkpoint freeze, closure and final qualification",
+    "tools/learn_jolt.py: source freeze and external supervisor portions authored by the runner contributor",
+    "src/nca/train/jolt_learning.py and src/nca/data/jolt_samples.py: fixed specifications, original sample identity, recurrent window and pre-work reservation integration",
+    "src/nca/controllers/jolt_learned.py: runtime invocation, history, proposal, dispatch and residual policy integration",
+    "src/nca/evaluation/jolt_learning.py and src/nca/evaluation/jolt_learning_audit.py: unchanged qualification, original evidence reconstruction, conservative partial outcomes and charged replay",
+    "src/nca/train/jolt_admission.py: separately authored incremental canonical reservation hashing and owned publication copies",
+    "tests/test_jolt_screen.py and tests/test_jolt_learning_audit.py: relevant synthetic negative controls"
+  ],
+  "findings": [
+    {
+      "area": "prospective source and allocation binding",
+      "result": "accepted",
+      "detail": "The executing worker requires the frozen clean source commit, complete source inventory, exact configuration and budget, pinned host/runtime, and at least two distinct accepted review records. Automatic retry and extension remain false. A later declaration-publication commit does not replace the frozen physical source commit."
+    },
+    {
+      "area": "pre-work accounting and native ownership",
+      "result": "accepted",
+      "detail": "Native owner requests have atomic prospective counters and durable ordered request evidence before dispatch. The six-tick cadence, finite stage ceilings, original active deadline and cleanup reserve remain enforced. Refused or uncertain work is retained. Native cancellation, close confirmation, process termination and external descendant closure have separate evidence."
+    },
+    {
+      "area": "learning and checkpoint admission",
+      "result": "accepted",
+      "detail": "The runner compares BC and PPO configuration with the fixed exported specifications, charges fitting and checkpoint operations, preserves original failed and overridden samples, and authenticates stochastic rollout densities before updates. Recurrent windows reconstruct complete prefixes and keep masks inside physical episode windows. All six fixed final checkpoint hashes precede every sealed outcome, including reference controllers."
+    },
+    {
+      "area": "offline audit and final closed costs",
+      "result": "accepted",
+      "detail": "The independent reader reconstructs original native receipts, histories, policy outputs, densities, fitting reservations and qualification. Replay loads and forwards are charged before use. The later stdlib verifier authenticates an unchanged pre-audit prefix, the exact cleanup-only replay delta, all closed counters and stage totals, original clock bounds, and worker/audit/result hash and qualification bindings. It performs no additional neural replay. Verified partial evidence cannot acquire completion or qualification."
+    },
+    {
+      "area": "supervisor and durable final verdict",
+      "result": "accepted",
+      "detail": "The supervisor retains the original process identity and original invocation clock, revokes the owned tree after BaseException paths, and attempts direct known-worker revocation if tree inspection fails without claiming verified descendant closure. Completion requires successful independent inventory, complete readback, closed-cost verification, zero owned descendants and timely durable receipt publication. The terminal stdout receipt and successful exit are authoritative."
+    },
+    {
+      "area": "reservation digest optimization",
+      "result": "accepted",
+      "detail": "The incremental array digest preserves the canonical JSON reservation hash and schema. Exported reservation copies cannot mutate the charged prefix. Existing admission checks and explicit prefix-equivalence negative controls remain applicable."
+    },
+    {
+      "area": "evidence and scope limits",
+      "result": "accepted",
+      "detail": "Historical cases and prior partial attempts remain opened. Static separation concerns declared initial layouts, contact material crops and starts/approaches; it does not establish novelty of every terrain region visited by a later trajectory. The acceptance thresholds, matched authored reference, owner-feel gate and morphology exclusion remain unchanged."
+    }
+  ],
+  "verification": [
+    {"check": "independent source inventory", "files": 182, "matched_frozen_source_sha256": true},
+    {"check": "tests/test_jolt_learning_executor.py", "tests": 20, "passed": 20, "failed": 0},
+    {"check": "tests/test_jolt_admission.py", "tests": 16, "passed": 16, "failed": 0},
+    {"check": "full offline integration suite", "reported_by": "runner integration reviewer", "tests_run": 795, "skipped_actual_host_tests": 57, "failures": 0, "errors": 0, "elapsed_seconds": 34.848, "consistent_pid_environment": true, "actual_host_environment_configured": false},
+    {"check": "fresh-process inventory replay of reservations larger than one MiB", "passed": true, "torch_imported": false, "numpy_imported": false},
+    {"check": "oversized JSON refused before loading bytes", "passed": true},
+    {"check": "python tools/check_docs.py --strict", "files": 74, "errors": 0, "warnings": 0},
+    {"check": "git diff --check", "passed": true}
+  ],
+  "blocking_findings": [],
+  "evidence_limits": {
+    "software_only": true,
+    "physical_learning_invocation_performed_for_this_review": false,
+    "demonstration_collection_performed_for_this_review": false,
+    "model_fitting_or_physical_checkpoint_execution_performed_for_this_review": false,
+    "physical_performance_or_inference_latency_accepted": false,
+    "learned_skill_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "bounded_completion_guaranteed": false,
+    "limitations": [
+      "Synthetic tests and source review do not establish physical learning success or guarantee completion within the fixed allocation.",
+      "The original 1,800-second ceiling includes startup, fitting, host work, cleanup, audit and publication. Exhaustion remains an incomplete or negative outcome without automatic continuation.",
+      "This review does not attest to a future CI run, execution declaration, physical dataset, trained checkpoint or owner acceptance. Those required gates retain their own receipts."
+    ]
+  }
+}

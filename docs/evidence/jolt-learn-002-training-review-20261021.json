@@ -1,0 +1,95 @@
+{
+  "schema": "nca-learn-jolt-002-software-review/v1",
+  "reviewer": "independent-training-and-evidence-review",
+  "reviewed_utc_date": "2026-10-21",
+  "issue": "LEARN-JOLT-002 / #62",
+  "accepted": true,
+  "acceptance_scope": "The frozen software implementation and prospective admission controls are acceptable for the separately gated single bounded allocation. This is not a learned-policy qualification or a physical result.",
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "source_file_count": 182,
+  "independent_source_recomputation": {
+    "matched": true,
+    "method": "Independently enumerate src/nca Python and Godot files, tools Python files, tests Python files, configs/learning JSON files excluding jolt-execution-* declarations, and pyproject.toml; SHA-256 each file and then the canonical sorted JSON inventory. No runner inventory function was called."
+  },
+  "authorship_disclosure": {
+    "authored": [
+      "src/nca/data/jolt_samples.py",
+      "src/nca/train/jolt_learning.py",
+      "tests/test_jolt_learning_v2.py",
+      "tests/test_jolt_screen.py"
+    ],
+    "modified": {
+      "src/nca/evaluation/jolt_learning.py": "Strict metric-domain and evidence-completeness validation; the original qualification implementation was supplied by another contributor.",
+      "src/nca/builtins.py": "Lazy version-2 policy and trainer registration."
+    },
+    "independence_limit": "This reviewer does not claim independent authorship review of the files listed above. Other contributors independently reviewed the sample and training implementation. The cross-review below concerns separately authored policy, runner, admission and readback code."
+  },
+  "independent_cross_review": [
+    {
+      "scope": "src/nca/controllers/jolt_learned.py",
+      "accepted_properties": "Versioned five-continuous/two-button policy contract, raw latent likelihood, own frozen BC base, immutable invocation clocks, separate proposal and dispatch history, supervisor abstention and recurrent resets, snapshot identity and pre-forward reservations."
+    },
+    {
+      "scope": "src/nca/train/jolt_screen.py",
+      "accepted_properties": "Original native receipts and task-only learning annotations remain distinguishable. Requests are charged and durably journaled before transmission. Refusal and uncertainty remain charged. Cutoff bootstrap requires an actual value from the received final observation. Native close requires an explicit true receipt. Six fixed final checkpoints precede all sealed evaluation."
+    },
+    {
+      "scope": "src/nca/evaluation/jolt_learning_audit.py",
+      "accepted_properties": "Readback binds source, declaration, runtime, distinct reviews, original native stream, sample provenance, policy family, fixed action RNG, recurrent values and density, task rewards, consumed-duration GAE, character metrics, fitting reservations and checkpoint identities. It distinguishes structurally verified partial evidence from complete evidence and qualification without acquiring a host or fitting weights."
+    },
+    {
+      "scope": "src/nca/train/jolt_admission.py and configs/learning",
+      "accepted_properties": "Frozen case splits, exact objectives and prospective counters are validated. Reservations are monotonic and cannot refund refused or uncertain work. Incremental reservation hashing preserves the canonical ordered-array digest."
+    },
+    {
+      "scope": "tools/learn_jolt.py and tests/test_jolt_learning_executor.py",
+      "accepted_properties": "One original invocation clock covers execution, mandatory process-tree cleanup, readback and publication. Closed-ledger verification independently reconstructs counts, ceilings, stage totals, immutable pre-audit prefix and cleanup-only readback deltas. Final completion requires the completed worker, verified and complete readback, exact artifact bindings, confirmed cleanup and the original deadline."
+    }
+  ],
+  "resolved_review_findings": [
+    "Training rewards and terminal/cutoff flags are bound to the original task-annotated capture event; detached replacements are rejected.",
+    "BC and actor eligibility require the complete admitted packet and applied action. Declared native scalar tolerance is 1e-6, booleans cannot alias integer packet metadata, and terminal-fence neutral views cannot substitute for original actuation.",
+    "An unavailable cutoff critic value is retained as an invalid bootstrap with its observation identity and reason, rather than invented as zero-valued evidence.",
+    "Metric domains reject truthy non-booleans, nonfinite values, negative counts and invalid completion fractions before qualification.",
+    "Transport success without an explicit native close confirmation cannot close the owner allocation.",
+    "Non-PPO null bootstrap evidence, exact stage episode costs, policy/source/context identities and actual capture artifacts reconcile in the independent reader.",
+    "Post-readback costs and outcomes cannot be upgraded by rehashing a changed reservation prefix, altered snapshot, incomplete audit or partial worker outcome."
+  ],
+  "verification": {
+    "runtime": {
+      "torch": "2.8.0+cpu",
+      "numpy": "2.3.5",
+      "device": "cpu"
+    },
+    "independently_executed_focused_suites": [
+      {"suite": "tests/test_jolt_learning_v2.py", "tests": 21, "result": "passed"},
+      {"suite": "tests/test_jolt_screen.py", "tests": 19, "result": "passed"},
+      {"suite": "tests/test_jolt_learning_audit.py", "tests": 16, "result": "passed on the final frozen source"},
+      {"suite": "tests/test_jolt_learning_executor.py", "tests": 20, "result": "passed on the final frozen source"}
+    ],
+    "artifact_integration": "Synthetic accepted-teacher and PPO-cutoff fixtures execute the actual capture and artifact publication code, then pass the saved raw/sample/metric artifacts to the independent episode reader. These fixtures do not claim a full physical allocation.",
+    "reported_full_offline_suite": {
+      "provenance": "Final result supplied by the coordinating implementer; not independently re-executed by this reviewer.",
+      "tests_run": 795,
+      "skipped": 57,
+      "skip_reason": "Actual-host tests require a configured host environment.",
+      "seconds": 34.848,
+      "result": "OK"
+    }
+  },
+  "remaining_gates": [
+    "Publish the reviewed source and obtain required checks on the exact final head.",
+    "Bind the clean source revision, both independent reviews, pinned host/build/runtime and unchanged complete budget in the prospective execution declaration.",
+    "Perform at most the separately authorized single bounded allocation; retain a capped, failed or inconclusive result without automatic retry or extension.",
+    "Require complete independently verified physical evidence and all unchanged numerical and character gates before any learned-policy qualification."
+  ],
+  "evidence_limits": {
+    "physical_collection_performed_by_this_review": false,
+    "experimental_fitting_performed_by_this_review": false,
+    "synthetic_optimizer_tests_only": true,
+    "learning_qualified": false,
+    "owner_feel_accepted": false,
+    "morphology_transfer_admitted": false,
+    "claim": "Static cross-review, synthetic contract and artifact-integration tests, and a matched source closure establish software evidence only. They do not establish runtime speed, teacher coverage, policy improvement, gameplay feel or morphology transfer on the target host."
+  }
+}

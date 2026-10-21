@@ -14,6 +14,9 @@ collection, fitting, checkpoint execution or transfer. The v4 recovery result
 satisfies the teacher and complete diagnostic evidence dependency. Bind that
 accepted result into the new implementation, then publish the final source,
 runtime, split and compute declaration before any learning execution.
+The [execution runbook](../LEARN_JOLT_002_RUNBOOK.md) describes the prepared v2
+implementation and operation inventory; these boxes remain acceptance checks,
+not a claim that a physical learning invocation has completed.
 
 ## Admission and scope
 

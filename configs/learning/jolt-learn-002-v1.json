@@ -1,0 +1,2427 @@
+{
+  "actor": "jev",
+  "architecture": {
+    "buttons": 2,
+    "continuous": 5,
+    "family": "gru",
+    "hidden_size": 32
+  },
+  "authored_assessment": {
+    "alternative_capped_completion_gain_fraction": 0.1,
+    "alternative_capped_completion_gain_seconds": 0.15,
+    "alternative_reference_success_minimum": 0.875,
+    "minimum_success_rate_gain": 0.125,
+    "no_seed_success_regression": true,
+    "strictly_positive_lower95": true
+  },
+  "authorization": "Owner continuation of issue #62 on 21 October 2026 commissions implementation and one separately source/runtime/review-bound invocation after all prospective admission checks; earlier teacher allocations remain closed.",
+  "bc": {
+    "aim_selection": "ordinary_requested_primary_only_no_outcome_filter",
+    "burn_in": "complete_episode_prefix_current_weights_no_grad",
+    "button_weight": 0.25,
+    "epochs": 40,
+    "gradient_norm": 0.5,
+    "launch_aim_weight": 0.5,
+    "learning_rate": 0.001,
+    "movement_trim_effort_weight": 1.0,
+    "no_positive_secondary_weight": 1.0,
+    "positive_weight": "training_negatives_div_max_positives_1_clamped_1_10",
+    "unroll": 16,
+    "window_rule": "fixed_physical_episode_windows_with_internal_masks"
+  },
+  "budget": {
+    "automatic_extension": false,
+    "automatic_retry": false,
+    "cleanup_reserve_seconds": 120,
+    "counters": {
+      "attempts": 1,
+      "audit_forward": 37888,
+      "bc_burn_in": 368640,
+      "bc_eligible_samples": 307200,
+      "bc_forward": 307200,
+      "bc_optimizer": 23040,
+      "bootstrap_forward": 12288,
+      "checkpoint_executions": 15744,
+      "checkpoint_loads": 48,
+      "checkpoint_writes": 36,
+      "confirmed_ticks": 120000,
+      "decisions": 20000,
+      "episodes_aborted": 6464,
+      "episodes_completed": 6464,
+      "episodes_started": 6464,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 31488,
+      "owner_cancel": 6465,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 6464,
+      "owner_requests": 38338,
+      "owner_reset": 6464,
+      "owner_step": 18944,
+      "ppo_actor_samples": 24576,
+      "ppo_base_burn_in": 958464,
+      "ppo_base_forward": 24576,
+      "ppo_burn_in": 958464,
+      "ppo_critic_samples": 24576,
+      "ppo_forward": 24576,
+      "ppo_optimizer": 24576,
+      "ppo_replay_base_forward": 6144,
+      "ppo_replay_forward": 6144,
+      "refused_ticks": 120000,
+      "requested_ticks": 120000,
+      "uncertain_ticks": 120000
+    },
+    "derivation": {
+      "artifact_accounting": "All actual files and bytes are counted in the final immutable inventory; serialization, fsync, readback and final publication remain inside the original wall deadline.",
+      "bc": "3 seeds * 40 epochs * 64 episodes * ceil(40/16) = 23,040 optimizer calls;307,200 actual row forwards;368,640 prefix burnin rows",
+      "checkpoints": "3 seeds * (BCinitial/final + residualinitial +8update + residualfinal)=36 writes;48 loads conservatively permits write/read verification plus 12 cached evaluation models;15,744 decision-level learned invocations",
+      "owner": "18,944 step + 6,464 reset + 6,464 profile + 6,465 cancel + 1 close = 38,338; native reset internally configures once; no separate configure or observe transport operation is admitted.",
+      "physical": "64 teacher + at most6144 one-decision PPO episodes  + 32 open  + 224 sealed  = 6464 episode starts; stagecaps total18,944 decisions / 113,664 ticks, aggregate margin grants no extra stages/cases/retries",
+      "ppo": "3*8*4*256=24,576 row forwards and conservative optimizer calls; max 39 prefix rows per nonempty window gives958,464 burn-in per module;6,144 pre-update replay rows per module",
+      "wall": "original outer start includes validation/startup/fitting/publication/nativeclosure/audit; active window1,680 s with 120 s fixed cleanup reserve; no reset renews time"
+    },
+    "device": "cpu",
+    "gpu_allowed": false,
+    "maximum_attempts": 1,
+    "maximum_owner_transport_seconds": 15,
+    "maximum_wall_seconds": 1800,
+    "stages": {
+      "open": {
+        "decisions": 1280,
+        "episodes_started": 32,
+        "requested_ticks": 7680
+      },
+      "ppo": {
+        "decisions": 6144,
+        "episodes_started": 6144,
+        "requested_ticks": 36864
+      },
+      "sealed": {
+        "decisions": 8960,
+        "episodes_started": 224,
+        "requested_ticks": 53760
+      },
+      "teacher": {
+        "decisions": 2560,
+        "episodes_started": 64,
+        "requested_ticks": 15360
+      }
+    },
+    "torch_threads": 1
+  },
+  "cases": {
+    "open": [
+      {
+        "contact_anchor_x": 460.5,
+        "contact_sha256": "d0245cb0aca66f5373b09f88b246b92a94523ce39fbf46c5abb360801fca6382",
+        "coverage": "floor_contact",
+        "geometry_family": "open-pile3-h7",
+        "host_seed": 1950664,
+        "id": "open-000-right-floor-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "1b0c6f47f7fa1e4d79e473594be3add14cb82cd84cbf7daccf830c99017b621b",
+        "pile_heights": [
+          5,
+          4,
+          8,
+          7,
+          9
+        ],
+        "spawn": [
+          432.0,
+          346.5
+        ],
+        "start_approach_sha256": "cff2d01937051951404e28150c7c906ebc2d0503b68b4b8e835427148d670c66",
+        "target": [
+          480.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 460.5,
+        "contact_sha256": "7572d36e5e7ed9741082437d9eabc0d6b5d5ef4ff53eb4f4ae78a29e2485dc94",
+        "coverage": "floor_contact",
+        "geometry_family": "open-pile3-h8",
+        "host_seed": 1950665,
+        "id": "open-001-left-floor-h8",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "7d11387a2ce9a5f3e1ed8f4ee92792f6fe59a80a44902b3dc44348a25dfa7fa3",
+        "pile_heights": [
+          8,
+          3,
+          5,
+          8,
+          9
+        ],
+        "spawn": [
+          492.0,
+          346.5
+        ],
+        "start_approach_sha256": "601d446e0cc2f4f3ebf4cf6f1594808eeb8a5623d5ee2016b8c5a98fab559c47",
+        "target": [
+          444.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 460.5,
+        "contact_sha256": "d0245cb0aca66f5373b09f88b246b92a94523ce39fbf46c5abb360801fca6382",
+        "coverage": "drop_landing",
+        "geometry_family": "open-pile3-h7",
+        "host_seed": 1950681,
+        "id": "open-002-right-drop12-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e2d5bae997d2f770f7b82720d9798d1c9dc197f8165a77cd411ae308e1f82b1c",
+        "pile_heights": [
+          9,
+          4,
+          6,
+          7,
+          7
+        ],
+        "spawn": [
+          434.0,
+          334.5
+        ],
+        "start_approach_sha256": "d33692e539bbd8f6354c0e11b260febd0d9c963887a6f626cb1cf0ae2fd6c81e",
+        "target": [
+          482.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 460.5,
+        "contact_sha256": "7572d36e5e7ed9741082437d9eabc0d6b5d5ef4ff53eb4f4ae78a29e2485dc94",
+        "coverage": "edge_contact",
+        "geometry_family": "open-pile3-h8",
+        "host_seed": 1950684,
+        "id": "open-003-left-pile-edge-h8",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "1b5c78540066795a904eb641be5acc4295b8814863a71eab6aaf8ce14cbfc5de",
+        "pile_heights": [
+          7,
+          3,
+          4,
+          8,
+          3
+        ],
+        "spawn": [
+          459.5,
+          338.5
+        ],
+        "start_approach_sha256": "35d3b80f9a06203c493e6fdeaf8d04d8d5e76fec55bece9841c85d7ce61ed6f5",
+        "target": [
+          432.0,
+          346.5
+        ]
+      }
+    ],
+    "sealed": [
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "floor_contact",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950688,
+        "id": "sealed-000-right-bed-entry-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "8a5d1fb59adccd3221a0dfa1f735a634160fb8a7dfa56164d876ec08371ba53f",
+        "pile_heights": [
+          7,
+          5,
+          8,
+          9,
+          7
+        ],
+        "spawn": [
+          520.0,
+          346.5
+        ],
+        "start_approach_sha256": "f857e6ac07c1dabf6f122e14c3b7761c9eec04d112cd2ac673f626041e21c65b",
+        "target": [
+          568.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "floor_contact",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950693,
+        "id": "sealed-001-left-bed-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "dc57f4d701a5cd81b0609ead443ab84a3103a7264f3be217e115024e35742872",
+        "pile_heights": [
+          9,
+          9,
+          3,
+          7,
+          7
+        ],
+        "spawn": [
+          590.0,
+          340.5
+        ],
+        "start_approach_sha256": "bc73bdbe6c46b746331cffc89d52726266bbc4d071b5f9779f77ff5da9de9089",
+        "target": [
+          540.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950702,
+        "id": "sealed-002-right-drop12-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "a5814d21cf84ff0e486f224bd4cc6009702910f5b3e7276bc71da189fb38d8a9",
+        "pile_heights": [
+          4,
+          6,
+          9,
+          6,
+          7
+        ],
+        "spawn": [
+          522.0,
+          334.5
+        ],
+        "start_approach_sha256": "049ca44a8b8327f876fc089efe80bebf676b7b141673d9f0a0ca1d471a9df1b8",
+        "target": [
+          570.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950711,
+        "id": "sealed-003-left-drop12-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "611d1f561fe57676f89cd196d30835f7c4137da6f3ace038f3a02fb0a0969c9c",
+        "pile_heights": [
+          3,
+          9,
+          7,
+          3,
+          7
+        ],
+        "spawn": [
+          588.0,
+          328.5
+        ],
+        "start_approach_sha256": "61c57118abad11673cd738aa64bfe4783bf75912c58e0b4fee55f80f349e7df8",
+        "target": [
+          538.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950734,
+        "id": "sealed-004-right-drop24-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "8c849daf9114e92f30031408302722770a7da03fe4085a833068df36d36fc3f8",
+        "pile_heights": [
+          4,
+          3,
+          5,
+          7,
+          7
+        ],
+        "spawn": [
+          524.0,
+          322.5
+        ],
+        "start_approach_sha256": "132c9f9b4e40497c383522af511e4168049d0976f4486126c6867718d2097071",
+        "target": [
+          572.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950738,
+        "id": "sealed-005-left-drop24-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "904f718d628e60e074026c1b00f3dc344688763dd51c654c655a97099b11e251",
+        "pile_heights": [
+          4,
+          8,
+          4,
+          5,
+          7
+        ],
+        "spawn": [
+          586.0,
+          316.5
+        ],
+        "start_approach_sha256": "e7f581e6f652e3e54e059b2738b71b92334f28b045f3a7ea380787fad20c65c2",
+        "target": [
+          536.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "edge_contact",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950749,
+        "id": "sealed-006-left-bed-edge-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "15551599b2522edb0fc3b7d719409d3428d39da0a08b16a4e28f4539ec2ef06d",
+        "pile_heights": [
+          4,
+          6,
+          4,
+          7,
+          7
+        ],
+        "spawn": [
+          537.0,
+          340.5
+        ],
+        "start_approach_sha256": "195867a4138a45efd5c8af45daf25bdb714a9b90dd839d36832b4b0064810c7a",
+        "target": [
+          582.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "aac981ded75d35deb9acade7f6391861df009dab97af32a093a525fb26c30ae4",
+        "coverage": "edge_contact",
+        "geometry_family": "sealed-pile4-h7",
+        "host_seed": 1950764,
+        "id": "sealed-007-right-bed-edge-h7",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "4af166a11c8f7a37e3bb371e4f67e8a875ff817bffcac180f210e4ce57e2c5fe",
+        "pile_heights": [
+          4,
+          4,
+          3,
+          3,
+          7
+        ],
+        "spawn": [
+          602.0,
+          340.5
+        ],
+        "start_approach_sha256": "4e50c352513821ad3f98eafa4cdea1090bdfd5e4e1812a1f450b6d676114bc12",
+        "target": [
+          548.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "floor_contact",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950772,
+        "id": "sealed-008-right-bed-entry-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "3e8df2f127aa184839cfe597e8110198d4718a0963252c24bc01322d1fe33f79",
+        "pile_heights": [
+          8,
+          6,
+          5,
+          5,
+          9
+        ],
+        "spawn": [
+          520.0,
+          346.5
+        ],
+        "start_approach_sha256": "f857e6ac07c1dabf6f122e14c3b7761c9eec04d112cd2ac673f626041e21c65b",
+        "target": [
+          568.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "floor_contact",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950776,
+        "id": "sealed-009-left-bed-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "0409c85b4bce4ea2bc0bf7d33cf62f351f790adbdd29fc7165e6069ba55849fb",
+        "pile_heights": [
+          9,
+          4,
+          7,
+          9,
+          9
+        ],
+        "spawn": [
+          590.0,
+          340.5
+        ],
+        "start_approach_sha256": "bc73bdbe6c46b746331cffc89d52726266bbc4d071b5f9779f77ff5da9de9089",
+        "target": [
+          540.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950788,
+        "id": "sealed-010-right-drop12-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "b0d5070367fa5ff91a6931771572e76a19c8bea7870ab8508cc50dded97bc334",
+        "pile_heights": [
+          4,
+          7,
+          8,
+          9,
+          9
+        ],
+        "spawn": [
+          522.0,
+          334.5
+        ],
+        "start_approach_sha256": "049ca44a8b8327f876fc089efe80bebf676b7b141673d9f0a0ca1d471a9df1b8",
+        "target": [
+          570.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950789,
+        "id": "sealed-011-left-drop12-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "3f3cac60df93f10956642af23f6bc94b1572069f8b8d76c01111e6d198710699",
+        "pile_heights": [
+          3,
+          5,
+          6,
+          7,
+          9
+        ],
+        "spawn": [
+          588.0,
+          328.5
+        ],
+        "start_approach_sha256": "61c57118abad11673cd738aa64bfe4783bf75912c58e0b4fee55f80f349e7df8",
+        "target": [
+          538.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950790,
+        "id": "sealed-012-right-drop24-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "dad30fe3c7629d5312a166dd12ec9f5d831497f19cbf69dc2ffbac731d943638",
+        "pile_heights": [
+          8,
+          6,
+          8,
+          6,
+          9
+        ],
+        "spawn": [
+          524.0,
+          322.5
+        ],
+        "start_approach_sha256": "132c9f9b4e40497c383522af511e4168049d0976f4486126c6867718d2097071",
+        "target": [
+          572.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "drop_landing",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950804,
+        "id": "sealed-013-left-drop24-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "a691d3e06be10bd3b741f61a1b462e90d885a47e6377c1e7b40f16badc79f415",
+        "pile_heights": [
+          3,
+          6,
+          5,
+          4,
+          9
+        ],
+        "spawn": [
+          586.0,
+          316.5
+        ],
+        "start_approach_sha256": "e7f581e6f652e3e54e059b2738b71b92334f28b045f3a7ea380787fad20c65c2",
+        "target": [
+          536.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "edge_contact",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950807,
+        "id": "sealed-014-left-bed-edge-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "fb0d481f7e385876357c3e340c868ed5f4dab98cb140a6b45bf9dfbe4d1099cb",
+        "pile_heights": [
+          9,
+          4,
+          8,
+          3,
+          9
+        ],
+        "spawn": [
+          537.0,
+          340.5
+        ],
+        "start_approach_sha256": "195867a4138a45efd5c8af45daf25bdb714a9b90dd839d36832b4b0064810c7a",
+        "target": [
+          582.0,
+          340.5
+        ]
+      },
+      {
+        "contact_anchor_x": 544.5,
+        "contact_sha256": "8139fbb43de5546ec149090e6836d7cd30234ff3621c0238ac43263cccab5adb",
+        "coverage": "edge_contact",
+        "geometry_family": "sealed-pile4-h9",
+        "host_seed": 1950833,
+        "id": "sealed-015-right-bed-edge-h9",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "68b904a60e701868166ca428ada3d9b81ca432f2b9c176f7f15795bf86c23969",
+        "pile_heights": [
+          6,
+          7,
+          7,
+          7,
+          9
+        ],
+        "spawn": [
+          602.0,
+          340.5
+        ],
+        "start_approach_sha256": "4e50c352513821ad3f98eafa4cdea1090bdfd5e4e1812a1f450b6d676114bc12",
+        "target": [
+          548.0,
+          340.5
+        ]
+      }
+    ],
+    "teacher": [
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950004,
+        "id": "teacher-000-right-floor-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "67c7c1daa279275cd877f3c16b5219ce38b9cae8c1e534c2ee07f11fd92c2392",
+        "pile_heights": [
+          5,
+          7,
+          3,
+          7,
+          9
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950016,
+        "id": "teacher-001-right-floor-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "59a730cdd9f19f16fd16e84c92339f7a272f09bd9861885914a0a08877848cd6",
+        "pile_heights": [
+          7,
+          7,
+          3,
+          4,
+          6
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950033,
+        "id": "teacher-002-left-floor-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "c68b7e7e979825c02f597d9d62b0d980810eb1bde03d819a128fa81670633d72",
+        "pile_heights": [
+          4,
+          5,
+          3,
+          6,
+          7
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950044,
+        "id": "teacher-003-left-floor-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "1d417b9ce331ef714ff705cf8fb0e2f0e55311460d9bd31a9468c557c865c523",
+        "pile_heights": [
+          3,
+          8,
+          3,
+          8,
+          6
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950063,
+        "id": "teacher-004-right-drop12-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e4034d976bb2f5dff8c3b04e4d42d860f4ba707418320c7e94da604724fb5100",
+        "pile_heights": [
+          8,
+          7,
+          3,
+          6,
+          7
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950078,
+        "id": "teacher-005-right-drop12-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "cedf98ca02ecc4b9325382c93072263c65b6b98894b7eed99e56b42f9d23aba8",
+        "pile_heights": [
+          7,
+          4,
+          3,
+          4,
+          5
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950083,
+        "id": "teacher-006-left-drop12-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "4912973d686599c96c2858fca8cd80d345f9629ad88c9000afec3c57edf69236",
+        "pile_heights": [
+          5,
+          9,
+          3,
+          5,
+          7
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950104,
+        "id": "teacher-007-left-drop12-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "b823d7dceb6ffad38018da50810cb0a7eea167f7efaba5f72a96a0caf9d078e7",
+        "pile_heights": [
+          9,
+          8,
+          3,
+          6,
+          9
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950113,
+        "id": "teacher-008-right-drop24-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "c45b2ffeffc6cde836fe22bf56cba7b1f33d5fd535e99324218f2505865fc957",
+        "pile_heights": [
+          6,
+          6,
+          3,
+          7,
+          5
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950133,
+        "id": "teacher-009-right-drop24-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "126074d2b58f7f85c8cb9689c0f9249e03e1f1ab568de5bc8b18ae1232a51f70",
+        "pile_heights": [
+          4,
+          9,
+          3,
+          7,
+          8
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950139,
+        "id": "teacher-010-left-drop24-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e60cccd70a8a4222eb81657f1d1e9184a8f89a54679bc87addfa7d538ba01d07",
+        "pile_heights": [
+          4,
+          3,
+          3,
+          9,
+          9
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950150,
+        "id": "teacher-011-left-drop24-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "4bfc45f9678a105eef241371347f26b40eaf28927e9e030f6aacfc4fb291c0db",
+        "pile_heights": [
+          5,
+          7,
+          3,
+          5,
+          9
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950158,
+        "id": "teacher-012-right-pile-edge-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "70f32cfba07e7296b2ed1f0eddc8139996b9966a4c121a7f4586e347f6d32e9d",
+        "pile_heights": [
+          3,
+          4,
+          3,
+          4,
+          3
+        ],
+        "spawn": [
+          378.5,
+          343.5
+        ],
+        "start_approach_sha256": "cdb10b8d1a8944869fd329ec4459f270adf98806b5ddc26dcec4724006651564",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950182,
+        "id": "teacher-013-right-pile-edge-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "4762125253f264166c0da2144489410960ee8a1589b3dd47382857c26426e3b4",
+        "pile_heights": [
+          5,
+          8,
+          3,
+          9,
+          7
+        ],
+        "spawn": [
+          378.5,
+          343.5
+        ],
+        "start_approach_sha256": "cdb10b8d1a8944869fd329ec4459f270adf98806b5ddc26dcec4724006651564",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950191,
+        "id": "teacher-014-left-pile-edge-r0-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "54e00784f6588b415b5ce644e5e035087f85e4c5dac7dc77262dc5ec441db32b",
+        "pile_heights": [
+          8,
+          3,
+          3,
+          9,
+          7
+        ],
+        "spawn": [
+          373.5,
+          343.5
+        ],
+        "start_approach_sha256": "6ddb4a9d29db320b82f7c42892cca38519d70f640461637bc0da31c074e61b6e",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "1ffd3915a140028a92fdb1af086685628448758308e2f94cfc5a7223187c6e2f",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h3",
+        "host_seed": 1950204,
+        "id": "teacher-015-left-pile-edge-r1-h3",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "cf4a472bfc5b82c93de76a7d6b400f44227509336a17bb7b5fb0129694434d0e",
+        "pile_heights": [
+          3,
+          3,
+          3,
+          8,
+          9
+        ],
+        "spawn": [
+          373.5,
+          343.5
+        ],
+        "start_approach_sha256": "6ddb4a9d29db320b82f7c42892cca38519d70f640461637bc0da31c074e61b6e",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950230,
+        "id": "teacher-016-right-floor-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "c649926f4cdc87103522cb843892e49cfcff6d6082dfc917efbcabfece3b1f4c",
+        "pile_heights": [
+          6,
+          7,
+          4,
+          8,
+          3
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950235,
+        "id": "teacher-017-right-floor-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "1082a985fdda1647393f89170d40e4111a614b512de62090a2a2935790942678",
+        "pile_heights": [
+          9,
+          6,
+          4,
+          9,
+          5
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950243,
+        "id": "teacher-018-left-floor-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "c7c6314d35e672d896adfd29c496d2f9aa3cb404660410a7db4871c8ad0c4101",
+        "pile_heights": [
+          3,
+          5,
+          4,
+          7,
+          3
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950285,
+        "id": "teacher-019-left-floor-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "8691ea360602c9204913529585c3e160045854a218ce151e6fcc1f6870a682f2",
+        "pile_heights": [
+          6,
+          7,
+          4,
+          6,
+          8
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950289,
+        "id": "teacher-020-right-drop12-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "6d631d086407b6ccd5e27199c0cdd355e8bd3695c60dceabfecb4989e94cf395",
+        "pile_heights": [
+          3,
+          8,
+          4,
+          5,
+          4
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950293,
+        "id": "teacher-021-right-drop12-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "16cabdfbf0956f0a9be9c89b935e499e054260cd50b73785eb3c94dd9dd61879",
+        "pile_heights": [
+          5,
+          5,
+          4,
+          3,
+          7
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950306,
+        "id": "teacher-022-left-drop12-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "45704783f71db5270aeaa9137f8fe10cd67992ecf956ba454c2b3eab577d9164",
+        "pile_heights": [
+          3,
+          4,
+          4,
+          8,
+          6
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950316,
+        "id": "teacher-023-left-drop12-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e908860b85aaf361a40e8aaf0181c8360bd059993f32b36c8938f1631d378d6f",
+        "pile_heights": [
+          5,
+          8,
+          4,
+          3,
+          7
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950323,
+        "id": "teacher-024-right-drop24-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "340b2cc014847a7410e3f7b97ae3277cbea2eda771fd602c12dee5859708c327",
+        "pile_heights": [
+          7,
+          7,
+          4,
+          5,
+          9
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950339,
+        "id": "teacher-025-right-drop24-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "0873791f53565c1c6146d3e50fa638ff561a5f23af368cdf1471f261d50f1fd8",
+        "pile_heights": [
+          8,
+          4,
+          4,
+          4,
+          9
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950351,
+        "id": "teacher-026-left-drop24-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "0f55f2aee659a8d29213cf69f636f5e4821272b0ca5ec15151b7a891891b9174",
+        "pile_heights": [
+          8,
+          9,
+          4,
+          5,
+          8
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950352,
+        "id": "teacher-027-left-drop24-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "d45db6230eb0a9c4ebf5bdf15876a97ad942bbe4908fd7c6d5c9010a7b38af00",
+        "pile_heights": [
+          5,
+          7,
+          4,
+          3,
+          3
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950356,
+        "id": "teacher-028-right-pile-edge-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "d47e758cd8c5b38c3917c99d327487226a8daebe368d7bd92000337bf0db9f56",
+        "pile_heights": [
+          7,
+          8,
+          4,
+          4,
+          3
+        ],
+        "spawn": [
+          378.5,
+          342.5
+        ],
+        "start_approach_sha256": "302c4a60699ef9a2bb2b2d6d67aa6bf4851e8e4e59f735b34a4d3696adb780d7",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950366,
+        "id": "teacher-029-right-pile-edge-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e5258eb56c978a7d6fcc15d65c515dd0d5973a09d827a4394a2bdc67dcb3abfa",
+        "pile_heights": [
+          8,
+          4,
+          4,
+          3,
+          4
+        ],
+        "spawn": [
+          378.5,
+          342.5
+        ],
+        "start_approach_sha256": "302c4a60699ef9a2bb2b2d6d67aa6bf4851e8e4e59f735b34a4d3696adb780d7",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950391,
+        "id": "teacher-030-left-pile-edge-r0-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "bbec43c384c8242ed56ce030fadfe88d4daaa5e30f69b890835a7f47add5eaa1",
+        "pile_heights": [
+          3,
+          4,
+          4,
+          9,
+          7
+        ],
+        "spawn": [
+          373.5,
+          342.5
+        ],
+        "start_approach_sha256": "83b9f53404ec30fdd290d5d4aed25132473d36ebf12f31d9ab6842f4a4a7f151",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "0e9f019f8cc74e4703e8a265753518a0fc6bf0213133722c955c7f2aeed3cbb8",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h4",
+        "host_seed": 1950396,
+        "id": "teacher-031-left-pile-edge-r1-h4",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "bb9e5154a2dbea79b9d1f8fac9f933552c97be516590e2c63498a40cda3a4833",
+        "pile_heights": [
+          4,
+          8,
+          4,
+          7,
+          9
+        ],
+        "spawn": [
+          373.5,
+          342.5
+        ],
+        "start_approach_sha256": "83b9f53404ec30fdd290d5d4aed25132473d36ebf12f31d9ab6842f4a4a7f151",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950399,
+        "id": "teacher-032-right-floor-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "05b6fbb6a1a976be509d5b52de442c95b00b7cd1c0e8d40d7fcdb3899214b5ab",
+        "pile_heights": [
+          6,
+          8,
+          5,
+          7,
+          8
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950407,
+        "id": "teacher-033-right-floor-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "2abbf00336fc41977c9a12a47382ae8cc0aa90ff010f859eb3c0973a3ace1902",
+        "pile_heights": [
+          3,
+          6,
+          5,
+          8,
+          4
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950419,
+        "id": "teacher-034-left-floor-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "c78fe0a7c03c4b017fce48814b5a99d98dc77ba6a7eb6dc0dd1def061e167d2d",
+        "pile_heights": [
+          6,
+          7,
+          5,
+          8,
+          7
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950424,
+        "id": "teacher-035-left-floor-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "3ead5aef4d717e4b205e616b88ec0c51cc48d586367c4722080089db80f0c0b1",
+        "pile_heights": [
+          7,
+          9,
+          5,
+          9,
+          3
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950426,
+        "id": "teacher-036-right-drop12-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "6ac569d4c57e4b3207cc0e7c0e45de9f7a6e19eb4c040438ea734846c0d4da36",
+        "pile_heights": [
+          4,
+          6,
+          5,
+          5,
+          7
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950429,
+        "id": "teacher-037-right-drop12-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "da3ee62b22423ed239450a969d83ddee6838ed1679a20e807b15c1dff2bc284e",
+        "pile_heights": [
+          6,
+          8,
+          5,
+          9,
+          4
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950435,
+        "id": "teacher-038-left-drop12-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "79f74f4521e87a76f5d72318809b416f094741412c10b4225757fd7aca6e2e7d",
+        "pile_heights": [
+          4,
+          8,
+          5,
+          9,
+          3
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950437,
+        "id": "teacher-039-left-drop12-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "02071fd48acd82ab5af2fab5dddb2eb95f74a8da09ff956eb5706b7117f77c4d",
+        "pile_heights": [
+          4,
+          4,
+          5,
+          6,
+          5
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950442,
+        "id": "teacher-040-right-drop24-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "9885cc78a3da11ab1e734eb4d8bc6793de37a3d20b876ddc896cd7db76e18c2b",
+        "pile_heights": [
+          7,
+          9,
+          5,
+          5,
+          4
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950452,
+        "id": "teacher-041-right-drop24-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "3c343a30108a72ef7759fc8d07455648a0028d86da0a5d8a50feb84578794646",
+        "pile_heights": [
+          3,
+          7,
+          5,
+          4,
+          5
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950467,
+        "id": "teacher-042-left-drop24-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "b4b47f928a9dabe9bf8dbef97f96fec47ffefa9eb4fc4320dcb050bb1d916bc3",
+        "pile_heights": [
+          5,
+          3,
+          5,
+          9,
+          9
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950468,
+        "id": "teacher-043-left-drop24-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "bd9854322fb21cd09f32a5356545e432938ce9dcab321e86f08debeae1fdb4e6",
+        "pile_heights": [
+          7,
+          3,
+          5,
+          4,
+          7
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950515,
+        "id": "teacher-044-right-pile-edge-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "558a2964d7db9bf5e99cc4903b1a4bf64b209f19b34e87ff6c2565ff5ceaaae3",
+        "pile_heights": [
+          8,
+          6,
+          5,
+          7,
+          8
+        ],
+        "spawn": [
+          378.5,
+          341.5
+        ],
+        "start_approach_sha256": "762d4f9759f50324929ff3f07dfbbc279341f8481b022ad7d9d6a033a67d96ad",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950517,
+        "id": "teacher-045-right-pile-edge-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "e77e15928f32f3a5a589ff31fa4c9b83e4ca902513cedb8889eaf010d37dcf0c",
+        "pile_heights": [
+          4,
+          7,
+          5,
+          3,
+          9
+        ],
+        "spawn": [
+          378.5,
+          341.5
+        ],
+        "start_approach_sha256": "762d4f9759f50324929ff3f07dfbbc279341f8481b022ad7d9d6a033a67d96ad",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950520,
+        "id": "teacher-046-left-pile-edge-r0-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "021c4e9b53ed589d1b875be8c994c85df8dc25fc7c3bceec2a256ab81da3c45e",
+        "pile_heights": [
+          3,
+          3,
+          5,
+          4,
+          3
+        ],
+        "spawn": [
+          373.5,
+          341.5
+        ],
+        "start_approach_sha256": "0476f0512ca266716486967fee35d51863e63e61ad050a9869230f08752e1c3f",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "ac70e5bab2fd08cfa66acd3dc4fba24044f06386e7adffc146ba1d55600d9196",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h5",
+        "host_seed": 1950522,
+        "id": "teacher-047-left-pile-edge-r1-h5",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "4a2a3c544f9c27888f0e1eaa0e3712aab3f56aec2af98ae8f9d92063c5993280",
+        "pile_heights": [
+          9,
+          3,
+          5,
+          3,
+          9
+        ],
+        "spawn": [
+          373.5,
+          341.5
+        ],
+        "start_approach_sha256": "0476f0512ca266716486967fee35d51863e63e61ad050a9869230f08752e1c3f",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950535,
+        "id": "teacher-048-right-floor-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "a5a2999617c6dede5d8bb3bbbde10cf84586ebebd9ead88a462d3e3e7c19a320",
+        "pile_heights": [
+          5,
+          4,
+          6,
+          4,
+          7
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950538,
+        "id": "teacher-049-right-floor-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "6d5a3e33c45072c0591b006864135a2cebba42a2ad8558648a18ff4d72fd9558",
+        "pile_heights": [
+          4,
+          9,
+          6,
+          8,
+          8
+        ],
+        "spawn": [
+          344.0,
+          346.5
+        ],
+        "start_approach_sha256": "9779eb86ef1f4c335a514d79a29cb86cfc91e04f19dee369af1e07f67d1d8daa",
+        "target": [
+          392.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950550,
+        "id": "teacher-050-left-floor-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "b80694b2281c5e3bb6c5269497b73902fcd59f98b7572155114347a4b1833aec",
+        "pile_heights": [
+          5,
+          8,
+          6,
+          8,
+          4
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "floor_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950558,
+        "id": "teacher-051-left-floor-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "bb2c40bc89ef370d4628b76af514bb70eb9561e6d4646815d68c0ef854a8a659",
+        "pile_heights": [
+          6,
+          8,
+          6,
+          9,
+          8
+        ],
+        "spawn": [
+          408.0,
+          346.5
+        ],
+        "start_approach_sha256": "16ffe98125f00a73ac1df3e9fc3a01230f3f7e8a42fc2ce719737375877cf235",
+        "target": [
+          358.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950560,
+        "id": "teacher-052-right-drop12-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "bed19e49833d8cfe3b5d19746e61290f5aec1fbd2d95ca10e06aadfe0b21c5b7",
+        "pile_heights": [
+          7,
+          8,
+          6,
+          5,
+          5
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950571,
+        "id": "teacher-053-right-drop12-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "7aeef280d931d2ce9cc0f49a7ef23e3db46102811b834fdc07f3e8d8a401db37",
+        "pile_heights": [
+          7,
+          5,
+          6,
+          4,
+          3
+        ],
+        "spawn": [
+          348.0,
+          334.5
+        ],
+        "start_approach_sha256": "7a35521e663026f613a2e0b41cee5b4aa7c495a372e591a62a985bbed6292089",
+        "target": [
+          396.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950591,
+        "id": "teacher-054-left-drop12-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "eb1752f9cc22e48f5e47b19320e46def8504cee2b9924bec7efc21616a090e5d",
+        "pile_heights": [
+          8,
+          3,
+          6,
+          7,
+          4
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950599,
+        "id": "teacher-055-left-drop12-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "a91e13a24a4d5b633cc96338a038289c3a3bc5f97a8bc66a0ede30b51e84d3fa",
+        "pile_heights": [
+          8,
+          5,
+          6,
+          8,
+          9
+        ],
+        "spawn": [
+          412.0,
+          334.5
+        ],
+        "start_approach_sha256": "548ca2486feb314e2177c5c147de179d312df203515d36917d8d99c2be77f5d3",
+        "target": [
+          362.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950603,
+        "id": "teacher-056-right-drop24-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "76ce28adab0c9cd212db929ade216bfd279c8702cabe46addee773ab3ad06050",
+        "pile_heights": [
+          4,
+          6,
+          6,
+          9,
+          3
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950617,
+        "id": "teacher-057-right-drop24-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "613bf2916847d9e851bdb9966fe0b30c9040a3053bd7ccbce1eb5aa30fc14a50",
+        "pile_heights": [
+          9,
+          3,
+          6,
+          8,
+          3
+        ],
+        "spawn": [
+          352.0,
+          322.5
+        ],
+        "start_approach_sha256": "f0178b86a5cd06906495ba7e1b87281f75bef0de465af88894e4ddfa57c865b4",
+        "target": [
+          400.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950618,
+        "id": "teacher-058-left-drop24-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "06c1211278d87ef662e6d96d8ed02139ad780914e385401ab701b718faa63a36",
+        "pile_heights": [
+          3,
+          9,
+          6,
+          9,
+          6
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "drop_landing",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950622,
+        "id": "teacher-059-left-drop24-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "f843b72ebeecab3bd2eb253e2a471efffd6eceae89f9e0d0ab284d1e8a262618",
+        "pile_heights": [
+          9,
+          9,
+          6,
+          4,
+          9
+        ],
+        "spawn": [
+          416.0,
+          322.5
+        ],
+        "start_approach_sha256": "de6be23c035c521eaa544473713c400744d74897152a620b3448c391f4e5b3e6",
+        "target": [
+          366.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950627,
+        "id": "teacher-060-right-pile-edge-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "08535ea4860027a22282b843674034e3fb0a8f3ba78954a3a7a25e9c5ce51fac",
+        "pile_heights": [
+          5,
+          5,
+          6,
+          7,
+          4
+        ],
+        "spawn": [
+          378.5,
+          340.5
+        ],
+        "start_approach_sha256": "433de4e3cd94a687fbf65aa4c206df904eb6a93c271861104187f105e2a9e674",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950638,
+        "id": "teacher-061-right-pile-edge-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "d8aa4ec8fd226b522925c17f79676d7f5ff5440d49b623709225f14bd3a609af",
+        "pile_heights": [
+          7,
+          3,
+          6,
+          4,
+          9
+        ],
+        "spawn": [
+          378.5,
+          340.5
+        ],
+        "start_approach_sha256": "433de4e3cd94a687fbf65aa4c206df904eb6a93c271861104187f105e2a9e674",
+        "target": [
+          408.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950646,
+        "id": "teacher-062-left-pile-edge-r0-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "8dd3fb1484b4f2e6035cdf69e0615f2cb7da90ed3a0c5f638dc9009c04d29cb0",
+        "pile_heights": [
+          6,
+          4,
+          6,
+          3,
+          9
+        ],
+        "spawn": [
+          373.5,
+          340.5
+        ],
+        "start_approach_sha256": "e9a8a5bd7480d393339b58711868aed3d91d360582b09e4c1a50e99df03aee7c",
+        "target": [
+          344.0,
+          346.5
+        ]
+      },
+      {
+        "contact_anchor_x": 376.5,
+        "contact_sha256": "4f0788824da0a6115a087a291f91fe8b545fb94621064f45d0789fe365f8ba76",
+        "coverage": "edge_contact",
+        "geometry_family": "teacher-pile2-h6",
+        "host_seed": 1950658,
+        "id": "teacher-063-left-pile-edge-r1-h6",
+        "initial_pose": "native default zero velocity/rotation; no host mutation",
+        "layout_sha256": "5b882695bbd192c6fdb6c11a3dcadc24a6d9c71f180b6b03d87f4e3b7bf5f62a",
+        "pile_heights": [
+          5,
+          9,
+          6,
+          9,
+          8
+        ],
+        "spawn": [
+          373.5,
+          340.5
+        ],
+        "start_approach_sha256": "e9a8a5bd7480d393339b58711868aed3d91d360582b09e4c1a50e99df03aee7c",
+        "target": [
+          344.0,
+          346.5
+        ]
+      }
+    ]
+  },
+  "decision_ticks": 6,
+  "emergency_predicate": {
+    "id": "observed-unstable-attitude/v1",
+    "rule": "fresh permitted attitude with abs(wrapped angle)>=1.20 or abs(angular speed)>=4.5; identical physical supervisor across all comparators; at most 48 ticks; no ordinary teacher fallback"
+  },
+  "excluded_claims": [
+    "morphology transfer",
+    "arbitrary terrain or support mutation",
+    "unobserved passive/contact force decomposition",
+    "owner feel approval",
+    "sealed outcomes before all six finals",
+    "automatic retries or allocation extension"
+  ],
+  "goal": {
+    "deadline_ticks": 240,
+    "maximum_arrival_angle": 0.32,
+    "maximum_arrival_speed": 6.0,
+    "pace": 0.8,
+    "quiet_ticks": 12,
+    "require_support": true,
+    "tolerance_cells": 4.0
+  },
+  "helper_lease_ticks": 12,
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "id": "learn-jolt-002-v1",
+  "issue": 62,
+  "learned_gate": {
+    "bootstrap_resamples": 27,
+    "failed_admissions_allowed": 0,
+    "integrity_failures_allowed": 0,
+    "maximum_airborne_fraction_loss": 0.125,
+    "maximum_angle_increase_radians": 0.1,
+    "maximum_case_inference_p95_ms": 5.0,
+    "maximum_peak_speed_ratio": 1.5,
+    "maximum_trim_increase_per_second": 0.5,
+    "minimum_every_seed_success": 0.5,
+    "minimum_initial_gain": 0.125,
+    "minimum_mean_success": 0.75,
+    "minimum_peak_speed_ratio": 0.7,
+    "strictly_positive_lower95": true
+  },
+  "learning_contract_notes": {
+    "bc": {
+      "aim_loss": "normalized aim MSE only when requested primary is true; never selected by future outcome",
+      "aim_weight": 0.5,
+      "burn_in": "complete preceding physical episode prefix under current weights; no gradient; masks remain inside fixed windows",
+      "button_weight": 0.25,
+      "continuous_weight": 1.0,
+      "data_selection": "all eligible ordinary proposed controls including failed episodes and pulse abstention",
+      "epochs": 40,
+      "learning_rate": 0.001,
+      "max_gradient_norm": 0.5,
+      "primary_positive_weight": "training-only negatives / max(positives, 1), clipped to [1, 10]; only no-positive secondary has fixed weight 1",
+      "secondary_positive_labels_expected": 0,
+      "secondary_positive_weight": 1.0,
+      "unroll": 16
+    },
+    "ppo": {
+      "base": "own seed BC-final frozen before residual initialization/updates; no authored runtime calls",
+      "burn_in": "complete preceding physical episode prefix under current weights; residual and frozen base states independent",
+      "clip_ratio": 0.2,
+      "entropy_weight": 0.001,
+      "epochs_per_update": 4,
+      "gamma_per_base_tick": 0.997,
+      "initial": "exactly zero deterministic residual; fixed stochastic exploration",
+      "lambda_per_base_tick": 0.99,
+      "learning_rate": 0.0003,
+      "likelihood": "joint five pre-transform Gaussian draws and two Bernoulli draws; no post-transform density claim",
+      "max_gradient_norm": 0.5,
+      "rollout_cutoff": "fresh episode after each update; actual durations; valid final administrative cutoff bootstraps",
+      "rollout_decisions": 256,
+      "unroll": 16,
+      "updates": 8,
+      "value_weight": 0.5
+    }
+  },
+  "mode": "stepped",
+  "opened_inventory": {
+    "file_sha256": "7cb1ec2ae5c845fb59350e109a6701dfae6b544e673c18f4fbedc8f09af14e30",
+    "path": "configs/learning/jolt-opened-inventory-v1.json"
+  },
+  "ppo": {
+    "burn_in": "complete_episode_prefix_current_weights_no_grad",
+    "clip_ratio": 0.2,
+    "decisions_per_update": 256,
+    "entropy_space": "raw_normal5_plus_bernoulli2",
+    "entropy_weight": 0.001,
+    "epochs": 4,
+    "gamma_per_tick": 0.997,
+    "gradient_norm": 0.5,
+    "lambda_per_tick": 0.99,
+    "learning_rate": 0.0003,
+    "unroll": 16,
+    "updates_per_seed": 8,
+    "value_weight": 0.5
+  },
+  "prerequisite": {
+    "file_sha256": "6300f104bbf5f0b027d690ff36c6ca0f827f3745f2b8efeff0d9678dcb615757",
+    "path": "configs/learning/jolt-prerequisite-v1.json"
+  },
+  "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+  "schema": "nca-jolt-learn-002/v1",
+  "seed_rules": {
+    "bc_initialization": "training_seed",
+    "bc_order_rng": "training_seed; optimizer independent per seed",
+    "ppo_action_rng": "training_seed+200000",
+    "ppo_host_seed": "exact declared seed of selected teacher case; no new host-seed family",
+    "residual_initialization": "training_seed+100000",
+    "scenario_order_rng": "training_seed+300000"
+  },
+  "selection": "whole BC family first if qualified; residual must pass own initial-gain gate; six final hashes precede every sealed outcome including authored/idle; no seed or checkpoint selection",
+  "split": {
+    "file_sha256": "056e613f776430f9711b5e58c7424d066de5444ffa52712bd6c63ffd539357a1",
+    "path": "configs/learning/jolt-static-split-v1.json"
+  },
+  "training_seeds": [
+    190103,
+    190207,
+    190301
+  ]
+}

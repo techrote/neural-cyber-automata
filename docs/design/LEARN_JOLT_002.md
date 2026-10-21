@@ -25,6 +25,8 @@ any such work.
 The [implementation checklist](LEARN_JOLT_002_IMPLEMENTATION.md) binds complete
 learned actuation, action/history masks, immutable invocation time, zero-correction
 residual parity and the remaining prospective cost and split checks.
+The separate [execution runbook](../LEARN_JOLT_002_RUNBOOK.md) records the prepared
+v2 contracts, exact counters, static split limitations and freeze/run procedure.
 
 The first [recovery diagnostic](../evidence/2026-10-20-jolt-recovery-v1.md)
 stopped after 24 of 96 rows. A sampled settled estimate retired its lease before
