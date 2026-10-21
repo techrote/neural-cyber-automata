@@ -123,66 +123,59 @@ require their separately declared complete physical comparison.
 ## Contact-transition movement in recovery v3
 
 [`JoltRecoveryControllerV3`](../src/nca/controllers/jolt_recovery_v3.py), registered
-as `authored-jolt-recovery@3`, implements the bounded movement correction in
-[#64](https://github.com/techrote/neural-cyber-automata/issues/64). V1, v2, the
-original reference, the arrival reference and the minimal supervisor retain
-their published source bytes. No host actuator, physical profile, gyro limit,
-caller deadline or task success predicate changes.
+as `authored-jolt-recovery@3`, adds a fresh initial contact-transition launch.
+An exactly six-tick supported-to-unsupported anticipation may launch only on a
+current observation with measured floor within 16 cells, displacement at most
+0.40 cells and speed at most six cells/s. Current energy, cooldown, ceiling,
+room and original deadline are rechecked. Unknown support, motion outside that
+envelope, gaps or authority changes discard the witness without renewing a lease.
 
-The retained v2 replay shows a supported initial anticipation at tick 12 followed
-by fresh raw support loss at tick 18. Its body moves only 0.022405 cells and has
-speed 0.967788 cells/s; waiting for another full unsupported stall window delays
-the first pulse until tick 42. V3 gives that observed contact change an explicit
-one-interval lifecycle. It may complete the original anticipation exactly six
-ticks later when the preceding sample was supported, the current sample is
-unsupported with a measured floor within 16 cells, displacement is at most
-0.40 cells and speed is at most six cells/s. The observation must be current at
-the caller's clock. It checks the current energy, cooldown, ceiling, room and
-original deadline again. Unknown support, motion outside that envelope, a gap
-or lost authority discards the pending witness. This is a newly observed
-support-change condition, without a retained support latch or renewed lease.
+The unchanged first-pulse calculation is followed by a separately solved
+shorter recovery vector: signed existing velocity, bounded lift and horizontal
+flight/reaction/stopping room, caller effort, minimum recovery effort 0.40,
+horizontal aim at most 0.82 and resulting upward speed at least 20 cells/s.
+These are admission heuristics; contact forces and landing progress remain
+native measurements. Fresh recovery windows and at most two edges still apply.
 
-The first pulse keeps the original initial aim/effort calculation. A subsequent
-pulse keeps the same fresh recovery-window and cooldown-acknowledgment rules,
-but divides its impulse differently. It chooses a bounded lift component,
-then analytically solves the horizontal velocity that fits flight, reaction
-and stopping distance. The calculation subtracts signed existing horizontal
-velocity, so an opposing velocity must be overcome before it can request a
-pulse. It refuses a vector whose resulting modeled velocity still points away
-from the target. Total effort stays within the caller's budget; the recovery
-minimum is 0.40, the horizontal aim cap remains 0.82, upward result remains at
-least 20 cells/s, and ceiling and time bounds still apply. This trades the old
-steep, full-effort second arc for a shorter arc with more horizontal impulse
-where the current room permits it. The calculation is an admission heuristic;
-it cannot establish actual landing progress through unknown contact forces.
+V3 immediately holds a supported quiet sample inside tolerance and counter-drives
+horizontal speed above six cells/s. Arrival stays advisory. After two pulses,
+a fresh supported stall can authorize twelve ticks of stronger ground traction;
+motion, support uncertainty/loss, gaps and authority boundaries clear it.
+The preserved [v3 evidence](evidence/2026-10-20-jolt-recovery-v3.md) and
+[source tests](../tests/test_jolt_recovery_v3.py) retain the detailed contract,
+28/32 arrivals, 32/32 airborne cases and failed inventory/third-rescue gates.
 
-Ordinary ground control also responds earlier to the caller's arrival envelope.
-A currently supported, slow, upright sample within tolerance requests a neutral
-hold immediately. Twelve sampled quiet ticks still mark an advisory only;
-`status="running"`, the original lease and caller-validated completion remain
-unchanged. A supported sample within tolerance with horizontal speed above six
-cells/s requests a bounded counter-traction input instead of continuing toward
-the target's exact center. Disturbance resumes ordinary correction.
+## Interior settling in recovery v4
 
-After both permitted primary edges, a fresh supported no-progress window can
-authorize at most twelve ticks of stronger ordinary traction. New motion, loss
-or uncertainty of support, arrival, a sample gap or lost authority ends it. The
-history is then cleared, requiring another complete observed-demand window
-before it can start again. This operation never grants a third primary edge or
-moves ordinary control into the supervisor.
+[`JoltRecoveryControllerV4`](../src/nca/controllers/jolt_recovery_v4.py), registered
+as `authored-jolt-recovery@4`, implements the ordinary settling follow-up in D-017.
+It inherits v3's exact initial-contact and pulse-vector methods, and preserves
+all older source bytes, gyro/profile limits, task thresholds and supervisor.
 
-[`test_jolt_recovery_v3.py`](../tests/test_jolt_recovery_v3.py) uses the retained
-four-sample anticipation prefix, a retained second-pulse source and synthetic
-authority/geometry boundaries. It keeps the tick-223 aliasing regression and
-checks pulse resources, the two-edge cap, signed velocity, bounded traction and
-advisory holding. These tests establish software decisions, not counterfactual
-physical outcomes. The independently declared diagnostic owns teacher arrival,
-airborne character, landing progress and acceptance claims.
+Current raw support inside the caller's Euclidean tolerance starts capture.
+Small outward disturbances retain capture until distance exceeds 1.25 times
+that tolerance. Outside the inner region, the controller requests bounded 0.10
+inward traction; within it, horizontal speed above two cells/s requests bounded
+counter-traction. The existing Schmitt/play/slew shaping remains active.
+Neutral holding requires distance at most 0.75 times tolerance, total speed at
+most two cells/s and the existing 0.32-radian posture bound. These are policy
+choices, not tighter evaluator thresholds. Unknown/lost support, sample gaps,
+cancellation, authority changes, emergency and deadline clear capture.
 
-The sole [v3 diagnostic](evidence/2026-10-20-jolt-recovery-v3.md) records 28/32
-arrivals and all 32 purposeful-airborne cases, but fails final inventory
-verification and the required third historical rescue. V3 remains an
-experimental controller, with no teacher-collection or learned admission.
+Exactly six ticks after the second pulse, a consecutive current observation
+with acknowledged positive cooldown, raw support and upward speed at least
+six cells/s may request one six-tick traction coast. That action's original-source
+lease is narrowed to six ticks. Later, delayed, nonrising or uncertain observations
+cannot extend this coast; no inferred contact state or new primary edge is added.
+
+`diagnostic_state()` adds `settling_capture`, `interior_quiet_hold` and
+`post_pulse_coast`. Sampled arrival stays advisory with `status="running"`;
+continuous native outcome and cancellation belong to the caller. The unchanged
+tick-223 regression still prevents sparse samples from proving completion.
+The [v4 tests](../tests/test_jolt_recovery_v4.py) and
+[offline retained prepass](evidence/2026-10-20-jolt-recovery-v4.md) establish
+software decisions only. New physical outcomes and teacher acceptance require
+the separately frozen diagnostic and complete original final verification.
 
 ## Minimal physical recovery supervisor
 

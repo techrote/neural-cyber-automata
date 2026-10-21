@@ -1,0 +1,871 @@
+{
+  "schema": "nca-jolt-recovery-diagnostic/v4",
+  "id": "jolt-recovery-004-diagnostic-v4",
+  "authorization": "The owner's 20 October 2026 request to complete issue 64, linked recommendation 6300675643, commissions offline correction, independent prospective freeze, and one new matched diagnostic; all earlier allocations remain closed",
+  "case_source": {
+    "path": "configs/first-skill/jolt-direction-frame-v1.json",
+    "sha256": "af936549f71bc72bc7fabfc8c75b2d04b58a8348635b5f47ddec50ea904a7687",
+    "classification": "All24 original authored training case/seed pairs plus8 already-open evaluation cases; not a new sealed evaluation"
+  },
+  "families": [
+    "authored-balanced-v1",
+    "jolt-arrival-v1",
+    "jolt-recovery-v4"
+  ],
+  "order": "Original 32 case/seed order; original teacher, arrival reference, and frozen recovery v4 in each matched case; all 96 episodes newly observed",
+  "preserved_sources": {
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec",
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3"
+  },
+  "goal": {
+    "pace": 0.8,
+    "tolerance_cells": 4.0,
+    "deadline_ticks": 240,
+    "quiet_ticks": 12,
+    "maximum_arrival_speed": 6.0,
+    "maximum_arrival_angle": 0.32,
+    "require_support": true
+  },
+  "physics": {
+    "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+    "mode": "stepped",
+    "base_hz": 60,
+    "decision_ticks": 6,
+    "helper_lease_ticks": 12,
+    "host_mechanics_changed": false
+  },
+  "budget": {
+    "maximum_episodes": 96,
+    "maximum_decisions": 4000,
+    "maximum_requested_ticks": 24000,
+    "maximum_host_requests": 4500,
+    "maximum_wall_seconds": 900,
+    "maximum_host_starts": 1,
+    "maximum_episode_decisions": 40,
+    "maximum_episode_ticks": 240,
+    "optimizer_updates": 0,
+    "checkpoint_executions": 0,
+    "automatic_retry": false,
+    "automatic_budget_extension": false,
+    "maximum_attempts": 1,
+    "learned_policy_calls": 0,
+    "shutdown_reserve_seconds": 120,
+    "maximum_owner_transport_seconds": 15,
+    "independent_verification_reserve_seconds": 60,
+    "supervisor_finalization_reserve_seconds": 6
+  },
+  "evidence": {
+    "metrics": "Unchanged HopTask outcomes and receipt-derived impulses, airborne motion, anticipation and first-motion latency, landing progress, final continuous quiet spans, recovery, emergency assistance and chatter; complete durable raw/sealed journal and full source/artifact identities",
+    "selection": "One retained-observation correction, one source freeze and one independently admitted physical invocation. No reuse, retry, candidate search or learning; preserve all prior failures",
+    "publication": "Original failure histories and reliability criteria retained; all paired results including failures published",
+    "limits": [
+      "Not sealed learned-policy acceptance",
+      "No morphology admission",
+      "No training or transfer",
+      "No owner feel acceptance",
+      "No continuous realtime qualification"
+    ],
+    "wall_accounting": "900 seconds from the sole external executor start before child Python startup through supervisor/worker source admission, host start, raw/sealed evidence, native termination, independent verification, durable supervisor receipt/finalization marker and original child exit. All layers share the original monotonic origin. Stop normal admissions to preserve 120 seconds; reserve 15 seconds for each complete normal exchange, including every receive. The worker closes by 840 seconds, retaining at least 60 seconds for independent verification and finalization; 6 seconds of that remain for final cleanup/receipt. Executor stream closure and receipt publication after the original child exit are post-execution accounting, never another physical attempt.",
+    "additional_limits": [
+      "No forced support-removal intervention; only naturally observed contact events",
+      "Original journal truncation cause remains unestablished; this continuation does not repair or relabel original evidence",
+      "V2 restored 32/32 purposeful-airborne cases; report any loss against that prior result separately from unchanged contemporaneous teacher gates",
+      "The v3 failed final inventory and all original bytes remain unchanged; new exclusive publication removes the gzip staging-hardlink lifecycle without claiming the historical cause is established"
+    ],
+    "publication_method": "exclusive-final-write/v1; seal nca-owner-journal-seal/v2; strict declared inventory before/after seal and independent replay",
+    "external_executor": "Exactly one tools/execute_jolt_diagnostic.py invocation; an immutable nca-jolt-arrival-executor/v1 receipt binds original child exit code 0, one attempt, no timeout, measured whole-process duration at most 900 seconds, source/declaration, supervisor/finalization and retained outer stdout/stderr hashes; executor source is frozen in manifest source_files"
+  },
+  "candidate_specifications": {
+    "jolt-arrival-v1": {
+      "schema": "nca-jolt-arrival-reference/v1",
+      "controller_id": "authored-jolt-arrival/v1",
+      "actor": "jev",
+      "skill": "directed_hop",
+      "profile_version": 1,
+      "baseline_source_sha256": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+      "shaping_and_recovery": {
+        "id": "balanced/v1",
+        "shaping": {
+          "quiet_below": 0.025,
+          "activate_above": 0.055,
+          "acceleration_rate": 8.0,
+          "braking_rate": 12.0,
+          "play_width": 0.025
+        },
+        "base_hz": 60,
+        "attitude_kp": 0.55,
+        "attitude_kd": 0.2,
+        "velocity_feedback": 0.45,
+        "support_dwell": 0.05,
+        "anticipation_seconds": 0.1,
+        "pulse_period": 0.85,
+        "recovery_enter_angle": 1.05,
+        "recovery_exit_angle": 0.32,
+        "recovery_enter_speed": 4.0,
+        "recovery_exit_speed": 0.8,
+        "recovery_dwell": 0.2,
+        "stopping_acceleration": 100.0
+      },
+      "speed_cells_per_second": 48.0,
+      "jump_cells_per_second": 86.0,
+      "gravity_cells_per_second_squared": 156.0,
+      "braking_cells_per_second_squared": 100.0,
+      "position_gain_per_second": 2.5,
+      "reaction_seconds": 0.1,
+      "settling_margin_cells": 2.0,
+      "maximum_pulses_per_invocation": 1,
+      "minimum_pulse_effort": 0.35,
+      "maximum_drive_and_pulse_effort": "max(0.45, caller pace)",
+      "minimum_upward_launch_speed": 2.0,
+      "maximum_opposing_launch_speed": 6.0,
+      "pulse_aim": "unit(clamp(dx/30), min(-0.55, dy/30-0.55))",
+      "pulse_room": "abs(dx)-2; positive toward velocity and upward velocity only; same-height ballistic travel + supported stopping distance + reaction travel",
+      "pulse_effort": "positive analytic quadratic root for available room, capped by caller effort; withhold if below minimum or actual post-pulse vertical speed is not upward",
+      "airborne_horizontal_request": 0.0,
+      "supported_drive": "desired_x=clamp(position_gain*dx, +/-speed*effort); request=desired_x/(speed*effort); inside settling margin with abs(vx)>arrival_speed request -sign(vx)*near_goal_counter_request",
+      "near_goal_counter_request": 0.1,
+      "secondary_rebound": false,
+      "arrival_maximum_speed": 6.0,
+      "arrival_maximum_angle": 0.32,
+      "arrival_requires_raw_support": true,
+      "arrival_quiet_observed_span_ticks": 12,
+      "arrival_maximum_sample_gap_ticks": 6,
+      "arrival_observation_rule": "first qualifying sample starts the span; nonqualifying or over-gap samples reset it; this is a local estimate only",
+      "feedback": "issued own-root proprioception, support, cooldown, energy and ceiling ray; explicit caller goal and deadline; no evaluator inputs",
+      "lifecycle": "retire canceled/completed/replaced goals; reject duplicate/stale ticks and generation rollback; new lifetime resets state and retires prior lifetime",
+      "owner_cancellation": "caller must separately revoke the host lease"
+    },
+    "jolt-recovery-v4": {
+      "schema": "nca-jolt-recovery-reference/v4",
+      "controller_id": "authored-jolt-recovery/v4",
+      "actor": "jev",
+      "skill": "directed_hop",
+      "profile_version": 1,
+      "preserved_source_sha256": {
+        "baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+        "jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+        "shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8"
+      },
+      "shaping": {
+        "quiet_below": 0.025,
+        "activate_above": 0.055,
+        "acceleration_rate": 8.0,
+        "braking_rate": 12.0,
+        "play_width": 0.025
+      },
+      "physical_supervisor": {
+        "schema": "nca-physical-recovery-supervisor/v1",
+        "base_hz": 60,
+        "maximum_helper_lease_ticks": 12,
+        "maximum_sample_gap_ticks": 60,
+        "emergency": "unstable_attitude must be explicitly requested and observed",
+        "emergency_enter_angle": 1.2,
+        "emergency_enter_angular_speed": 4.5,
+        "emergency_exit_angle": 0.32,
+        "emergency_exit_angular_speed": 0.8,
+        "emergency_quiet_ticks": 12,
+        "maximum_dwell_sample_gap_ticks": 6,
+        "maximum_emergency_ticks": 48,
+        "emergency_request": "auxiliary self-right; trim clamp(-angle*.55-omega*.20); effort .9",
+        "ordinary_action": "passed through without target, launch or posture decisions",
+        "expiry": "exclusive original observation lease, original goal deadline and active emergency deadline",
+        "authority": "retire canceled/replaced/completed goals and prior lifetimes; reject rollback",
+        "host_cancellation": "caller must revoke owner; neutral output alone is not cancellation"
+      },
+      "constants": {
+        "SPEED": 48.0,
+        "JUMP": 86.0,
+        "GRAVITY": 156.0,
+        "BRAKING_ACCELERATION": 100.0,
+        "POSITION_GAIN": 2.5,
+        "REACTION_SECONDS": 0.1,
+        "SETTLING_MARGIN": 2.0,
+        "MINIMUM_PULSE_EFFORT": 0.55,
+        "MINIMUM_UPWARD_LAUNCH_SPEED": 20.0,
+        "MAXIMUM_OPPOSING_LAUNCH_SPEED": 6.0,
+        "MINIMUM_HORIZONTAL_AIM": 0.05,
+        "MAXIMUM_HORIZONTAL_AIM": 0.82,
+        "INITIAL_AIM_ROOM_SCALE": 60.0,
+        "RECOVERY_AIM_ROOM_SCALE": 90.0,
+        "CEILING_MARGIN": 6.0,
+        "SETTLING_TIME_RESERVE": 0.2,
+        "MAXIMUM_PULSES": 2,
+        "ANTICIPATION_TICKS": 6,
+        "SUPPORT_DWELL_TICKS": 3,
+        "MAXIMUM_WINDOW_GAP_TICKS": 6,
+        "WATCHDOG_TICKS": 18,
+        "MAXIMUM_STALL_PROGRESS": 0.4,
+        "MAXIMUM_STALL_SPEED": 6.0,
+        "MINIMUM_DRIVE_REQUEST": 0.15,
+        "NEAR_GROUND_DISTANCE": 16.0,
+        "LOSS_DESCENT_TICKS": 12,
+        "MINIMUM_DESCENT_SPEED": 12.0,
+        "MAXIMUM_ARRIVAL_SPEED": 6.0,
+        "MAXIMUM_ARRIVAL_ANGLE": 0.32,
+        "QUIET_SPAN_TICKS": 12
+      },
+      "effort_limit": "max(.45, caller pace); never raise it to the minimum hop effort",
+      "initial_launch": "fresh supported anticipation or its exact six-tick supported-to-unsupported transition; current floor<=16, displacement<=.40 and speed<=6; synchronous fresh observation; all pulse bounds rechecked",
+      "second_launch": "same new physical recovery window, cooldown acknowledgment, energy and two-edge limit; shorter local room-bound recovery arc",
+      "supported_watchdog": "18 fresh ticks of supported directed demand, <=.40 cells toward progress and <=6 cells/s current speed",
+      "unsupported_edge": "18 fresh unsupported near-ground ticks, <=.40 cells displacement and <=6 cells/s current speed",
+      "unexpected_descent": "observed supported-to-unsupported transition outside the launch interval; 12 fresh unsupported ticks, descent >=12 and below goal",
+      "pulse_aim": "first pulse uses the preserved room/60 projection; recovery pulses normalize their separately solved horizontal/vertical impulse components",
+      "descent_aim": "reduce horizontal aim if needed to leave at least20 cells/s upward velocity within caller effort",
+      "pulse_room": "first pulse uses the preserved positive impulse quadratic; recovery solves the total horizontal velocity quadratic for its fixed bounded lift, then subtracts signed observed toward velocity",
+      "pulse_bounds": "upward result >=20 cells/s, ceiling apex plus6 cells, and remaining time minus.20 seconds settling reserve",
+      "anticipation": "zero traction for six ticks; fresh condition and current room rechecked at launch",
+      "ordinary_drive": "supported desired_x=clamp(2.5*dx,+/-48*effort); ground velocity servo; no free-air traction claim",
+      "ordinary_posture": "lean=.16*desired_x/48; anticipation counterlean=.10; bounded .55 proportional/.20 damping trim with shared shaping",
+      "arrival": "raw supported samples within tolerance, speed<=6 and angle<=.32 over12 observed ticks with gaps<=6 produce an advisory only",
+      "secondary_rebound": false,
+      "host_mechanics_changed": false,
+      "feedback": "only FeedbackObservation whitelist and explicit caller goal; no task evaluator or native mutation",
+      "evidence": "local reasons and requested pulses are not actual impulses, airborne or recovered verdicts",
+      "preserved_recovery_source_sha256": {
+        "jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+        "recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d"
+      },
+      "arrival_advisory": "running neutral hold, unchanged original-source lease and goal deadline; fresh disturbance resumes ordinary correction",
+      "completion": "caller validates continuous task outcome and current ownership, then cancels local/native intent; capture never supplies evaluator state or changes success thresholds",
+      "continuous_arrival": "unmeasured by sparse policy samples; the unchanged task evaluates every retained physical tick",
+      "preserved_advisory_source_sha256": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+      "movement_constants": {
+        "MINIMUM_RECOVERY_EFFORT": 0.4,
+        "RECOVERY_APEX_ROOM_FRACTION": 0.25,
+        "MAXIMUM_RECOVERY_APEX": 7.0,
+        "GROUND_CORRECTION_TICKS": 12,
+        "GROUND_CORRECTION_REQUEST": 1.0,
+        "ARRIVAL_COUNTER_REQUEST": 0.1
+      },
+      "pending_launch": "one six-tick anticipation witness; unknown support, gap, motion, admission failure or lost authority discards it; a contact transition keeps only its original start",
+      "first_pulse_aim": "preserved initial room/60 projection for the first pulse regardless of its fresh physical reason",
+      "recovery_vertical_impulse": "max(86*.40, sqrt(2*156*min(7,.25*room)) + current_vy); capped by caller effort, ceiling and original remaining time; post-pulse upward speed>=20",
+      "recovery_horizontal_impulse": "solve total positive horizontal speed from V*(conservative_flight+.1)+V^2/(2*100)<=room; subtract signed existing toward speed; cap vector by caller effort and horizontal aim .82; require positive resulting toward speed",
+      "recovery_flight": "2*(existing positive upward speed + vertical impulse)/156 plus sqrt(2*max(0,dy)/156); conservative local bound, not a contact simulation",
+      "recovery_effort": "normalize the solved impulse vector; .40 minimum and max(.45,caller pace) maximum; no raised caller budget",
+      "ordinary_arrival_hold": "neutral only on current raw support inside .75*caller Euclidean tolerance, speed<=2 and angle<=.32; status remains running and sampled arrival remains advisory",
+      "ordinary_arrival_braking": "inside capture, bounded .10 inward traction targets slow approach; inside the inner region with abs(vx)>2, bounded .10 counter-traction; zero requested motion does not claim an active host brake",
+      "ordinary_ground_correction": "after both primary edges, a fresh supported no-progress window can request bounded full traction for at most12 ticks; support loss, new motion, gap, quiet envelope or authority change ends it; a new window is required to restart",
+      "supervisor_unchanged": true,
+      "preserved_movement_source_sha256": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+      "settling_constants": {
+        "CAPTURE_INTERIOR_RATIO": 0.75,
+        "CAPTURE_RELEASE_RATIO": 1.25,
+        "CAPTURE_SPEED": 2.0,
+        "CAPTURE_REQUEST": 0.1,
+        "POST_PULSE_RISE_SPEED": 6.0,
+        "POST_PULSE_COAST_TICKS": 6
+      },
+      "settling_capture": "enter on current supported distance<=caller tolerance; retain until distance>1.25*tolerance, support loss/uncertainty, sample gap or authority boundary; keep ordinary shaped traction inside outer tolerance until interior quiet",
+      "capture_shaping": "unchanged Schmitt/play/slew shaping; .10 requested magnitude yields at most .125 shaped magnitude from preserved .025 play, except finite slew from prior ordinary drive",
+      "post_second_pulse_coast": "at exactly six ticks after the second requested pulse, its fresh current cooldown acknowledgement, consecutive source sample and raw supported vy<=-6 can request one six-tick traction unload with source lease capped at6; no renewed witness, extra pulse or inferred unsupported state",
+      "pulse_vectors_unchanged": true,
+      "initial_contact_lifecycle_unchanged": true
+    }
+  },
+  "teacher_acceptance": {
+    "schema": "nca-jolt-recovery-acceptance/v4",
+    "reference": "jolt-arrival-v1",
+    "candidate": "jolt-recovery-v4",
+    "paired_cases": 32,
+    "minimum_extra_arrivals": 1,
+    "minimum_historical_rescues": 3,
+    "historical_failures": [
+      "demo-floor-left-60-1",
+      "demo-floor-left-60-2",
+      "reference-floor-left-63",
+      "reference-drop28-left-57",
+      "reference-drop12-right-45"
+    ],
+    "required_unsupported_rescue": "reference-drop12-right-45",
+    "require_supported_failure_rescue": true,
+    "maximum_regressions": 1,
+    "historical_missing_airborne": [
+      "demo-floor-left-24-0",
+      "demo-floor-left-24-1",
+      "demo-floor-left-24-2",
+      "demo-floor-left-36-0",
+      "demo-floor-left-36-1",
+      "demo-floor-left-36-2",
+      "reference-floor-left-27"
+    ],
+    "minimum_restored_airborne_cases": 1,
+    "minimum_overall_purposeful_launch_change": 0,
+    "maximum_trim_reversal_increase_per_second": 0.5,
+    "maximum_absolute_angle_increase_radians": 0.1,
+    "minimum_toward_speed_ratio": 0.7,
+    "maximum_toward_speed_ratio": 1.5,
+    "every_case_inference_p95_maximum_ms": 5.0,
+    "maximum_requested_primary_edges": 2,
+    "second_primary_requires_fresh_physical_reason": true,
+    "aggregation": "equal weight over32 already-open paired development cases",
+    "learned_qualification": false
+  },
+  "prior_invocations": [
+    {
+      "id": "jolt-arrival-diagnostic-v1",
+      "source_revision": "5d9d6a13d2f273ee1b4fd3ce0b50a6482c807382",
+      "declaration_sha256": "269cef7a852fe8d690bb95ab9187576a3babe0f1fa5d1e8ee28fafc2730c474a",
+      "retained_summary_status": "completed",
+      "evidence_status": "incomplete_owner_journal",
+      "episode_rows": 64,
+      "dispatched_decisions": 1549,
+      "requested_ticks": 9294,
+      "episode_confirmed_ticks": 9294,
+      "reported_owner_requests": 1722,
+      "journal_verified_owner_responses": 842,
+      "full_owner_request_count_verified": false,
+      "host_starts": 1,
+      "whole_process_seconds": 221.63055612800235,
+      "archive_sha256": "55d8be5e14ca7aeeeb42bdbf7d2e58d6e970806017e19d9fedd965c8e68ed4d4",
+      "reused_rows": 0,
+      "resumed": false,
+      "accounting_limit": "Episode receipts corroborate all 1549 decisions and 9294 ticks; the truncated raw owner journal cannot independently establish its reported full owner-request count or native closure"
+    },
+    {
+      "id": "jolt-recovery-001-diagnostic-v1",
+      "source_revision": "ceb19f5742a782299197557fa53e2208523eb7f7",
+      "declaration_sha256": "2e5d4e3c554ec2382d10a95d347c1f933252050f2a18dff320711c2cc3c7fff7",
+      "status": "incomplete",
+      "episode_rows": 24,
+      "dispatched_decisions": 479,
+      "requested_ticks": 2874,
+      "confirmed_ticks": 2874,
+      "owner_requests": 549,
+      "host_starts": 1,
+      "whole_process_seconds": 61.76433001999976,
+      "archive_sha256": "6be1740a1a623084f431ba7ed08f39fceb8d3ee9fa416d519c48ff6b57ede439",
+      "reused_rows": 0,
+      "resumed": false
+    },
+    {
+      "id": "jolt-recovery-002-diagnostic-v2",
+      "source_revision": "8da294ae4a263dd95c34b181abb795b906060c2d",
+      "source_tree": "c701a9d37edb5567fab9c7db0fb595fafec2ece5",
+      "declaration_sha256": "d7cc13335b453a755e9b7d950ac52d982aff553c025cbe0fbd47b81b5b0729eb",
+      "status": "completed",
+      "teacher_accepted": false,
+      "episode_rows": 96,
+      "dispatched_decisions": 2449,
+      "requested_ticks": 14694,
+      "confirmed_ticks": 14694,
+      "owner_requests": 2711,
+      "host_starts": 1,
+      "whole_process_seconds": 444.46566076900126,
+      "archive_sha256": "7325c1674a9007e7b2c8becb5abc2e37e2d5183c5c899eda4b4be37e88ce2a53",
+      "reused_rows": 0,
+      "resumed": false
+    },
+    {
+      "id": "jolt-recovery-003-diagnostic-v3",
+      "source_revision": "c6f558bbf6f185b31d7ea2c9b57336b3c7fee1ac",
+      "source_tree": "9ac1f17b16868319b88e32cbbf8df3e5bdbcce70",
+      "declaration_sha256": "03c58b439b808581a63541a8dbb005a4b73486acd9afd2a0fd635f1604abfb03",
+      "status": "failed_final_output_inventory_verification",
+      "worker_status": "completed",
+      "teacher_accepted": false,
+      "whole_invocation_qualified": false,
+      "episode_rows": 96,
+      "dispatched_decisions": 2303,
+      "requested_ticks": 13818,
+      "confirmed_ticks": 13818,
+      "owner_requests": 2568,
+      "full_owner_request_count_verified": true,
+      "host_starts": 1,
+      "whole_process_seconds": 294.9515252410001,
+      "archive_sha256": "398e81ffc465150b9407cba64b43ed1ba0070aeb9d61180e96650aa1bedef7e8",
+      "reused_rows": 0,
+      "resumed": false,
+      "retained_failure": "Extra byte-identical owner-journal.jsonl.gz.pending outside original final inventory; cause unestablished. Two historical rescues remain below required three."
+    }
+  ],
+  "cumulative_accounting": "Original arrival, recovery v1, recovery v2 and v3 retain distinct closed one-attempt allocations. Publish new and cumulative actual host/decision/tick/wall ledgers, with the original full owner-call count explicitly reported rather than journal-verified. No earlier rows, remaining budget or sealed-evaluation status transfer.",
+  "change_scope": {
+    "controller": "Versioned v4 settling capture and one fresh acknowledged second-pulse coast interval; preserve v3 launch/contact lifecycle, pulse vectors, physical supervisor, v1/v2/v3 source identities and caller-owned completion",
+    "evidence": "New exclusive-final publication and strict declared final inventory; retain every earlier failed byte and verdict without repair",
+    "unchanged": [
+      "Original host/profile/task/success criteria",
+      "All 32 case IDs, seeds and order",
+      "Six-tick cadence and at most two freshly justified primary edges",
+      "All prospective teacher acceptance thresholds",
+      "No learned collection, optimizer, checkpoint or morphology admission"
+    ]
+  },
+  "allocation_accounting": {
+    "invocations": "One newly commissioned attempt and host; no retry, resumption, extension or outcome-driven tuning",
+    "effective_episode_bound": "96 episodes times 40 decisions equals 3840 decisions; 3840 decisions times 6 requested ticks equals 23040 ticks. Retain nominal global caps of 4000 decisions and 24000 ticks and enforce both layers",
+    "owner_requests": "4500 total reserved owner calls including reset, profile, cancellation and native close; uncertain reservations consume allocation",
+    "startup_handshake": "The capability handshake with response id 0 is not a metered owner request; source/startup time and the single host start remain inside the original whole-process cap of 900 seconds",
+    "cleanup": "Reserve 120 seconds within 900 seconds. Each normal exchange has 15 seconds including send and every receive. Latest normal admission is at elapsed 765 seconds and the active boundary is 780 seconds; the worker exits by 840 seconds to protect 60 seconds for independent verification/finalization",
+    "post_exit_verification": "Original independent verification shares the original wall clock; keep 6 seconds within the final reserve of 60 seconds for termination, durable streams/receipt and finalization marker. The sole external executor measures through original child exit and retains post-execution accounting. Preserve any timeout, inventory or closure failure"
+  },
+  "case_inventory": [
+    {
+      "id": "demo-floor-right-24-0",
+      "family": "floor-right-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        200.0,
+        346.5
+      ],
+      "host_seed": 621001
+    },
+    {
+      "id": "demo-floor-right-24-1",
+      "family": "floor-right-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        200.0,
+        346.5
+      ],
+      "host_seed": 621002
+    },
+    {
+      "id": "demo-floor-right-24-2",
+      "family": "floor-right-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        200.0,
+        346.5
+      ],
+      "host_seed": 621003
+    },
+    {
+      "id": "demo-floor-left-24-0",
+      "family": "floor-left-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        240.0,
+        346.5
+      ],
+      "host_seed": 621031
+    },
+    {
+      "id": "demo-floor-left-24-1",
+      "family": "floor-left-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        240.0,
+        346.5
+      ],
+      "host_seed": 621032
+    },
+    {
+      "id": "demo-floor-left-24-2",
+      "family": "floor-left-24",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        240.0,
+        346.5
+      ],
+      "host_seed": 621033
+    },
+    {
+      "id": "demo-floor-right-36-0",
+      "family": "floor-right-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ],
+      "host_seed": 621061
+    },
+    {
+      "id": "demo-floor-right-36-1",
+      "family": "floor-right-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ],
+      "host_seed": 621062
+    },
+    {
+      "id": "demo-floor-right-36-2",
+      "family": "floor-right-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        212.0,
+        346.5
+      ],
+      "host_seed": 621063
+    },
+    {
+      "id": "demo-floor-left-36-0",
+      "family": "floor-left-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        228.0,
+        346.5
+      ],
+      "host_seed": 621091
+    },
+    {
+      "id": "demo-floor-left-36-1",
+      "family": "floor-left-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        228.0,
+        346.5
+      ],
+      "host_seed": 621092
+    },
+    {
+      "id": "demo-floor-left-36-2",
+      "family": "floor-left-36",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        228.0,
+        346.5
+      ],
+      "host_seed": 621093
+    },
+    {
+      "id": "demo-floor-right-48-0",
+      "family": "floor-right-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ],
+      "host_seed": 621121
+    },
+    {
+      "id": "demo-floor-right-48-1",
+      "family": "floor-right-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ],
+      "host_seed": 621122
+    },
+    {
+      "id": "demo-floor-right-48-2",
+      "family": "floor-right-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        224.0,
+        346.5
+      ],
+      "host_seed": 621123
+    },
+    {
+      "id": "demo-floor-left-48-0",
+      "family": "floor-left-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        216.0,
+        346.5
+      ],
+      "host_seed": 621151
+    },
+    {
+      "id": "demo-floor-left-48-1",
+      "family": "floor-left-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        216.0,
+        346.5
+      ],
+      "host_seed": 621152
+    },
+    {
+      "id": "demo-floor-left-48-2",
+      "family": "floor-left-48",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        216.0,
+        346.5
+      ],
+      "host_seed": 621153
+    },
+    {
+      "id": "demo-floor-right-60-0",
+      "family": "floor-right-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        236.0,
+        346.5
+      ],
+      "host_seed": 621181
+    },
+    {
+      "id": "demo-floor-right-60-1",
+      "family": "floor-right-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        236.0,
+        346.5
+      ],
+      "host_seed": 621182
+    },
+    {
+      "id": "demo-floor-right-60-2",
+      "family": "floor-right-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        236.0,
+        346.5
+      ],
+      "host_seed": 621183
+    },
+    {
+      "id": "demo-floor-left-60-0",
+      "family": "floor-left-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        204.0,
+        346.5
+      ],
+      "host_seed": 621211
+    },
+    {
+      "id": "demo-floor-left-60-1",
+      "family": "floor-left-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        204.0,
+        346.5
+      ],
+      "host_seed": 621212
+    },
+    {
+      "id": "demo-floor-left-60-2",
+      "family": "floor-left-60",
+      "origin": "previously_open_training",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        204.0,
+        346.5
+      ],
+      "host_seed": 621213
+    },
+    {
+      "id": "reference-floor-right-27",
+      "family": "floor-right-27",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        203.0,
+        346.5
+      ],
+      "host_seed": 625001
+    },
+    {
+      "id": "reference-floor-left-27",
+      "family": "floor-left-27",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        237.0,
+        346.5
+      ],
+      "host_seed": 625002
+    },
+    {
+      "id": "reference-floor-right-63",
+      "family": "floor-right-63",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        176.0,
+        346.5
+      ],
+      "target": [
+        239.0,
+        346.5
+      ],
+      "host_seed": 625003
+    },
+    {
+      "id": "reference-floor-left-63",
+      "family": "floor-left-63",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        264.0,
+        346.5
+      ],
+      "target": [
+        201.0,
+        346.5
+      ],
+      "host_seed": 625004
+    },
+    {
+      "id": "reference-drop12-right-45",
+      "family": "drop12-right-45",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        176.0,
+        334.5
+      ],
+      "target": [
+        221.0,
+        346.5
+      ],
+      "host_seed": 625005
+    },
+    {
+      "id": "reference-drop12-left-45",
+      "family": "drop12-left-45",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        264.0,
+        334.5
+      ],
+      "target": [
+        219.0,
+        346.5
+      ],
+      "host_seed": 625006
+    },
+    {
+      "id": "reference-drop28-right-57",
+      "family": "drop28-right-57",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        176.0,
+        318.5
+      ],
+      "target": [
+        233.0,
+        346.5
+      ],
+      "host_seed": 625007
+    },
+    {
+      "id": "reference-drop28-left-57",
+      "family": "drop28-left-57",
+      "origin": "previously_open_evaluation",
+      "spawn": [
+        264.0,
+        318.5
+      ],
+      "target": [
+        207.0,
+        346.5
+      ],
+      "host_seed": 625008
+    }
+  ],
+  "case_inventory_sha256": "b48eeeffa3b07f0a12a8cc2736fd0ed80f500e95b00bb69f9e46fb2c3fabd06d",
+  "budget_derivation": {
+    "global": "96 episodes; nominal caps of 4000 decisions and 24000 ticks. Limits of 40 decisions per episode and 6 ticks per decision enforce effective caps of 3840 decisions and 23040 ticks",
+    "owner_requests": "4500 covers step/reset/profile/cancel/native close calls; every attempted reservation counted; uncertainty remains failed, with no retry",
+    "active_window": "900 minus 120 equals 780 seconds; normal operations require the complete transport allowance of 15 seconds within that window, yielding latest normal admission at 765 seconds",
+    "worker_exit": "900 minus 60 equals 840 seconds; worker sealing and native cleanup share the reserve of 120 seconds",
+    "post_exit_verification": "Reserve at least 60 seconds when the worker reaches its deadline; retain the last 6 seconds for final streams/receipt/group cleanup; no extension",
+    "transport": "A diagnostic-only socket wrapper recomputes an absolute deadline before sendall and every recv. A trickled response cannot renew its total budget of 15 seconds. Cancel/close share the remaining whole-process ceiling",
+    "startup_handshake": "The native capability handshake with response id 0 is not a metered owner call; elapsed time and the sole host launch remain inside the whole-process ceiling"
+  }
+}

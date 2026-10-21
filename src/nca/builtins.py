@@ -91,6 +91,7 @@ def builtin_registry() -> Registry:
     from .controllers.jolt_recovery import JoltRecoveryController
     from .controllers.jolt_recovery_v2 import JoltRecoveryControllerV2
     from .controllers.jolt_recovery_v3 import JoltRecoveryControllerV3
+    from .controllers.jolt_recovery_v4 import JoltRecoveryControllerV4
     from .data import replay_episode
     from .skills import register_skills
     from .cellular import register as register_cellular
@@ -119,6 +120,8 @@ def builtin_registry() -> Registry:
                       ("local-observation", "wire", "contact-recovery", "arrival-advisory", "separate-supervisor", "cancellation"))
     registry.register("policy", "authored-jolt-recovery", 3, JoltRecoveryControllerV3,
                       ("local-observation", "wire", "contact-recovery", "arrival-advisory", "fresh-contact-transition", "separate-supervisor", "cancellation"))
+    registry.register("policy", "authored-jolt-recovery", 4, JoltRecoveryControllerV4,
+                      ("local-observation", "wire", "contact-recovery", "arrival-advisory", "interior-capture", "fresh-contact-transition", "separate-supervisor", "cancellation"))
     registry.register("evaluator", "recorded", 1, RecordedEvaluator, ("recorded_fixture",))
     registry.register("evaluator", "consumed-replay", 1, replay_episode,
                       ("act004", "same-runtime", "original-observation-age"))

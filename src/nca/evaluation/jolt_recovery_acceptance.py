@@ -19,7 +19,8 @@ REFERENCE = "jolt-arrival-v1"
 CANDIDATE = "jolt-recovery-v1"
 CANDIDATE_V2 = "jolt-recovery-v2"
 CANDIDATE_V3 = "jolt-recovery-v3"
-_CANDIDATE_VERSIONS = {CANDIDATE: "v1", CANDIDATE_V2: "v2", CANDIDATE_V3: "v3"}
+CANDIDATE_V4 = "jolt-recovery-v4"
+_CANDIDATE_VERSIONS = {CANDIDATE: "v1", CANDIDATE_V2: "v2", CANDIDATE_V3: "v3", CANDIDATE_V4: "v4"}
 HISTORICAL_FAILURES = (
     "demo-floor-left-60-1", "demo-floor-left-60-2",
     "reference-floor-left-63", "reference-drop28-left-57",
@@ -164,6 +165,9 @@ def _candidate_controller(candidate_family):
     if candidate_family == CANDIDATE_V3:
         from nca.controllers.jolt_recovery_v3 import JoltRecoveryControllerV3
         return JoltRecoveryControllerV3()
+    if candidate_family == CANDIDATE_V4:
+        from nca.controllers.jolt_recovery_v4 import JoltRecoveryControllerV4
+        return JoltRecoveryControllerV4()
     raise ContractError("jolt_recovery_acceptance", "unknown recovery candidate version")
 
 
@@ -274,6 +278,70 @@ def audit_recovery(output: Path, *, expected_revision: str, expected_declaration
              and supervisor.get("final_output_verification") == verified
              and _number(supervisor.get("wall_seconds")) <= manifest["declaration"]["budget"]["maximum_wall_seconds"],
              "the full invocation and independent final verification must close within the declared budget")
+    finalization_sha256 = executor_sha256 = None
+    if candidate_family == CANDIDATE_V4:
+        _require(supervisor.get("whole_process_started_monotonic") == manifest.get("whole_process_started_monotonic")
+                 == summary["counts"].get("whole_process_started_monotonic")
+                 and supervisor.get("cleanup_reserve_seconds") == 120
+                 and supervisor.get("independent_verification_reserve_seconds") == 60
+                 and supervisor.get("supervisor_finalization_reserve_seconds") == 6,
+                 "v4 source/evidence must share the original outer clock and prospectively divided reserve")
+        finalization_path = output.with_name(output.name + "-finalization.json")
+        finalization = strict_json_loads(finalization_path.read_bytes())
+        _require(finalization.get("schema") == "nca-jolt-arrival-finalization/v1"
+                 and finalization.get("source_revision") == expected_revision
+                 and finalization.get("declaration_sha256") == expected_declaration_sha256
+                 and finalization.get("supervisor_sha256") == hashlib.sha256(supervisor_path.read_bytes()).hexdigest()
+                 and finalization.get("whole_process_started_monotonic") == manifest["whole_process_started_monotonic"]
+                 and finalization.get("completed") is True
+                 and supervisor["wall_seconds"] <= _number(finalization.get("wall_seconds")) <= 900,
+                 "v4 requires the unchanged original post-receipt finalization within its whole-process ceiling")
+        finalization_sha256 = hashlib.sha256(finalization_path.read_bytes()).hexdigest()
+        executor_path = output.with_name(output.name + "-executor.json")
+        executor = strict_json_loads(executor_path.read_bytes())
+        terminal = executor.get("terminal_report")
+        _require(executor.get("schema") == "nca-jolt-arrival-executor/v1"
+                 and executor.get("source_revision") == expected_revision
+                 and executor.get("declaration_sha256") == expected_declaration_sha256
+                 and executor.get("executor_source_sha256") == manifest["source_files"].get("tools/execute_jolt_diagnostic.py")
+                 and type(executor.get("executor_source_sha256")) is str
+                 and len(executor["executor_source_sha256"]) == 64
+                 and type(executor.get("maximum_wall_seconds")) is int and executor["maximum_wall_seconds"] == 900
+                 and type(executor.get("attempts")) is int and executor["attempts"] == 1
+                 and type(executor.get("returncode")) is int and executor["returncode"] == 0
+                 and executor.get("timeout") is False and executor.get("completed") is True
+                 and executor.get("supervisor_terminated") is True
+                 and executor.get("owned_process_tree_terminated") is True
+                 and executor.get("error_type") is None
+                 and executor.get("whole_process_started_monotonic") == manifest["whole_process_started_monotonic"]
+                 and executor.get("supervisor_sha256") == hashlib.sha256(supervisor_path.read_bytes()).hexdigest()
+                 and executor.get("finalization_sha256") == finalization_sha256
+                 and _number(executor.get("process_exited_monotonic")) - executor["whole_process_started_monotonic"]
+                     == _number(executor.get("wall_seconds"))
+                 and isinstance(terminal, dict) and terminal.get("completed") is True
+                 and type(terminal.get("returncode")) is int and terminal["returncode"] == 0
+                 and terminal.get("timeout") is False and terminal.get("finalization_sha256") == finalization_sha256
+                 and finalization["wall_seconds"] <= _number(terminal.get("wall_seconds"))
+                     <= executor["wall_seconds"] <= 900,
+                 "v4 requires the unchanged original external executor through child exit within its whole-process ceiling")
+        stream_paths = [output.with_name(output.name + suffix)
+                        for suffix in ("-executor-stdout.log", "-executor-stderr.log")]
+        streams = executor.get("streams")
+        _require(isinstance(streams, dict) and set(streams) == {path.name for path in stream_paths},
+                 "v4 external executor must retain its exact original stdout/stderr inventory")
+        for path in stream_paths:
+            metadata = streams[path.name]
+            _require(path.is_file() and not path.is_symlink() and isinstance(metadata, dict),
+                     "v4 external executor streams must be retained regular files")
+            payload = path.read_bytes()
+            _require(type(metadata.get("bytes")) is int and metadata["bytes"] == len(payload)
+                     and metadata.get("sha256") == hashlib.sha256(payload).hexdigest(),
+                     "v4 external executor stream bytes differ from the unchanged original receipt")
+            if path == stream_paths[0]:
+                lines = payload.splitlines()
+                _require(bool(lines) and strict_json_loads(lines[-1]) == terminal,
+                         "v4 external executor terminal report differs from original CLI stdout")
+        executor_sha256 = hashlib.sha256(executor_path.read_bytes()).hexdigest()
     pulse_audit = verify_controller_replay(output, summary["rows"], candidate_family=candidate_family)
     result = assess_teacher(summary["rows"], pulse_authority_verified=pulse_audit["verified"],
                             candidate_family=candidate_family)
@@ -281,4 +349,7 @@ def audit_recovery(output: Path, *, expected_revision: str, expected_declaration
                   evidence_verification=verified, pulse_authority=pulse_audit,
                   replay_source=replay_source,
                   supervisor_sha256=hashlib.sha256(supervisor_path.read_bytes()).hexdigest())
+    if finalization_sha256 is not None:
+        result["finalization_sha256"] = finalization_sha256
+        result["executor_sha256"] = executor_sha256
     return result

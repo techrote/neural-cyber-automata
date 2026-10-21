@@ -3,15 +3,18 @@ title: LEARN-JOLT-002 — learn a useful Jolt skill after recovery qualification
 kind: reference
 summary: Conditional imitation and residual-control pilot with learned launch authority, fresh geometry/start holdouts and unchanged reliability gates.
 owns: [learning.jolt002-design]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # LEARN-JOLT-002
 
 This is the next experiment design commissioned by D-015 and tracked in
-[LEARN-JOLT-002 / #62](https://github.com/techrote/neural-cyber-automata/issues/62). It is conditional on
-accepted [Jolt recovery #48](https://github.com/techrote/neural-cyber-automata/issues/48)
-and [complete diagnostic evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43).
+[LEARN-JOLT-002 / #62](https://github.com/techrote/neural-cyber-automata/issues/62).
+The [v4 recovery result](../evidence/2026-10-20-jolt-recovery-v4.md) satisfies its
+[Jolt teacher #48](https://github.com/techrote/neural-cyber-automata/issues/48)
+and [complete diagnostic evidence #43](https://github.com/techrote/neural-cyber-automata/issues/43)
+dependency. Collection still requires the versioned implementation, fresh splits
+and final source/runtime/budget admission below.
 It does not authorize treating the earlier open diagnostic cases as sealed
 evaluation, relabel an authored result as learned, or replace the failed
 [morphology prerequisite](../evidence/2026-10-19-t106-direction-frame.md).
@@ -35,12 +38,32 @@ three, the unsupported/drop failure unresolved and four regressions instead of
 at most one. Airborne character is restored in 32/32 cases, and the complete
 0.727556 vigor ratio passes. Motion response is slower despite sub-millisecond
 worst-case inference p95. These findings prioritize arrival timing and physical
-recovery over architecture work. Complete evidence alone cannot admit collection;
-an accepted corrective teacher result must precede this learning pilot.
-[JOLT-RECOVERY-003 / #64](https://github.com/techrote/neural-cyber-automata/issues/64)
-tracks anticipation contact loss, useful second-hop landing progress and arrival
-timing. Its completed source and separately declared evidence must satisfy the
-unchanged teacher gate before this issue's collection dependency can be released.
+recovery over architecture work. The [v3 result](../evidence/2026-10-20-jolt-recovery-v3.md)
+improves to 28/32 arrivals but retains only two historical rescues, one regression
+and failed final inventory verification. These earlier results remain unchanged.
+
+The separate fourth diagnostic for [#64](https://github.com/techrote/neural-cyber-automata/issues/64)
+passes all thirteen unchanged teacher checks: **30/32 arrivals versus 27/32**,
+three historical rescues, zero success regressions and 32/32 purposeful-airborne
+cases. The [original result](../evidence/jolt-recovery-v4-result-20261020.json)
+and [independent complete review](../evidence/jolt-recovery-v4-review-20261020.json)
+bind one complete 96-row physical invocation. Two leftward failures remain;
+`reference-floor-left-63` ends 12.503336 cells from target versus v3's 8.131480.
+The [four-case comparison](../evidence/jolt-recovery-v4-case-comparison-20261020.json)
+does not establish consistent useful landing progress after the second coast.
+Owner feel remains unaccepted. All 32 cases were already open; these results
+release only the teacher dependency and establish no sealed learned skill.
+
+The qualified reference is `authored-jolt-recovery@4` at frozen physical source
+`46a22f98dce78be3c4ba534d955e58d5691c7d96`, with candidate specification SHA-256
+`2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038`
+and canonical diagnostic declaration SHA-256
+`bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c`.
+The prospective learner must bind these exact teacher, supervisor and evidence
+identities from the [manifest](../evidence/jolt-recovery-v4-manifest-20261020.json)
+and complete review. A later publication commit does not replace the frozen
+physical source. This teacher qualification does not relax the learned reliability,
+gain, character, runtime or morphology continuation requirements below.
 
 ## Question and comparison
 
@@ -118,7 +141,9 @@ or idle reference on those cases.
 Create a hashed inventory of all previously opened geometry/start/target cases,
 including failed, partial, export, cellular and diagnostic runs. At minimum this
 covers T-103, T-104, T-105, the direction-frame follow-up, the original arrival
-diagnostic and every failed or completed recovery diagnostic, including v1/v2.
+diagnostic and every failed or completed recovery diagnostic, including v1/v2/v3/v4.
+All 32 v4 cases belong in this opened inventory, including the eight historically
+labelled evaluation cases.
 An old evaluation label does not make a case sealed again. Reject any overlap
 before host construction and record the inventory/source identities.
 

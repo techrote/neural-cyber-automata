@@ -1,0 +1,149 @@
+{
+  "archive": {
+    "all_members_verified_against_original_manifest": true,
+    "bytes": 26268108,
+    "deterministic_metadata_verified": true,
+    "duplicate_members": 0,
+    "materialized_members_byte_identical": true,
+    "member_manifest": {
+      "bytes": 72908,
+      "hashed_member_entries": 242,
+      "name": "MEMBER-MANIFEST.json",
+      "self_binding": "The manifest self-entry explicitly excludes its own hash; its complete original bytes are bound by the separately preserved external SHA-256 and the externally pinned archive.",
+      "self_hash_excluded": true,
+      "sha256": "56fd6563543a5aec63ffc5b59155e4255867422aedd6285267f7a2a398b49a66"
+    },
+    "name": "jolt-recovery-v4-evidence-20261020.tgz",
+    "outer_gzip_eof_crc_and_no_trailing_data_verified": true,
+    "outer_gzip_uncompressed_bytes": 100198400,
+    "regular_members": 243,
+    "sha256": "27afcae51f20a02fce7888b385574f92d0932dd4ab8aedd4393df0f6e2454e44",
+    "total_member_bytes": 100009955,
+    "unexpected_or_missing_members": 0,
+    "unsafe_or_nonregular_members": 0
+  },
+  "candidate_specification_sha256": "2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038",
+  "created_utc": "2026-10-21T18:12:21.652917+00:00",
+  "declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+  "evidence_limits": [
+    "This report verifies recovered evidence identity and reconciles original native receipts; it performs no new physical experiment.",
+    "Filesystem durability and process termination are confirmed by original hash-bound receipts, not re-enacted during recovery.",
+    "It does not independently rescore teacher acceptance or widen the previously open development-case population.",
+    "Existing authored-case, teacher, owner-feel, sealed-evaluation and learned-policy qualifications remain governed by their original evidence and acceptance reviews.",
+    "The lost unpublished completion review bytes are unavailable and are not represented as reconstructed originals."
+  ],
+  "new_work": {
+    "checkpoint_executions": 0,
+    "host_starts": 0,
+    "learned_policy_calls": 0,
+    "optimizer_updates": 0,
+    "owner_requests": 0,
+    "physical_ticks": 0,
+    "training_or_diagnostic_reruns": 0,
+    "tuning_or_source_changes": 0
+  },
+  "original_evidence": {
+    "all_243_members_unchanged_after_review": true,
+    "all_files_verified_against_archived_prepack_review": true,
+    "all_inner_gzip_eof_crc_and_no_trailing_data_verified": true,
+    "inner_files": 197,
+    "inner_gzip_files": 97,
+    "inner_gzip_uncompressed_bytes": 190153350,
+    "inner_inventory_sha256": "970011a8857d0b225645db1ffb82a5bf329f49631b0538802c94934a13272a8a",
+    "original_files_modified": false,
+    "outer_files": 9,
+    "outer_receipts": 3,
+    "outer_streams": 6,
+    "summary_inventory_artifacts": 196,
+    "total_files": 206
+  },
+  "original_outer_receipts": {
+    "completed": true,
+    "executor_sha256": "6669f168d5e85558643efbd1390ce06fdf8c04d4848f6aa3f2992a7ad68929d3",
+    "executor_wall_seconds": 544.9560992200022,
+    "finalization_sha256": "0120db365d1dfc47ab7f80253ba2ea16fb8d57b16a4121a929024a251fd0418f",
+    "finalization_wall_seconds": 544.898435156003,
+    "maximum_wall_seconds": 900,
+    "owned_process_group_and_tree_termination_receipts_confirmed": true,
+    "returncode": 0,
+    "shared_clock_origin_and_full_invocation_wall_verified": true,
+    "source_declaration_and_stream_bindings_verified": true,
+    "supervisor_finalization_executor_hash_chain_verified": true,
+    "supervisor_sha256": "8c7eb475376125c417cb4453ff5f70570eb0adec7719384ed7d88e8e6a346fd6",
+    "supervisor_wall_seconds": 544.893780182003,
+    "terminal_stdout_matches_executor_report": true,
+    "timeout": false
+  },
+  "owner_journal": {
+    "all_13584_raw_tick_receipts_bound_to_episode_records": true,
+    "all_record_sequences_and_hash_links_verified": true,
+    "canonical_episode_envelopes_and_metrics_rows_verified": 96,
+    "chain_sha256": "7c839b45ecc258b53f2579c5ed14a3db68012b1fc7d3443d7437840a51c0e572",
+    "compressed_bytes": 8076610,
+    "compressed_sha256": "7da490978b499c403966cf12efaf0e01e4e5857ef8f9a09ca64cd99d02f21eee",
+    "episode_packet_observation_and_profile_bindings_verified": true,
+    "events": {
+      "episode_completed": 96,
+      "episode_started": 96,
+      "host_closed": 1,
+      "host_start_reserved": 1,
+      "request_reserved": 2531,
+      "response_received": 2531
+    },
+    "native_close_and_termination_receipts_confirmed": true,
+    "owner_operations": {
+      "cancel": 74,
+      "close": 1,
+      "profile": 96,
+      "reset": 96,
+      "step": 2264
+    },
+    "pending_reservations": 0,
+    "raw_bytes": 79135027,
+    "raw_equals_complete_decompressed_bytes": true,
+    "raw_sha256": "2930bae8c26e0817b04746eddd5b3cd504283eaa3bfc641d68a3e64f42b6849d",
+    "records": 5256,
+    "sealed_counts_rows_and_durability_receipts_verified": true,
+    "validation": {
+      "bound_episode_ticks": 13584,
+      "counts": {
+        "confirmed_step_ticks": 13584,
+        "episodes_started": 96,
+        "host_requests": 2531,
+        "host_start_attempts": 1,
+        "host_terminations": 1,
+        "requested_step_ticks": 13584,
+        "step_requests": 2264
+      },
+      "episode_receipts_bound": true,
+      "episodes_completed": 96,
+      "gzip_eof_verified": true,
+      "native_close_confirmed": true,
+      "records": 5256,
+      "verified": true
+    }
+  },
+  "review_provenance": {
+    "method": "Independent standard-library byte, gzip, JSON-chain, request/response and raw per-tick reconciliation; frozen Git object and worktree source comparisons.",
+    "missing_unpublished_prior_review_recreated": false,
+    "new_recovery_verification": true,
+    "original_evidence_review_sha256": "3677f9e020e1ded340138ecf32b8dfddbd05d358c4b8c6a8d383be47f8384172",
+    "original_final_source_review_sha256": "3440c29d550bf8da6783d25570384242d34b9b236c3d3bdaa0fe0da11f8e4ac6",
+    "recovery_verifier_sha256": "07656b0c0e46959761fb90b12be3a96edcfd0d7af5c3a70bbb4af65b636ba0f5"
+  },
+  "schema": "nca-jolt-recovery-v4-archive-recovery-verification/v1",
+  "scope": "New independent offline verification of the recovered original evidence archive and its materialized members after workspace loss.",
+  "source_pins": {
+    "all_episode_source_and_declaration_pins_verified": true,
+    "current_worktree_file_bytes_verified": true,
+    "distinct_source_files": 117,
+    "final_source_review_files": 115,
+    "frozen_git_file_bytes_verified": true,
+    "frozen_git_tree_verified": true,
+    "manifest_source_files": 100,
+    "manifest_source_files_sha256": "f84cb0a2aed7f49ebc8dbe588cb274502394abd5249acbe32f3e27dad788f91f"
+  },
+  "source_revision": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+  "source_tree": "90e22caf259228083308c1ce23e047c3c27df63e",
+  "verified": true
+}

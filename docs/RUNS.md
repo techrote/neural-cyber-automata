@@ -3,7 +3,7 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # Run ledger
@@ -40,6 +40,23 @@ T-101 and T-104 specify immutable per-run manifests and a generated/merged ledge
 | jolt-recovery-001-diagnostic-v1 | 2026-10-20 | Frozen `ceb19f57…`; host `f2e34cf9…`; accepted evidence base PR #58 | Linux CPU, Python 3.12.14, pinned Godot/native/Rapier; authored only | Declaration `2e5d4e3c…`; unchanged task/profile/cadence | Original/arrival/recovery v1 on the same opened cases; only eight training-origin pairs reached | One attempt: 24/96 rows, 479 dispatched decisions / 2,874 requested and confirmed ticks / 549 owner calls; 61.76433001999976 total seconds | Incomplete: sampled arrival retired authority with only 11 actual quiet ticks; dispatch refused lease 0, and the undispatched frame prevented a character seal. Native cleanup and full raw/pending-gzip bytes survive. No teacher, learned or morphology qualification. | [Preserved result and analysis](evidence/2026-10-20-jolt-recovery-v1.md), [immutable index](evidence/jolt-recovery-v1-index-20261020.json); separately commissioned v2 is #60 |
 | jolt-recovery-002-diagnostic-v2 | 2026-10-20 | Frozen `8da294ae…`, tree `c701a9d3…`, source inventory `9f8cbc56…`; unchanged host `f2e34cf9…` | Linux CPU, Python 3.12.14, pinned Godot/native/Rapier; authored only | Declaration `d7cc1333…`, candidate spec `a3f4da6b…`; unchanged kinetics/task/profile/cadence | Fresh original/arrival/recovery v2 on all 32 already-open pairs; no reused v1 rows | One independent attempt: 96 complete rows, 2,449 decisions / 14,694 requested-confirmed ticks / 2,711 answered calls; 444.46566076900126 total seconds. Both recovery increments: 2,928 decisions / 17,568 ticks / 3,260 calls / 506.229990789001 seconds | Complete evidence and negative teacher gate: arrivals 17/32, 27/32, 25/32; recovery purposeful air 32/32, two rescues and four regressions, required unsupported rescue absent. All 196 indexed artifacts, native closure and 900 candidate decisions verified. No learned execution or morphology admission. | [Full result and limits](evidence/2026-10-20-jolt-recovery-v2.md), [unchanged gate review](evidence/jolt-recovery-v2-review-20261020.json) |
 | jolt-recovery-003-diagnostic-v3 | 2026-10-20 | Frozen `c6f558bb…`, tree `9ac1f17b…`; unchanged host `f2e34cf9…` | Linux CPU, Python 3.12.14, pinned Godot/native/Rapier; authored only | Declaration `03c58b43…`, candidate spec `e1808447…`; unchanged task/profile/cadence and teacher thresholds | Fresh original/arrival/recovery v3 on all 32 already-open pairs; no historical row substitution | One attempt: 96 rows, 2,303 decisions / 13,818 requested-confirmed ticks / 2,568 answered calls; 294.951525241 whole-process seconds. Recovery v1–v3 total 5,231 decisions / 31,386 ticks / 5,828 calls / 801.181516030001 seconds | Failed final evidence inventory: original supervisor `completed=false`, undeclared duplicate pending gzip retained. Descriptive arrivals 17/32, 27/32, 28/32; v3 airborne 32/32, two historical rescues including required drop case and one regression. Teacher rejected; no retry, learning or morphology admission. | [Result and limits](evidence/2026-10-20-jolt-recovery-v3.md), [original worker result](evidence/jolt-recovery-v3-result-20261020.json), [failed supervisor](evidence/jolt-recovery-v3-supervisor-20261020.json) |
+| jolt-recovery-004-diagnostic-v4 | 2026-10-20 | Frozen `46a22f98…`, tree `90e22caf…`; unchanged host `f2e34cf9…` | Linux CPU, Python 3.12.14, pinned Godot 4.7/native/Rapier; authored only | Canonical declaration `bc3cf684…`, candidate spec `2a049248…`; unchanged task/profile/cadence and teacher thresholds | Fresh original/arrival/recovery v4 on the same 32 already-open cases: 24 training-origin and eight previously opened evaluation-origin cases | One host: 96 complete rows, 2,264 decisions / 13,584 requested-confirmed ticks / 2,531 answered owner calls; 544.9560992200022 whole-process seconds | Complete evidence and all thirteen teacher checks pass. Arrivals 17/32, 27/32, 30/32; v4 purposeful air 32/32, three historical rescues and zero success regressions. Two leftward failures retained. Teacher dependency satisfied; no learned, sealed-evaluation, owner-feel or morphology qualification. | [Result and limits](evidence/2026-10-20-jolt-recovery-v4.md), [original result](evidence/jolt-recovery-v4-result-20261020.json), [independent complete review](evidence/jolt-recovery-v4-review-20261020.json); immutable 243-file archive SHA `27afcae5…` |
+
+The [arrival and recovery cost review](evidence/jolt-recovery-v4-evidence-review-20261020.json)
+records the original arrival diagnostic plus recovery v1–v4: **five host starts,
+376 episode rows, 9,044 decisions, 54,264 episode-confirmed ticks, 10,081 reported
+owner calls and 1,567.7681713780057 whole-process seconds**. The row total retains
+v1's incomplete final row. The original arrival journal cannot independently
+verify its full reported 1,722 owner calls; the cumulative owner-call total keeps
+that limitation. V4's 2,531 calls are independently verified in full. These costs
+exclude later offline review, archive recovery, publication and CI.
+
+The v4 archive is 26,268,108 bytes with 243 regular-file members, SHA-256
+`27afcae51f20a02fce7888b385574f92d0932dd4ab8aedd4393df0f6e2454e44`.
+Its [original member inventory](evidence/jolt-recovery-v4-archive-members-20261020.json)
+retains the original evidence, independent reviews and exact source attribution.
+Recovering those bytes for publication adds no host, owner-call, native-tick,
+learning or optimizer work and does not alter any earlier result.
 
 [PR #36](https://github.com/techrote/neural-cyber-automata/pull/36) merged the
 primary/alternate provenance correction. These separately identified executions

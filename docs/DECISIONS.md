@@ -14,6 +14,37 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-017 — Complete the separately commissioned fourth Jolt recovery diagnostic
+
+[ACCEPTED] 2026-10-20 by owner: complete [#64 at its JOLT-RECOVERY-004 recommendation](https://github.com/techrote/neural-cyber-automata/issues/64#issuecomment-6300675643).
+
+This fresh commission covers an offline controller/evidence correction, exact
+source and declaration review, and one prospectively published matched
+diagnostic. The earlier recommendation was proposal-only; the subsequent owner
+request commissions this bounded work. Consumed arrival/v1/v2/v3 allocations
+and their original failed qualifications remain immutable and separate.
+
+Keep one host, 32 opened cases, three controller families and 96 fresh episodes.
+Global maxima are 4,000 decisions, 24,000 requested ticks, 4,500 owner calls and
+900 whole-process seconds. Each episode retains 40 decisions/240 ticks, giving
+the tighter effective totals of 3,840 decisions/23,040 ticks. Reserve 120 of the
+900 seconds for shutdown, durable sealing and independent final verification;
+stop admitting new episodes before that reserve is endangered. No retries,
+extensions, resumed episodes, outcome-driven candidate search or learning calls
+are included. Source/host/profile/task identities, all paired cases and the
+original teacher acceptance must pass independent admission before the host starts.
+
+Fix the extra compressed-journal staging/inventory lifecycle with synthetic
+durability and strict-inventory checks, and use retained observations for a
+versioned ordinary settling/landing correction. Preserve fresh pulse authority,
+the two-edge cap and minimal supervisor. An original final-inventory failure
+cannot be repaired into teacher qualification by later forensic subchecks.
+Only a complete passing teacher result releases #62's teacher dependency;
+collection/learning and morphology retain their separate declarations and gates.
+The [v4 evidence page](evidence/2026-10-20-jolt-recovery-v4.md) records the offline
+source and historical costs; the execution commit/tree and admission are fixed
+prospectively before spending this single allocation.
+
 ### D-016 — Build a CUDA-trained inverse kinematics layer
 
 [ACCEPTED] 2026-10-20 by owner: open the CUDA IK issue chain, then begin execution.

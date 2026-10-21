@@ -3,7 +3,7 @@ title: Current state
 kind: state
 summary: CPU contract implementation and explicit evidence limits for the current Cybersand control programme.
 owns: [state.summary]
-verified: 2026-10-20
+verified: 2026-10-21
 ---
 
 # Current state
@@ -12,11 +12,11 @@ Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.c
 
 [CURRENT] The [Runner IK milestone](IK_LAYER.md) adds a registered nominal profile, strict source/lifetime-bound targets/results and prospective numeric acceptance. CUDA learning, inverse-solver implementation, CPU IK export and physical joint-target qualification remain unmeasured or unimplemented.
 
-[Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted.
-The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32.
-Its historical journal stays incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58); the separate [v2 comparison](evidence/2026-10-20-jolt-recovery-v2.md) fully verifies all 96 rows and closure in 444.465661 seconds.
-The [v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) remains preserved. [PR #61](https://github.com/techrote/neural-cyber-automata/pull/61) records v2 arrivals 25/32 versus 27/32, despite 32/32 purposeful airborne cases; teacher #48, [LEARN-JOLT-002](design/LEARN_JOLT_002.md) and morphology #16 remain blocked on their respective gates.
-The separately bounded [v3 correction](evidence/2026-10-20-jolt-recovery-v3.md) records 28/32 arrivals and 32/32 purposeful-airborne cases, including the required drop rescue. It still has only two of three required historical rescues, one regression and a failed final inventory check. Its sole allocation is closed; #64 remains open and no teacher, collection or learned gate is released.
+[Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted. The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32. Its historical journal stays incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58). The [v1 incomplete attempt](evidence/2026-10-20-jolt-recovery-v1.md), [v2 teacher failure](evidence/2026-10-20-jolt-recovery-v2.md) and [v3 failed qualification and final inventory](evidence/2026-10-20-jolt-recovery-v3.md) retain their original outcomes and consumed allocations.
+
+The separately bounded [v4 result](evidence/2026-10-20-jolt-recovery-v4.md), executed at frozen source `46a22f98dce78be3c4ba534d955e58d5691c7d96`, passes all thirteen teacher checks and complete evidence verification. It records **30/32 arrivals versus 27/32**, three historical rescues, zero success regressions and purposeful airborne motion in all 32 already-open cases. This satisfies [#48's teacher qualification](https://github.com/techrote/neural-cyber-automata/issues/48) and the teacher dependency of [LEARN-JOLT-002 / #62](design/LEARN_JOLT_002.md). Its one host produced 96 fresh rows, 2,264 decisions, 13,584 confirmed ticks and 2,531 answered owner calls in 544.9560992200022 whole-process seconds; [the run ledger](RUNS.md) preserves cumulative costs and historical verification limits.
+
+Two leftward cases still fail. In `reference-floor-left-63`, final distance worsens from v3's 8.131480 to 12.503336 cells; useful landing progress after the second coast is not consistently demonstrated. The result establishes neither owner feel, a learned skill nor sealed generalization. [The learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) still requires versioned full actuation and sample semantics, fresh geometry/start splits and the final source/runtime/budget declaration before collection. The fixed learned **75% mean / 50% every-seed** reliability gate and the separate morphology continuation gates remain unchanged; #16 remains blocked.
 
 ## T-100 — Accepted research baseline
 

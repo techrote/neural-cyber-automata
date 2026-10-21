@@ -1,0 +1,2651 @@
+{
+  "admission_limit": "Exact public commit/tree, clean execution checkout and completed source/runner/evidence checks must still be bound prospectively.",
+  "audit_script_sha256": "ef5fa637b2e000d150286a6c7bda4bddb88482a65fa7701fa17e7921f615d929",
+  "budget": {
+    "automatic_budget_extension": false,
+    "automatic_retry": false,
+    "checkpoint_executions": 0,
+    "independent_verification_reserve_seconds": 60,
+    "learned_policy_calls": 0,
+    "maximum_attempts": 1,
+    "maximum_decisions": 4000,
+    "maximum_episode_decisions": 40,
+    "maximum_episode_ticks": 240,
+    "maximum_episodes": 96,
+    "maximum_host_requests": 4500,
+    "maximum_host_starts": 1,
+    "maximum_owner_transport_seconds": 15,
+    "maximum_requested_ticks": 24000,
+    "maximum_wall_seconds": 900,
+    "optimizer_updates": 0,
+    "shutdown_reserve_seconds": 120,
+    "supervisor_finalization_reserve_seconds": 6
+  },
+  "candidate_specification_sha256": "2a04924885e3147881fef5ed3421c7c0e43457faa83e5c13b8e3c351c0384038",
+  "case_count": 32,
+  "case_inventory_sha256": "b48eeeffa3b07f0a12a8cc2736fd0ed80f500e95b00bb69f9e46fb2c3fabd06d",
+  "declaration_sha256": "bc3cf6843d670a9305fa2f70bfa7531c865fa05363f3d55c88f8c554e520d30c",
+  "effective_decision_ceiling": 3840,
+  "effective_tick_ceiling": 23040,
+  "exact_request_prefix_decisions": 605,
+  "first_changed_requests": [
+    {
+      "case_id": "demo-floor-right-24-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.144256591795994,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 90
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.06255976995453236
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.06255976995453236
+      },
+      "old_phase": "settle_brake",
+      "tick": 90
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.144256591795994,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 90
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.06255976995453236
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.06255976995453236
+      },
+      "old_phase": "settle_brake",
+      "tick": 90
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 2.924209594725994,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 90
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.006491221964824913
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.0,
+          0.0
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.0,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_hold",
+      "tick": 90
+    },
+    {
+      "case_id": "demo-floor-left-24-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.9385681152350003,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 84
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "old_phase": "settle_brake",
+      "tick": 84
+    },
+    {
+      "case_id": "demo-floor-left-24-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.9385681152350003,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 84
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "old_phase": "settle_brake",
+      "tick": 84
+    },
+    {
+      "case_id": "demo-floor-left-24-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.9385681152350003,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 84
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0073676861939020455
+      },
+      "old_phase": "settle_brake",
+      "tick": 84
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 2.955703735351989,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 102
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.11341899919789286
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.0,
+          0.0
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.0,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_hold",
+      "tick": 102
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "diagnostics": {
+        "action_lease_ticks": 6,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "post_pulse_coast",
+        "post_pulse_coast": true,
+        "progress_cells": 0.0,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 2,
+        "pulse_reason": null,
+        "reason": "fresh_rising_second_pulse",
+        "recovery_epoch": 1,
+        "settling_capture": false,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 0,
+        "tick": 126
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.2736815787851812
+      },
+      "new_phase": "post_pulse_coast",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.3345189730326168,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.2518914430836849
+      },
+      "old_phase": "settle",
+      "tick": 126
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "diagnostics": {
+        "action_lease_ticks": 6,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "post_pulse_coast",
+        "post_pulse_coast": true,
+        "progress_cells": 0.0,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 2,
+        "pulse_reason": null,
+        "reason": "fresh_rising_second_pulse",
+        "recovery_epoch": 1,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 0,
+        "tick": 144
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.2555225323885684
+      },
+      "new_phase": "post_pulse_coast",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.2599009116490885,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.2555225323885684
+      },
+      "old_phase": "settle",
+      "tick": 144
+    },
+    {
+      "case_id": "demo-floor-left-36-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.8662109375,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-left-36-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.8662109375,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-left-36-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.8662109375,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 5.031066894531989,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 4.798645019531023,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 4.094787597655994,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 102
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.12461878818770358
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": -0.12461878818770358
+      },
+      "old_phase": "settle_brake",
+      "tick": 102
+    },
+    {
+      "case_id": "demo-floor-left-48-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.272598266601989,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-left-48-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.272598266601989,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-left-48-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.3319854736330115,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 96
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 96
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.360626220702983,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 120
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 120
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.360626220702983,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 120
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 120
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.360626220702983,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 120
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 120
+    },
+    {
+      "case_id": "demo-floor-left-60-0",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 1.8580474853510225,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 144
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.10969230616465217
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.0,
+          0.0
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.0,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_hold",
+      "tick": 144
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "diagnostics": {
+        "action_lease_ticks": 6,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "post_pulse_coast",
+        "post_pulse_coast": true,
+        "progress_cells": -0.0,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 2,
+        "pulse_reason": null,
+        "reason": "fresh_rising_second_pulse",
+        "recovery_epoch": 1,
+        "settling_capture": false,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 0,
+        "tick": 162
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.2433915305882683
+      },
+      "new_phase": "post_pulse_coast",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.35428387324016963,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.2202099459121603
+      },
+      "old_phase": "settle",
+      "tick": 162
+    },
+    {
+      "case_id": "demo-floor-left-60-2",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 1.864425659178977,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 144
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.04403372700326149
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.0,
+          0.0
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.0,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_hold",
+      "tick": 144
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 4.1610412597659945,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 84
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 84
+    },
+    {
+      "case_id": "reference-floor-left-27",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.850631713867017,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 102
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.03759919260628524
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.03759919260628524
+      },
+      "old_phase": "settle_brake",
+      "tick": 102
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 4.249130249024006,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 114
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 114
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "diagnostics": {
+        "action_lease_ticks": 6,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "post_pulse_coast",
+        "post_pulse_coast": true,
+        "progress_cells": -0.0,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 2,
+        "pulse_reason": null,
+        "reason": "fresh_rising_second_pulse",
+        "recovery_epoch": 1,
+        "settling_capture": false,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 0,
+        "tick": 156
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.18006957247853286
+      },
+      "new_phase": "post_pulse_coast",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.6319004535675122,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.13734378054737986
+      },
+      "old_phase": "approach",
+      "tick": 156
+    },
+    {
+      "case_id": "reference-drop12-right-45",
+      "diagnostics": {
+        "action_lease_ticks": 6,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "post_pulse_coast",
+        "post_pulse_coast": true,
+        "progress_cells": 0.0,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 2,
+        "pulse_reason": null,
+        "reason": "fresh_rising_second_pulse",
+        "recovery_epoch": 1,
+        "settling_capture": false,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 0,
+        "tick": 150
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "post_pulse_coast",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.8,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.08112308936814236
+      },
+      "old_phase": "approach",
+      "tick": 150
+    },
+    {
+      "case_id": "reference-drop12-left-45",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.359619140625,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 132
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 132
+    },
+    {
+      "case_id": "reference-drop28-right-57",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 3.5646820068359943,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 162
+      },
+      "new_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.07500000000000001,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_brake",
+      "tick": 162
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "diagnostics": {
+        "action_lease_ticks": 12,
+        "arrival_advisory": false,
+        "ground_correction": false,
+        "initial_contact_transition": false,
+        "initial_contact_witness_tick": null,
+        "interior_quiet_hold": false,
+        "phase": "settle_capture",
+        "post_pulse_coast": false,
+        "progress_cells": 2.1570434570310226,
+        "pulse_acknowledged_by_cooldown": true,
+        "pulse_count": 1,
+        "pulse_reason": null,
+        "reason": "supported_interior_capture",
+        "recovery_epoch": 0,
+        "settling_capture": true,
+        "supervisor_intervention": false,
+        "supervisor_reason": null,
+        "support_loss_ticks": 0,
+        "support_state": "supported",
+        "supported_stall_ticks": 18,
+        "tick": 156
+      },
+      "new_action": {
+        "aim": [
+          -0.6,
+          -0.8
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.8,
+        "move": [
+          -0.125,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.11256382251158349
+      },
+      "new_phase": "settle_capture",
+      "old_action": {
+        "aim": [
+          0.0,
+          0.0
+        ],
+        "attach_usable": false,
+        "auxiliary": false,
+        "effort": 0.0,
+        "move": [
+          0.0,
+          0.0
+        ],
+        "primary": false,
+        "reel": 0.0,
+        "release_usable": false,
+        "secondary": false,
+        "tool": false,
+        "trim": 0.0
+      },
+      "old_phase": "settle_hold",
+      "tick": 156
+    }
+  ],
+  "new_host_starts": 0,
+  "new_owner_calls": 0,
+  "new_physical_ticks": 0,
+  "old_fresh_initial_contact_lifecycle_exactly_inherited": true,
+  "old_ground_correction_exactly_inherited": true,
+  "old_pulse_solver_exactly_inherited": true,
+  "opened_evaluation_origin_count": 8,
+  "optimizer_updates": 0,
+  "preserved_source_sha256": {
+    "src/nca/adapters/host_bridge.gd": "f58eb49369fff2b98f7d16da16c0531522aff589bf3008f6fff01972c9629938",
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec"
+  },
+  "retained_first_launch_prefixes": [
+    {
+      "case_id": "demo-floor-right-24-0",
+      "equal_request_prefix_decisions": 15,
+      "first_pulse": {
+        "action_sha256": "47f07eb7d87a368355c59a27850d1350290c695ef8332c58ba2cd81af5965364",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "d34fb925f2f7c301f7a0eec96bd61b4f4b9516b2bb6b86913a8613d47714fa49"
+    },
+    {
+      "case_id": "demo-floor-right-24-1",
+      "equal_request_prefix_decisions": 15,
+      "first_pulse": {
+        "action_sha256": "47f07eb7d87a368355c59a27850d1350290c695ef8332c58ba2cd81af5965364",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "6422ad2352c680e6ced0064a016ccf07d58abd0b235ffb80a8bc186ec1b3ab3e"
+    },
+    {
+      "case_id": "demo-floor-right-24-2",
+      "equal_request_prefix_decisions": 15,
+      "first_pulse": {
+        "action_sha256": "47f07eb7d87a368355c59a27850d1350290c695ef8332c58ba2cd81af5965364",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "e25888f766105ef1018a8f6dc723aa9889d324296b81fb9fd4ac702af4a71d7e"
+    },
+    {
+      "case_id": "demo-floor-left-24-0",
+      "equal_request_prefix_decisions": 14,
+      "first_pulse": {
+        "action_sha256": "44c75d834f090ad41e7a49bf7c80787d5ee1af69ac54fb7691c7c72a77ff3916",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "455265eb0adaa5796d8d30c84a09a5269df5d7b1d49c3b60f3ce9f7d86c19e25"
+    },
+    {
+      "case_id": "demo-floor-left-24-1",
+      "equal_request_prefix_decisions": 14,
+      "first_pulse": {
+        "action_sha256": "44c75d834f090ad41e7a49bf7c80787d5ee1af69ac54fb7691c7c72a77ff3916",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "3c5a37b4123edf5ae8eafdac617032183a62b7e8451e6e676f2821207aa4ab05"
+    },
+    {
+      "case_id": "demo-floor-left-24-2",
+      "equal_request_prefix_decisions": 14,
+      "first_pulse": {
+        "action_sha256": "44c75d834f090ad41e7a49bf7c80787d5ee1af69ac54fb7691c7c72a77ff3916",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "5db49f79378890b6b405d0dec2510d0a61d51e92b4812b81cf4381f1bc19765e"
+    },
+    {
+      "case_id": "demo-floor-right-36-0",
+      "equal_request_prefix_decisions": 17,
+      "first_pulse": {
+        "action_sha256": "ff706490b3c7d1f78f74bbd648f0bcb7868d85b81ae216f2d59338b33a8d64dc",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "275fbced0bdd04c2a722976d3fc43484302146fdcc70bd26fb76d15f6bfd1534"
+    },
+    {
+      "case_id": "demo-floor-right-36-1",
+      "equal_request_prefix_decisions": 21,
+      "first_pulse": {
+        "action_sha256": "ff706490b3c7d1f78f74bbd648f0bcb7868d85b81ae216f2d59338b33a8d64dc",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "b0b7e62bd79e12d22f5f49a60e0b60112564f46470abfb7fe6bec639da263f08"
+    },
+    {
+      "case_id": "demo-floor-right-36-2",
+      "equal_request_prefix_decisions": 24,
+      "first_pulse": {
+        "action_sha256": "ff706490b3c7d1f78f74bbd648f0bcb7868d85b81ae216f2d59338b33a8d64dc",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "45fa6a2fbfbead6f1c9c3ca786ddb4a02b70fd0c24afa286b408559b4df767b4"
+    },
+    {
+      "case_id": "demo-floor-left-36-0",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "13555b3df4b920c4d18afb36840df0cb16a5cd2acf33a764751de8d1e34e14e8",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "89506b253e8539037ead92cec9b2dad86becfcb036f9b128e6f29c9b0994dd60"
+    },
+    {
+      "case_id": "demo-floor-left-36-1",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "13555b3df4b920c4d18afb36840df0cb16a5cd2acf33a764751de8d1e34e14e8",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "dd4b8f1ea8f65e923dbc8c279a84a91234928f36a007ef1d5270061c6c500743"
+    },
+    {
+      "case_id": "demo-floor-left-36-2",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "13555b3df4b920c4d18afb36840df0cb16a5cd2acf33a764751de8d1e34e14e8",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "e42ad65a579d17de71a4c55c9579fdd7b02a4950e0bf17eeb5a5e75d5e0c0808"
+    },
+    {
+      "case_id": "demo-floor-right-48-0",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "02b0119f0f2efe4863e00e96a0a108d28dd09437f45f7578a68f3ebf1d21232c",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "637f3588c1086cecdfeb02e0f566771f6cf3d7c1cf7146ee9483048fd27f4e5e"
+    },
+    {
+      "case_id": "demo-floor-right-48-1",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "02b0119f0f2efe4863e00e96a0a108d28dd09437f45f7578a68f3ebf1d21232c",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "66361e6e36144af3cdabd2cb2c5e9e0ca7c8de26423ba441bc39e98c833ab1d1"
+    },
+    {
+      "case_id": "demo-floor-right-48-2",
+      "equal_request_prefix_decisions": 17,
+      "first_pulse": {
+        "action_sha256": "02b0119f0f2efe4863e00e96a0a108d28dd09437f45f7578a68f3ebf1d21232c",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "476643ed90d8e35d035eb2b89961d0ffe71e70776d61de3e154248034d1f7aaf"
+    },
+    {
+      "case_id": "demo-floor-left-48-0",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "d48fcc8be8441ae7b7bcff2352d7d912758d0412eae40dbc89c79ceebeb377eb",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "6e39113d7b092a9fdbf598dc0c4d9091b163634f0b07680475429fe98609e14b"
+    },
+    {
+      "case_id": "demo-floor-left-48-1",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "d48fcc8be8441ae7b7bcff2352d7d912758d0412eae40dbc89c79ceebeb377eb",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "3c40264825c62aea3d727a77297437292e64c724ff389c6074ccd4b031cb7e26"
+    },
+    {
+      "case_id": "demo-floor-left-48-2",
+      "equal_request_prefix_decisions": 16,
+      "first_pulse": {
+        "action_sha256": "d48fcc8be8441ae7b7bcff2352d7d912758d0412eae40dbc89c79ceebeb377eb",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "ea24145a12085786a8bfb250c1c6f129ec6a07c01044d888d25d84305cd5a2df"
+    },
+    {
+      "case_id": "demo-floor-right-60-0",
+      "equal_request_prefix_decisions": 20,
+      "first_pulse": {
+        "action_sha256": "eb5c2cc1942929b18551fe91fe1a9d1b2df56e6cfa987bd1c31e76c6b36d343f",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "d3ffa5d11b87ca6c2e6b67d3f29c4d7cf413d92bb2e5220db701778b92f82e80"
+    },
+    {
+      "case_id": "demo-floor-right-60-1",
+      "equal_request_prefix_decisions": 20,
+      "first_pulse": {
+        "action_sha256": "eb5c2cc1942929b18551fe91fe1a9d1b2df56e6cfa987bd1c31e76c6b36d343f",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "96f6b5ab56d8fbd998276d5819c1dd8ffeeff03dce068a33fc04625cc947ac1b"
+    },
+    {
+      "case_id": "demo-floor-right-60-2",
+      "equal_request_prefix_decisions": 20,
+      "first_pulse": {
+        "action_sha256": "eb5c2cc1942929b18551fe91fe1a9d1b2df56e6cfa987bd1c31e76c6b36d343f",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "66411ea25642bc2f3240a4264caa6499ee8468d6e0875e1a1a3c63224ad02dbe"
+    },
+    {
+      "case_id": "demo-floor-left-60-0",
+      "equal_request_prefix_decisions": 24,
+      "first_pulse": {
+        "action_sha256": "c2026e9e817d988978d5c3c82a547983557c44864a2f3a41e50f7f4415c46604",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "489401d688b9fd9f733bf4a22309500d8e189f8263749b3f626b12de1ced47da"
+    },
+    {
+      "case_id": "demo-floor-left-60-1",
+      "equal_request_prefix_decisions": 27,
+      "first_pulse": {
+        "action_sha256": "c2026e9e817d988978d5c3c82a547983557c44864a2f3a41e50f7f4415c46604",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "7292d2fb9459377d9b19f7cc78912bd013493211cd8bc88c20d1a4b37ff1ef4a"
+    },
+    {
+      "case_id": "demo-floor-left-60-2",
+      "equal_request_prefix_decisions": 24,
+      "first_pulse": {
+        "action_sha256": "c2026e9e817d988978d5c3c82a547983557c44864a2f3a41e50f7f4415c46604",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "6384a23082443c51fe65e15c28ec30791fae65614758873cfdb2b1b0cbdaf3c3"
+    },
+    {
+      "case_id": "reference-floor-right-27",
+      "equal_request_prefix_decisions": 14,
+      "first_pulse": {
+        "action_sha256": "644166e750fd1ba98ecd9e3eabd8a36161878223a58a0e4560d1c3f139afbbe8",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "53a40770130af0792ae4ef6fc647080b4f4728e5d11ffab05989c582f120a441"
+    },
+    {
+      "case_id": "reference-floor-left-27",
+      "equal_request_prefix_decisions": 17,
+      "first_pulse": {
+        "action_sha256": "ed5319e00709dca9e3c62f131feb48e46c0fcc9cacadf6cd75f1405f6c308789",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "b0bf97515cc4857530d296942aa7162974559cb0167e1c02fd38d7c4e5825b74"
+    },
+    {
+      "case_id": "reference-floor-right-63",
+      "equal_request_prefix_decisions": 19,
+      "first_pulse": {
+        "action_sha256": "eb5c2cc1942929b18551fe91fe1a9d1b2df56e6cfa987bd1c31e76c6b36d343f",
+        "reason": "initial_contact_loss_launch",
+        "tick": 18
+      },
+      "original_artifact_sha256": "aeea23b146f8ad30f24205cdff30977037d20fe6ce4ad4ad45ce772e953f5b60"
+    },
+    {
+      "case_id": "reference-floor-left-63",
+      "equal_request_prefix_decisions": 26,
+      "first_pulse": {
+        "action_sha256": "c2026e9e817d988978d5c3c82a547983557c44864a2f3a41e50f7f4415c46604",
+        "reason": "initial_supported_launch",
+        "tick": 12
+      },
+      "original_artifact_sha256": "d4e956b90f7de3a246a6e6648dffe6faa22ca1feaf75bc6d6de973371738b177"
+    },
+    {
+      "case_id": "reference-drop12-right-45",
+      "equal_request_prefix_decisions": 25,
+      "first_pulse": {
+        "action_sha256": "7bde971e72661bdf3e610135f82ffca24df7489b85b80962636e8b352bc8aa69",
+        "reason": "initial_supported_launch",
+        "tick": 36
+      },
+      "original_artifact_sha256": "3cf45cde87ddf2e6b3018032160631444f2f816b7e52f560ef931f256bcef02a"
+    },
+    {
+      "case_id": "reference-drop12-left-45",
+      "equal_request_prefix_decisions": 22,
+      "first_pulse": {
+        "action_sha256": "9f1339698c12224eb5740e8c16110e8e0572cd8349ce7b7379f1571fc74e2e79",
+        "reason": "initial_supported_launch",
+        "tick": 42
+      },
+      "original_artifact_sha256": "c26b9865872cda2ff147152f7db014d3644577c2536e1982346f517de24f3bc9"
+    },
+    {
+      "case_id": "reference-drop28-right-57",
+      "equal_request_prefix_decisions": 27,
+      "first_pulse": {
+        "action_sha256": "c89297ad13f01971dd405e05f8a8ca22cd93cfe0fa6c0e626ca017bc3a57dd92",
+        "reason": "initial_supported_launch",
+        "tick": 48
+      },
+      "original_artifact_sha256": "ffff1e4754363e7e70a519a52b423647b670da1be5ecf366074abe26c51751e9"
+    },
+    {
+      "case_id": "reference-drop28-left-57",
+      "equal_request_prefix_decisions": 26,
+      "first_pulse": {
+        "action_sha256": "c68c10367a9e510d1621a94f9d6639c634fe2dd3bb1957c9b24d17ed92006641",
+        "reason": "initial_supported_launch",
+        "tick": 54
+      },
+      "original_artifact_sha256": "bc0324f30065f026735aa85a8da7da3ffe05a464831f9772fe3cc32b4491d3ef"
+    }
+  ],
+  "schema": "nca-jolt-recovery-004-independent-source-review/v1",
+  "scope": "Offline declaration/inheritance review and retained physical prefixes; no new physical outcome prediction.",
+  "source_file_sha256": {
+    ".gitattributes": "939448d2f2aaca508f4c7404c9e81538e9e6b72371fb1a4c243dfe0f72e3e702",
+    "configs/baselines/jolt-recovery-diagnostic-v4.json": "a8a00e4f143c94363e398263af7e8423a80a0eab246b753731ff93e17cbf4b22",
+    "configs/first-skill/jolt-direction-frame-v1.json": "f3aee95344531ef7b4c17998f26b9dd314f1d211bc16cf51df2004b2b86c2ba4",
+    "pyproject.toml": "d62d7e0b38be25b1a4591c39adcc17a741ebe7b67c6200fed256fac5fdcbab06",
+    "src/nca/__init__.py": "8a2260eff8ec09d88acd7ae28bd4cd65e7b5769e23280de3baf33054e8bcb766",
+    "src/nca/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "src/nca/adapters/__init__.py": "9a738dce03d9e0c7346bcc7febb6420f953754d29b66f581c321e0eb28a39599",
+    "src/nca/adapters/decisions.py": "5662310c1a92478c98e987cf3bc814dea64c04bbe375caf1d3e077d0ee25ff64",
+    "src/nca/adapters/godot.py": "47ff63a5ee81fcc35b46f6f2c1d7e66e8bf4d4cf725e1640df246dfd1ca14ac2",
+    "src/nca/adapters/protocol.py": "21a1c8b2cf5a124bd1e854ff05ed12e99579ca10dc5850e47beda614a95df761",
+    "src/nca/adapters/skill_control.py": "d94039d61eb82ad46472eac001e8d01e7b944d3672a1c6a8b36e8b8214974670",
+    "src/nca/bench/__init__.py": "01e87b0b8aeda58d48cbf7f970ab01afae39f0dde4e45027d1b36fddff6eae22",
+    "src/nca/bench/candidate_evaluation.py": "4ce2a189a0344853022119a66e5e0d15643bff9b203c1cfc60707cbc0b291d51",
+    "src/nca/bench/candidate_worker.py": "b316965b26b6101133feb2ef817faa380b55c8e46c1dcff9f7284c426875975b",
+    "src/nca/bench/common.py": "bd3ea9efc3895d71d644693a1000065625e1606bfd0931d99fce14dcd651a8c9",
+    "src/nca/bench/deployment.py": "cf2c2411563ce3520561a5bd7e87fe47a7d7615dcf8abecf2789cfd77d9f9e4c",
+    "src/nca/bench/export_postprocess.py": "dcbc6f9903e228bd6e6e5b527301cab9082ac75cfb442006251aaa1b8fb8e28b",
+    "src/nca/bench/inference_worker.py": "dd577f9d9e7567ca019779e600f2e9fada7045648fcbbcce399d42536bb2ae49",
+    "src/nca/bench/parity_audit.py": "867bd8a34f57e44891dd18b3d5fc723001ad290c3ee4fb0fb5a903866e0d984f",
+    "src/nca/bench/pose_clip.py": "8e592ad086274ea0a430f8d1b2c390b8c5e0d24612e0017ca23d0c1d3e684d5b",
+    "src/nca/bench/subprocess_capture.py": "a063df6a168752db4a5416167ab91e0857a7893e9171ffff13c6c7ca186a1622",
+    "src/nca/bench/torch_inference_worker.py": "42e4c0c53840822c4ac5fc21c89a04c1143c58a2731ec5b8df7239401e3a801f",
+    "src/nca/bench/torch_screen.py": "1353b1e4d7e5c48bdd39ddd8512d4f83e6ebddd5d72b38fcdbde4be2df15367f",
+    "src/nca/builtins.py": "4445c0fc596caa1a4320213e683688eb1d867293dc821f84cab4d0af118fb773",
+    "src/nca/cellular/__init__.py": "ed9486a5b57cf553b6579e52ad2145abe0c52d920ad3123a41a9e7507f3ef892",
+    "src/nca/cellular/core.py": "036ef5dd46d1a8ae5d063d89c5e0bae195e797e4b5beee6458f92869c1f9b11d",
+    "src/nca/cellular/evaluation.py": "560e0030d59719b741cc5aa81d97b957d3f563cb0b82a032eda26dc735e25d27",
+    "src/nca/cellular/messages.py": "ad2fe63f11c8a977ced7870406866ab537aa1780f8b25ca5e51fd3eb68b71b41",
+    "src/nca/cellular/model.py": "0b093e584c0fa4dca4253ca39d5f9139cd5bfc3f78077edfe3c9f829d19e8f15",
+    "src/nca/cellular/screen.py": "1e8a2aa64c662cebf0b467c8ee67a60ce54b18389cd48f0bad8c6349df278c66",
+    "src/nca/cellular/training.py": "f137c4473bc8bf4a21f377d443df10c57bfbac991d2334afdd250dd9631e4baa",
+    "src/nca/cli.py": "12cd4e3cd99c6d1ac7ec220e38630a09c5e9f66cb27fae6bf6f7f48e88ebe353",
+    "src/nca/contracts.py": "0e5873a0f0dab3990c8ba4abe5ebef90af792d90d5ac68aa51be3bf4974e0892",
+    "src/nca/controllers/__init__.py": "7bd61816e6158b2e455202af59eed903ab40c4d68808b2ce73de5c4815721fa8",
+    "src/nca/controllers/baseline.py": "19929806429698977cdba82b855c52d6362d1dd2bb4e2aa7161e41bb1bb3f210",
+    "src/nca/controllers/goal_frame.py": "f53b6d9fc7ed35fa561b495e97b75c2e813d5e2ac94c4abcdc158e209c417eb0",
+    "src/nca/controllers/jolt_arrival.py": "b9eb8304aa4c481c253ba1c39d39ae7a2bba03fe9e1d8bf867eef9c96f7a500b",
+    "src/nca/controllers/jolt_recovery.py": "5bc64ff9e09092620ea74f7a6ab881e02acb0e984028674d4d4a5186ac4c9528",
+    "src/nca/controllers/jolt_recovery_v2.py": "e919d10d78ba1d9dacecf135014f9e344a1ea7e43817f84d29e067577565fdae",
+    "src/nca/controllers/jolt_recovery_v3.py": "367447b4dd732a8e999f1d172795685fa4591028026ebbdd2697d12dc0c2aab3",
+    "src/nca/controllers/jolt_recovery_v4.py": "d7903561e37bc0845b3993d3b608ff83200021084e4d41e6f8ab19dff38edeec",
+    "src/nca/controllers/learned.py": "aef7ad138e6b66798bf48a019adbe3fb99d125e38aa28d7d217a54dde642f98b",
+    "src/nca/controllers/morphology/__init__.py": "4d85732a897817e3abad2cb6f1c453392e50fd1fde4633fd86c0342105a2730e",
+    "src/nca/controllers/morphology/admission.py": "8bfe1c5bf5e0374e31332db9037648d13d9557b6a5be9c3785b53e8bd7ea4ffc",
+    "src/nca/controllers/morphology/conformance.py": "384ea7611ede3f50ecc1eb4971f5102e04e5d12b78060611632e7d6e7c6142d0",
+    "src/nca/controllers/morphology/core.py": "68222591aa2ec9c593978901e56fd82f3f0721c58c859e566025da9e2eecd12f",
+    "src/nca/controllers/morphology/models.py": "98324b83a489d3f8f2571db6b4f87167c674774ce18cd3337e248351dd5645d7",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/shaping.py": "655719bb3e8faf6b3c4ff8c94d6db8624285828549adfd6de86b83f2c7597de8",
+    "src/nca/data/__init__.py": "1db5b3cc1397ad0784d0d13d2e6f6a1168a00cc3ba6e1c393da895a5bcd43d62",
+    "src/nca/data/capture.py": "437dd099171f5803c6776b821e0d1ab53749d902feae08c2f54159c21ec82b0b",
+    "src/nca/data/morphology.py": "c65a7c12a47b67df76d3bb3a59d2b66ff9cd28d41d9f13e4d17f642981ab9d37",
+    "src/nca/data/records.py": "c368b23f69daa543621bf85ee125274aaf2d84f3d4db13c5e524d2323bf7d020",
+    "src/nca/data/replay.py": "2856943f54bfa5ceefae484c1eb4415ea3723c489ee440f7c233c2193b6d217d",
+    "src/nca/data/storage.py": "da194eef8f5b0249f7cc78ec2a36beccc39ebe0af29c9419aaff74746fa21abd",
+    "src/nca/environment.py": "28c0f11e2100563298fa7e904a441d29c5f6c9dc38dac1cd8373ab3b2613b29a",
+    "src/nca/envs/__init__.py": "f2d677f8306fc823568db5875f13656fe631e417c5bf4252b92e51927ceb6ea2",
+    "src/nca/envs/recorded.py": "fd14ea8f05188b4383eba4220f876fb89b3e997068ded641363169cc4d127ad6",
+    "src/nca/evaluation/durable_journal.py": "ea005165d12c6a30045f6d265df7506a021246dfe6d5a540e118ee2cd5346269",
+    "src/nca/evaluation/durable_publication.py": "0821f684aaa2e9ca8d136daadfbc7b54b751f2fbbca89dbab791f193258e2262",
+    "src/nca/evaluation/feel.py": "2d6beb2d97547aa23114c706da923f7e0f1d95e89aec170968d0abce119c374a",
+    "src/nca/evaluation/jolt_arrival.py": "e566b4f67a22c3130198afb4db9497e370e8ffb69cff038b2c604df47cb508a3",
+    "src/nca/evaluation/jolt_character.py": "edd404a1e980f42c35210f325e36d93dff027faa816e8f7b1f6dd029366e900c",
+    "src/nca/evaluation/jolt_decisions.py": "d9a2dc8f64f67f8d2232f413ed49a29230da280ff90df2b635ed04f44d43871a",
+    "src/nca/evaluation/jolt_recovery_acceptance.py": "5eef4e9bdbecfa761ca797a023c66c903a88afb74dbdc9fa2d3759c895b30d21",
+    "src/nca/export/__init__.py": "25896ac09ec77cd4e5c89733b1a165a64a4527b5e9d179e1b271cce0a8657a55",
+    "src/nca/export/build.py": "cc0dda972c80b5b048eb058d87be403378cd4f69fe4fd96548f3f4027e433eb5",
+    "src/nca/export/candidate.py": "7f1b8c678efd949f91ae983ca0b343074ece0f013d39fcc6103b0929ad413e4d",
+    "src/nca/export/runtime.py": "02dfcd25707762128886d6750ebac59b27abb5329bd60c8312b2106215290c59",
+    "src/nca/export/spec.py": "ff9785c2351b7ad59b31de8666091d3998b53faca92595c09cb5ffcf6aae9f87",
+    "src/nca/export/torch_runtime.py": "af699010e798d3f771a447d8bc00b2c33c949588989f3d0792bde2489030ad51",
+    "src/nca/ik/__init__.py": "2ec02f8b3375af8c9ce28929a6eefa990fc64248b7780f36071e59093d2d8f83",
+    "src/nca/ik/contracts.py": "276e294230442d7dac904c1fb6ab919586be14026be3071e8c4f0b61cf4f4f12",
+    "src/nca/ik/profiles.py": "521d5776bebd6ba41ecf5911d07ed40dddbb9ba23f99cd7dda7311a69cc2d38c",
+    "src/nca/randomness.py": "5657c03da1621383c19108272cc49aad871e717eb7fef75e03f586994a4235c8",
+    "src/nca/registry.py": "bf87641999c887c54f70d16412c919fc0159757315c3a8e5d3d73f887a5babdf",
+    "src/nca/runs.py": "738b82ddc1e3f97a999f17bf6dcd9583d5851d7b7f8f3e0e0d4877a9d1d6ddc7",
+    "src/nca/skills/__init__.py": "f7496e4ea61292bf8d674f5317448dcba6fb4120d6390963e91acbbb422beba1",
+    "src/nca/skills/tasks.py": "ffbf002664c7dd2c25deb1357b521cef2ce57520b5afdeed106f48659ce39137",
+    "src/nca/skills/usables.py": "28b0216307a0b343d6b202d693521c6ece8e3b30c18f536479befaec8e19bf1a",
+    "src/nca/train/__init__.py": "c7affc3edbfd799388155ff0345c5673e3345496f2a8ddca1c4e1f2e8333fb59",
+    "src/nca/train/artifacts.py": "c3b8e60f54d86e4226cf12c756949a39a9f15458962f5517fa8bc273bc62bc72",
+    "src/nca/train/clips.py": "61f8eca2d49a1d1e73efe7bb05be4ba3d8c3c7ceb22d407e2a660cabd4ed70e9",
+    "src/nca/train/goal_frame.py": "824b2fba7d702ed881d570bbdca3e2aa7a1354bb739a73d024c5ce282e4f980f",
+    "src/nca/train/goal_frame_config.py": "ae6b8f8b9b58ac83ecc31546ac0f4e50e52bc029edbc03b8aaa25f0be6aa789a",
+    "src/nca/train/imitation.py": "51e80a051b5e56e16233e633295a0f39438063f40b3b07f2cb95be9452acce89",
+    "src/nca/train/morphology_artifacts.py": "a2b03891293a8e222608a873803343fa56c2232662034f34945a94730029af1d",
+    "src/nca/train/morphology_capture.py": "bb910b24948aa29025d454c6f8d7488c75f6f602d7b7eda23b96569b4c6ccbbb",
+    "src/nca/train/morphology_config.py": "e60263e2148724e46630b0cfa86825abc8c932ba360e76bf2dc444a8413c85b5",
+    "src/nca/train/morphology_learning.py": "5ced743f09895b5691cdd43d12eb4b526985f2e5e388a34b737c35aa75ece05d",
+    "src/nca/train/morphology_metrics.py": "70b7e73f4255c5d881142a81e23b203b9f46d9e23e7129ea6af4c3feb5242e94",
+    "src/nca/train/morphology_screen.py": "b4f3ce5c6f7c9842944e3e4011d080ba433d6e09775be68f203d9837e3e970ee",
+    "src/nca/train/morphology_spec.py": "b54721b557da1912d32baaecffa99ab8c4d5ee212a4ecac30ea66420159d9f65",
+    "src/nca/train/morphology_task.py": "974b5d32aa6ade91879490302717cdb99ace859fb83e40294a6a1c987449c53a",
+    "src/nca/train/recurrent.py": "04cbdf5620b5fe396a3bc5d6238454c0ea0f48feca6719cb28607bb038fbc4bd",
+    "src/nca/train/screen.py": "f0d4f5b7cf852ade4abdcf85a8f0dbb6344e7862a78d735661f0a06809c20b95",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec",
+    "tests/test_jolt_arrival.py": "d01d91eb9ecc1710c9d83ad4d4749976af36430e7789712fb535ef5ee15e27f2",
+    "tests/test_jolt_arrival_diagnostic.py": "e14bb01d9c5ea8e51eb2f10f02168f655629b50bd8ed59b573262492f6de0394",
+    "tests/test_jolt_arrival_journal.py": "ba452e2d57d08cfe45a068a64bebc64590302ff00ad6bc04ce87e6a2df41f4f7",
+    "tests/test_jolt_character.py": "ab77931614c3530bdf9d48c70c68777c41a190c5e89ab86ca62e002c7f221b62",
+    "tests/test_jolt_decision_refusals.py": "30b503cddc9a0f60de0bda8663dac1131180b9248ca086c86204afb5302cad33",
+    "tests/test_jolt_evidence_durability.py": "b10de43e66fbc631a6e20d8a96d587987b14e27b44290073eb92c014da797629",
+    "tests/test_jolt_evidence_publication.py": "b44103065bdf4478ffd44b2ada762ede93d66e27c01d1001333a8351b071d546",
+    "tests/test_jolt_recovery.py": "214d47fb2ef09518c69c60f522372de5432a0de65f3d1387948c14447981ddf1",
+    "tests/test_jolt_recovery_acceptance.py": "d7508671cfc4e21158e83126bb03a65148f508b49baa5e3bd2c57f7520989aa1",
+    "tests/test_jolt_recovery_v2.py": "540af7a6a5d43364095ecc5db771a7342338e436c23be3ad8664ace00fa4d693",
+    "tests/test_jolt_recovery_v3.py": "6afc0889aaa9af4eeb103545a019b5a0d9c7d11ef05d54946cf7536a04e49901",
+    "tests/test_jolt_recovery_v3_diagnostic.py": "6a5742d78e6775f98796d5a57974b6c5168a54030b72d581278746b36a6aa1a0",
+    "tests/test_jolt_recovery_v4.py": "9ac1b360386b4f68bc72973cd153f1730347e8ab1e2ca80e1fe7d712d1697f41",
+    "tests/test_jolt_recovery_v4_diagnostic.py": "6c81e39d8f43c30eba279b69ad374cd98c3428809c3a8f5dfefa295747c36585",
+    "tests/test_jolt_recovery_v4_executor.py": "d7a5484ab36e82a4110c572fee90c04cd2eb151a0c0022a4a77bee0b114d795b",
+    "tests/test_jolt_recovery_v4_supervisor.py": "46eccab9e08c7582c52d8e398a07eeec55923f2ecd15dfca6ec793e5b60bf97a",
+    "tools/execute_jolt_diagnostic.py": "c8a4f0699f45a67d3cc287c53aa6cbcbd4c0ed553dfde4c3b53e7f66c750ef85",
+    "tools/jolt_arrival.py": "446ce889f4b6d6378993bc8e872803385649b4897868848f98616eb84c2c1e02"
+  },
+  "superseded_unexecuted_source_checkpoint": {
+    "correction_scope": "Narrow LF source/evidence attributes and a test-local POSIX os namespace; production behavior, declaration, case inventory and numeric acceptance remain unchanged.",
+    "failures": [
+      "Windows CRLF conversion of omitted exact-byte pinned v3 controller, task and host bridge inputs.",
+      "Four synthetic supervisor tests did not explicitly select their declared POSIX process-group model on Windows."
+    ],
+    "new_host_starts": 0,
+    "new_owner_calls": 0,
+    "new_physical_ticks": 0,
+    "revision": "80ca7d265fa3dba9141b36ea201ae579136e1dc2",
+    "status": "Withheld before physical invocation because Windows CPU CI failed.",
+    "tree": "152331386c00ec961ae24a024d06b08e95be3604"
+  },
+  "unchanged_acceptance_sha256_without_identity": "1d20379d7a724c87b7d16845c1f5043e253ec7640a3b208a008240665383afa2"
+}
