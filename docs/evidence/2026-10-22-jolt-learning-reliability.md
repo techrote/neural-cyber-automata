@@ -154,6 +154,15 @@ models and optimizer operations; these are software tests, not a replay or resum
 of the consumed experiment. Final-head hosted CI remains a separate merge gate
 and its final outcome is recorded on the linked PR and issue.
 
+The first hosted head `f7466f014552699069ccd96268174cfde120c5b6` exposed a test
+fixture portability error in all four code-conformance jobs. Backdating the
+timeout fixture by 1,769.8 seconds produced a negative origin on freshly booted
+runners, which the production executor correctly refused. The correction
+translates only the synthetic clock's origin while retaining real elapsed time,
+actual child timeout/cleanup and all production deadline checks. The original
+failed checks and source identity are retained in the validation record and
+[PR #70](https://github.com/techrote/neural-cyber-automata/pull/70).
+
 ## Remaining learned objective
 
 Issue #62 remains open. It needs all six frozen final checkpoints and the full

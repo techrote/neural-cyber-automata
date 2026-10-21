@@ -1,16 +1,86 @@
 {
   "base_revision": "1c19c5aa7e715575d867675babd19bb08ae58e25",
+  "ci_fixture_correction": {
+    "behavior": "A test-local positive origin preserves real elapsed time without changing Python or subprocess clocks; two seconds of phase headroom and a four-second child sleeper allow startup while still requiring actual spawn, timeout, kill/reap and no verification retry. Both normal and near-zero raw-clock subtests pass.",
+    "changed_source_files": [
+      "tests/test_jolt_learning_executor_v2.py"
+    ],
+    "experimental_allocation_changed": false,
+    "production_source_byte_identical_to_first_head": true
+  },
   "command": "env -u NCA_HOST_CHECKOUT -u NCA_GODOT -u NCA_EXPORT_BUNDLE -u NCA_EXPORT_BUNDLE_SHA256 PYTHONPATH=src:tests python -m unittest discover -s tests -q",
+  "documentation_check": {
+    "command": "python tools/check_docs.py --strict",
+    "errors": 0,
+    "files": 81,
+    "warnings": 0
+  },
   "final_full_suite": {
-    "elapsed_seconds": 44.756,
-    "environment_change": "consistent PID namespace visibility",
+    "elapsed_seconds": 47.027,
+    "environment": "consistent PID namespace visibility; actual-host and export inputs explicitly unset",
     "exit_code": 0,
     "failures": 0,
-    "log_sha256": "1e4d24a294da15db4cdbaf2c6b87500245992394ca60aded072bb9a01689cecb",
+    "log_sha256": "6fdc2baa77f31086fdd9d5a51986840f8cfdeb304dac0c5b92454c9b7402cad8",
     "passed": 929,
     "skipped": 59,
     "skips": "Expected environment-dependent actual-host, export and CUDA qualification tests remain skipped when their prerequisites are absent.",
+    "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297",
     "tests": 988
+  },
+  "first_hosted_ci": {
+    "checks": [
+      {
+        "conclusion": "success",
+        "job_id": 119553614755,
+        "name": "check-docs",
+        "run_id": 39696066007
+      },
+      {
+        "conclusion": "failure",
+        "elapsed_seconds": 33.296,
+        "errors": 1,
+        "job_id": 119553614709,
+        "name": "cpu (ubuntu-24.04)",
+        "run_id": 39696066016,
+        "skipped": 338,
+        "tests": 988
+      },
+      {
+        "conclusion": "failure",
+        "elapsed_seconds": 32.287,
+        "errors": 1,
+        "job_id": 119553614453,
+        "name": "cpu (windows-2022)",
+        "run_id": 39696066016,
+        "skipped": 341,
+        "tests": 988
+      },
+      {
+        "conclusion": "failure",
+        "elapsed_seconds": 71.975,
+        "errors": 1,
+        "job_id": 119553614617,
+        "name": "actual-host",
+        "run_id": 39696066029,
+        "skipped": 244,
+        "tests": 988
+      },
+      {
+        "conclusion": "failure",
+        "elapsed_seconds": 77.116,
+        "errors": 1,
+        "job_id": 119553614635,
+        "name": "learning-cpu",
+        "run_id": 39696066230,
+        "skipped": 6,
+        "tests": 988
+      }
+    ],
+    "head_sha": "f7466f014552699069ccd96268174cfde120c5b6",
+    "reason": "Backdating an arbitrary monotonic epoch by 1769.8 seconds made the synthetic original invocation origin negative on freshly booted runners; the production guard correctly refused it.",
+    "record_url": "https://github.com/techrote/neural-cyber-automata/pull/70#issuecomment-6329201366",
+    "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+    "test": "test_jolt_learning_executor_v2.RealSyntheticChildTests.test_real_child_timeout_is_killed_and_has_no_verification_retry"
   },
   "historical_preservation": {
     "all_preexisting_evidence_files_unchanged": true,
@@ -49,19 +119,32 @@
     "No physical experiment, execution declaration, new allocation, learned qualification, owner-feel approval or morphology admission is established."
   ],
   "offline_scope_only": true,
+  "pre_ci_full_suite": {
+    "elapsed_seconds": 44.756,
+    "environment_change": "consistent PID namespace visibility",
+    "exit_code": 0,
+    "failures": 0,
+    "head_sha": "f7466f014552699069ccd96268174cfde120c5b6",
+    "log_sha256": "1e4d24a294da15db4cdbaf2c6b87500245992394ca60aded072bb9a01689cecb",
+    "passed": 929,
+    "skipped": 59,
+    "skips": "Expected environment-dependent actual-host, export and CUDA qualification tests remain skipped when their prerequisites are absent.",
+    "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+    "tests": 988
+  },
   "prospective_experiment_admitted": false,
   "reviews": {
     "docs/evidence/jolt-learning-reliability-executor-review-20261022.json": {
-      "bytes": 7362,
-      "sha256": "0795272607a50040fdb9e7fc75f6043e0d842a012670731064ad8cf38acce026"
+      "bytes": 17633,
+      "sha256": "9de77233fe3bce07af558b25ad79bde25fa3c8fd1dcb31829c1f1c1164e34ca1"
     },
     "docs/evidence/jolt-learning-reliability-journal-review-20261022.json": {
-      "bytes": 28225,
-      "sha256": "892713ba681ca0c1c535c3c5f1837379dcdcd18fae9ac1aff480e1e5979aab2e"
+      "bytes": 31329,
+      "sha256": "243dda7eb60464cfd7c68fb8edbf28f6ee1aa506121d754215c670b43578cb93"
     },
     "docs/evidence/jolt-learning-reliability-worker-review-20261022.json": {
-      "bytes": 7115,
-      "sha256": "3cb7a6591540e6c781dbba1c92a33b9a4844fe906bee2b11c6950061fa1b7fd0"
+      "bytes": 10338,
+      "sha256": "4ec8ead89f3a66f0fc70508f3099e89f6bcfedd98cf57776b610ad5fda0e84fa"
     }
   },
   "runtime": {
@@ -76,5 +159,5 @@
   "scope": "offline software regression and publication; no prospective experiment admission",
   "source_inventory_file_count": 207,
   "source_inventory_method": "nca.train.jolt_screen.source_inventory; canonical SHA-256",
-  "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb"
+  "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297"
 }

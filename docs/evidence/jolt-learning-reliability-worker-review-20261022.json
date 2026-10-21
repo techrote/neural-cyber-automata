@@ -5,6 +5,7 @@
     "src/nca/controllers/jolt_learned.py": "8ac31038129dfd2a8e7d97ad8cf54e153c9164ab7481ad4d1bb17bbd5ef1b5a2",
     "src/nca/train/jolt_execution_contract.py": "7a5e66be239d1e71c7cb2278d95964e708e4903602990d405180a0ea18b5ec48",
     "src/nca/train/jolt_screen.py": "450e2f67069cbf2539e6406c299a3fb464d2690ff39b3c3eaf9ca9ac857b8a7d",
+    "tests/test_jolt_learning_executor_v2.py": "600fe7c3ee3d2faac26816a99a1fd6c37d0c0feb0e3f791949be51903971888e",
     "tests/test_jolt_reliability.py": "efc221b220dae6616942ccb0414bd8fd14df5754ac718f988112fa7f8019d56d",
     "tools/learn_jolt.py": "65c5a6aeda99b8f91162cb3c4eaf9eaaf6155672d91d8d10c4da4ac7067f84e8"
   },
@@ -44,19 +45,66 @@
       "finding": "Python Boolean equality could allow attempts=true to stand for the integer one.",
       "id": "worker-review-05",
       "resolution": "V2 executor, worker, inventory and auditor require an exact integer attempt count of one. Legacy v1 behavior remains separate."
+    },
+    {
+      "finding": "The disposable-child timeout fixture subtracted 1769.8 seconds from an arbitrary host monotonic epoch, which could create an invalid negative invocation origin on a newly booted runner.",
+      "id": "worker-review-06",
+      "resolution": "Only the executor test clock reference is translated to a positive epoch while preserving real elapsed time. Timeout fixtures retain two real seconds for startup and a four-second sleeper. Both host and explicitly near-zero raw epochs assert positive origin, actual spawn, timeout, reaped nonzero child exit and no verification retry. Global clock functions and all production deadlines remain unchanged."
     }
   ],
-  "reviewed_utc": "2026-10-21T23:47:39.848137+00:00",
+  "review_history": [
+    {
+      "accepted": true,
+      "offline_scope_only": true,
+      "prospective_experiment_admitted": false,
+      "review_artifact": "docs/evidence/jolt-learning-reliability-worker-review-20261022.json",
+      "review_artifact_identity": {
+        "bytes": 7115,
+        "sha256": "3cb7a6591540e6c781dbba1c92a33b9a4844fe906bee2b11c6950061fa1b7fd0"
+      },
+      "reviewed_utc": "2026-10-21T23:47:39.848137+00:00",
+      "source_inventory_file_count": 207,
+      "source_revision": "f7466f014552699069ccd96268174cfde120c5b6",
+      "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+      "subsequent_ci_finding": "Hosted CI reported that the disposable-child timeout fixture could manufacture a negative original invocation time on a fresh runner; production correctly refused that invalid origin. The reported CI failure is retained separately in the validation record.",
+      "validation": {
+        "additional_negative_control": "Temporary v2 audit input with attempts=true and syntactically valid allocation identity returned verified=false, complete=false and qualified=false with zero audit forwards, zero checkpoint loads and no reservations.",
+        "archived_checkpoint_deserialization_performed": false,
+        "command": "PYTHONPATH=src:tests python -m unittest test_jolt_reliability test_jolt_learning_audit_v2 test_jolt_learning_audit test_jolt_screen -v",
+        "elapsed_seconds": 1.982,
+        "model_fitting_performed": false,
+        "physical_host_started": false,
+        "runtime": {
+          "device": "cpu",
+          "numpy": "2.3.5",
+          "python": "3.12.14",
+          "torch": "2.8.0+cpu"
+        },
+        "tests_failed": 0,
+        "tests_passed": 66,
+        "tests_skipped": 0
+      }
+    }
+  ],
+  "reviewed_utc": "2026-10-21T23:57:24.390555+00:00",
   "reviewer": "independent-worker-runtime-and-admission-review",
   "reviewer_implementation_contributions": {
     "src/nca/evaluation/jolt_learning_audit.py": "3984290d05cb42dfe07c0fab6310575045136933a23befa9e9ce148317f70ec0",
     "tests/test_jolt_learning_audit_v2.py": "a83c120afcf3cb7516e95b3fedd1a83b7b6a9329c9ab6ca55529d3c7ba47b387"
   },
   "schema": "nca-learn-jolt-002-offline-software-review/v2",
-  "scope": "Independent cross-review of the opt-in v2 worker, learned-controller retirement diagnostic, CLI admission and executor-to-worker inventory binding. Acceptance is limited to the offline software repair.",
+  "scope": "Independent cross-review of the opt-in v2 worker, learned-controller retirement diagnostic, CLI admission and executor-to-worker inventory binding. Acceptance is limited to the offline software repair. Refreshed after independent review of the test-only monotonic-epoch correction exposed by hosted CI.",
+  "source_change_since_previous_review": {
+    "base_revision": "f7466f014552699069ccd96268174cfde120c5b6",
+    "changed_source_files": [
+      "tests/test_jolt_learning_executor_v2.py"
+    ],
+    "contract_and_configuration_changes": false,
+    "production_sources_unchanged": true
+  },
   "source_inventory_file_count": 207,
   "source_inventory_method": "nca.train.jolt_screen.source_inventory; canonical SHA-256",
-  "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+  "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297",
   "supporting_integration_files_examined": {
     "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
     "src/nca/evaluation/jolt_learning.py": "1262f38dcde3b0b42da0a358575b5b3157428b98bd83a563c9b1d1649d39eb7c",
@@ -65,10 +113,10 @@
     "src/nca/train/jolt_executor.py": "67d63d815a1a3c2fc9679981f86bb017a8a9dc9341bff2a48034421ab383f601"
   },
   "validation": {
-    "additional_negative_control": "Temporary v2 audit input with attempts=true and syntactically valid allocation identity returned verified=false, complete=false and qualified=false with zero audit forwards, zero checkpoint loads and no reservations.",
+    "additional_negative_control": "The real-child timeout test exercises both the host monotonic clock and an explicitly near-zero raw clock, retaining spawn, timeout, positive invocation origin, killed/reaped child and no verifier assertions. The original 66-test audit/worker validation is preserved in review_history.",
     "archived_checkpoint_deserialization_performed": false,
-    "command": "PYTHONPATH=src:tests python -m unittest test_jolt_reliability test_jolt_learning_audit_v2 test_jolt_learning_audit test_jolt_screen -v",
-    "elapsed_seconds": 1.982,
+    "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor_v2 test_jolt_reliability -v",
+    "elapsed_seconds": 5.189,
     "model_fitting_performed": false,
     "physical_host_started": false,
     "runtime": {
@@ -78,7 +126,7 @@
       "torch": "2.8.0+cpu"
     },
     "tests_failed": 0,
-    "tests_passed": 66,
+    "tests_passed": 39,
     "tests_skipped": 0
   },
   "verified_properties": [
@@ -87,6 +135,7 @@
     "Native cancellation can prove revocation through its same-state generation receipt without requiring suspension. A cleanup failure remains a separate diagnostic and cannot confirm closure.",
     "V2 worker cleanup attempts native revocation independently when owner requests, cost reservation or journal notes fail; poisoned or unverified journal closure cannot become successful evidence.",
     "V1 defaults and evidence contracts remain distinct. V2 rejects the old declaration and independently binds the original executor clock, worker declaration and exact final inventory.",
-    "Qualification thresholds, paired comparison rules, six-final-checkpoint prerequisite, all-seed preference and the original allocation limits are unchanged."
+    "Qualification thresholds, paired comparison rules, six-final-checkpoint prerequisite, all-seed preference and the original allocation limits are unchanged.",
+    "The CI regression correction is confined to the disposable-child test fixture; production source, scientific contracts, admission and timeout ceilings are byte-identical to the earlier reviewed commit."
   ]
 }

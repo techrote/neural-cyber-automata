@@ -56,10 +56,33 @@
       "id": "phase-reserve-producer-reader-mismatch",
       "independent_reproduction": "Worker cleanup and worker exit at 1771 seconds, and verification cleanup and verification exit at 1796 seconds, now all return CLI code 2, completed false and lifecycle verified false. No wall limit was enlarged.",
       "original_finding": "Slow cleanup or exit-receipt publication could cross a reserved boundary while the producer returned success and lifecycle readback rejected it."
+    },
+    {
+      "classification": "Test portability failure, not a production deadline relaxation.",
+      "correction": "The fixture translates real elapsed time onto a positive monotonic epoch of 2000, patching only the executor module time namespace. Two real seconds remain for admission/spawn and a four-second disposable sleeper still forces timeout. A near-zero raw-clock subtest explicitly checks positive origin, spawned child, timeout, reaping and absent verifier.",
+      "id": "real-child-timeout-low-uptime-fixture",
+      "independent_review": "The translation preserves every elapsed interval and leaves subprocess waiting on real elapsed time. Production source, original-origin validation, 1800-second ceiling and 30/5-second reserves are byte-identical to the prior reviewed closure.",
+      "original_finding": "The original fixture subtracted 1769.8 seconds from the host monotonic clock. A newly booted runner can then provide a nonpositive original invocation origin, correctly rejected by the executor before the synthetic child starts."
     }
   ],
   "retained_checkpoint_loads": 0,
   "review_date": "2026-10-22",
+  "review_history": [
+    {
+      "changed_source_files": [
+        {
+          "current_sha256": "600fe7c3ee3d2faac26816a99a1fd6c37d0c0feb0e3f791949be51903971888e",
+          "path": "tests/test_jolt_learning_executor_v2.py",
+          "previous_sha256": "73b12b1b5c26599835bbdb24a3bebdbdda58a5c0577948a075c98e30cc691ded"
+        }
+      ],
+      "original_review_bytes_preserved": true,
+      "previous_publication": "https://github.com/techrote/neural-cyber-automata/blob/f7466f014552699069ccd96268174cfde120c5b6/docs/evidence/jolt-learning-reliability-journal-review-20261022.json",
+      "previous_review_sha256": "892713ba681ca0c1c535c3c5f1837379dcdcd18fae9ac1aff480e1e5979aab2e",
+      "previous_source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+      "scope": "The sole source change corrects a test-clock assumption exposed by CI. All previously reviewed production source bytes are unchanged."
+    }
+  ],
   "review_independence": {
     "implemented_by_this_reviewer": [
       "src/nca/evaluation/verified_journal.py",
@@ -238,7 +261,7 @@
     "tests/test_jolt_learning_audit.py": "2008d588ecef8dc8b157fe860bd09da88246049bd0b9bb59b93efb274946107e",
     "tests/test_jolt_learning_audit_v2.py": "a83c120afcf3cb7516e95b3fedd1a83b7b6a9329c9ab6ca55529d3c7ba47b387",
     "tests/test_jolt_learning_executor.py": "e842f33bb36b3eebef7917559e403470495cfec58d3c5ed7adb99e8147df4520",
-    "tests/test_jolt_learning_executor_v2.py": "73b12b1b5c26599835bbdb24a3bebdbdda58a5c0577948a075c98e30cc691ded",
+    "tests/test_jolt_learning_executor_v2.py": "600fe7c3ee3d2faac26816a99a1fd6c37d0c0feb0e3f791949be51903971888e",
     "tests/test_jolt_learning_v2.py": "94a45b32aeb99d4e6984d7503e55806fe4fc6df2bcdf9e91a68b90606bc42b11",
     "tests/test_jolt_recovery.py": "214d47fb2ef09518c69c60f522372de5432a0de65f3d1387948c14447981ddf1",
     "tests/test_jolt_recovery_acceptance.py": "d7508671cfc4e21158e83126bb03a65148f508b49baa5e3bd2c57f7520989aa1",
@@ -286,13 +309,14 @@
     "tools/review_jolt_recovery.py": "9a3b76ff409b6bb0f34a271478151abe56f9bc16bd87af29870d3a91778bdd94",
     "tools/skill_pilot.py": "41100380972464455877cf92ff2400ac7743f77ab1d0f614bb905180503e3cf8"
   },
-  "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+  "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297",
   "validation": [
     {
       "command": "PYTHONPATH=src:tests:tools python -m unittest test_verified_journal test_jolt_learning_executor_v2 test_jolt_reliability -v",
       "elapsed_seconds": 1.494,
       "failed": 0,
       "passed": 51,
+      "provenance": "Original review at the preceding source closure; retained without relabelling as a full rerun of the corrected closure.",
       "runtime": {
         "numpy": "2.3.5",
         "python": "3.12",
@@ -300,6 +324,7 @@
       },
       "scope": "Synthetic storage faults, mock owners, disposable Python subprocesses and small software fixtures only.",
       "skipped": 0,
+      "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
       "tests": 51
     },
     {
@@ -307,8 +332,21 @@
       "elapsed_seconds": 0.014,
       "failed": 0,
       "passed": 3,
+      "provenance": "Original review at the preceding source closure; retained without relabelling as a full rerun of the corrected closure.",
       "scope": "Independent writer/auditor interface, mutated receipt, legacy refusal and incomplete synthetic journal replay.",
       "skipped": 0,
+      "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+      "tests": 3
+    },
+    {
+      "command": "PYTHONPATH=src:tests:tools python -m unittest test_jolt_learning_executor_v2.RealSyntheticChildTests -v",
+      "elapsed_seconds": 4.121,
+      "failed": 0,
+      "passed": 3,
+      "production_source_change_count": 0,
+      "scope": "Independent real disposable Python-child validation, including both ordinary and near-zero raw-monotonic timeout subcases, clean lifecycle readback and retained nonzero/malformed-verifier failures. No physical host or learner.",
+      "skipped": 0,
+      "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297",
       "tests": 3
     }
   ]

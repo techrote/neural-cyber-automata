@@ -441,7 +441,8 @@ class LearningExecutorV2Tests(unittest.TestCase):
 class RealSyntheticChildTests(unittest.TestCase):
     """Exercise actual spawn, exit, stream sync and timeout; no host or learner."""
 
-    def run_synthetic(self, root, *, worker_exit=0, worker_sleep=0, verifier_text=None, timeout=False):
+    def run_synthetic(self, root, *, worker_exit=0, worker_sleep=0, verifier_text=None, timeout=False,
+                      monotonic=None):
         script = root / "synthetic-worker.py"
         verdict = {"inventory_verified": True, "readback_verified": True, "readback_complete": True,
                    "costs_verified": True, "status": "completed", "qualified": False}
@@ -463,9 +464,20 @@ class RealSyntheticChildTests(unittest.TestCase):
 
         helper = SimpleNamespace(prepare_process_tree=lambda: 987, owned_processes=lambda identity: {},
                                  terminate_owned_tree=terminate)
-        started = time.monotonic() - (1769.8 if timeout else 0)
+        real_clock = time.monotonic if monotonic is None else monotonic
+        real_origin = real_clock()
+
+        def translated_monotonic():
+            # Monotonic epochs are arbitrary, including near zero on fresh CI
+            # runners. Keep real elapsed time but use a positive test origin.
+            return 2000. + (real_clock() - real_origin)
+
+        # Leave two real seconds for admission/spawn before the worker cutoff.
+        started = translated_monotonic() - (1768. if timeout else 0)
         output = io.StringIO()
-        with mock.patch.dict(sys.modules, {"execute_jolt_diagnostic": helper}), redirect_stdout(output):
+        with (mock.patch.dict(sys.modules, {"execute_jolt_diagnostic": helper}),
+              mock.patch.object(jolt_executor, "time", SimpleNamespace(monotonic=translated_monotonic)),
+              redirect_stdout(output)):
             result = jolt_executor.execute(args, whole_started=started, script=script)
         lifecycle = args.output.with_name("output-lifecycle")
         return result, json.loads(output.getvalue()), lifecycle
@@ -492,15 +504,22 @@ class RealSyntheticChildTests(unittest.TestCase):
                 self.assertTrue((lifecycle / "terminal.json").is_file())
 
     def test_real_child_timeout_is_killed_and_has_no_verification_retry(self):
-        with tempfile.TemporaryDirectory() as folder:
-            result, terminal, lifecycle = self.run_synthetic(Path(folder), timeout=True, worker_sleep=3)
-            self.assertEqual(result, 2)
-            self.assertFalse(terminal["completed"])
-            receipt = json.loads((lifecycle / "worker-exit.json").read_bytes())
-            self.assertTrue(receipt["timeout"])
-            self.assertTrue(receipt["process_exited"])
-            self.assertNotEqual(receipt["returncode"], 0)
-            self.assertFalse((lifecycle / "verification-started.json").exists())
+        for low_uptime in (False, True):
+            with self.subTest(low_uptime=low_uptime), tempfile.TemporaryDirectory() as folder:
+                real_origin = time.monotonic()
+                recent_clock = lambda: .01 + (time.monotonic() - real_origin)
+                result, terminal, lifecycle = self.run_synthetic(Path(folder), timeout=True,
+                    worker_sleep=4, monotonic=recent_clock if low_uptime else None)
+                self.assertEqual(result, 2)
+                self.assertFalse(terminal["completed"])
+                invocation = json.loads((lifecycle / "invocation.json").read_bytes())
+                self.assertGreater(invocation["whole_process_started_monotonic"], 0)
+                receipt = json.loads((lifecycle / "worker-exit.json").read_bytes())
+                self.assertTrue(receipt["spawned"])
+                self.assertTrue(receipt["timeout"])
+                self.assertTrue(receipt["process_exited"])
+                self.assertNotEqual(receipt["returncode"], 0)
+                self.assertFalse((lifecycle / "verification-started.json").exists())
 
 
 if __name__ == "__main__":

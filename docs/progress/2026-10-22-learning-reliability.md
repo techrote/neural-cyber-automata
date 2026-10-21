@@ -33,4 +33,15 @@ Final-head CI and merge verification are subsequent publication gates recorded
 on the PR and issue. The original allocation remains failed and paired learned
 reliability unmeasured; morphology continuation remains blocked and its gates unchanged.
 
+## Hosted fixture correction before merge
+
+[PR #70](https://github.com/techrote/neural-cyber-automata/pull/70) first exposed
+a synthetic timeout origin that became negative on freshly booted runners.
+The test now translates its clock while preserving real elapsed time and requires
+actual child timeout/reaping with normal and near-zero source clocks. Production
+source is byte-identical to the first head. The corrected full offline suite
+runs 988 tests: 929 pass and 59 expected environment skips, in 47.027 seconds. Reviews
+bind the corrected 207-file source closure and preserve their previous versions;
+the original CI failure remains recorded. Final-head hosted checks remain required.
+
 © 2026 techrote. All rights reserved.
