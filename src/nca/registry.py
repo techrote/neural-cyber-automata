@@ -8,8 +8,8 @@ from typing import Any, Literal
 
 from .contracts import ContractError, Record, identifier, unique
 
-PluginKind = Literal["adapter", "profile", "policy", "evaluator", "trainer", "skill", "cellular"]
-KINDS = ("adapter", "profile", "policy", "evaluator", "trainer", "skill", "cellular")
+PluginKind = Literal["adapter", "profile", "policy", "evaluator", "trainer", "skill", "cellular", "kinematics", "ik_solver"]
+KINDS = ("adapter", "profile", "policy", "evaluator", "trainer", "skill", "cellular", "kinematics", "ik_solver")
 
 
 @dataclass(frozen=True)

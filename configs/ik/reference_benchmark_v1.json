@@ -1,0 +1,51 @@
+{
+  "schema": "nca-ik-reference-benchmark-config/v1",
+  "id": "runner-reference-cpu-v1",
+  "device": "cpu",
+  "profile": "runner-right-sole@1",
+  "partition": "geometric-conformance-only-not-learned-splits",
+  "generator": "independent-authored-runner-vectors/v1",
+  "random_seed": null,
+  "methods": ["dls", "analytic-2r"],
+  "order": "case-major-dls-then-analytic; warmups precede measured cases",
+  "grid": {"hip": [-0.6, 0.6, 9], "ankle": [-0.2, 0.2, 9]},
+  "initial_configurations": [[0.0, 0.0], [-0.65, 0.24], [0.65, -0.24]],
+  "warmup_calls_per_method": 8,
+  "measured_calls_per_method": 243,
+  "solver": {
+    "max_iterations": 64,
+    "max_seconds": 0.05,
+    "damping": 0.02,
+    "max_step": 0.25,
+    "max_backtracks": 8,
+    "tolerance_cells": 1e-7,
+    "posture_weight": 0.002,
+    "singular_probe": 0.05
+  },
+  "acceptance": {
+    "endpoint_residual_cells_max": 1e-6,
+    "require_solved_status": true,
+    "require_finite_and_target_bounded": true,
+    "timing_threshold_seconds": null
+  },
+  "budget": {
+    "max_wall_seconds": 30.0,
+    "publication_reserve_seconds": 5.0,
+    "supervisor_child_timeout_seconds": 25.0,
+    "max_calls_total": 502,
+    "max_numerical_iterations_total": 16064,
+    "attempts": 1,
+    "retry_or_resume": false,
+    "whole_process_supervisor_required": true
+  },
+  "measurement": {
+    "timed": "core solver call including returned diagnostic construction",
+    "excluded_from_core": ["target generation", "independent endpoint check", "target and lifecycle validation", "model", "transport", "host motion", "result publication"],
+    "aggregate_clock": "first module clock read after importing time, through terminal receipt preparation; interpreter startup and process teardown unmeasured",
+    "whole_process_acceptance": "separately published supervisor starts before spawn, enforces 30 seconds, and retains exact code and terminal receipt",
+    "percentiles": "nearest-rank ceil(p*N) over all measured calls including failures",
+    "cuda": "unmeasured",
+    "physical": "unmeasured",
+    "learned_comparison": "not performed"
+  }
+}

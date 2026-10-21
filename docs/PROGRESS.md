@@ -249,3 +249,19 @@ Actual CUDA execution, matched CUDA/CPU timing and peak memory remain unmeasured
 The issue retains its hardware acceptance gates; CPU fixtures and skipped manual
 GPU tests do not clear them. The concurrent Jolt PR #67 landed during this work;
 integration preserves its original failed allocation and separate issue gates.
+
+## 2026-10-21 — Independent IK geometry and reference
+
+Issue #52 starts from accepted main `a1d71a58e87042649d7483131118a6acff5f94bf`.
+Independent source auditing confirms the unchanged Runner profile against both
+pinned host blobs. Separate work streams implement generic planar FK, bounded
+numerical/analytic solving and independent conformance fixtures. The
+[owning reference](IK_KINEMATICS.md) records interfaces and evidence boundaries.
+
+Independent review corrected float32 limits rounded outside exact bounds,
+delta-emission roundoff, an equal-link folded continuum and current-angle
+normalization for analytic branch choice. Focused geometry/reference checks
+cover the fixes. The [evidence page](evidence/2026-10-21-ik-kinematics.md)
+records source identities, conformance and the separately declared finite
+reference-performance allocation. Actual CUDA, learned IK and physical tracking
+remain unmeasured; no Jolt or morphology gate changes.

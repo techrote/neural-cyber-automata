@@ -27,6 +27,7 @@ verified: 2026-10-21
 | What remains optional? | [IDEAS.md](IDEAS.md) |
 | What compute is supported or measured? | [HARDWARE.md](HARDWARE.md) |
 | How is the first CUDA IK task defined and qualified? | [IK contracts](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and [host handoff](IK_HOST_HANDOFF.md) |
+| How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md) and [software evidence](evidence/2026-10-21-ik-runtime-software.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
