@@ -3,10 +3,14 @@ title: Bounded actor learning operations
 kind: reference
 summary: Install the optional CPU learner, validate the frozen screen and retain reproducible training evidence.
 owns: [learning.operations]
-verified: 2026-10-19
+verified: 2026-10-21
 ---
 
 # Bounded actor learning
+
+The separate [IK device runtime](IK_RUNTIME.md) provides a fixed geometric smoke
+fixture and resumable optimizer boundaries. It does not move this historical
+actor learner onto CUDA or change its accepted CPU environment and artifacts.
 
 The first screen compares the balanced Jolt controller, direct behavioural
 cloning and recurrent residual PPO under one accepted physical profile.

@@ -228,3 +228,24 @@ restored originals and new verification records. Final publication, all five CI
 checks on that exact PR head, merge/main verification and issue completion remain
 the next integration steps. No additional diagnostic, collection, training or
 source tuning occurred during recovery.
+
+## 2026-10-21 — Optional IK runtime software integration
+
+Issue #51 adds [isolated device setup and operator commands](IK_RUNTIME.md),
+the fixed Runner inverse-workload smoke, complete optimizer-boundary checkpoints,
+and a supervised immutable allocation shared across attempts. Existing learner
+artifact imports retain their aliases after the immutable helpers move to the
+dependency-free run module. The bare package has no new required dependency.
+
+The [software evidence](evidence/2026-10-21-ik-runtime-software.md) records exact
+CPU resume conformance and negative controls for unavailable CUDA, OOM, corrupt
+checkpoints, cancellation, source/environment changes and exhausted allocations.
+Independent review corrected final-step cancellation and persistent environment
+lineage, required checkpoint/placement receipts for qualification, and checked
+publication/readback within charged reserves. Hidden Git index flags cannot
+bypass committed-source verification.
+
+Actual CUDA execution, matched CUDA/CPU timing and peak memory remain unmeasured.
+The issue retains its hardware acceptance gates; CPU fixtures and skipped manual
+GPU tests do not clear them. The concurrent Jolt PR #67 landed during this work;
+integration preserves its original failed allocation and separate issue gates.

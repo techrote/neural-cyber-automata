@@ -3,42 +3,16 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import hashlib
 import io
-import json
-import os
 from pathlib import Path
-import tempfile
 from typing import Any, Mapping
 
 import torch
 
-from nca.contracts import canonical_json, sha256_json
+from nca.contracts import sha256_json
 from nca.controllers.learned import RecurrentPolicy, load_policy, policy_state_sha256
 from nca.data.capture import source_identity
-
-
-def immutable_bytes(path: str | Path, payload: bytes) -> str:
-    target = Path(path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".bundle-", delete=False) as stream:
-            temporary = stream.name
-            stream.write(payload)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.link(temporary, target)
-    except FileExistsError as exc:
-        raise ValueError(f"immutable artifact already exists: {target.name}") from exc
-    finally:
-        if temporary is not None:
-            Path(temporary).unlink(missing_ok=True)
-    return hashlib.sha256(payload).hexdigest()
-
-
-def immutable_json(path: str | Path, value: Mapping[str, Any]) -> str:
-    return immutable_bytes(path, (canonical_json(value) + "\n").encode())
+from nca.runs import immutable_bytes, immutable_json
 
 
 def read_config(path: str | Path) -> tuple[dict[str, Any], str]:
