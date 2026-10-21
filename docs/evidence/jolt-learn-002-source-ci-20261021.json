@@ -1,0 +1,119 @@
+{
+  "schema": "nca-learn-jolt-002-source-ci/v1",
+  "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+  "all_five_required_checks_passed": true,
+  "physical_execution_started": false,
+  "required_jobs": [
+    "actual-host",
+    "check-docs",
+    "cpu (ubuntu-24.04)",
+    "cpu (windows-2022)",
+    "learning-cpu"
+  ],
+  "workflow_runs": [
+    {
+      "id": 39664541741,
+      "name": "CPU conformance",
+      "head_sha": "a68e687ced52bef778375a2753b1362dea3704fa",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541741",
+      "created_at": "2026-10-21T19:46:26Z",
+      "updated_at": "2026-10-21T19:47:31Z",
+      "jobs": [
+        {
+          "id": 119445970990,
+          "name": "cpu (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541741/job/119445970990"
+        },
+        {
+          "id": 119445971499,
+          "name": "cpu (windows-2022)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541741/job/119445971499"
+        }
+      ]
+    },
+    {
+      "id": 39664541604,
+      "name": "docs",
+      "head_sha": "a68e687ced52bef778375a2753b1362dea3704fa",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541604",
+      "created_at": "2026-10-21T19:46:26Z",
+      "updated_at": "2026-10-21T19:46:38Z",
+      "jobs": [
+        {
+          "id": 119445970139,
+          "name": "check-docs",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541604/job/119445970139"
+        }
+      ]
+    },
+    {
+      "id": 39664541744,
+      "name": "Pinned host conformance",
+      "head_sha": "a68e687ced52bef778375a2753b1362dea3704fa",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541744",
+      "created_at": "2026-10-21T19:46:26Z",
+      "updated_at": "2026-10-21T19:48:16Z",
+      "jobs": [
+        {
+          "id": 119445969508,
+          "name": "actual-host",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541744/job/119445969508"
+        }
+      ]
+    },
+    {
+      "id": 39664541644,
+      "name": "Optional CPU learning conformance",
+      "head_sha": "a68e687ced52bef778375a2753b1362dea3704fa",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541644",
+      "created_at": "2026-10-21T19:46:26Z",
+      "updated_at": "2026-10-21T19:48:48Z",
+      "jobs": [
+        {
+          "id": 119445968758,
+          "name": "learning-cpu",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39664541644/job/119445968758"
+        }
+      ]
+    }
+  ],
+  "prior_preflight_evidence": [
+    "docs/evidence/jolt-learn-002-checkout-proof-20261021.json",
+    "docs/evidence/jolt-learn-002-checkout-review-20261021.json",
+    "docs/evidence/jolt-learn-002-preflight-20261021.json",
+    "docs/evidence/jolt-learn-002-preflight-ci-20261021.json"
+  ],
+  "execution_declaration": {
+    "path": "docs/evidence/jolt-execution-learn-002-20261021.json",
+    "sha256": "424482c32e213e55e1984638f68842dcc678b0cbb44fab615ad50d2945953dff",
+    "canonical_sha256": "29b8db695828f7c512a86e120c596645f23d1ff520ce6dab104fc8fbf6b66d5f"
+  },
+  "static_execution_admission_verified": true
+}
