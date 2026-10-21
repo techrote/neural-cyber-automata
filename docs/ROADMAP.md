@@ -54,14 +54,26 @@ three historical rescues, zero success regressions and 32/32 purposeful-airborne
 cases. This releases #62's teacher dependency. Two leftward failures remain,
 including worse final distance for `reference-floor-left-63`; consistent useful
 second-coast landing progress and owner feel are not established. All 32 cases
-are opened development evidence, and no collection or learned result occurred.
+remain opened development evidence. The teacher result supplies no learned
+qualification.
 
-The [learning implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md)
-still requires versioned full actuation and sample semantics, fresh geometry/start
-splits, exact teacher evidence binding and final source/runtime/budget admission
-before collection. The learned 75% mean / 50% every-seed reliability gate and all
-separate morphology gates remain unchanged. Any additional recovery diagnostic
-would require a separately commissioned prospective allocation.
+The [learning implementation](LEARN_JOLT_002_RUNBOOK.md) and its source reviews
+admitted one declared allocation at clean source
+`a68e687ced52bef778375a2753b1362dea3704fa`, with the 182-file closure retained in
+the [failed-allocation evidence](evidence/2026-10-21-jolt-learn-002.md).
+That allocation was consumed: it retained five of six final checkpoints and
+stopped before any open or sealed evaluation. The original journal contains
+6,720 records against the worker's claimed 24,195; complete physical evidence
+and terminal execution receipts are missing. Paired learned reliability remains
+unmeasured. #62 stays open and blocked, and T-106 remains blocked.
+
+The [implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) preserves
+the historical admission requirements; its boxes are not a current execution
+status. Publication and independent readback preserve the failed result and do
+not reopen its allocation. The learned 75% mean / 50% every-seed reliability gate
+and all separate morphology gates remain unchanged. Any further physical
+experiment requires a separately commissioned prospective allocation; no retry,
+resume, retuning or extension of this one is admitted.
 
 ## Dependency gates
 

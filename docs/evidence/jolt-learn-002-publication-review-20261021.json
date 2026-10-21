@@ -1,0 +1,196 @@
+{
+  "acceptance_scope": "Current documentation, copied original evidence, independent negative-result reviews, cost reconciliation and byte-preservation index are accepted for publication to PR #67. This is not learned qualification, durable raw-archive publication confirmation, or permission to merge before remaining gates.",
+  "accepted": true,
+  "archive_readback_performed_during_this_review": {
+    "all_six_copied_originals_match_archive_members": true,
+    "bytes": 106211945,
+    "duplicate_or_unsafe_member_paths": [],
+    "durable_external_publication_confirmed": false,
+    "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
+    "meaning": "Accepts the local archive bytes and exact copied originals. Does not reconstruct missing execution receipts or claim durable external saving succeeded.",
+    "member_identity_mismatches": [],
+    "nested_gzip_eof_basis": "The separately hashed archive audit records complete EOF checks for all 458 nested gzip files. This final review rehashed every stored archive member; it did not repeat nested decompression.",
+    "regular_members_hashed_from_archive": 765,
+    "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+  },
+  "executed_source_inventory_files": 182,
+  "executed_source_inventory_unchanged": true,
+  "executed_source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "executed_source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+  "findings": [],
+  "independence": "This reviewer did not author the original executable source, experiment, original receipts, original training postmortem, archive package or publication prose. It authored the separately identified later forensic review and reproducibility script; their inclusion is disclosed and is not counted as a second independent experiment audit.",
+  "merge_disposition": {
+    "issue_62_reason": "Required paired comparison and useful learned-actuation objective remain incomplete.",
+    "issue_62_should_remain_open": true,
+    "learned_qualified": false,
+    "merge_ready": false,
+    "morphology_transfer_admitted": false,
+    "new_experiment_admitted": false,
+    "remaining_gates": [
+      "Durable external raw-archive publication, recorded hash identity and fresh publication readback.",
+      "All required CI checks passing on the final PR head.",
+      "Merge followed by verification of the accepted tree on main."
+    ]
+  },
+  "resolved_review_findings": [
+    {
+      "id": "missing_receipt_location",
+      "resolution": "Publication index now identifies lifecycle/executor.json and lifecycle/finalization.json, matching frozen executor source and archive naming."
+    },
+    {
+      "id": "cumulative_v4_provenance",
+      "resolution": "Cost record separately binds the four-run historical ledger and original v4 result/executor identities. All lineage arithmetic and reported-vs-unknown qualifications independently checked."
+    },
+    {
+      "id": "publication_route_requirement",
+      "resolution": "The author-corrected later result review requires durable raw archive and hash index without inventing a GitHub release-asset-specific condition. Publication remains explicitly pending."
+    }
+  ],
+  "review_base_revision": "146650695a1043f7eba44255c7c1a12545065f40",
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "github_mutations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "physical_ticks": 0,
+    "repository_mutations": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "tests_executed": 0,
+    "torch_imports": 0
+  },
+  "reviewed_file_count": 26,
+  "reviewed_files": {
+    "docs/LEARN_JOLT_002_RUNBOOK.md": {
+      "bytes": 21050,
+      "sha256": "6ffe38e91cb6a8eb27a79af94308f2b0c374d325243e2cef29ab55160060d95c"
+    },
+    "docs/PROGRESS.md": {
+      "bytes": 14696,
+      "sha256": "dc602b078437cd2d0299ef644d2412daa668f9d7d61387a7d393b54cc47c6251"
+    },
+    "docs/README.md": {
+      "bytes": 4697,
+      "sha256": "321f7c285bfe0ae65289e10522837b24859c95e6edfb1eaae16290827da9d5a4"
+    },
+    "docs/ROADMAP.md": {
+      "bytes": 16162,
+      "sha256": "098c8bce4af37c54ca67fc43256c949c099644d59131f282e7f011babc38bc50"
+    },
+    "docs/RUNS.md": {
+      "bytes": 23326,
+      "sha256": "1601a7e584a26c4a9bd8ad93e04b6fdf7a087419c8783af9c0b9900bfe408374"
+    },
+    "docs/STATE.md": {
+      "bytes": 22451,
+      "sha256": "9f3ee9ab190aa657d9841aeaccd4c7377c9cd19198bd40845273ba8b45bb71ab"
+    },
+    "docs/design/LEARN_JOLT_002.md": {
+      "bytes": 16404,
+      "sha256": "1e3ea2d5269bf541584b46133aefb5774161eae41436264841fd4e6aaa1f926a"
+    },
+    "docs/design/LEARN_JOLT_002_IMPLEMENTATION.md": {
+      "bytes": 16944,
+      "sha256": "71fd159df00644206168ffe84723ec07e5f8750e12f6e2bf8b02f9dd6955b8ed"
+    },
+    "docs/evidence/2026-10-21-jolt-learn-002.md": {
+      "bytes": 14098,
+      "sha256": "c81b500263bef8319f97d8483800feb99d316b0e097834a2d95b0552feda0553"
+    },
+    "docs/evidence/jolt-learn-002-archive-audit-20261021.json": {
+      "bytes": 6035,
+      "sha256": "e346ca93c080748ee574ee82229c054bd9565ea2b70880202afd887138ae1a9f"
+    },
+    "docs/evidence/jolt-learn-002-archive-members-20261021.json": {
+      "bytes": 127318,
+      "sha256": "f04c225536ca31464a4cceb266e56104e8757ada183176c6df1a7ca6efab5693"
+    },
+    "docs/evidence/jolt-learn-002-artifact-bindings-20261021.json": {
+      "bytes": 1602,
+      "sha256": "8aae875dda3863cec9c334111d575733baf0a52f2d8f2081b7d63eb1171c7e87"
+    },
+    "docs/evidence/jolt-learn-002-costs-20261021.json": {
+      "bytes": 6274,
+      "sha256": "8c9bc1486cf978c35ce55e401ea100fb3dccf40f52075fa68d835361ff7ee47a"
+    },
+    "docs/evidence/jolt-learn-002-forensic-review-20261021.json": {
+      "bytes": 14147,
+      "sha256": "fd4c0bfd43c82f4dfb46b416fdee9718d911338a0caddfbb16be17c7b2fcb71b"
+    },
+    "docs/evidence/jolt-learn-002-index-20261021.json": {
+      "bytes": 5103,
+      "sha256": "7b739652786eb4f1f08279280bc40a10df540281cdfe57c5fcbc6a6694d0dfb3"
+    },
+    "docs/evidence/jolt-learn-002-manifest-20261021.json": {
+      "bytes": 24766,
+      "sha256": "9459cc2292354108794e7ee6c9ae7bca2c72d3ec9999058572f97e87154c2931"
+    },
+    "docs/evidence/jolt-learn-002-original-inventory-20261021.json": {
+      "bytes": 102178,
+      "sha256": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d"
+    },
+    "docs/evidence/jolt-learn-002-original-invocation-20261021.json": {
+      "bytes": 257,
+      "sha256": "5e5c6af2db2ea251c3862a08565fe701bf78116815a3da1ed4f0a4e632b8d8a4"
+    },
+    "docs/evidence/jolt-learn-002-original-readback-20261021.json": {
+      "bytes": 378,
+      "sha256": "a7d46962e3950d852d8c893c7a271d65888adcdf2da25f2c09a6ca6b1044a271"
+    },
+    "docs/evidence/jolt-learn-002-readback/audit_and_package_jolt.py": {
+      "bytes": 17416,
+      "sha256": "174108bb3e35385969580621e2635bd0d8bb8c6921bab6005ac7aa4aad2c78ea"
+    },
+    "docs/evidence/jolt-learn-002-readback/forensic-review-reproduce.py": {
+      "bytes": 13894,
+      "sha256": "d6bebe3cf9c8d5b0a9423b109a81af1beec264a931700df80398cca3102216fa"
+    },
+    "docs/evidence/jolt-learn-002-readback/verify_jolt_bindings.py": {
+      "bytes": 4243,
+      "sha256": "e4ad5fdee532f9863746832de535f0a6b8deb8b003cfe78db96b2e68810ee3e7"
+    },
+    "docs/evidence/jolt-learn-002-result-20261021.json": {
+      "bytes": 14827,
+      "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+    },
+    "docs/evidence/jolt-learn-002-result-review-20261021.json": {
+      "bytes": 15530,
+      "sha256": "45a2818476351d6f63ef9f35945eb4bb85b20f984c2f08e1c674b5c184deae54"
+    },
+    "docs/evidence/jolt-learn-002-training-postmortem-review-20261021.json": {
+      "bytes": 13485,
+      "sha256": "d579872865d764f4ac7a647331478de3ad183843f7b7b8d47ed17843b3f4fea8"
+    },
+    "docs/progress/2026-10-21-learning.md": {
+      "bytes": 11938,
+      "sha256": "02ba8e5fdda4c61d1c9e4ec71e6e87a644db57ee162645ade75852c71ef4eb27"
+    }
+  },
+  "reviewed_files_canonical_sha256": "4abc83832b2758335d654ad39933faa5cb2b6e94d12d9c5391b13e84e92ef106",
+  "reviewed_utc": "2026-10-21T21:18:14.195368+00:00",
+  "reviewer": "independent-forensic-and-final-publication-review",
+  "schema": "nca-learn-jolt-002-final-publication-review/v1",
+  "self_review_file_excluded": "docs/evidence/jolt-learn-002-publication-review-20261021.json",
+  "verified_publication_properties": {
+    "all_review_script_hash_bindings_match": true,
+    "archive_publication_pending_explicit_in_index_result_and_progress": true,
+    "concrete_private_workspace_paths_or_credentials_observed": false,
+    "copied_original_files_byte_identical": 6,
+    "cumulative_counts_recalculated": true,
+    "documentation_reconciles_stale_status": true,
+    "failed_original_qualification_preserved": true,
+    "generic_privacy_scan_tokens_in_script_are_not_private_paths": true,
+    "initial_lifecycle_false_not_treated_as_unconsumed": true,
+    "missing_journal_suffix_cause_preserved_as_unknown": true,
+    "no_retry_resume_retuning_reseeding_extension_or_checkpoint_selection_admitted": true,
+    "original_reported_costs_and_closure_copied_exactly": true,
+    "owner_feel_and_morphology_remain_unaccepted": true,
+    "publication_index_file_bindings_match": true,
+    "source_state_emergency_cause_explicitly_inferred_not_recorded": true,
+    "unknown_whole_process_time_exit_and_timeout_preserved_as_null": true,
+    "zero_evaluation_rows_not_relabelled_zero_reliability": true
+  }
+}

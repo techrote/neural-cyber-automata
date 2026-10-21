@@ -1,0 +1,181 @@
+{
+  "basis": "Original worker/result, 518340 exact reservation records and retained episode metadata; complete native reconciliation unavailable after retained owner prefix.",
+  "declared_maximum_wall_seconds": 1800,
+  "entire_owner_stream_reconciled": false,
+  "independently_retained_owner_prefix": {
+    "answered_owner_requests": 2256,
+    "complete_native_closure": false,
+    "episode_finishes": 77,
+    "episode_starts": 78,
+    "records": 6720,
+    "response_reported_ticks": 12204,
+    "step_responses": 2034
+  },
+  "internal_ledger_seconds": 963.0812728359988,
+  "internal_timer_is_whole_process_duration": false,
+  "lineage_subtotal": {
+    "combined_whole_process_seconds": null,
+    "current_internal_ledger_seconds": 963.0812728359988,
+    "episode_rows_including_incomplete": 605,
+    "limitations": [
+      "Original arrival owner calls remain reported because its journal was incomplete.",
+      "Recovery v1 contains an incomplete final row.",
+      "Current worker ticks and closure are retained claims beyond the 6720-record owner prefix.",
+      "Internal ledger time is not added to earlier whole-process intervals as a complete duration."
+    ],
+    "previous_five_whole_process_seconds": 1567.7681713780057,
+    "prior_historical_ledger": {
+      "bytes": 4745,
+      "path": "jolt-recovery-v4-historical-costs-20261020.json",
+      "scope": "Original arrival plus recovery v1-v3: four hosts, 280 episode rows, 6780 decisions and 1022.8120721580035 whole-process seconds.",
+      "sha256": "8a6394f8b4465a498fc9ce5c13ec922ca97c5d5ba6a6c9e30ddf6e46d792f972"
+    },
+    "recovery_v4_executor": {
+      "bytes": 1568,
+      "path": "jolt-recovery-v4-executor-20261020.json",
+      "sha256": "6669f168d5e85558643efbd1390ce06fdf8c04d4848f6aa3f2992a7ad68929d3"
+    },
+    "recovery_v4_increment": {
+      "confirmed_ticks": 13584,
+      "decisions": 2264,
+      "episode_rows": 96,
+      "host_starts": 1,
+      "owner_calls": 2531,
+      "whole_process_seconds": 544.9560992200022
+    },
+    "recovery_v4_result": {
+      "bytes": 387943,
+      "path": "jolt-recovery-v4-result-20261020.json",
+      "sha256": "faf163a276a40f10762eefbfedb70c2ec527c76340ee008678590bca0b5194fd"
+    },
+    "reported_bc_optimizer_calls": 16320,
+    "reported_decisions": 16553,
+    "reported_host_starts": 6,
+    "reported_owner_operations": 18149,
+    "reported_ppo_optimizer_calls": 1772,
+    "reported_requested_or_episode_ticks": 99318,
+    "reported_total_optimizer_calls": 18092,
+    "scope": "Original arrival reference plus recovery v1-v4 plus this LEARN-JOLT-002 invocation only; excludes other learned/export/cellular runs, later reviews, publication and CI."
+  },
+  "original_executor_exit_code": null,
+  "original_process_tree_closure_independently_proven": false,
+  "original_reported_costs": {
+    "cleanup_reserve_seconds": 120.0,
+    "closed": true,
+    "counts": {
+      "attempts": 1,
+      "audit_forward": 0,
+      "bc_burn_in": 153600,
+      "bc_eligible_samples": 182400,
+      "bc_forward": 182640,
+      "bc_optimizer": 16320,
+      "bootstrap_forward": 46,
+      "checkpoint_executions": 5988,
+      "checkpoint_loads": 0,
+      "checkpoint_writes": 34,
+      "confirmed_ticks": 45054,
+      "decisions": 7509,
+      "episodes_aborted": 1,
+      "episodes_completed": 228,
+      "episodes_started": 229,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 11790,
+      "owner_cancel": 100,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 229,
+      "owner_requests": 8068,
+      "owner_reset": 229,
+      "owner_step": 7509,
+      "ppo_actor_samples": 22704,
+      "ppo_base_burn_in": 26104,
+      "ppo_base_forward": 23216,
+      "ppo_burn_in": 26104,
+      "ppo_critic_samples": 23216,
+      "ppo_forward": 23216,
+      "ppo_optimizer": 1772,
+      "ppo_replay_base_forward": 5804,
+      "ppo_replay_forward": 5804,
+      "refused_ticks": 0,
+      "requested_ticks": 45054,
+      "uncertain_ticks": 0
+    },
+    "maximum_wall_seconds": 1800.0,
+    "refused_or_uncertain_work_refunded": false,
+    "reservation_count": 518340,
+    "reservations_sha256": "73544f11602832ae915e732029cf539a52867e4aecac043e77cf67c3154edff5",
+    "schema": "nca-jolt-learn-budget/v1",
+    "stage_counts": {
+      "open": {
+        "decisions": 0,
+        "episodes_started": 0,
+        "requested_ticks": 0
+      },
+      "ppo": {
+        "decisions": 5987,
+        "episodes_started": 165,
+        "requested_ticks": 35922
+      },
+      "sealed": {
+        "decisions": 0,
+        "episodes_started": 0,
+        "requested_ticks": 0
+      },
+      "teacher": {
+        "decisions": 1522,
+        "episodes_started": 64,
+        "requested_ticks": 9132
+      }
+    },
+    "wall_seconds": 963.0812728359988
+  },
+  "original_reported_owner_closure": {
+    "confirmed_ticks": 45054,
+    "durability": {
+      "chain_sha256": "faff1e126d419440f866b53432a2ccfd58d12676bf0dc6bfad94c34507083455",
+      "closed": true,
+      "directory_fsync": true,
+      "poisoned": false,
+      "record_fsyncs": 24195,
+      "records": 24195,
+      "total_fsyncs": 24196
+    },
+    "native_close_confirmed": true,
+    "owner_requests": {
+      "cancel": 100,
+      "close": 1,
+      "configure": 0,
+      "profile": 229,
+      "reset": 229,
+      "step": 7509
+    },
+    "pending_owner_request": null,
+    "refused_ticks": 0,
+    "requested_ticks": 45054,
+    "uncertain_owner_requests": [],
+    "uncertain_ticks": 0
+  },
+  "original_result": {
+    "bytes": 14827,
+    "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+  },
+  "original_timeout_status": null,
+  "original_whole_process_seconds": null,
+  "publication_and_later_reviews": {
+    "new_checkpoint_loads": 0,
+    "new_host_starts": 0,
+    "new_neural_forwards": 0,
+    "new_optimizer_calls": 0,
+    "new_physical_ticks": 0,
+    "original_artifact_mutations": 0,
+    "retry_started": false,
+    "separate_from_original_allocation": true
+  },
+  "reviewed_utc_date": "2026-10-21",
+  "schema": "nca-learn-jolt-002-cost-reconciliation/v1",
+  "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+}

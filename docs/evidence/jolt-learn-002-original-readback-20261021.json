@@ -1,0 +1,1 @@
+{"audit_forward":0,"checkpoint_loads":0,"complete":false,"error":{"code":"jolt_audit","reason":"jolt_audit: original owner journal did not durably close","type":"ContractError"},"morphology_transfer_admitted":false,"owner_feel_accepted":false,"partial_evidence":[],"qualified":false,"schema":"nca-learn-jolt-002-independent-readback/v1","verified":false,"verified_episodes":[]}

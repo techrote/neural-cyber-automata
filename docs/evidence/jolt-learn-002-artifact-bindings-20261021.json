@@ -1,0 +1,37 @@
+{
+  "checks": {
+    "canonical_reservations_hash_matches_result": true,
+    "closed_and_original_reservation_bytes_identical": true,
+    "configuration_matches_manifest": true,
+    "declaration_matches_manifest": true,
+    "inner_outer_declaration_bytes_identical": true,
+    "reservation_count_matches_result": true,
+    "result_binds_original_failed_readback": true,
+    "result_binds_original_worker": true
+  },
+  "checks_passed": true,
+  "later_review_wall_seconds": 1.5934753359997558,
+  "original_qualified": false,
+  "original_status": "failed",
+  "original_training_postmortem_binding_mismatches": [],
+  "original_training_postmortem_bound_files": 12,
+  "reproducer_sha256": "e4ad5fdee532f9863746832de535f0a6b8deb8b003cfe78db96b2e68810ee3e7",
+  "reservation_canonical_sha256": "73544f11602832ae915e732029cf539a52867e4aecac043e77cf67c3154edff5",
+  "reservation_count": 518340,
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "physical_ticks": 0,
+    "torch_imports": 0
+  },
+  "reviewed_utc_date": "2026-10-21",
+  "reviewer": "independent-archive-byte-audit",
+  "schema": "nca-learn-jolt-002-artifact-bindings/v1",
+  "scope": "Independent standard-library metadata identity checks only. No claim of complete owner receipts, physical correctness, tensor contents or qualification.",
+  "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+}

@@ -8,13 +8,9 @@ verified: 2026-10-21
 
 # LEARN-JOLT-002 runbook
 
-The [#62 design](design/LEARN_JOLT_002.md) and
-[admission checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) define the unchanged
-scientific and acceptance requirements. This page describes the separate v2
-implementation and the one bounded execution procedure. Source preparation and
-offline contract tests establish no collected dataset, trained checkpoint,
-physical learning result or morphology qualification. Execution requires a clean
-published source, two independent accepting reviews and its frozen declaration.
+The [#62 design](design/LEARN_JOLT_002.md) and [admission checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) define the unchanged scientific and acceptance requirements. This page preserves the separate v2 implementation and original bounded execution procedure. Published source reviews and the prospective declaration admitted one invocation at clean source `a68e687ced52bef778375a2753b1362dea3704fa`, with 182-file closure SHA-256 `d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727`. Later evidence-publication commits preserve that physical source identity.
+
+**The original allocation was consumed and failed.** Its [retained evidence](evidence/2026-10-21-jolt-learn-002.md) includes five of six final checkpoints and no open or sealed evaluation rows. Independent readback found 6,720 original owner-journal records against the worker's claimed 24,195. Complete physical evidence and terminal execution receipts are missing, paired learned reliability is unmeasured, and no learned family is qualified. #62 stays open and blocked; morphology #16 stays blocked. Source tests, archive preservation and later publication do not supply those missing qualifications or reopen the consumed declaration.
 
 ## Admission records and source ownership
 
@@ -225,6 +221,8 @@ The 15,744 learned-call ceiling conservatively exceeds the 14,784 possible stage
 calls; it does not enlarge the independently enforced physical stage caps.
 
 ## Freeze and launch once
+
+**The 2026-10-21 declaration has already been consumed. Do not launch or resume it.** The commands below document its original procedure. A new directory, publication commit or recovered artifact does not grant another attempt. Any further physical invocation requires a separately commissioned, prospectively admitted allocation; the original no-retry and no-extension limits remain in force.
 
 Use the pinned [Linux host setup](HOST_ADAPTER.md#linux-setup) and the isolated
 [CPU learner installation](LEARNING.md#install-the-optional-cpu-lane), with

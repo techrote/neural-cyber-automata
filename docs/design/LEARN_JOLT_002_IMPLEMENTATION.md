@@ -8,15 +8,27 @@ verified: 2026-10-21
 
 # LEARN-JOLT-002 implementation checklist
 
-This appendix makes the [experiment design](LEARN_JOLT_002.md) operational.
-It proposes implementation checks and budget arithmetic. It authorizes no
-collection, fitting, checkpoint execution or transfer. The v4 recovery result
-satisfies the teacher and complete diagnostic evidence dependency. Bind that
-accepted result into the new implementation, then publish the final source,
-runtime, split and compute declaration before any learning execution.
-The [execution runbook](../LEARN_JOLT_002_RUNBOOK.md) describes the prepared v2
-implementation and operation inventory; these boxes remain acceptance checks,
-not a claim that a physical learning invocation has completed.
+This appendix preserves the original admission checklist and budget arithmetic
+for the [experiment design](LEARN_JOLT_002.md). The boxes below are a historical
+requirements checklist; use the source reviews, declaration and
+[failed-allocation evidence](../evidence/2026-10-21-jolt-learn-002.md) for current
+implementation and execution status. Their original checked states are retained.
+
+The v4 recovery result satisfied the teacher and complete diagnostic evidence
+dependency. Source, runtime, split and compute admission preceded one allocation
+at clean source `a68e687ced52bef778375a2753b1362dea3704fa`, with a 182-file source
+closure. That allocation was consumed and failed. It retained five of six final
+checkpoints and no open or sealed evaluation rows; independent readback found
+6,720 owner-journal records against the worker's claimed 24,195. Complete physical
+evidence and terminal execution receipts remain missing. Paired learned
+reliability is unmeasured, #62 remains open and blocked, and morphology #16
+remains blocked.
+
+The [execution runbook](../LEARN_JOLT_002_RUNBOOK.md) retains the v2 contracts and
+original procedure. Later publication does not change the execution source or
+reopen its allocation. This checklist authorizes no retry, resume, fitting,
+checkpoint execution or transfer; any further physical experiment needs a
+separately commissioned prospective allocation.
 
 ## Admission and scope
 

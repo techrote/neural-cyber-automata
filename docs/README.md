@@ -35,6 +35,7 @@ verified: 2026-10-21
 | What happened in the contact-recovery diagnostics? | [V4 teacher qualification and remaining limits](evidence/2026-10-20-jolt-recovery-v4.md), [v3 improvement with failed acceptance](evidence/2026-10-20-jolt-recovery-v3.md), [complete v2 negative result](evidence/2026-10-20-jolt-recovery-v2.md), [preserved v1 failure](evidence/2026-10-20-jolt-recovery-v1.md) |
 | What must the next learned Jolt experiment prove? | [LEARN-JOLT-002 design](design/LEARN_JOLT_002.md), [implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) |
 | How are the separate learned Jolt contracts, static split and single bounded invocation operated? | [LEARN-JOLT-002 runbook](LEARN_JOLT_002_RUNBOOK.md) |
+| What happened to the single learned Jolt allocation? | [Consumed failure, preserved evidence and nonqualification](evidence/2026-10-21-jolt-learn-002.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |

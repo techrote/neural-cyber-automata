@@ -1,0 +1,329 @@
+{
+  "accepted_scope": "Faithful publication of the original failed, incomplete, nonqualifying allocation and its evidence limitations.",
+  "disposition": {
+    "additional_physical_invocation_admitted": false,
+    "future_source_work": "Separately review the diagnostics and durability evidence paths. Do not repair old receipts, extend the consumed allocation or claim a diagnosed persistence cause without evidence.",
+    "merge_scope": "Reviewed source plus truthful failed-allocation evidence and reconciliation, subject to final-head CI and independent publication review; no successful experiment or learned qualification claim.",
+    "publish_original_bytes_unchanged": true,
+    "publish_original_failed_verdict_unchanged": true,
+    "resume_or_retry_admitted": false,
+    "retuning_reseeding_extension_or_checkpoint_selection_admitted": false
+  },
+  "findings": [
+    {
+      "assessment": "A prospective declaration and initial invocation exist alongside 64 teacher records, learned checkpoints, training artifacts and 229 worker result rows. The one allocation has been consumed. The initial physical_execution_started=false field precedes worker construction and is never a final no-execution certificate.",
+      "classification": "direct retained evidence",
+      "id": "consumed_allocation"
+    },
+    {
+      "assessment": "The original independent auditor rejects the journal before any checkpoint load or neural audit forward. The later original inventory binds the same 6720-record prefix. Therefore the discrepancy was already present during the original readback and inventory sealing; it is not explained solely by a later change to the indexed file.",
+      "classification": "direct retained evidence plus source ordering",
+      "id": "journal_suffix_missing_before_seal"
+    },
+    {
+      "assessment": "DurableJournal writes one linked record, flushes and fsyncs before advancing its in-memory counters. Its durability_receipt reports those counters and does not independently reread the pathname. The runner contains no intended truncation or rewrite of the live journal. The retained bytes do not establish how the missing suffix arose; neither a particular filesystem fault, path replacement, manual change nor transport failure is proven.",
+      "classification": "source establishes mechanism limits, not a causal diagnosis",
+      "id": "journal_cause_unknown"
+    },
+    {
+      "assessment": "The inventory exactly matches all retained indexed files, including the incomplete journal. A passing archive or inventory comparison authenticates the saved package, not the full owner lifetime or the claimed 24195-record closure.",
+      "classification": "direct byte comparison",
+      "id": "inventory_not_lifetime_proof"
+    },
+    {
+      "assessment": "The outer executor source normally publishes executor.json, finalization.json and terminal JSON even when complete=false. All three final receipts are absent or empty. The worker printed status=failed but this is not the executor completion verdict. Cause and exit state of the outer executor are unestablished; a worker ValueError alone does not explain why the outer failure receipts are missing.",
+      "classification": "direct absence plus source control-flow analysis",
+      "id": "missing_external_completion"
+    },
+    {
+      "assessment": "963.0812728359988 seconds is the worker ledger close interval from the common original start. It precedes subsequent finalization work. No authoritative final whole-process wall interval, timeout value or owned-tree cleanup receipt is retained, so a completed under-1800-second invocation cannot be claimed.",
+      "classification": "direct metadata with explicit limit",
+      "id": "partial_time_accounting"
+    },
+    {
+      "assessment": "Five of six required final checkpoints exist and neither open nor sealed comparisons began. There are no complete paired outcomes or confidence bounds. The original failed readback and failed result remain authoritative. Learned reliability, own-initial gain, authored-relative gain, character and held-out runtime qualification are unmeasured; no learned family, owner feel or morphology is accepted.",
+      "classification": "direct contract failure",
+      "id": "qualification_unavailable"
+    }
+  ],
+  "inventory_readback": {
+    "identity_mismatches": [],
+    "indexed_files": 757,
+    "meaning": "Every indexed retained file matches the original index. This does not establish journal, physical, paired-evaluation, or executor completeness.",
+    "missing": [],
+    "passed": true,
+    "retained_files_including_inventory": 758,
+    "surplus": []
+  },
+  "journal": {
+    "cause_of_missing_suffix": "unknown",
+    "chain_sha256": "83b8db7284d1655d911726e6b22bbf61b9a40bca467c3b3d6b93cc30b0a67e14",
+    "complete_lifetime": false,
+    "episode_finishes": 77,
+    "episode_starts": 78,
+    "events": {
+      "bc_fitting_finished": 3,
+      "bc_fitting_started": 3,
+      "checkpoint_published": 8,
+      "decision_proposed": 2034,
+      "episode_finished": 77,
+      "episode_started": 78,
+      "fitting_shape_frozen": 1,
+      "host_start_reserved": 1,
+      "host_started": 1,
+      "owner_request": 2256,
+      "owner_response": 2256,
+      "ppo_fitting_finished": 1,
+      "ppo_fitting_started": 1
+    },
+    "last_episode_finished": "ppo-seed190103-u1-e5",
+    "last_episode_started": "ppo-seed190103-u1-e6",
+    "last_record": {
+      "event": "owner_response",
+      "serial": 2256
+    },
+    "last_request": {
+      "elapsed_seconds": 353.32983045699893,
+      "operation": "cancel",
+      "serial": 2256,
+      "stage": "ppo"
+    },
+    "matches_worker_receipt": false,
+    "pending_requests": 0,
+    "prefix_chain_valid": true,
+    "records": 6720,
+    "requests": {
+      "cancel": 66,
+      "profile": 78,
+      "reset": 78,
+      "step": 2034
+    },
+    "response_reported_ticks": 12204,
+    "responses": 2256,
+    "worker_claimed_durability": {
+      "chain_sha256": "faff1e126d419440f866b53432a2ccfd58d12676bf0dc6bfad94c34507083455",
+      "closed": true,
+      "directory_fsync": true,
+      "poisoned": false,
+      "record_fsyncs": 24195,
+      "records": 24195,
+      "total_fsyncs": 24196
+    }
+  },
+  "original_files": {
+    "budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "closed-budget-reservations.json": {
+      "bytes": 59444115,
+      "sha256": "96e676b94d38c7721c76b54c58f8b56880d0187aae16350bf52af26028b2ab13"
+    },
+    "config.json": {
+      "bytes": 54250,
+      "sha256": "4bc4720716dd3c6786b5e66c672f7b78f825c5edd404a5582a8de009c4ee7965"
+    },
+    "declaration.json": {
+      "bytes": 28047,
+      "sha256": "424482c32e213e55e1984638f68842dcc678b0cbb44fab615ad50d2945953dff"
+    },
+    "independent-readback.json": {
+      "bytes": 378,
+      "sha256": "a7d46962e3950d852d8c893c7a271d65888adcdf2da25f2c09a6ca6b1044a271"
+    },
+    "inventory.json": {
+      "bytes": 102178,
+      "sha256": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d"
+    },
+    "manifest.json": {
+      "bytes": 24766,
+      "sha256": "9459cc2292354108794e7ee6c9ae7bca2c72d3ec9999058572f97e87154c2931"
+    },
+    "owner-journal.jsonl": {
+      "bytes": 75687705,
+      "sha256": "0df17e9885eceb41b6e42757557ebad4dfba8adafcb084199245fb8dd5c1ee9c"
+    },
+    "result.json": {
+      "bytes": 14827,
+      "sha256": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7"
+    },
+    "worker-result.json": {
+      "bytes": 1040705,
+      "sha256": "9c00653440113fd14a6171aed1f62427dcce719572ac40d198c6b8dd140d4943"
+    }
+  },
+  "original_independent_readback": {
+    "audit_forward": 0,
+    "checkpoint_loads": 0,
+    "complete": false,
+    "error": {
+      "code": "jolt_audit",
+      "reason": "jolt_audit: original owner journal did not durably close",
+      "type": "ContractError"
+    },
+    "morphology_transfer_admitted": false,
+    "owner_feel_accepted": false,
+    "partial_evidence": [],
+    "qualified": false,
+    "schema": "nca-learn-jolt-002-independent-readback/v1",
+    "verified": false,
+    "verified_episodes": []
+  },
+  "original_run": {
+    "created_utc": "2026-10-21T19:50:49.380041+00:00",
+    "declaration_canonical_sha256": "29b8db695828f7c512a86e120c596645f23d1ff520ce6dab104fc8fbf6b66d5f",
+    "error": {
+      "code": null,
+      "type": "ValueError"
+    },
+    "evidence_complete": false,
+    "learned_qualified": false,
+    "morphology_transfer_admitted": false,
+    "owner_feel_accepted": false,
+    "recorded_finals": [
+      "bc-seed190103-final",
+      "bc-seed190207-final",
+      "bc-seed190301-final",
+      "residual-seed190103-final",
+      "residual-seed190207-final"
+    ],
+    "recorded_open_rows": 0,
+    "recorded_sealed_rows": 0,
+    "required_finals": 6,
+    "source_inventory_files": 182,
+    "source_inventory_matches": true,
+    "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+    "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727",
+    "status": "failed",
+    "whole_process_started_monotonic": 8052.838104387
+  },
+  "outer_files": {
+    "jolt-learn-002-20261021-command-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "jolt-learn-002-20261021-terminal.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "jolt-learn-002-training-postmortem-review-20261021.json": {
+      "bytes": 13485,
+      "sha256": "d579872865d764f4ac7a647331478de3ad183843f7b7b8d47ed17843b3f4fea8"
+    },
+    "lifecycle/invocation.json": {
+      "bytes": 257,
+      "sha256": "5e5c6af2db2ea251c3862a08565fe701bf78116815a3da1ed4f0a4e632b8d8a4"
+    },
+    "lifecycle/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lifecycle/stdout.log": {
+      "bytes": 3488,
+      "sha256": "bd9a5c2773bcb525c2499eaba951c863fc0cc9c9d9d130d264ef04426ad65cbf"
+    }
+  },
+  "reservation_readback": {
+    "before_and_after_readback_bytes_identical": true,
+    "canonical_sha256": "73544f11602832ae915e732029cf539a52867e4aecac043e77cf67c3154edff5",
+    "counts": {
+      "attempts": 1,
+      "audit_forward": 0,
+      "bc_burn_in": 153600,
+      "bc_eligible_samples": 182400,
+      "bc_forward": 182640,
+      "bc_optimizer": 16320,
+      "bootstrap_forward": 46,
+      "checkpoint_executions": 5988,
+      "checkpoint_loads": 0,
+      "checkpoint_writes": 34,
+      "confirmed_ticks": 45054,
+      "decisions": 7509,
+      "episodes_aborted": 1,
+      "episodes_completed": 228,
+      "episodes_started": 229,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 11790,
+      "owner_cancel": 100,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 229,
+      "owner_requests": 8068,
+      "owner_reset": 229,
+      "owner_step": 7509,
+      "ppo_actor_samples": 22704,
+      "ppo_base_burn_in": 26104,
+      "ppo_base_forward": 23216,
+      "ppo_burn_in": 26104,
+      "ppo_critic_samples": 23216,
+      "ppo_forward": 23216,
+      "ppo_optimizer": 1772,
+      "ppo_replay_base_forward": 5804,
+      "ppo_replay_forward": 5804,
+      "refused_ticks": 0,
+      "requested_ticks": 45054,
+      "uncertain_ticks": 0
+    },
+    "last_reservation": {
+      "cleanup": true,
+      "elapsed_seconds": 915.835714717,
+      "increments": {
+        "host_terminations": 1
+      },
+      "index": 518339,
+      "stage": null
+    },
+    "last_reservation_elapsed_seconds": 915.835714717,
+    "reservation_count": 518340,
+    "scope": "Internal accounting is consistent. The missing owner-journal suffix prevents a complete original-request/receipt reconciliation.",
+    "sequential_and_monotonic": true,
+    "summed_increments_match_recorded_counts": true
+  },
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "github_mutations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "original_auditor_replays": 0,
+    "original_executable_source_mutations": 0,
+    "physical_ticks": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "reviewed_source_files": {
+    "src/nca/evaluation/durable_journal.py": "ea005165d12c6a30045f6d265df7506a021246dfe6d5a540e118ee2cd5346269",
+    "src/nca/evaluation/jolt_learning_audit.py": "9304f114546ada0690b16d6dc55029c1e9ef921c9822dc3bc159bd21f8eeb2a0",
+    "src/nca/train/jolt_screen.py": "89cecde9287cb00bec96181fbad84eb3986bd531ceeffdb0eb9b171c38c4bde3",
+    "tools/execute_jolt_diagnostic.py": "c8a4f0699f45a67d3cc287c53aa6cbcbd4c0ed553dfde4c3b53e7f66c750ef85",
+    "tools/learn_jolt.py": "62eb13bf62bd1b2bad5356a00d52b120c368dbacc7bd8d75e2df24fde4ca8ee5"
+  },
+  "reviewed_utc": "2026-10-21T21:05:57.811783+00:00",
+  "reviewer": "independent-forensic-source-and-retained-data-review",
+  "schema": "nca-learn-jolt-002-forensic-review/v1",
+  "scope": "Independent standard-library byte, JSON, hash-chain, reservation and frozen-source examination. No experimental replay or physical verification.",
+  "time_and_closure": {
+    "authoritative_terminal_bytes": 0,
+    "independent_owned_process_tree_cleanup_verified": false,
+    "initial_invocation_physical_execution_started_false_is_final_status": false,
+    "maximum_declared_whole_process_seconds": 1800.0,
+    "missing_lifecycle_files": [
+      "executor.json",
+      "finalization.json"
+    ],
+    "native_close_confirmed_by_worker": true,
+    "native_close_independently_authenticated": false,
+    "original_executor_returncode": null,
+    "original_executor_timeout": null,
+    "whole_process_elapsed_seconds": null,
+    "within_whole_process_ceiling_proven": false,
+    "worker_measurement_boundary": "BudgetLedger.close before result.json publication, inventory sealing, external executor verification and final receipt publication.",
+    "worker_reported_wall_seconds": 963.0812728359988
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "archive": {
+    "bytes": 106211945,
+    "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
+    "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8"
+  },
+  "archive_readback": {
+    "changed_members": [],
+    "deterministic_metadata": "Sorted USTAR regular members; mode 0444; zero timestamp/uid/gid; empty owner names and gzip filename; gzip mtime zero.",
+    "inner_gzip_eofs_rechecked": 458,
+    "missing_members": [],
+    "outer_gzip_eof_verified": true,
+    "outer_uncompressed_tar": {
+      "bytes": 283944960,
+      "sha256": "02213a0eea0f49d385910583cd463c7638c947e876b5f624997e1c53be1cb745"
+    },
+    "regular_members": 765,
+    "verified": true
+  },
+  "configuration_canonical_sha256": "79bf82d3fc905bf6c55bc504264792bf4b4918e508e83928908ce41ce586228d",
+  "declaration_canonical_sha256": "29b8db695828f7c512a86e120c596645f23d1ff520ce6dab104fc8fbf6b66d5f",
+  "experiment_verdict": {
+    "allocation_consumed": true,
+    "archive_completeness_is_experiment_completeness": false,
+    "missing_executor_completion_receipts": [
+      "executor.json",
+      "finalization.json"
+    ],
+    "open_evaluation_rows": 0,
+    "original_auditor_complete": false,
+    "original_auditor_error": {
+      "code": "jolt_audit",
+      "reason": "jolt_audit: original owner journal did not durably close",
+      "type": "ContractError"
+    },
+    "original_auditor_verified": false,
+    "original_qualified": false,
+    "original_status": "failed",
+    "outer_terminal_file_bytes": 0,
+    "required_final_checkpoints": 6,
+    "required_sealed_rows": 224,
+    "retained_final_checkpoints": 5,
+    "retry_permitted": false,
+    "sealed_evaluation_rows": 0,
+    "whole_process_exit_time_proven": false
+  },
+  "later_review_wall_seconds": 42.71087259200067,
+  "limitations": [
+    "Counts from worker/result metadata are retained claims where the original owner suffix is absent.",
+    "Hash and gzip checks authenticate retained bytes, not missing physical observations or learned correctness.",
+    "This later review is outside the consumed original allocation and cannot extend or complete its clock."
+  ],
+  "member_manifest": {
+    "bytes": 127318,
+    "filename": "jolt-learn-002-archive-members-20261021.json",
+    "sha256": "f04c225536ca31464a4cceb266e56104e8757ada183176c6df1a7ca6efab5693"
+  },
+  "original_artifacts": {
+    "all_members": 765,
+    "checkpoint_files_verified_as_opaque_bytes": 34,
+    "checkpoint_hash_mismatches": [],
+    "episode_rows": 229,
+    "episode_sample_hash_mismatches": [],
+    "gzip_errors": [],
+    "gzip_files": 458,
+    "inner_files": 758,
+    "original_changes_during_review": [],
+    "private_path_token_hits_in_text": [],
+    "uncompressed_file_bytes": 283352687
+  },
+  "original_inventory": {
+    "bytes": 102178,
+    "file": "run/inventory.json",
+    "indexed_files": 757,
+    "matching_indexed_files": 757,
+    "mismatches": [],
+    "missing": [],
+    "sha256": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d",
+    "unindexed": [
+      "inventory.json"
+    ],
+    "unindexed_inventory_itself_expected": true
+  },
+  "original_owner_journal": {
+    "bytes": 75687705,
+    "chain_prefix_errors": [],
+    "chain_sha256": "83b8db7284d1655d911726e6b22bbf61b9a40bca467c3b3d6b93cc30b0a67e14",
+    "compressed_owner_journal_present": false,
+    "event_counts": {
+      "bc_fitting_finished": 3,
+      "bc_fitting_started": 3,
+      "checkpoint_published": 8,
+      "decision_proposed": 2034,
+      "episode_finished": 77,
+      "episode_started": 78,
+      "fitting_shape_frozen": 1,
+      "host_start_reserved": 1,
+      "host_started": 1,
+      "owner_request": 2256,
+      "owner_response": 2256,
+      "ppo_fitting_finished": 1,
+      "ppo_fitting_started": 1
+    },
+    "file": "run/owner-journal.jsonl",
+    "interpretation": "An internally valid prefix does not establish the missing suffix or durable original closure.",
+    "last_retained_events": [
+      {
+        "episode_id": "ppo-seed190103-u1-e6",
+        "event": "decision_proposed",
+        "index": 15
+      },
+      {
+        "event": "owner_request",
+        "operation": "step",
+        "serial": 2255
+      },
+      {
+        "event": "owner_response",
+        "serial": 2255
+      },
+      {
+        "event": "owner_request",
+        "operation": "cancel",
+        "serial": 2256
+      },
+      {
+        "event": "owner_response",
+        "serial": 2256
+      }
+    ],
+    "missing_records_relative_to_writer": 17475,
+    "raw_compressed_equality": "not_applicable_no_compressed_owner_journal",
+    "recorded_writer_chain_sha256": "faff1e126d419440f866b53432a2ccfd58d12676bf0dc6bfad94c34507083455",
+    "recorded_writer_records": 24195,
+    "retained_owner_request_counts": {
+      "cancel": 66,
+      "profile": 78,
+      "reset": 78,
+      "step": 2034
+    },
+    "retained_owner_responses": 2256,
+    "retained_records": 6720,
+    "sha256": "0df17e9885eceb41b6e42757557ebad4dfba8adafcb084199245fb8dd5c1ee9c",
+    "unanswered_retained_requests": {},
+    "writer_receipt_matches": false
+  },
+  "review_operations": {
+    "checkpoint_deserializations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_artifact_mutations": 0,
+    "original_auditor_replays": 0,
+    "physical_ticks": 0,
+    "retry_started": false,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "review_scope": "Later standard-library-only byte/inventory/chain review and independent archive readback; no physical or neural replay and no original verdict repair.",
+  "reviewed_utc_date": "2026-10-21",
+  "reviewer": "independent-archive-byte-audit",
+  "schema": "nca-learn-jolt-002-archive-audit/v1",
+  "source_file_readback": {
+    "files": 182,
+    "mismatches": [],
+    "reconstructed_inventory_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+  },
+  "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa",
+  "source_sha256": "d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727"
+}
