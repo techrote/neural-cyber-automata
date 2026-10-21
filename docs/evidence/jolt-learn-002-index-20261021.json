@@ -4,10 +4,15 @@
     "bytes": 106211945,
     "contains_all_retained_original_files": true,
     "does_not_restore_missing_original_evidence": true,
-    "durable_publication_confirmed": false,
+    "durable_publication_confirmed": true,
     "filename": "jolt-learn-002-failed-evidence-20261021.tgz",
     "member_bytes": 283352687,
-    "publication_state": "Verified local archive prepared; durable external publication pending approval. Do not merge before this step is confirmed.",
+    "publication_receipt": {
+      "bytes": 3381,
+      "path": "jolt-learn-002-durable-publication-20261021.json",
+      "sha256": "bdc098383804abc22ef96f1ac41572aa44b26b1cb7ec0012bd283067296abc2d"
+    },
+    "publication_state": "Published to the owner-approved external store and independently verified from a fresh download; the original failed allocation remains unqualified.",
     "regular_members": 765,
     "sha256": "9c1862df7397f55b06f5e91061ac862785e3fcd84d38af7ab6887ffa7ec53fe8",
     "storage": "Raw archive remains outside Git; delivery and persistence receipt recorded separately."
@@ -68,6 +73,10 @@
       "bytes": 1602,
       "sha256": "8aae875dda3863cec9c334111d575733baf0a52f2d8f2081b7d63eb1171c7e87"
     },
+    "jolt-learn-002-downloaded-readback-20261021.json": {
+      "bytes": 5363,
+      "sha256": "d3eb4beb67b7c0a1a0813741ea68cc9a77b7f9c0e3e9421356875c3b3b8f5094"
+    },
     "jolt-learn-002-forensic-review-20261021.json": {
       "bytes": 14147,
       "sha256": "fd4c0bfd43c82f4dfb46b416fdee9718d911338a0caddfbb16be17c7b2fcb71b"
@@ -110,6 +119,10 @@
     "jolt-learn-002-readback/forensic-review-reproduce.py": {
       "bytes": 13894,
       "sha256": "d6bebe3cf9c8d5b0a9423b109a81af1beec264a931700df80398cca3102216fa"
+    },
+    "jolt-learn-002-readback/verify_downloaded_jolt_archive.py": {
+      "bytes": 11240,
+      "sha256": "1d3c0c709ac88d03ac7a4b7d3c1a1901eafa22e4b25e65120646e86ff4834abe"
     },
     "jolt-learn-002-readback/verify_jolt_bindings.py": {
       "bytes": 4243,
