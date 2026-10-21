@@ -1,0 +1,31 @@
+{
+  "added_rule": "*.json text eol=lf",
+  "attributes_path": ".gitattributes",
+  "attributes_sha256": "080a59fce5f3f293bf80e63392bae6bbc891a25c4273ea48936eef4e8d732419",
+  "bound_file_count": 129,
+  "bound_files_all_eol_lf": true,
+  "bound_files_sha256": "455bd4453a80529afca5685f66c83625807d17fa25c779f8c35674a5d44b3b34",
+  "created_utc": "2026-10-21T19:37:35.539254+00:00",
+  "evidence_limits": [
+    "This is Git checkout conversion reproduction on Linux, not a Windows-hosted CI result.",
+    "The unchanged physical allocation remains unopened."
+  ],
+  "full_static_admission_passed": true,
+  "git_version": "git version 2.51.1",
+  "hash_normalization_or_admission_relaxation": false,
+  "historical_evidence_or_configuration_bytes_changed": false,
+  "method": "Isolated local Git clone of the published source commit; core.autocrlf=true and core.eol=crlf; compare original checkout, stage the proposed attribute rule, remove only the isolated tracked JSON copies, recreate them with checkout-index, and run full static admission against that checkout.",
+  "network_used_for_checkout": false,
+  "new_attribute_bound_mismatches": 0,
+  "original_attribute_bound_mismatches": 71,
+  "physical_execution_started": false,
+  "schema": "nca-learn-jolt-002-checkout-proof/v1",
+  "source_revision": "0acf2c6624cc901fdbb5c57d9932405aa2839999",
+  "source_sha256": "b85ad6eac1dedc4c8e82b724721637c6577a3526703a6ab7f046cfff8b02cc4a",
+  "tracked_json_bytes_preserved_after_checkout": true,
+  "tracked_json_count": 130,
+  "tracked_json_original_bytes_all_lf": true,
+  "training_performed": false,
+  "windows_os_execution": false,
+  "windows_style_checkout_conversion_enabled": true
+}
