@@ -1,0 +1,44 @@
+{
+  "checkpoint_loads": 0,
+  "checks": {
+    "durable_freeze_before_sealed_reset": true,
+    "durable_sealed_marker_before_sealed_reset": true,
+    "five_finals_only": true,
+    "no_barrier_artifacts": true,
+    "no_evaluation_stage_reservations": true,
+    "no_marker_deletion_path": true,
+    "original_inventory_byte_verified": true,
+    "six_final_barrier_before_evaluation": true,
+    "zero_open_and_sealed_rows": true
+  },
+  "input_files": {
+    "docs/evidence/jolt-execution-learn-002-20261021.json": "424482c32e213e55e1984638f68842dcc678b0cbb44fab615ad50d2945953dff",
+    "docs/evidence/jolt-learn-002-archive-members-20261021.json": "f04c225536ca31464a4cceb266e56104e8757ada183176c6df1a7ca6efab5693",
+    "docs/evidence/jolt-learn-002-costs-20261021.json": "8c9bc1486cf978c35ce55e401ea100fb3dccf40f52075fa68d835361ff7ee47a",
+    "docs/evidence/jolt-learn-002-downloaded-readback-20261021.json": "d3eb4beb67b7c0a1a0813741ea68cc9a77b7f9c0e3e9421356875c3b3b8f5094",
+    "docs/evidence/jolt-learn-002-original-inventory-20261021.json": "0ebf42b8e4dc96ca69f1eb1bf733b6de8c4c304452f00766fa68c57f37ecee6d",
+    "docs/evidence/jolt-learn-002-result-20261021.json": "3c00bdc9ce9b0393aad31a4730c114b6447514770aee6893968f2d236c1885e7",
+    "docs/evidence/jolt-learn-002-training-postmortem-review-20261021.json": "d579872865d764f4ac7a647331478de3ad183843f7b7b8d47ed17843b3f4fea8"
+  },
+  "limitations": [
+    "This is a source/counter/artifact reachability proof, not a claim of complete original physical evidence or verified original executor duration.",
+    "All six fixed final hashes and a new sealed-opened barrier remain mandatory before this new allocation can open any sealed outcome.",
+    "Independent final-source admission must explicitly accept this proof before execution."
+  ],
+  "new_physical_ticks": 0,
+  "original_owner_journal_complete": false,
+  "original_result_qualified": false,
+  "reasoning": [
+    "The original frozen run completes all three residual finals before freeze_candidates; the latter requires six distinct fixed finals and publishes frozen-finals.json before any evaluation loop.",
+    "The sealed loop publishes sealed-opened.json before its first case/controller reset, including authored and idle. The frozen execution path has no deletion of either barrier artifact.",
+    "The original complete surviving-file inventory has 757 files, exactly five final checkpoints, no frozen-finals or sealed-opened artifact, and no open/sealed raw or sample path.",
+    "The byte-verified original result retains zero open and sealed decisions, starts and requested ticks. The final PPO capture exception precedes the missing residual final and both barriers.",
+    "The separately downloaded 765-member transport verifies the exact original inventory/result bytes; it does not reconstruct or repair the missing owner-journal suffix.",
+    "Together the frozen causal order, original cost stages, five-final state and immutable surviving inventory establish that the sixteen declared sealed candidates were not reached by this invocation. All original teacher candidates and four open candidates are conservatively opened in the new inventory."
+  ],
+  "schema": "nca-jolt-003-unopened-sealed-proof/v1",
+  "sealed_cases_sha256": "a4fef769ad0548b23b58d37e1a5733473e823004de1d7a471ac87b7c7136f064",
+  "source_file": "src/nca/train/jolt_screen.py",
+  "source_file_sha256": "89cecde9287cb00bec96181fbad84eb3986bd531ceeffdb0eb9b171c38c4bde3",
+  "source_revision": "a68e687ced52bef778375a2753b1362dea3704fa"
+}

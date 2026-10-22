@@ -24,10 +24,11 @@ from nca.controllers.jolt_learned import (
     combine_residual, features, joint_log_probability, map_action,
     mapped_continuous, policy_state_sha256,
 )
-from nca.data.jolt_samples import JoltDecisionRecord, JoltDraw, JoltEpisode, validate_history
+from nca.data.jolt_samples import JoltDecisionRecord, JoltDraw, JoltEpisode, JoltEpisodeV3, validate_history
 
 
 Reserve = Callable[[str, int], Any]
+TERMINAL_SCHEMA_V3 = "nca-jolt-learning-terminal/v3"
 BC_SPEC = {
     "epochs": 40, "unroll": 16, "learning_rate": .001, "gradient_norm": .5,
     "movement_trim_effort_weight": 1., "launch_aim_weight": .5, "button_weight": .25,
@@ -137,6 +138,30 @@ def clone_sequences(episodes: Sequence[JoltEpisode], *, expected_teacher_sha256:
     if not converted or not any(row.eligible for episode in converted for row in episode.rows):
         raise ValueError("no eligible ordinary teacher samples; retain the failed data without fitting")
     return tuple(converted)
+
+
+def convert_clone_episode_v3(episode: JoltEpisodeV3, *, expected_teacher_sha256: str,
+                              expected_supervisor_sha256: str) -> CloneEpisode:
+    """Convert one complete capture; keep a masked episode without resampling.
+
+    The worker retains compact features/labels and releases raw native packets
+    between demonstrations. The fixed complete dataset must have at least one
+    eligible ordinary row before fitting; an all-masked episode is not filtered.
+    """
+    if (not isinstance(episode, JoltEpisodeV3) or episode.split != "training"
+            or episode.outcome["complete"] is not True or not episode.decisions):
+        raise ValueError("v3 demonstration conversion needs a complete positive-progress training capture")
+    validate_history(episode)
+    rows = []
+    for index, record in enumerate(episode.decisions):
+        if (record.event.source.policy_sha256 != expected_teacher_sha256
+                or record.supervisor_sha256 != expected_supervisor_sha256
+                or record.event.source.kind != "scripted" or record.draw is not None):
+            raise ValueError("v3 demonstration source differs from the frozen authored teacher and supervisor")
+        rows.append(LearningRow(record_features(record), index == 0 or record.recurrent_reset,
+            None if record.proposal is None else action_label(record.proposal), record.imitation_eligible,
+            record.proposal is not None, record.overridden or not record.admitted))
+    return CloneEpisode(episode.id, tuple(rows), episode.sha256, episode.status)
 
 
 @dataclass(frozen=True)
@@ -347,6 +372,32 @@ class JoltRolloutSequence:
         validate_history(evidence)
 
 
+@dataclass(frozen=True)
+class JoltRolloutSequenceV3(JoltRolloutSequence):
+    """Execution-v3 terminal boundary, without altering native task flags.
+
+    In particular, a supervisor retirement discovered at a cutoff peek wins
+    over administrative bootstrapping, but the already-retained cutoff flag
+    and every per-tick reward remain original evidence. Masked override rows
+    still receive no actor/critic loss and still cut the original GAE trace.
+    """
+
+    terminal_failure: bool = False
+    episode_outcome_sha256: str = ""
+    terminal_schema: str = TERMINAL_SCHEMA_V3
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        from nca.contracts import digest
+        digest(self.episode_outcome_sha256, "episode_outcome_sha256")
+        if type(self.terminal_failure) is not bool or self.terminal_schema != TERMINAL_SCHEMA_V3:
+            raise ValueError("v3 terminal semantics must be explicit")
+        if self.terminal_failure and (self.bootstrap_value != 0.
+                or self.transitions[-1].final_observation_valid
+                or any(row.task_terminal for row in self.transitions)):
+            raise ValueError("safe failure has zero bootstrap and no critic observation or invented task terminal")
+
+
 def rollout_sequence(episode: JoltEpisode, values: Sequence[float], *, bootstrap_value: float = 0.,
                      final_observation_valid: bool = True) -> JoltRolloutSequence:
     if episode.split != "training" or len(values) != len(episode.decisions):
@@ -361,6 +412,45 @@ def rollout_sequence(episode: JoltEpisode, values: Sequence[float], *, bootstrap
             record.actual_ticks, valid, event.terminated, event.truncated, final_valid,
             index == 0 or record.recurrent_reset))
     return JoltRolloutSequence(episode.id, tuple(rows), bootstrap_value)
+
+
+def rollout_sequence_v3(episode: JoltEpisodeV3, values: Sequence[float | None], *,
+                        bootstrap_value: float = 0., final_observation_valid: bool = True) -> JoltRolloutSequenceV3:
+    """Translate only a receipt-complete v3 episode to the unchanged PPO rows."""
+    if not isinstance(episode, JoltEpisodeV3) or episode.outcome["complete"] is not True:
+        raise ValueError("v3 PPO requires a complete explicitly versioned outcome")
+    terminal_failure = episode.outcome["kind"] == "safe_retirement"
+    if terminal_failure and (bootstrap_value != 0. or final_observation_valid):
+        raise ValueError("safe failure cannot acquire a bootstrap value observation")
+    if len(values) != len(episode.decisions):
+        raise ValueError("v3 PPO values must match the exact retained physical rows")
+    if type(bootstrap_value) not in (int, float) or not math.isfinite(bootstrap_value):
+        raise ValueError("v3 PPO requires a finite original cutoff value")
+    for record, value in zip(episode.decisions, values):
+        if (value is None) != (record.proposal is None):
+            raise ValueError("v3 preserves absent model values on value-less override intervals")
+    # This zero is an internal masked tensor placeholder, never a model value
+    # observation in retained evidence. Invalid rows train neither loss head.
+    numeric = [0. if value is None else float(value) for value in values]
+    learning_bootstrap = bootstrap_value
+    if episode.decisions:
+        last = episode.decisions[-1]
+        event = last.event
+        if (episode.outcome["kind"] == "administrative_cutoff"
+                and final_observation_valid is True and last.proposal is None
+                and last.overridden and last.observation_valid and last.admitted
+                and event.valid and event.trace_complete and last.actual_ticks == 6
+                and event.truncated and not event.terminated and event.next_observation is not None):
+            # Recovery can finish at the cutoff peek after a consumed override.
+            # Its real value/observation and forward charges remain in capture
+            # and independent replay. The unchanged GAE mask discards this last
+            # row and cuts the trace, so only its unused tensor placeholder is
+            # zero. Ordinary cutoffs and legacy validation keep their meaning.
+            learning_bootstrap = 0.
+    original = rollout_sequence(episode, numeric, bootstrap_value=learning_bootstrap,
+                                final_observation_valid=final_observation_valid)
+    return JoltRolloutSequenceV3(original.episode_id, original.transitions, original.bootstrap_value,
+                                terminal_failure, sha256_json(episode.outcome))
 
 
 def generalized_advantages(sequence: JoltRolloutSequence, *, gamma_per_tick: float = .997,
@@ -379,7 +469,8 @@ def generalized_advantages(sequence: JoltRolloutSequence, *, gamma_per_tick: flo
         at_end = index + 1 == len(rows)
         next_valid = at_end or (rows[index + 1].valid and not rows[index + 1].reset
                                 and not row.record.overridden and row.record.admitted)
-        bootstrap = row.final_observation_valid and not row.task_terminal and next_valid
+        terminal_failure = at_end and isinstance(sequence, JoltRolloutSequenceV3) and sequence.terminal_failure
+        bootstrap = row.final_observation_valid and not row.task_terminal and not terminal_failure and next_valid
         next_value = sequence.bootstrap_value if at_end else rows[index + 1].value
         discount, trace = gamma_per_tick ** row.actual_ticks, lambda_per_tick ** row.actual_ticks
         delta = row.reward + (discount * next_value if bootstrap else 0.) - row.value
@@ -521,3 +612,19 @@ def ppo_update(policy: JoltPolicy, base_policy: JoltPolicy, optimizer: torch.opt
             "mean_ratio": sum(ratios) / len(ratios) if ratios else None,
             "clip_fraction": sum(clips) / len(clips) if clips else None,
             "frozen_base_sha256": base_sha}
+
+
+def ppo_update_v3(policy: JoltPolicy, base_policy: JoltPolicy, optimizer: torch.optim.Optimizer,
+                  sequences: Sequence[JoltRolloutSequenceV3], **kwargs) -> dict[str, Any]:
+    """Every fixed v3 update consumes exactly 256 confirmed physical decisions."""
+    if (not sequences or len(sequences) > 256
+            or any(not isinstance(sequence, JoltRolloutSequenceV3) for sequence in sequences)
+            or sum(len(sequence.transitions) for sequence in sequences) != 256
+            or any(row.actual_ticks != 6 for sequence in sequences for row in sequence.transitions)):
+        raise ValueError("v3 PPO requires exactly 256 confirmed six-tick decisions in at most 256 positive episodes")
+    result = ppo_update(policy, base_policy, optimizer, sequences, **kwargs)
+    result.update(terminal_schema=TERMINAL_SCHEMA_V3,
+                  confirmed_decisions=256, episodes=len(sequences),
+                  safe_retirements=sum(sequence.terminal_failure for sequence in sequences),
+                  new_terminal_penalty=False)
+    return result

@@ -1,0 +1,373 @@
+{
+  "schema": "nca-learn-jolt-003-offline-semantic-source-review/v1",
+  "reviewer": "jolt-v3-semantic-source-reviewer",
+  "review_date": "2026-10-22",
+  "status": "accepted_for_offline_software_only",
+  "accepted": true,
+  "offline_scope_only": true,
+  "prospective_experiment_admitted": false,
+  "complete_pipeline_feasibility_established": false,
+  "allocation_id": "learn-jolt-003-20261022-a1",
+  "experiment_allocation_consumed": false,
+  "physical_host_started": false,
+  "trained_checkpoint_reused": false,
+  "newly_initialized_synthetic_cpu_networks_executed": true,
+  "learned_family_qualified": false,
+  "owner_feel_accepted": false,
+  "morphology_unblocked": false,
+  "issue_62_completion_accepted": false,
+  "blocking_findings_for_offline_semantics": [],
+  "independence": {
+    "production_source_authored_by_this_reviewer": false,
+    "regression_test_files_authored_by_this_reviewer": [
+      "tests/test_jolt_learning_v3.py",
+      "tests/test_jolt_learning_audit_v3.py"
+    ],
+    "disclosure": "The reviewer identified and reproduced the quiet-exit administrative-cutoff conversion failure and authored bounded synthetic regression tests. Another contributor implemented the production correction; this reviewer independently inspected that correction and the frozen semantic source. The reviewer does not claim independent authorship separation for the regression tests themselves.",
+    "separate_roles": "This semantic acceptance review is distinct from the inventory implementation review and the pipeline/resource feasibility review."
+  },
+  "review_method": [
+    "Read AGENTS.md, required project documentation, the commissioned task/read-set, versioned design, allocation, and prior admission-refusal evidence.",
+    "Reviewed the terminal, cancellation, dataset, recurrent masks, GAE, fixed PPO stream, independent replay, qualification, and version dispatch paths.",
+    "Executed only bounded synthetic tests with newly initialized CPU networks while diagnosing and reproducing the cutoff bug; did not start a physical host or reuse a trained checkpoint.",
+    "Inspected the preserved full-suite and focused-suite transcripts rather than repeating successful suites.",
+    "Independently reconstructed the executable file inventory and canonical content digest using standard-library file reads; compared every file against the source freeze.",
+    "Read the final typed pipeline conformance report as incomplete planning evidence and retained its explicit refusal of experiment admission."
+  ],
+  "findings": [
+    {
+      "id": "S01",
+      "subject": "Narrow safe-retirement proof",
+      "result": "accepted_for_offline_software",
+      "finding": "Only a fully replayed emergency_recovery_deadline can produce a complete unsuccessful episode. The verifier replays the unchanged supervisor from the original invocation across every consumed interval, requires positive complete admitted six-tick steps, original contiguous observations, matching proposal/dispatch history and leases, and rejects an earlier task terminal or cutoff. Original deadline and quiet-exit precedence are preserved.",
+      "references": [
+        "src/nca/evaluation/jolt_retirement.py:103-190",
+        "src/nca/controllers/recovery_supervisor.py",
+        "src/nca/data/jolt_samples.py:235-284",
+        "tests/test_jolt_learning_v3.py",
+        "tests/test_jolt_learning_audit_v3.py"
+      ]
+    },
+    {
+      "id": "S02",
+      "subject": "Native cancellation and refusal propagation",
+      "result": "accepted_for_offline_software",
+      "finding": "Retirement requires the original pre/post native cancellation observations, the same actor incarnation and physical state, revoked targets and cleared action/edges/lease, and the correct control-generation fence. Native refusal, uncertain or zero progress, unknown retirement reasons, cancellation failure, proof failure, or durable-evidence failure remain errors. A failed proof cannot authorize another scheduled invocation.",
+      "references": [
+        "src/nca/evaluation/jolt_retirement.py:76-100",
+        "src/nca/controllers/morphology/conformance.py",
+        "src/nca/train/jolt_capture_v3.py:200-280",
+        "src/nca/evaluation/jolt_learning_audit.py:118-147"
+      ]
+    },
+    {
+      "id": "S03",
+      "subject": "Original task facts and unsuccessful-episode metrics",
+      "result": "accepted_for_offline_software",
+      "finding": "Safe retirement is an explicitly versioned outcome over the retained native decisions. It does not invent a terminal physical transition or a task deadline. Independent replay reconstructs original rewards and measured character/latency information, requires success false, and assigns the original four-second capped completion cost. Ordinary arrival and the native tick-240 deadline retain their original terminal behavior, including deadline precedence over coincident emergency expiry.",
+      "references": [
+        "src/nca/data/jolt_samples.py:235-284",
+        "src/nca/train/jolt_capture_v3.py:180-193",
+        "src/nca/train/jolt_capture_v3.py:281-333",
+        "src/nca/evaluation/jolt_learning_audit.py:914-1034",
+        "src/nca/train/task.py",
+        "tests/test_jolt_learning_v3.py",
+        "tests/test_jolt_learning_audit_v3.py"
+      ]
+    },
+    {
+      "id": "S04",
+      "subject": "Retained labels, masks, recurrent state and GAE",
+      "result": "accepted_with_existing_design_limit",
+      "finding": "Unsuccessful teacher episodes retain supported ordinary labels and abstentions without success filtering. Value-less overrides retain None as model-value evidence, train neither actor nor critic, and cut the original GAE trace. Reward and per-tick discounting remain unchanged; safe retirement adds no terminal penalty and does not carry reward across an emergency gap. Recurrent reset and fixed-window behavior remain unchanged. Consequently, retaining a safe failure is not itself proof of a new negative learning signal or an effective parameter update.",
+      "references": [
+        "src/nca/train/jolt_learning.py",
+        "src/nca/train/jolt_screen.py:647-682",
+        "src/nca/evaluation/jolt_learning_audit.py:468-510",
+        "src/nca/evaluation/jolt_learning_audit.py:1055-1175",
+        "tests/test_jolt_learning_v3.py"
+      ]
+    },
+    {
+      "id": "S05",
+      "subject": "Quiet exit exactly at an administrative cutoff",
+      "result": "resolved_and_independently_reviewed",
+      "finding": "The original failure was reproduced when quiet recovery completed at the cutoff peek after a consumed override: capture correctly retained a nonzero real value, but legacy rollout validation rejected it because the final learning row was masked. The V3 converter now first rejects nonfinite original values, then uses a zero internal bootstrap placeholder only for a complete admitted trace-complete six-tick override at an administrative cutoff with a real valid final observation. The persisted actual value, observation hash and forward charges remain intact and replay independently. Since unchanged GAE skips the last masked row and cuts the trace, this projection cannot change a trainable return. Ordinary cutoffs, safe-retirement zero bootstrap, and legacy rejection remain unchanged.",
+      "references": [
+        "src/nca/train/jolt_learning.py:417-482",
+        "src/nca/train/jolt_capture_v3.py:210-220",
+        "src/nca/evaluation/jolt_learning_audit.py:953-975",
+        "tests/test_jolt_learning_v3.py:test_quiet_exit_at_cutoff_retains_value_without_bootstrapping_a_masked_row",
+        "tests/test_jolt_learning_audit_v3.py:test_quiet_exit_cutoff_replays_actual_value_and_masked_gae_separately"
+      ]
+    },
+    {
+      "id": "S06",
+      "subject": "Deterministic PPO continuation and bounded progress",
+      "result": "accepted_for_offline_software",
+      "finding": "The fixed seeded case stream advances once per actual episode and continues across updates independently of outcomes. Safe failures consume their scheduled entries, cannot be replaced, and remain in the exact 256-confirmed-decision update count. Positive-progress requirements and the frozen per-update/total start ceilings bound fragmentation. Complete counters describe receipt-complete captures, including administrative PPO truncations, rather than success.",
+      "references": [
+        "src/nca/train/jolt_screen.py:700-758",
+        "src/nca/train/jolt_admission_v3.py",
+        "src/nca/evaluation/jolt_learning_audit.py:1176-1280",
+        "tests/test_jolt_streams_v3.py",
+        "configs/learning/jolt-learn-003-v1.json"
+      ]
+    },
+    {
+      "id": "S07",
+      "subject": "Qualification and comparison denominators",
+      "result": "accepted_for_offline_software",
+      "finding": "The implementation retains all 32 open and 224 sealed case/controller rows, all three seeds, and the six-final freeze before sealed evaluation. Safe failures are unsuccessful rows in the original denominators. The original whole-family success, own-initial/authored improvement, character, latency and integrity gates and whole-BC-family preference remain unchanged. No partial or complete negative result can establish learned-actuation success, owner feel, morphology release, or closure of issue #62.",
+      "references": [
+        "src/nca/train/jolt_screen.py:760-825",
+        "src/nca/evaluation/jolt_learning.py:83-173",
+        "src/nca/evaluation/jolt_learning_audit.py",
+        "tests/test_jolt_learning_audit_v3.py",
+        "tests/test_jolt_streams_v3.py"
+      ]
+    },
+    {
+      "id": "S08",
+      "subject": "Version separation and historical evidence",
+      "result": "accepted_for_offline_software",
+      "finding": "New episode, terminal, retirement, execution, capture and audit behavior is explicitly versioned. Legacy V1/V2 dispatch and rollout validation retain their prior meaning. The consumed LEARN-JOLT-002 allocation is not reopened or reinterpreted, and no historical result or prior qualification is upgraded by this review.",
+      "references": [
+        "src/nca/train/jolt_screen.py:95-149",
+        "src/nca/train/jolt_screen.py:281-302",
+        "src/nca/data/jolt_samples.py",
+        "src/nca/train/jolt_learning.py:350-453",
+        "src/nca/evaluation/jolt_learning_audit.py:72-147",
+        "tests/test_jolt_learning_v2.py",
+        "tests/test_jolt_learning_audit_v2.py"
+      ]
+    },
+    {
+      "id": "S09",
+      "subject": "Physical admission remains refused",
+      "result": "experiment_not_admitted",
+      "finding": "The resource report remains explicit incomplete planning evidence. Measured components already exceed their declared shared-clock phases, and native host work, full semantic audit, neural work, complete publication overhead, process cleanup and aggregate worker/native memory remain unresolved. A passing offline semantic review supplies no experiment declaration or feasibility admission and spends no allocation.",
+      "references": [
+        "src/nca/train/jolt_admission_v3.py",
+        "tools/check_jolt_pipeline_envelope_v3.py",
+        "configs/learning/jolt-learn-003-v1.json"
+      ]
+    }
+  ],
+  "remaining_physical_admission_requirements": [
+    "A defensible complete source/runtime/host-bound time and memory envelope covering active work, closure, independent audit, publication, external verification, stream/receipt finalization, and observed exit under the original single shared-clock limits.",
+    "Any change to the commissioned total, phase allocations, counters, cases, objective, or learning design requires the applicable owner-authorized amendment; this review makes no such change.",
+    "A fresh valid exact-source execution declaration with required independent prospective reviews and all frozen prerequisite, host, runtime, configuration and case-stream bindings.",
+    "The allocation must remain unopened and unspent until all admission gates pass; no fit, physical evaluation, replacement attempt, resume or deadline extension is authorized by this offline review."
+  ],
+  "limitations": [
+    "The acceptance field applies only to the reviewed offline software semantics. This JSON is not a passing prospective experiment-admission review.",
+    "Synthetic receipt owners and freshly initialized CPU networks are not measured Cybersand behavior, trained-policy performance, owner-feel evidence or usable qualification.",
+    "The full offline suite includes explicitly skipped actual-host and CUDA integration checks; those capabilities remain unmeasured.",
+    "The reviewer authored the two disclosed regression-test files; separate review is required to characterize those tests as independently authored.",
+    "Synthetic component timing uses bounded specimens and a declared planning factor with cache effects and unresolved work; it is not a whole-pipeline worst-case guarantee.",
+    "No complete experiment output, learned family, valid physical negative, held-out evaluation, or owner acceptance was produced.",
+    "Required checks on the final PR head and merge verification remain coordinator gates; this semantic review does not waive them or claim that pending hosted checks have passed."
+  ],
+  "verdict": "No blocking finding remains in the reviewed offline terminal, cancellation, learning, replay, deterministic scheduling, qualification-denominator and legacy-compatibility semantics. The quiet-exit cutoff defect is fixed while preserving actual retained values and unchanged loss/GAE semantics. Accept the software only within this offline scope. Physical experiment admission remains refused, the allocation remains unspent, and the learned-actuation objective remains open.",
+  "reviewed_source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "reviewed_source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "source_checkout_clean_at_review": true,
+  "source_file_count": 244,
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_binding": {
+    "independently_recomputed": true,
+    "canonical_digest": "SHA-256 of the canonical sorted path-to-content-SHA-256 mapping",
+    "inventory_definition": "src/nca/**/*.py; src/nca/**/*.gd; tools/*.py; tests/**/*.py; configs/learning/*.json; pyproject.toml; excludes basenames beginning jolt-execution-",
+    "complete_inventory_matched_source_freeze": true,
+    "source_freeze": {
+      "basename": "source-freeze-final.json",
+      "bytes": 28002,
+      "sha256": "dd8a935d83bb1208d5a07472d8b52f8dba2414ffe0a3d6f104771b89f64d1485"
+    }
+  },
+  "configuration": {
+    "path": "configs/learning/jolt-learn-003-v1.json",
+    "canonical_sha256": "239e2432d652414130217b51ffb8002aff67aeaa1694979d0081cfa3c341f353",
+    "file_sha256": "76129b50e37774d20b46d34b82d4ca66b06c989838b44332ad57306453dddbf2",
+    "independently_verified": true,
+    "changed_during_completion": false
+  },
+  "frozen_offline_runtime": {
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "interop_threads": 1,
+    "kernel": "6.18.55",
+    "libc": [
+      "glibc",
+      "2.39"
+    ],
+    "logical_cpus_available": 9,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "threads": 1,
+    "torch": "2.8.0+cpu"
+  },
+  "host_revision_required_not_executed": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "reviewed_source_files_sha256": {
+    "src/nca/controllers/jolt_learned.py": "8ac31038129dfd2a8e7d97ad8cf54e153c9164ab7481ad4d1bb17bbd5ef1b5a2",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/controllers/morphology/conformance.py": "384ea7611ede3f50ecc1eb4971f5102e04e5d12b78060611632e7d6e7c6142d0",
+    "src/nca/data/jolt_samples.py": "dae417e383b451f98f4a6fdfb3b2b0e2cf1365193324dc6de25a5476f045e612",
+    "src/nca/evaluation/jolt_retirement.py": "6342cccc464294b51b6793020a845d17b415caf758e2f2ffd7042175511d0661",
+    "src/nca/evaluation/jolt_learning.py": "353bbe7c248a731e3c1cf67a443fbe1baf09c4d03a486839d2fca7bdd17e1505",
+    "src/nca/evaluation/jolt_learning_audit.py": "571b973816e1c4d862a418d27bf50a92bc00c15b36b649334dd11ff7fc982137",
+    "src/nca/train/jolt_capture_v3.py": "a512ee9057f2ab499cd7c51ecba6b90669102cf1fe04db1293b5a484a6e0375e",
+    "src/nca/train/jolt_learning.py": "0e24011651a802ec714e077f330ed198347b005982e70c940f4f3365903fe63f",
+    "src/nca/train/jolt_screen.py": "1f27bb3f4afdbebe3c8fa20f790ff528e0ababef6415816f5a88954f6433279c",
+    "src/nca/train/jolt_admission_v3.py": "f2bea59135824ae5fc66c78f3ffce844ca6d93d1e51f3e9f4974a082216d20df",
+    "src/nca/train/jolt_cli_v3.py": "f9a226559bdd359ae51f77a613ca9b64492cd931de8eb70d19376ec9d2c4c8ff",
+    "src/nca/train/jolt_executor_v3.py": "c67bafddbb18d5596dc0ad44c6816d7ca29d5befa92dd86f81b946a44e8cd444",
+    "src/nca/train/task.py": "1e1a173b2b3228ec419a08cf9539ad285b65b36569e82d1e5d4e8f37ffa3d0ec",
+    "tests/test_jolt_learning_v3.py": "50ffde4894d4562d870c2114a94fc82c6813c41b7689e96902d49f1612d27133",
+    "tests/test_jolt_learning_audit_v3.py": "f96192f81d975d5ad0c8134787b55338b9e9ef86d8301a5aa4852abd77a30341",
+    "tests/test_jolt_streams_v3.py": "5261523346bf7d90bd175353ffed3bc660c24575aa86435344b744e400520f03",
+    "tests/test_jolt_cli_v3.py": "edbd49cde9a6c019bb9e37584c877c857f08c980983188ac77d99a97bb6b9ecd",
+    "tests/test_jolt_executor_v3.py": "627eec9320aa0683385435474324c994336243e8649e13860c637cbbf874a818",
+    "tests/test_jolt_pipeline_envelope_v3.py": "8e89836eed3f0879094b71a9bba564596fdcc7a57bc1a0df080445a73c8b5062",
+    "tools/check_jolt_pipeline_envelope_v3.py": "ace3ef74404fbdada61b9b04539232c54998ea1d2d6fe934dc8c9027a61ff711"
+  },
+  "verification_evidence": [
+    {
+      "check": "Full offline suite",
+      "performed_by": "coordinating agent; original transcript inspected by this reviewer",
+      "source_revision_reported_for_tested_content": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "source_tree": "b4b588abb06d2ac82c7a0b8d0e203daafb4aeb4f",
+      "execution_closure_sha256": "6bbb8d6c7d776f535ca36cc2e4868c510a9b16fab0fa857b1f0cf8f1b51bebff",
+      "tests_run": 1181,
+      "passed": 1122,
+      "skipped": 59,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 139.259,
+      "final_revision_full_suite_claim": false,
+      "continuity": "The final source differs only in inventory metadata lookup and its one regression test. This reviewer independently compared every execution-closure file hash; all terminal, learning, qualification, audit and authored semantic regression files are identical.",
+      "transcript": {
+        "basename": "offline-final.log",
+        "bytes": 216089,
+        "sha256": "2467d6073e0922a4414c1d9c79c76474232797c5d4f30cb42c2a102d5ec10c7e"
+      }
+    },
+    {
+      "check": "Focused V3 regressions",
+      "performed_by": "coordinating agent; original transcript inspected by this reviewer",
+      "source_revision_reported_for_tested_content": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests_run": 73,
+      "passed": 73,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 46.157,
+      "includes": "Ordinary arrival; normal tick-240 deadline; deadline/emergency coincidence; quiet exit at 48 ticks; real nonzero cutoff value retained and independently replayed while masked GAE remains zero; legacy rejection and nonfinite cutoff refusal.",
+      "transcript": {
+        "basename": "focused-final.log",
+        "bytes": 13756,
+        "sha256": "0401d29ee7d3a9f6b2225940ddf1f30c9228e083a705e1e1067cd3114eeb8f49"
+      }
+    },
+    {
+      "check": "Final portability, inventory and lifecycle regressions",
+      "performed_by": "coordinating agent; original transcript and narrow source diff inspected by this reviewer",
+      "source_revision_reported_for_tested_content": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "tests_run": 26,
+      "passed": 26,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 0.547,
+      "source_changes_since_full_suite": [
+        "src/nca/train/jolt_cli_v3.py",
+        "tests/test_jolt_cli_v3.py"
+      ],
+      "finding": "Path.lstat obtains real non-following link metadata on Windows, preserving hard-link and special-entry rejection. The added synthetic Windows DirEntry test covers both a valid original tree and an external hard-link alias.",
+      "transcript": {
+        "basename": "inventory-portability-final.log",
+        "bytes": 4723,
+        "sha256": "3834bf2b817c739900b4611ef5ca04ab3af6751252aea026ec328f7427cb4e48"
+      }
+    },
+    {
+      "check": "Final clean-source typed pipeline conformance",
+      "performed_by": "coordinating agent; report, exit evidence, and all source bindings independently inspected by this reviewer",
+      "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "report": {
+        "basename": "jolt-learn-003-typed-pipeline-20261022.json",
+        "bytes": 83092,
+        "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+      },
+      "observed_exit": {
+        "basename": "typed-pipeline-clean-observed-exit.json",
+        "bytes": 607,
+        "sha256": "cc9c30288d6023bb9108b784fa6e4cbb8b3d61ca02a056b15a6a7e23918100cf"
+      },
+      "observed_exit_code": 0,
+      "timed_out": false,
+      "observed_complete_process_seconds": 23.145674724000855,
+      "conformance_source_file_count": 245,
+      "conformance_source_sha256": "6b4a05a8331d75189ab2d5f098498164c24d1d134b7c3c634e0a7d2b40012496",
+      "relationship_to_execution_closure": "Exactly the 244 execution files with identical hashes, plus configs/morphology/profiles-v1.json. The separate 245-file hash is not the execution-declaration closure.",
+      "result": "completed_offline_measurement_only",
+      "prospective_experiment_admitted": false,
+      "complete_pipeline_feasibility_established": false
+    }
+  ],
+  "pipeline_refusal_evidence": {
+    "report": {
+      "basename": "jolt-learn-003-typed-pipeline-20261022.json",
+      "bytes": 83092,
+      "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+    },
+    "planning_method": "The report scales bounded synthetic observations by declared source counts and a factor of four. These are incomplete component planning estimates, not measured total experiment duration or a universal worst-case bound.",
+    "component_planning_seconds_excluding_unresolved": {
+      "active": 18864.25638012876,
+      "audit": 8058.123357910334,
+      "closure": 1323.666022749878,
+      "publication": 459.61819860065833,
+      "verification": 1370.062645619195
+    },
+    "repeated_readback_passes": {
+      "active": {
+        "episode_family_writes": 2,
+        "journal_appends": 1
+      },
+      "audit": {
+        "episode_family_decode_hash_passes": 2,
+        "journal_chain_passes": 1,
+        "journal_syntax_passes": 1,
+        "reservation_passes": 3
+      },
+      "closure": {
+        "journal_chain_passes": 1,
+        "reservation_passes": 2
+      },
+      "publication": {
+        "reservation_passes": 2,
+        "whole_artifact_hash_passes": 1
+      },
+      "verification": {
+        "journal_chain_passes": 1,
+        "reservation_passes": 2,
+        "whole_artifact_hash_passes": 1
+      }
+    },
+    "unresolved_terms": [
+      "Native host startup, reset, stepping, transport, cancellation and process memory are unmeasured here.",
+      "Episode dataclass construction, history/retirement/metric validation and semantic journal replay are not timed by storage specimens.",
+      "Neural fitting, inference, authentication and audit forwards require separate source/runtime-bound CPU evidence.",
+      "Full-worker peak memory includes retained PPO transitions, metrics/results, auditor copies, models, native process and allocator overhead; specimen RSS is not that bound.",
+      "Complete reservation publication writes/fsync, small-file open/stat latency, source admission and fixed JSON publication are not established by read throughput.",
+      "Page-cache behavior and type/shape surrogates make these factor-four observations planning estimates, not universal worst-case execution guarantees.",
+      "Final process reaping, stream fsync, receipts and observed outer exit must still fit their original shared-clock phases."
+    ],
+    "whole_worker_peak_memory_established": false,
+    "conclusion": "The report does not justify admission under the existing shared-clock phases and does not establish a sufficient amended total."
+  }
+}

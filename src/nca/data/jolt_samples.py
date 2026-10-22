@@ -18,6 +18,8 @@ from .records import CaptureEvent, policy_view
 SAMPLE_SCHEMA = "jolt-pretransform-normal-bernoulli/v2"
 DECISION_SCHEMA = "jolt-proposal-supervision-consumption/v2"
 EPISODE_SCHEMA = "jolt-invocation-episode/v2"
+EPISODE_SCHEMA_V3 = "jolt-invocation-episode/v3"
+OUTCOME_SCHEMA_V3 = "nca-jolt-episode-outcome/v3"
 NATIVE_ACTION_TOLERANCE = 1e-6
 
 
@@ -228,6 +230,58 @@ class JoltEpisode(Record):
                 raise ContractError("jolt_sequence", "capture indices must remain strictly ordered")
             if index + 1 < len(self.decisions) and (row.event.terminated or row.event.truncated):
                 raise ContractError("jolt_sequence", "no decisions may follow task termination or administrative cutoff")
+
+
+@dataclass(frozen=True)
+class JoltEpisodeV3(JoltEpisode):
+    """A separately versioned outcome boundary over unchanged native decisions.
+
+    A verified safe retirement is a complete unsuccessful episode. It does not
+    rewrite a consumed tick as a task deadline, invent a last transition, or
+    supply a new reward. ``retirement`` is authenticated against the complete
+    raw observations/cancellation by the independent retirement verifier.
+    """
+
+    outcome: Mapping[str, Any] | None = None
+    retirement: Mapping[str, Any] | None = None
+    schema: Literal["jolt-invocation-episode/v3"] = EPISODE_SCHEMA_V3
+
+    def validate(self) -> None:
+        super().validate()
+        outcome = self.outcome
+        if (not isinstance(outcome, Mapping)
+                or set(outcome) != {"schema", "kind", "complete", "success", "reason"}
+                or outcome["schema"] != OUTCOME_SCHEMA_V3
+                or outcome["kind"] not in {"safe_retirement", "task_terminal", "administrative_cutoff", "integrity_error"}
+                or type(outcome["complete"]) is not bool or type(outcome["success"]) is not bool
+                or not isinstance(outcome["reason"], str) or not outcome["reason"]):
+            raise ContractError("jolt_outcome", "v3 requires an explicit typed episode outcome")
+        if outcome["complete"] != (outcome["kind"] != "integrity_error"):
+            raise ContractError("jolt_outcome", "integrity failures cannot acquire a complete outcome")
+        if outcome["complete"] and (not self.decisions or any(row.actual_ticks <= 0 for row in self.decisions)):
+            raise ContractError("jolt_outcome", "receipt-complete captures require positive confirmed progress")
+        if outcome["success"] and (outcome["kind"] != "task_terminal" or outcome["reason"] != "arrival"):
+            raise ContractError("jolt_outcome", "only a native-receipt task arrival may succeed")
+        if self.reason != outcome["reason"]:
+            raise ContractError("jolt_outcome", "episode and versioned outcome reasons differ")
+        if outcome["kind"] == "safe_retirement":
+            if (self.status != "completed" or outcome["success"]
+                    or outcome["reason"] != "emergency_recovery_deadline"
+                    or not isinstance(self.retirement, Mapping)
+                    or self.retirement.get("schema") != "nca-jolt-safe-retirement/v3"
+                    or self.retirement.get("reason") != outcome["reason"]
+                    or self.retirement.get("path") not in ("ordinary_attempt", "cutoff_peek")
+                    or any(row.event.terminated for row in self.decisions)):
+                raise ContractError("jolt_outcome", "safe retirement needs its separate failed-terminal proof")
+        elif self.retirement is not None:
+            raise ContractError("jolt_outcome", "an ordinary or erroneous capture cannot invent safe retirement")
+        if outcome["kind"] == "task_terminal" and (self.status != "completed" or not self.decisions[-1].event.terminated):
+            raise ContractError("jolt_outcome", "task completion must retain its original terminal tick flags")
+        if outcome["kind"] == "administrative_cutoff" and (
+                self.status != "capped" or not self.decisions[-1].event.truncated or outcome["success"]):
+            raise ContractError("jolt_outcome", "an administrative cutoff is a complete capped capture")
+        if outcome["kind"] == "integrity_error" and self.status not in ("failed", "capped", "canceled"):
+            raise ContractError("jolt_outcome", "integrity errors remain incomplete capture failures")
 
 
 def reconstructed_history(previous: JoltDecisionRecord | None) -> dict[str, Any]:

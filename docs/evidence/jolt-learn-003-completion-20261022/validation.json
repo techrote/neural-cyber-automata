@@ -1,0 +1,264 @@
+{
+  "artifact_identities": {
+    "admission-refusal.json": {
+      "bytes": 7607,
+      "sha256": "91f6bb181802a2d25457b45a1d628073b3942325f75700fc519db1f02b609dbb"
+    },
+    "docs-check.log": {
+      "bytes": 46,
+      "sha256": "7ea095cba8e52d37931957ba85da8bf055c4a9721ee5e8f72779f6b5b24ac8cb"
+    },
+    "envelope-review.json": {
+      "bytes": 24485,
+      "sha256": "5fb88f7a688af2fe3a1da8217f3124fb9e8e0174b5a49ad974b38fcb76850ca6"
+    },
+    "focused-tests.log": {
+      "bytes": 13756,
+      "sha256": "0401d29ee7d3a9f6b2225940ddf1f30c9228e083a705e1e1067cd3114eeb8f49"
+    },
+    "inventory-cross-review.json": {
+      "bytes": 13269,
+      "sha256": "c93030a22028e910d1b3c1f5bda40d6ef92684d3b482675194c4e3b58988fffa"
+    },
+    "inventory-portability-tests.log": {
+      "bytes": 4723,
+      "sha256": "3834bf2b817c739900b4611ef5ca04ab3af6751252aea026ec328f7427cb4e48"
+    },
+    "offline-tests.log": {
+      "bytes": 216089,
+      "sha256": "2467d6073e0922a4414c1d9c79c76474232797c5d4f30cb42c2a102d5ec10c7e"
+    },
+    "preserved-history.json": {
+      "bytes": 30229,
+      "sha256": "4fb6baf7c6be6ee270ff30fca6ea22704c7a1556a861f13a27eae7fa2c17f881"
+    },
+    "semantic-review.json": {
+      "bytes": 24549,
+      "sha256": "82829e88fac99e03c96402b9151326b8e52658554c915abf636a5800fb83715c"
+    },
+    "source-ci.json": {
+      "bytes": 2961,
+      "sha256": "0f50a7d0afd11533c55647b185ed3fe9b4ea678eb770cf14a6ff96e77d5fa09c"
+    },
+    "source-freeze.json": {
+      "bytes": 28002,
+      "sha256": "dd8a935d83bb1208d5a07472d8b52f8dba2414ffe0a3d6f104771b89f64d1485"
+    },
+    "typed-pipeline-conformance.json": {
+      "bytes": 83092,
+      "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+    },
+    "typed-pipeline-development.json": {
+      "bytes": 82841,
+      "sha256": "70353b1737e848c4c5783d31ff0e938dd9ab9594b74d677f93bcc69a1c3e35cd"
+    },
+    "typed-pipeline-observed-exit.json": {
+      "bytes": 607,
+      "sha256": "cc9c30288d6023bb9108b784fa6e4cbb8b3d61ca02a056b15a6a7e23918100cf"
+    },
+    "typed-pipeline-source-0cba-observed-exit.json": {
+      "bytes": 607,
+      "sha256": "2f22562ea47054a9e7491def45702e1401063da72153397c64eba2cf1c14a1c6"
+    },
+    "typed-pipeline-source-0cba.json": {
+      "bytes": 83109,
+      "sha256": "23289060b16a72751cc4d387c8da93e23ede8d907087cdec4d96f8d3ac1cbbfc"
+    },
+    "typed-pipeline-source-0cba.log": {
+      "bytes": 1154,
+      "sha256": "6b79b98c222818edc1bec7704875049d4b434d22bcf91e5d5d3d7d8d87861434"
+    },
+    "typed-pipeline.log": {
+      "bytes": 1145,
+      "sha256": "15090e8359da8820b4ef441f8db7f1900479ebd25ffa8bb6157970f036dbcb5a"
+    }
+  },
+  "created_utc": "2026-10-22T20:10:12.761440+00:00",
+  "documentation_check": {
+    "checked_files": 92,
+    "command": "python tools/check_docs.py --strict",
+    "errors": 0,
+    "observed_exit_code": 0,
+    "transcript": "docs-check.log",
+    "warnings": 0
+  },
+  "environment_limits": [
+    "Local actual-host/device tests were not configured; expected skips are retained.",
+    "Process-lifecycle tests ran with a consistent process and procfs PID namespace; source cleanup guards were not weakened.",
+    "Synthetic unit tests execute newly initialized neural models and temporary synthetic checkpoints. They are not physical learning or historical trained-checkpoint reuse."
+  ],
+  "experiment_allocation_consumed": false,
+  "final_source_delta_since_full_suite": [
+    "src/nca/train/jolt_cli_v3.py",
+    "tests/test_jolt_cli_v3.py"
+  ],
+  "hosted_checks": {
+    "ci_is_not_learning_allocation": true,
+    "final_executable_source_all_five_passed": true,
+    "final_executable_source_checks": "source-ci.json",
+    "pr_url": "https://github.com/techrote/neural-cyber-automata/pull/73",
+    "required_jobs": [
+      "docs",
+      "cpu (ubuntu-24.04)",
+      "cpu (windows-2022)",
+      "Optional CPU learning conformance",
+      "Pinned host conformance"
+    ],
+    "status_at_publication": "required on exact final publication head; actual results and merge verification remain in PR 73"
+  },
+  "independent_offline_reviews": {
+    "envelope-review.json": {
+      "bytes": 24485,
+      "sha256": "5fb88f7a688af2fe3a1da8217f3124fb9e8e0174b5a49ad974b38fcb76850ca6"
+    },
+    "inventory-cross-review.json": {
+      "bytes": 13269,
+      "sha256": "c93030a22028e910d1b3c1f5bda40d6ef92684d3b482675194c4e3b58988fffa"
+    },
+    "semantic-review.json": {
+      "bytes": 24549,
+      "sha256": "82829e88fac99e03c96402b9151326b8e52658554c915abf636a5800fb83715c"
+    }
+  },
+  "offline_scope_only": true,
+  "preservation": {
+    "all_byte_identical": true,
+    "baseline_revision": "4983c711ebe873ab04eecf10b8e72f678c4c622a",
+    "configuration_files": 59,
+    "historical_evidence_files": 179,
+    "jolt_learning_ast_comparison": {
+      "changed_definition": "rollout_sequence_v3",
+      "other_top_level_functions_and_classes_unchanged": 20
+    },
+    "manifest": "preserved-history.json"
+  },
+  "prospective_experiment_admitted": false,
+  "publication_note": "Git data API publication changes commit metadata only. Each public tree was independently verified byte-identical to the tested local tree. The full and focused suites predate the final two-file Windows portability correction; they are not represented as final-source full-suite runs.",
+  "retained_failures": [
+    {
+      "finding": "Quiet recovery exactly at administrative cutoff rejected a valid nonzero actual peek after the masked final physical row.",
+      "original_regression_log_sha256": "a0e3561170541aa3a636905b3b31a6f123393ad61d708f52b988c4d9792ba194",
+      "resolution": "Narrow v3-only internal zero-bootstrap projection preserves real value/observation/forward evidence. The original traceback log contains local paths; its hash and independent review are public, without publishing those paths."
+    },
+    {
+      "finding": "Undeclared empty directory and FIFO omitted from inventory.",
+      "original_reproducer_log_sha256": "ea9659a41a0ca861a39d46032215325d154d7d322e0475d51aad7e7047c15459",
+      "resolution": "Complete entry scan with real-filesystem negative tests."
+    },
+    {
+      "errors": 1,
+      "failures": 2,
+      "finding": "Windows DirEntry metadata reports zero link count for valid files.",
+      "job_url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39844933300/job/120055621359",
+      "resolution": "Path.lstat plus Windows-metadata acceptance and hard-link rejection regression. The original failed job is retained.",
+      "skipped": 390,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests": 1181
+    }
+  ],
+  "schema": "nca-jolt-003-offline-completion-validation/v1",
+  "semantic_and_pipeline_helper_bytes_unchanged_since_full_suite": true,
+  "source_closure_unchanged_after_documentation": true,
+  "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "test_commit_metadata_provenance": [
+    {
+      "identical_tree": "b4b588abb06d2ac82c7a0b8d0e203daafb4aeb4f",
+      "public_commit": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tested_local_commit": "e682f97d63f8c73188190c28386639a03613b65b"
+    },
+    {
+      "identical_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+      "public_commit": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "tested_local_commit": "a7a5b33da15c7442ee1d23d9939cd5d94a0c5145"
+    }
+  ],
+  "test_environment": {
+    "MKL_NUM_THREADS": 1,
+    "OMP_NUM_THREADS": 1,
+    "OPENBLAS_NUM_THREADS": 1,
+    "PYTHONPATH": "src:tests",
+    "runtime": {
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "deterministic_algorithms": true,
+      "device": "cpu",
+      "interop_threads": 1,
+      "kernel": "6.18.55",
+      "libc": [
+        "glibc",
+        "2.39"
+      ],
+      "logical_cpus_available": 9,
+      "machine": "x86_64",
+      "numpy": "2.3.5",
+      "python": "3.12.14",
+      "system": "Linux",
+      "threads": 1,
+      "torch": "2.8.0+cpu"
+    }
+  },
+  "tests": [
+    {
+      "command": "python -m unittest discover -s tests -p test_*.py -v",
+      "errors": 0,
+      "failures": 0,
+      "name": "full_offline_suite",
+      "observed_exit_code": 0,
+      "passed": 1122,
+      "public_source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "seconds": 139.259,
+      "skipped": 59,
+      "tests": 1181,
+      "transcript": "offline-tests.log"
+    },
+    {
+      "command": "python -m unittest -v test_jolt_learning_v3 test_jolt_learning_audit_v3 test_jolt_cli_v3 test_jolt_executor_v3 test_jolt_pipeline_envelope_v3",
+      "errors": 0,
+      "failures": 0,
+      "name": "focused_semantic_inventory_pipeline_suite",
+      "observed_exit_code": 0,
+      "passed": 73,
+      "public_source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "seconds": 46.157,
+      "skipped": 0,
+      "tests": 73,
+      "transcript": "focused-tests.log"
+    },
+    {
+      "command": "python -m unittest -v test_jolt_cli_v3 test_jolt_executor_v3",
+      "errors": 0,
+      "failures": 0,
+      "name": "final_inventory_lifecycle_portability_suite",
+      "observed_exit_code": 0,
+      "passed": 26,
+      "public_source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "seconds": 0.547,
+      "skipped": 0,
+      "tests": 26,
+      "transcript": "inventory-portability-tests.log"
+    }
+  ],
+  "typed_pipeline_measurements": [
+    {
+      "report": "typed-pipeline-development.json",
+      "scope": "Development report preserved unchanged; its original wall-limit label was subsequently corrected to sampling-only, with final publication and observed exit explicitly separate.",
+      "source_dirty": true,
+      "source_revision": "4983c711ebe873ab04eecf10b8e72f678c4c622a"
+    },
+    {
+      "observed_exit_receipt": "typed-pipeline-source-0cba-observed-exit.json",
+      "report": "typed-pipeline-source-0cba.json",
+      "scope": "Clean pre-portability source; not relabeled as final source.",
+      "source_dirty": false,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc"
+    },
+    {
+      "observed_exit_receipt": "typed-pipeline-observed-exit.json",
+      "report": "typed-pipeline-conformance.json",
+      "scope": "Final clean-source fixed synthetic measurement; helper executes no model, checkpoint or host.",
+      "source_dirty": false,
+      "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214"
+    }
+  ]
+}

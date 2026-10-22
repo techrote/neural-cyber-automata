@@ -14,6 +14,32 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-019 — Implement and conditionally execute LEARN-JOLT-003
+
+[ACCEPTED] 2026-10-22 by owner: complete the prepared
+[LEARN-JOLT-003 task](design/LEARN_JOLT_003_PROMPT.md). The
+[actual commission](https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584)
+records fresh allocation `learn-jolt-003-20261022-a1` for implementation,
+independent review and exactly one 7,200-second CPU comparison conditional on
+all prospective gates. D-018 remains the historical preparation boundary.
+
+Implement the separately versioned safe-retirement path, unchanged learning
+workload, exact 39 ceilings, frozen case/controller order, bounded evidence and
+complete independent audit. Preserve PR #70 and subsequent unrelated IK work.
+The [implementation contracts](design/LEARN_JOLT_003.md) identify new versions
+without changing policy/action semantics or repairing old failed evidence.
+Admission requires exact clean executable source, two independent reviews,
+passing required checks and defensible complete time/memory/storage feasibility.
+If feasibility remains unresolved, publish admission failure before spending
+the allocation. No retry, resume, extension, tuning, reseeding or host change is
+included. Learned, owner-feel and morphology gates remain separate.
+
+The [completion record](evidence/2026-10-22-learn-jolt-003-completion.md) accepts
+the reviewed offline software and publishes the permitted admission refusal.
+Complete time and memory feasibility remain unresolved. The requested larger
+audit allocation was assessed without silently enlarging the retained whole
+ceiling; no executable budget change or physical invocation occurred.
+
 ### D-018 — Calculate and review a separately versioned Jolt follow-up
 
 [ACCEPTED] 2026-10-22 by owner: calculate and review a new allocation and create

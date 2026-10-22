@@ -1,0 +1,17 @@
+synthetic typed journal: owner_request_step
+synthetic typed journal: owner_request_reset
+synthetic typed journal: owner_request_profile
+synthetic typed journal: owner_request_cancel
+synthetic typed journal: owner_request_close
+synthetic typed journal: owner_response_step
+synthetic typed journal: owner_response_reset
+synthetic typed journal: owner_response_profile
+synthetic typed journal: owner_response_cancel
+synthetic typed journal: owner_response_close
+synthetic typed journal: decision_proposed
+synthetic typed journal: episode_started
+synthetic typed journal: episode_finished_authored
+synthetic typed journal: episode_finished_other
+synthetic typed journal: safe_retirement_verified
+synthetic typed journal: fixed_notes
+{"completed": true, "output_basename": "jolt-learn-003-typed-pipeline-final-20261022.json", "elapsed_seconds": 23.185628749000898, "component_sums_excluding_unresolved": {"active": 31382.583499352015, "closure": 1415.0910312854621, "audit": 8182.119931474583, "publication": 533.0574522797408, "verification": 1461.6219514155025}, "complete_pipeline_feasibility_established": false, "prospective_experiment_admitted": false}

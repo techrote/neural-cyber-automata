@@ -81,6 +81,13 @@ Its source reviews explicitly exclude prospective experiment admission. The
 48-tick emergency stop remains allocation-aborting, and complete runtime
 feasibility remains unmeasured. This increment supplies no paired learned result.
 
+The separately commissioned [LEARN-JOLT-003 offline completion](evidence/2026-10-22-learn-jolt-003-completion.md)
+closes reviewed v3 inventory and terminal-learning defects. Its full pipeline
+assessment retains unresolved original-clock time and full-worker/native memory
+gates, so prospective admission is refused and the conditional allocation remains
+unspent. It supplies no paired learned result, qualified family or morphology
+release; #62 and T-106 retain the existing requirements.
+
 ## Dependency gates
 
 **T-101:** Can start after the prepass merge; no ACT-004 implementation dependency for the package and recorded fixtures.

@@ -14,6 +14,7 @@ from nca.contracts import ContractError
 
 
 SCHEMA = "nca-jolt-learning-qualification/v1"
+SCHEMA_V3 = "nca-jolt-learning-qualification/v3"
 POLICY_SEEDS = (190103, 190207, 190301)
 METRICS = ("success", "capped_completion_seconds", "ordinary_trim_reversals_per_second",
            "mean_absolute_angle_radians", "peak_toward_speed_cells_per_second", "purposeful_launch")
@@ -80,10 +81,12 @@ def controller_ids():
         for family in ("bc", "residual") for seed in POLICY_SEEDS for phase in ("initial", "final")]
 
 
-def qualify(rows, cases, *, evidence_complete=False):
+def qualify(rows, cases, *, evidence_complete=False, execution_version=1):
     """No outcome censoring, checkpoint selection, or authored-baseline waiver."""
     if type(evidence_complete) is not bool:
         raise ContractError("jolt_evidence", "independent evidence acceptance must be an explicit boolean")
+    if type(execution_version) is not int or execution_version not in (1, 2, 3):
+        raise ContractError("jolt_evidence", "unknown qualification execution version")
     selected = [row for row in rows if row["split"] == "sealed"]
     case_ids = [case["id"] if isinstance(case, Mapping) else case for case in cases]
     if len(case_ids) != 16 or len(set(case_ids)) != 16:
@@ -91,7 +94,8 @@ def qualify(rows, cases, *, evidence_complete=False):
     expected = set(itertools.product(case_ids, controller_ids()))
     keys = [(row["case_id"], row["controller_id"]) for row in selected]
     complete = len(keys) == len(set(keys)) and set(keys) == expected
-    result = {"schema": SCHEMA, "complete_pairs": complete, "evidence_complete": evidence_complete,
+    result = {"schema": SCHEMA_V3 if execution_version == 3 else SCHEMA,
+              "complete_pairs": complete, "evidence_complete": evidence_complete,
               "expected_rows": len(expected), "observed_rows": len(selected), "families": {},
               "selected_family": None, "qualified": False, "owner_feel_accepted": False,
               "morphology_transfer_admitted": False,
@@ -103,6 +107,8 @@ def qualify(rows, cases, *, evidence_complete=False):
         return result
     for row in selected:
         _validate_metrics(row)
+        if execution_version == 3:
+            _validate_outcome_v3(row)
     lookup = dict(zip(keys, selected))
     authored = [lookup[(case, "authored")] for case in case_ids]
     idle = [lookup[(case, "idle")] for case in case_ids]
@@ -114,6 +120,12 @@ def qualify(rows, cases, *, evidence_complete=False):
                     and row["metrics"].get("failed_admissions") == 0
                     and row["metrics"].get("administratively_capped") is False for row in selected)
     result["global_integrity"] = integrity
+    if execution_version == 3:
+        integrity = integrity and all(row["outcome"]["complete"] for row in selected)
+        result["global_integrity"] = integrity
+        result["safe_retirements"] = sum(row["outcome"]["kind"] == "safe_retirement" for row in selected)
+        result["failure_denominator"] = "all sixteen declared cases for every controller and policy seed"
+        result["terminal_penalty_added"] = False
     for family in ("bc", "residual"):
         seeds, initial_gains, authored_gains, time_gains = [], [], [], []
         for seed in POLICY_SEEDS:
@@ -162,3 +174,55 @@ def qualify(rows, cases, *, evidence_complete=False):
     result["qualified"] = result["selected_family"] is not None
     result["conclusion"] = "learned_prerequisite_qualified" if result["qualified"] else "retained_negative_result"
     return result
+
+
+def _validate_outcome_v3(row):
+    """A complete expected failure stays in every original paired denominator."""
+    from nca.evaluation.jolt_retirement import OUTCOME_SCHEMA, RETIREMENT_SCHEMA, SAFE_REASON
+    outcome = row.get("outcome")
+    if (not isinstance(outcome, Mapping)
+            or set(outcome) != {"schema", "kind", "complete", "success", "reason"}
+            or outcome["schema"] != OUTCOME_SCHEMA
+            or outcome["kind"] not in ("safe_retirement", "task_terminal", "administrative_cutoff", "integrity_error")
+            or type(outcome["complete"]) is not bool or type(outcome["success"]) is not bool
+            or not isinstance(outcome["reason"], str)):
+        raise ContractError("jolt_outcome", "explicit versioned episode outcome required")
+    metrics = row["metrics"]
+    if outcome["success"] is not metrics["success"]:
+        raise ContractError("jolt_outcome", "episode outcome changed the observed task success")
+    if (outcome["reason"] != metrics.get("reason")
+            or any(field not in row for field in ("cancellation_error", "retirement_validation_error", "cleanup_phase_error"))
+            or outcome["complete"] and (row.get("owner_closure_confirmed") is not True
+                or row.get("error") is not None or row["cancellation_error"] is not None
+                or row["retirement_validation_error"] is not None or row["cleanup_phase_error"] is not None)):
+        raise ContractError("jolt_outcome", "complete outcome lacks original reason and independent native closure")
+    if outcome["kind"] == "safe_retirement":
+        retirement = row.get("retirement")
+        if (not outcome["complete"] or outcome["success"] or outcome["reason"] != SAFE_REASON
+                or row.get("error") is not None or row["cancellation_error"] is not None
+                or row["retirement_validation_error"] is not None
+                or row.get("owner_closure_confirmed") is not True
+                or metrics["integrity_failure"] or metrics["failed_admissions"] != 0
+                or metrics["administratively_capped"] or metrics["capped_completion_seconds"] != 4.
+                or metrics.get("reason") != SAFE_REASON
+                or not isinstance(retirement, Mapping) or retirement.get("schema") != RETIREMENT_SCHEMA
+                or retirement.get("reason") != SAFE_REASON
+                or retirement.get("path") not in ("ordinary_attempt", "cutoff_peek")):
+            raise ContractError("jolt_outcome", "safe retirement cannot become success, integrity failure or a shorter cost")
+    elif row.get("retirement") is not None:
+        raise ContractError("jolt_outcome", "nonretired outcome invented a safe-retirement receipt")
+    if outcome["kind"] == "integrity_error":
+        if outcome["complete"] or outcome["success"] or row.get("error") is None:
+            raise ContractError("jolt_outcome", "integrity errors cannot establish complete successful pairs")
+    elif outcome["kind"] == "administrative_cutoff":
+        if not outcome["complete"] or outcome["success"] or not metrics["administratively_capped"]:
+            raise ContractError("jolt_outcome", "administrative cutoff must retain its incomplete-task meaning")
+    elif outcome["kind"] == "task_terminal":
+        if (not outcome["complete"] or row.get("error") is not None
+                or metrics["administratively_capped"] or metrics["integrity_failure"]):
+            raise ContractError("jolt_outcome", "task terminal lacks receipt-complete physical evidence")
+
+
+def qualify_v3(rows, cases, *, evidence_complete=False):
+    """Versioned complete-failure semantics with all original numeric gates."""
+    return qualify(rows, cases, evidence_complete=evidence_complete, execution_version=3)

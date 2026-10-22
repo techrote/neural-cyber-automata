@@ -37,3 +37,21 @@ def require_prospective_review(record):
             or record.get("prospective_experiment_admitted") is not True):
         raise ContractError("jolt_execution_review_scope",
                             "v2 execution needs explicit prospective experiment review")
+
+
+def validate_v3_allocation_identity(declaration, *, consumed_allocation_ids=()):
+    """Validate the new experiment identity against an independently bound registry.
+
+    The default empty registry does not establish historical freshness. Final
+    prospective admission must supply the reviewed consumed-allocation inventory;
+    runtime also refuses every already-created output/lifecycle identity.
+    """
+    if (not isinstance(declaration, Mapping)
+            or declaration.get("schema") != "nca-learn-jolt-003-execution/v3"):
+        raise ContractError("jolt_v3_allocation_identity", "the separately versioned LEARN-JOLT-003 declaration is required")
+    identity = validate_v2_allocation_identity(declaration)
+    if not identity["allocation_id"].startswith("learn-jolt-003-"):
+        raise ContractError("jolt_v3_allocation_identity", "the allocation must name the new LEARN-JOLT-003 experiment")
+    if identity["allocation_id"] in consumed_allocation_ids:
+        raise ContractError("jolt_v3_allocation_consumed", "a consumed allocation cannot be admitted or resumed")
+    return identity

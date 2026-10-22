@@ -1,0 +1,506 @@
+{
+  "acceptance_scope": "offline_software_and_explicit_admission_refusal_evidence_only",
+  "accepted": true,
+  "complete_pipeline_feasibility_established": false,
+  "complete_tail_operation_inventory": {
+    "additional_raw_identity_hashes_after_reservation_publication": {
+      "count": 2,
+      "phases": [
+        "closure",
+        "publication"
+      ],
+      "separately_timed_in_helper_phase_components": false,
+      "source": "BudgetLedgerV3.publish_reservations performs file_identity(destination) after its canonical publication/readback loops."
+    },
+    "canonical_reservation_parse_replay_passes": 9,
+    "journal_complete_chain_passes": 3,
+    "journal_semantic_traversal_passes": 1,
+    "pass_inventory_limit": "The nine canonical passes and three chain passes do not enumerate every write, hash, metadata syscall, JSON publication, semantic reconstruction or final lifecycle operation. The two extra reservation identity hashes and remaining publication work are explicit unresolved costs.",
+    "phase_pass_inventory": {
+      "active": {
+        "episode_family_writes": 2,
+        "journal_appends": 1
+      },
+      "audit": {
+        "episode_family_decode_hash_passes": 2,
+        "journal_chain_passes": 1,
+        "journal_syntax_passes": 1,
+        "reservation_passes": 3
+      },
+      "closure": {
+        "journal_chain_passes": 1,
+        "reservation_passes": 2
+      },
+      "publication": {
+        "reservation_passes": 2,
+        "whole_artifact_hash_passes": 1
+      },
+      "verification": {
+        "journal_chain_passes": 1,
+        "reservation_passes": 2,
+        "whole_artifact_hash_passes": 1
+      }
+    },
+    "semantic_traversal_relation_to_helper_syntax_pass": "This is the same source traversal represented by the helper audit journal_syntax_passes=1, not an extra fourth post-chain parsing pass. The helper measures only syntax; semantic work during that traversal is unresolved."
+  },
+  "config_file_sha256": "76129b50e37774d20b46d34b82d4ca66b06c989838b44332ad57306453dddbf2",
+  "config_sha256": "239e2432d652414130217b51ffb8002aff67aeaa1694979d0081cfa3c341f353",
+  "created_utc": "2026-10-22T20:07:12.712007+00:00",
+  "decision": "Accept the reviewed offline software and explicit refusal evidence; stop before any LEARN-JOLT-003 physical invocation. Do not enlarge budgets, skip audit stages, spend the allocation, reuse historical weights, or imply learned qualification to manufacture completion.",
+  "experiment_allocation_consumed": false,
+  "fresh_invocation_and_historical_preservation": {
+    "allocation_id": "learn-jolt-003-20261022-a1",
+    "allocation_status": "unspent; execution admission refused",
+    "fresh_initialization_source": "jolt_screen.run initializes every BC policy with its fixed training seed and each residual with seed+100000; evaluation loads only checkpoints written in the new immutable invocation output.",
+    "historical_trained_weight_reuse_found": false,
+    "legacy_failure_and_qualification_status_preserved": true,
+    "new_physical_pilot_performed": false,
+    "prior_allocation_reopened_or_retried": false,
+    "sealed_cases_opened_by_this_work": false
+  },
+  "independence_disclosure": {
+    "independent_production_review": [
+      "Closed inventory and wrapper implementation authored by other contributors",
+      "Ledger, operation ceilings, original-clock phase enforcement, source/config/runtime identities and repeated readback structure",
+      "Final Windows no-follow metadata correction and its evidence"
+    ],
+    "measurement_helper_self_authorship_not_independent_implementation_review": true,
+    "other_review_contributions": "The separate inventory reviewer cross-reviewed the typed helper and identified the original overbroad 180-second label; the frozen helper now correctly labels it a sampling deadline.",
+    "reviewer_authored": [
+      "tools/check_jolt_pipeline_envelope_v3.py",
+      "tests/test_jolt_pipeline_envelope_v3.py"
+    ],
+    "this_final_review_model_or_checkpoint_executions": 0,
+    "this_final_review_new_benchmarks": 0,
+    "this_review_physical_host_starts": 0,
+    "this_review_physical_ticks": 0
+  },
+  "independent_identity_verification": {
+    "all_244_executable_file_hashes_recomputed": true,
+    "config_raw_and_canonical_hashes_recomputed": true,
+    "final_conformance_original_bytes_and_observed_exit_binding_verified": true,
+    "final_conformance_stdout_stderr_binding_verified": true,
+    "final_delta_from_0cba752": "Only Path.lstat instead of DirEntry.stat in inventory traversal and a regression covering zero-filled DirEntry metadata while still rejecting a real outside hard link.",
+    "helper_source_closure": {
+      "additional_source_files": {
+        "configs/morphology/profiles-v1.json": "31c0a00c182252c20bbacdd4fba5c5c2658f4a1d448cf4784a2a10592336d25f"
+      },
+      "files": 245,
+      "relationship": "Exactly the 244 executable source files plus the historical profile-shape input.",
+      "sha256": "6b4a05a8331d75189ab2d5f098498164c24d1d134b7c3c634e0a7d2b40012496"
+    },
+    "production_operation_learning_config_or_budget_change_in_final_delta": false
+  },
+  "inventory_assessment": {
+    "accepted_for_static_closed_tree_verification": true,
+    "final_inventory_and_lifecycle_transcript_reviewed": {
+      "artifact": {
+        "basename": "inventory-portability-final.log",
+        "bytes": 4723,
+        "sha256": "3834bf2b817c739900b4611ef5ca04ab3af6751252aea026ec328f7427cb4e48"
+      },
+      "passed": 26,
+      "seconds": 0.547,
+      "skipped": 0,
+      "tests": 26
+    },
+    "independent_local_inventory_run_on_byte_identical_pre_portability_source": {
+      "passed": 14,
+      "skip_reason": "Execution sandbox forbade creation of a UNIX socket.",
+      "skipped": 1,
+      "tests": 15
+    },
+    "required_properties_verified": [
+      "The output root must be an original directory; manifest and artifacts must be regular files with one hard link.",
+      "Every manifest key is a canonical relative path, without absolute paths, traversal, alternate separators or self-reference.",
+      "Only directories required as ancestors of declared files are allowed; extra empty directories at any depth are rejected.",
+      "Symlinks, dangling links, FIFOs, sockets, special files, missing files, extra files and changed bytes are rejected.",
+      "The wrapper hashes its declaration through file_identity_v3 after no-follow regular-file and single-link checks, before lifecycle verification.",
+      "Lifecycle files also reject outside hard links before hashing.",
+      "Path.lstat supplies no-follow metadata for the final cross-platform inventory path; the new synthetic Windows metadata regression preserves both ordinary-tree acceptance and hard-link rejection."
+    ],
+    "scope_limit": "Static closed evidence trees after worker closure; no claim of atomic protection against a concurrent malicious filesystem mutator."
+  },
+  "memory_assessment": {
+    "complete_worker_and_native_peak_bound_established": false,
+    "reason": "Streaming reservations and compact teacher/audit rows reduce copies, but retained PPO transitions, worker metrics/results, audit reconstruction, models, native process and allocator overhead still require a complete bound. Synthetic-process RSS and shared cgroup snapshots do not supply it.",
+    "shared_memory_snapshot_not_attributable_to_the_worker": {
+      "MemAvailable_bytes": 9655517184,
+      "MemTotal_bytes": 10451439616,
+      "cpu.max": "800000 100000",
+      "memory.current": "7282065408",
+      "memory.max": "8589934592",
+      "memory.peak": "7674437632"
+    },
+    "synthetic_process_peak_rss_bytes": 43520000
+  },
+  "offline_scope_only": true,
+  "operation_and_storage_assessment": {
+    "all_39_caps_fixed_semantics_seeds_and_one_attempt_preserved": true,
+    "available_disk_bytes_after_final_conformance": 25379631104,
+    "available_disk_satisfied_declared_static_byte_requirement_at_observation": true,
+    "exact_counter_caps": {
+      "attempts": 1,
+      "audit_forward": 37888,
+      "bc_burn_in": 368640,
+      "bc_eligible_samples": 307200,
+      "bc_forward": 307200,
+      "bc_optimizer": 23040,
+      "bootstrap_forward": 12288,
+      "checkpoint_executions": 21144,
+      "checkpoint_loads": 48,
+      "checkpoint_writes": 36,
+      "confirmed_ticks": 120000,
+      "decisions": 20000,
+      "episodes_aborted": 6464,
+      "episodes_completed": 6464,
+      "episodes_started": 6464,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 25248,
+      "owner_cancel": 6465,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 6464,
+      "owner_requests": 38338,
+      "owner_reset": 6464,
+      "owner_step": 18944,
+      "ppo_actor_samples": 24576,
+      "ppo_base_burn_in": 33792,
+      "ppo_base_forward": 24576,
+      "ppo_burn_in": 33792,
+      "ppo_critic_samples": 24576,
+      "ppo_forward": 24576,
+      "ppo_optimizer": 24576,
+      "ppo_replay_base_forward": 6144,
+      "ppo_replay_forward": 6144,
+      "refused_ticks": 120000,
+      "requested_ticks": 120000,
+      "uncertain_ticks": 120000
+    },
+    "exact_counter_count": 39,
+    "journal_record_maximum": 115110,
+    "live_spool_maximum_bytes": 488699892,
+    "owner_operations": 38338,
+    "published_reservation_maximum_bytes": 490601708,
+    "reservation_reader_maximum_bytes": 536870912,
+    "reservation_record_loose_maximum": 1901556,
+    "stage_totals": {
+      "decisions": 18944,
+      "episodes_started": 6464,
+      "requested_ticks": 113664
+    },
+    "static_disk_observation_is_not_complete_resource_admission": true,
+    "storage_bounds": {
+      "authored_episode_starts": 84,
+      "authored_metrics_bytes": 49152,
+      "complete_lifecycle_files": 16,
+      "confirmed_decisions": 18944,
+      "episode_starts": 6464,
+      "largest_episode_uncompressed_bytes": 5308416,
+      "lifecycle_files": 17,
+      "maximum_journal_records": 115110,
+      "maximum_worker_fixed_bytes": 8388608,
+      "maximum_worker_result_bytes": 64795296,
+      "ordinary_json_reader_bytes": 67108864,
+      "other_metrics_bytes": 8192,
+      "outer_stdout_stderr_and_exit_files": 3,
+      "pieces": {
+        "checkpoints": 37748736,
+        "fixed_ordinary_json": 872415232,
+        "learning_json": 442368,
+        "lifecycle_and_original_outer_evidence": 20971520,
+        "live_reservation_spool": 488699892,
+        "metrics": 56393728,
+        "owner_journal": 7543848960,
+        "raw_episode_gzip": 2909979485,
+        "sample_episode_gzip": 2909979485,
+        "two_published_reservation_prefixes": 981203416
+      },
+      "raw_episode_reader_bytes": 33554432,
+      "raw_per_family_bytes": 2906652672,
+      "required_disk_bytes_including_1_gib_reserve": 16895424646,
+      "reservation_reader_bytes": 536870912,
+      "sample_reader_bytes": 67108864,
+      "schema": "nca-jolt-bounded-serialization/v3",
+      "source_requires_independent_runtime_time_and_memory_admission": true,
+      "total_artifact_bytes": 15821682822,
+      "worker_files": 19469
+    }
+  },
+  "physical_execution_started": false,
+  "prospective_experiment_admitted": false,
+  "qualification_claimed": false,
+  "review_cannot_satisfy_execution_admission": true,
+  "review_roles": [
+    "operation_serialization_deadline_feasibility",
+    "closed_inventory_integrity"
+  ],
+  "reviewed_source_files": {
+    "src/nca/evaluation/durable_journal.py": "ea005165d12c6a30045f6d265df7506a021246dfe6d5a540e118ee2cd5346269",
+    "src/nca/evaluation/jolt_journal_v3.py": "ebb03b6ad6716a527b10d48e0f467856e87cfffc1f2872235db3063b0739f6a2",
+    "src/nca/evaluation/jolt_learning_audit.py": "571b973816e1c4d862a418d27bf50a92bc00c15b36b649334dd11ff7fc982137",
+    "src/nca/evaluation/verified_journal.py": "08a5a8bdcd700177e850f46023858426515740d6275641393129cb4e31d84228",
+    "src/nca/train/jolt_admission_v3.py": "f2bea59135824ae5fc66c78f3ffce844ca6d93d1e51f3e9f4974a082216d20df",
+    "src/nca/train/jolt_budget_v3.py": "fec87f764b9f9e79eb9c24ea42c5ccda729917e7fe386e4791581cc5dbeba06c",
+    "src/nca/train/jolt_capture_v3.py": "a512ee9057f2ab499cd7c51ecba6b90669102cf1fe04db1293b5a484a6e0375e",
+    "src/nca/train/jolt_cli_v3.py": "f9a226559bdd359ae51f77a613ca9b64492cd931de8eb70d19376ec9d2c4c8ff",
+    "src/nca/train/jolt_execution_v3.py": "d3550b76be3f50fe44c31417d5e82018b0523e3e9f5c5025f39827cfd8433d5f",
+    "src/nca/train/jolt_executor_v3.py": "c67bafddbb18d5596dc0ad44c6816d7ca29d5befa92dd86f81b946a44e8cd444",
+    "src/nca/train/jolt_learning.py": "0e24011651a802ec714e077f330ed198347b005982e70c940f4f3365903fe63f",
+    "src/nca/train/jolt_native_v3.py": "860e490475a7ad261403cc31fcbd85448db22bd541b4e2db3510dc5cfbd11f91",
+    "src/nca/train/jolt_screen.py": "1f27bb3f4afdbebe3c8fa20f790ff528e0ababef6415816f5a88954f6433279c",
+    "src/nca/train/jolt_shape_v3.py": "e3aba841c66c41323613757f727add36f82a25106881a9172e78a80882fd12aa",
+    "src/nca/train/jolt_storage_v3.py": "c2a7622416c69eb633b57f34840c710036565e6625bd73a325b493784bb06713",
+    "src/nca/train/jolt_streams_v3.py": "a5ead0666fe219b7afba53a47a561f4720cae9f87049b1880b6fb48dc1656d11",
+    "tests/test_jolt_cli_v3.py": "edbd49cde9a6c019bb9e37584c877c857f08c980983188ac77d99a97bb6b9ecd",
+    "tests/test_jolt_executor_v3.py": "627eec9320aa0683385435474324c994336243e8649e13860c637cbbf874a818",
+    "tests/test_jolt_pipeline_envelope_v3.py": "8e89836eed3f0879094b71a9bba564596fdcc7a57bc1a0df080445a73c8b5062",
+    "tools/check_jolt_pipeline_envelope_v3.py": "ace3ef74404fbdada61b9b04539232c54998ea1d2d6fe934dc8c9027a61ff711",
+    "tools/observe_jolt_v3.py": "aea77e05d9f96f6a1a279abb280e04b44b311e096c386fe9d66639a4e85677aa"
+  },
+  "reviewer": "independent-operation-storage-deadline-review",
+  "runtime": {
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "interop_threads": 1,
+    "kernel": "6.18.55",
+    "libc": [
+      "glibc",
+      "2.39"
+    ],
+    "logical_cpus_available": 9,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "threads": 1,
+    "torch": "2.8.0+cpu"
+  },
+  "runtime_binding_scope": {
+    "installed_distribution_and_platform_metadata_independently_verified": {
+      "kernel": "6.18.55",
+      "libc": [
+        "glibc",
+        "2.39"
+      ],
+      "logical_cpus_available": 9,
+      "machine": "x86_64",
+      "numpy": "2.3.5",
+      "python": "3.12.14",
+      "system": "Linux",
+      "torch": "2.8.0+cpu"
+    },
+    "numpy_imported_for_review": false,
+    "physical_host_identity_observed": false,
+    "required_host_revision_not_executed": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+    "required_profile_sha256": "97559dcca7b1523ee622fd886615f05f5d7f85bacc0655ba9d642e909dc112bc",
+    "thread_device_and_determinism_fields": "Fixed source configuration in the frozen runtime record; no model execution or full-worker resource observation was performed by this review.",
+    "torch_imported_for_review": false
+  },
+  "runtime_sha256": "4be0ab55fee3b553a23c9d396081fb7bbf45c88774231ea3927ef2bb0a5a640a",
+  "schema": "nca-learn-jolt-003-source-admission-review/v1",
+  "source_checkout_clean_at_review": true,
+  "source_file_count": 244,
+  "source_freeze_evidence": {
+    "basename": "source-freeze-final.json",
+    "bytes": 28002,
+    "sha256": "dd8a935d83bb1208d5a07472d8b52f8dba2414ffe0a3d6f104771b89f64d1485"
+  },
+  "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "synthetic_measurement_scope": {
+    "fixed_design": {
+      "adaptive_sampling": false,
+      "deadline_scope": "sampling; final environment/report publication and observed exit are outside this guard",
+      "episode_lengths": [
+        1,
+        40
+      ],
+      "episode_repetitions": 3,
+      "hash_sample_bytes": 8388608,
+      "journal_rows_per_type": 16,
+      "maximum_sampling_seconds_from_script_entry": 180,
+      "native_host_or_trained_checkpoint_permitted": false,
+      "planning_factor": 4,
+      "read_repetitions": 4,
+      "reservation_sample_rows": 25000,
+      "whole_process_hard_deadline_enforced": false
+    },
+    "helper_claims_complete_process_180_second_hard_limit": false,
+    "host_checkpoint_or_experiment_execution": false,
+    "independent_outer_direct_child_timeout_seconds": 210,
+    "independent_outer_receipt": {
+      "basename": "typed-pipeline-clean-observed-exit.json",
+      "bytes": 607,
+      "sha256": "cc9c30288d6023bb9108b784fa6e4cbb8b3d61ca02a056b15a6a7e23918100cf"
+    },
+    "observed_complete_process_seconds": 23.145674724000855,
+    "observed_exit_code": 0,
+    "original_stdout_stderr": {
+      "basename": "typed-pipeline-clean-final.log",
+      "bytes": 1145,
+      "sha256": "15090e8359da8820b4ef441f8db7f1900479ebd25ffa8bb6157970f036dbcb5a"
+    },
+    "preliminary_and_0cba_reports_preserved_as_separate_original_evidence": true,
+    "report": {
+      "basename": "jolt-learn-003-typed-pipeline-20261022.json",
+      "bytes": 83092,
+      "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+    },
+    "report_publication_and_process_exit_outside_sampling_alarm": true,
+    "sampling_deadline_seconds_from_script_entry": 180,
+    "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+    "timed_out": false
+  },
+  "test_evidence_scope": {
+    "final_head_hosted_ci_pass_claimed": false,
+    "final_head_hosted_ci_status_at_review": "pending; required checks remain a separate merge gate",
+    "final_source_inventory_lifecycle": {
+      "artifact": {
+        "basename": "inventory-portability-final.log",
+        "bytes": 4723,
+        "sha256": "3834bf2b817c739900b4611ef5ca04ab3af6751252aea026ec328f7427cb4e48"
+      },
+      "passed": 26,
+      "seconds": 0.547,
+      "skipped": 0,
+      "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "tests": 26
+    },
+    "preceding_source_focused_suite": {
+      "artifact": {
+        "basename": "focused-final.log",
+        "bytes": 13756,
+        "sha256": "0401d29ee7d3a9f6b2225940ddf1f30c9228e083a705e1e1067cd3114eeb8f49"
+      },
+      "passed": 73,
+      "seconds": 46.157,
+      "skipped": 0,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests": 73
+    },
+    "preceding_source_full_suite": {
+      "artifact": {
+        "basename": "offline-final.log",
+        "bytes": 216089,
+        "sha256": "2467d6073e0922a4414c1d9c79c76474232797c5d4f30cb42c2a102d5ec10c7e"
+      },
+      "entire_suite_rerun_on_final_revision_claimed": false,
+      "passed": 1122,
+      "seconds": 139.259,
+      "skipped": 59,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests": 1181
+    }
+  },
+  "timing_assessment": {
+    "absolute_phase_offsets_seconds": {
+      "active": 6000,
+      "audit": 6780,
+      "closure": 6180,
+      "finalization": 7200,
+      "publication": 6888,
+      "verification": 7128,
+      "verification_cleanup": 7140,
+      "worker_cleanup": 6900
+    },
+    "budget_revision_applied": false,
+    "final_component_details_seconds": {
+      "active": {
+        "journal_serialization_and_durable_appends": 3592.824418704331,
+        "two_episode_families_write_readback": 15271.43196142443
+      },
+      "audit": {
+        "journal_complete_chain": 910.4444470185367,
+        "journal_syntax_only": 331.6553426484743,
+        "reservations_three_passes": 619.8323635970119,
+        "two_episode_families_decode_hash_only": 6196.19120464631
+      },
+      "closure": {
+        "journal_complete_chain": 910.4444470185367,
+        "reservation_publication_two_passes": 413.22157573134126
+      },
+      "publication": {
+        "closed_reservations_two_passes": 413.22157573134126,
+        "whole_artifact_hash": 46.39662286931707
+      },
+      "verification": {
+        "journal_complete_chain": 910.4444470185367,
+        "two_reservation_prefixes": 413.22157573134126,
+        "whole_artifact_hash": 46.39662286931707
+      }
+    },
+    "final_factor_four_component_planning_seconds_excluding_unresolved": {
+      "active": 18864.25638012876,
+      "audit": 8058.123357910334,
+      "closure": 1323.666022749878,
+      "publication": 459.61819860065833,
+      "verification": 1370.062645619195
+    },
+    "interpretation": "The measured component projections do not establish either the existing envelope or a reallocation leaving 2700 active seconds and 3900 audit seconds. Closure, publication and external verification still require their own complete evidence. Projections use conservative independent shape/count maxima and cache-sensitive samples, can overestimate an actual workload, and are neither an observed experiment duration nor a guaranteed upper bound.",
+    "maximum_wall_seconds_unchanged": 7200,
+    "no_sufficient_cap_can_be_derived_from_partial_components": true,
+    "phase_interpretation": "These are absolute deadlines on one original clock, with the stated reserved increments; early entry can use earlier unspent time. They are not independent renewable per-phase clocks.",
+    "recommended_revised_cap_seconds": null,
+    "requested_3900_audit_under_7200_admitted": false,
+    "requested_audit_reallocation_arithmetic": {
+      "arithmetic_only_not_an_authorized_budget_revision": true,
+      "episode_seconds": 900,
+      "journal_seconds": 900,
+      "neural_seconds": 900,
+      "remaining_active_seconds": 2700,
+      "requested_combined_audit_seconds": 3900,
+      "reservation_seconds": 1200,
+      "unchanged_other_tail_seconds": 600,
+      "unchanged_whole_ceiling_seconds": 7200
+    },
+    "reserved_phase_increments_seconds": {
+      "active": 6000,
+      "audit": 600,
+      "closure": 180,
+      "finalization": 60,
+      "publication_work": 108,
+      "verification_cleanup": 12,
+      "verification_work": 228,
+      "worker_cleanup": 12
+    },
+    "sufficient_revised_whole_process_cap_claimed": false
+  },
+  "unresolved_blocking_findings": [
+    {
+      "finding": "Full native/semantic/neural/publication/closure costs have no complete source/runtime-bound elapsed-time envelope; the typed planning components do not support either the retained schedule or the requested 3900-second audit reallocation.",
+      "id": "complete_original_clock_time",
+      "scope": "prospective_experiment_admission"
+    },
+    {
+      "finding": "The complete worker, auditor, model and native peak-memory bound is unresolved; sample RSS and shared cgroup availability cannot replace it.",
+      "id": "full_process_peak_memory",
+      "scope": "prospective_experiment_admission"
+    },
+    {
+      "finding": "Two raw reservation identity passes, complete publication writes/fsync, small-file metadata work, final reaping/receipts/observed exit, and remaining semantic reconstruction are not fully timed by the helper.",
+      "id": "unmeasured_tail_work",
+      "scope": "prospective_experiment_admission"
+    },
+    {
+      "finding": "No complete accepted physical resource/declaration admission is established. This offline record intentionally has prospective_experiment_admitted=false and must be rejected by execution admission.",
+      "id": "prospective_identity_and_review_gates",
+      "scope": "prospective_experiment_admission"
+    }
+  ],
+  "unresolved_blocking_findings_for_offline_software_scope": [],
+  "unresolved_component_terms_preserved": [
+    "Native host startup, reset, stepping, transport, cancellation and process memory are unmeasured here.",
+    "Episode dataclass construction, history/retirement/metric validation and semantic journal replay are not timed by storage specimens.",
+    "Neural fitting, inference, authentication and audit forwards require separate source/runtime-bound CPU evidence.",
+    "Full-worker peak memory includes retained PPO transitions, metrics/results, auditor copies, models, native process and allocator overhead; specimen RSS is not that bound.",
+    "Complete reservation publication writes/fsync, small-file open/stat latency, source admission and fixed JSON publication are not established by read throughput.",
+    "Page-cache behavior and type/shape surrogates make these factor-four observations planning estimates, not universal worst-case execution guarantees.",
+    "Final process reaping, stream fsync, receipts and observed outer exit must still fit their original shared-clock phases."
+  ]
+}
