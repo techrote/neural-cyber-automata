@@ -3,7 +3,7 @@ title: LEARN-JOLT-002 — bounded execution runbook
 kind: reference
 summary: Versioned learned Jolt contracts, fixed static splits, prospective counters and the single-invocation freeze/run procedure.
 owns: [learning.jolt002-operations]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # LEARN-JOLT-002 runbook
@@ -11,6 +11,8 @@ verified: 2026-10-21
 The [#62 design](design/LEARN_JOLT_002.md) and [admission checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) define the unchanged scientific and acceptance requirements. This page preserves the separate v2 implementation and original bounded execution procedure. Published source reviews and the prospective declaration admitted one invocation at clean source `a68e687ced52bef778375a2753b1362dea3704fa`, with 182-file closure SHA-256 `d9754ca327bae965c7a50d213bb44171fdce4212a71ba13afb943c8126bdc727`. Later evidence-publication commits preserve that physical source identity.
 
 **The original allocation was consumed and failed.** Its [retained evidence](evidence/2026-10-21-jolt-learn-002.md) includes five of six final checkpoints and no open or sealed evaluation rows. Independent readback found 6,720 original owner-journal records against the worker's claimed 24,195. Complete physical evidence and terminal execution receipts are missing, paired learned reliability is unmeasured, and no learned family is qualified. #62 stays open and blocked; morphology #16 stays blocked. Source tests, archive preservation and later publication do not supply those missing qualifications or reopen the consumed declaration.
+
+The separate [execution v2 reliability increment](evidence/2026-10-22-jolt-learning-reliability.md) adds journal readback, structured failure/cleanup evidence and bound lifecycle verification. It is offline software work only. Its reviews cannot admit an experiment, its modes reject the consumed v1 declaration, and the original procedure below remains historical. No new allocation is commissioned here.
 
 ## Admission records and source ownership
 

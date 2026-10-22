@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Documentation map
@@ -38,6 +38,7 @@ verified: 2026-10-21
 | What must the next learned Jolt experiment prove? | [LEARN-JOLT-002 design](design/LEARN_JOLT_002.md), [implementation checklist](design/LEARN_JOLT_002_IMPLEMENTATION.md) |
 | How are the separate learned Jolt contracts, static split and single bounded invocation operated? | [LEARN-JOLT-002 runbook](LEARN_JOLT_002_RUNBOOK.md) |
 | What happened to the single learned Jolt allocation? | [Consumed failure, preserved evidence and nonqualification](evidence/2026-10-21-jolt-learn-002.md) |
+| What recording and execution repairs followed that failure? | [Versioned offline reliability repair and remaining experiment gate](evidence/2026-10-22-jolt-learning-reliability.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |

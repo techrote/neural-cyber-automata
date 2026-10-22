@@ -42,6 +42,8 @@ from nca.train.task import HopTask, REWARD_SCHEMA
 
 SCHEMA = "nca-learn-jolt-002-independent-readback/v1"
 RUN_SCHEMA = "nca-learn-jolt-002-run/v1"
+SCHEMA_V2 = "nca-learn-jolt-002-independent-readback/v2"
+RUN_SCHEMA_V2 = "nca-learn-jolt-002-run/v2"
 MAX_JSON_BYTES = 64 * 1024 * 1024
 MAX_RESERVATION_BYTES = 512 * 1024 * 1024
 PPO_ID = re.compile(r"ppo-seed(190103|190207|190301)-u([0-7])-e([0-9]+)\Z")
@@ -61,6 +63,75 @@ def _near(left: float, right: float, detail: str) -> None:
     _need(type(left) in (int, float) and type(right) in (int, float)
           and math.isfinite(left) and math.isfinite(right)
           and math.isclose(left, right, rel_tol=1e-5, abs_tol=2e-5), detail)
+
+
+def _execution_version(worker, manifest, declaration):
+    """Require an explicitly matching version; never reinterpret v1 evidence."""
+    version = {RUN_SCHEMA: 1, RUN_SCHEMA_V2: 2}.get(worker.get("schema"))
+    _need(version is not None and manifest.get("schema") == worker["schema"],
+          "unknown or mismatched worker/manifest contract")
+    _need(declaration.get("schema") == f"nca-learn-jolt-002-execution/v{version}",
+          "execution declaration and result versions differ")
+    return version
+
+
+def _cancellation_error_v2(row, raw):
+    """Bind the separate cleanup error without copying arbitrary exception text."""
+    _need("cancellation_error" in row and "cancellation_error" in raw.evaluation,
+          "v2 capture omitted its cancellation result")
+    error = row["cancellation_error"]
+    _same(raw.evaluation["cancellation_error"], error, "raw cancellation error differs")
+    if error is not None:
+        _need(isinstance(error, Mapping) and set(error) == {"type", "code"}
+              and isinstance(error["type"], str)
+              and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", error["type"]) is not None
+              and (error["code"] is None or isinstance(error["code"], str)
+                   and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", error["code"]) is not None),
+              "cancellation error is not a bounded structured diagnostic")
+        _need(row["error"] is not None, "cleanup error was omitted from episode failure")
+    return error
+
+
+def _episode_closure_v2(raw, row, *, deadline_missed):
+    """Recompute native cancellation from retained events, not actor suspension."""
+    cleanup_error = _cancellation_error_v2(row, raw)
+    if not raw.events or cleanup_error is not None:
+        return False
+    final = raw.events[-1]
+    if final.kind == "cancel":
+        _need(final.valid is True and final.next_observation is not None
+              and final.tick_before == final.tick_after
+              and not final.ticks and final.requested_packet is None,
+              "cancellation event cannot establish a native fence")
+        cancellation_receipt(final.issued_observation, final.next_observation)
+        return True
+    return bool(deadline_missed and final.kind == "step" and final.valid
+                and final.next_observation
+                and final.next_observation.get("suspended") is True)
+
+
+def _durability_v2(durable, identity, *, system):
+    """Verify the v2 writer's claim against this reader's complete raw stream."""
+    fields = {"schema", "closed", "poisoned", "records", "record_fsyncs", "total_fsyncs",
+              "directory_fsync", "chain_sha256", "readback_records", "closed_verified",
+              "final_directory_fsync", "closed_identity"}
+    _need(isinstance(durable, Mapping) and set(durable) == fields
+          and durable["schema"] == "nca-owner-journal-durability/v2",
+          "unknown or incomplete v2 journal durability contract")
+    _need(all(type(durable[key]) is bool for key in ("closed", "poisoned", "directory_fsync",
+                                                   "closed_verified", "final_directory_fsync"))
+          and all(type(durable[key]) is int and durable[key] >= 0
+                  for key in ("records", "record_fsyncs", "total_fsyncs", "readback_records")),
+          "v2 journal durability counters or flags are malformed")
+    _need(durable["closed"] and not durable["poisoned"] and durable["closed_verified"]
+          and durable["records"] == durable["record_fsyncs"] == durable["readback_records"] == identity["records"]
+          and durable["total_fsyncs"] == identity["records"] + 1
+          and durable["chain_sha256"] == identity["chain_sha256"],
+          "v2 owner journal did not independently verify closure")
+    _same(durable["closed_identity"], identity, "v2 closed journal bytes differ from independent readback")
+    _need(isinstance(system, str) and bool(system), "journal durability requires the frozen runtime platform")
+    _need(system == "Windows" or durable["directory_fsync"] and durable["final_directory_fsync"],
+          "v2 journal omitted required directory synchronization")
 
 
 def _path(root: Path, name: str) -> Path:
@@ -282,6 +353,7 @@ class _Audit:
         self.config = _json(_path(output, "config.json"))
         self.manifest = _json(_path(output, "manifest.json"))
         self.declaration = _json(_path(output, "declaration.json"))
+        self.execution_version = 2 if self.worker.get("schema") == RUN_SCHEMA_V2 else 1
         self.models, self.checkpoints = {}, {}
         self.loaded = self.forwards = 0
         self.episodes, self.verified_rows, self.partial = {}, [], []
@@ -302,8 +374,12 @@ class _Audit:
         from nca.train.jolt_admission import validate_config
         from nca.train.jolt_learning import BC_SPEC, PPO_SPEC
         root = Path(__file__).resolve().parents[3]
-        _need(self.worker["schema"] == RUN_SCHEMA and self.manifest["schema"] == RUN_SCHEMA,
-              "unknown worker or manifest contract")
+        self.execution_version = _execution_version(self.worker, self.manifest, self.declaration)
+        if self.execution_version == 2:
+            from nca.train.jolt_execution_contract import validate_v2_allocation_identity
+            validate_v2_allocation_identity(self.declaration)
+            _need(type(self.declaration.get("attempts")) is int and self.declaration["attempts"] == 1,
+                  "exactly one integer invocation is required")
         _need(self.worker["status"] in ("completed", "failed", "capped"), "unknown allocation completion status")
         _same(self.worker["manifest"], self.manifest, "worker manifest changed")
         _need(self.manifest["config_sha256"] == sha256_json(self.config)
@@ -313,8 +389,7 @@ class _Audit:
         _same(self.config["bc"], BC_SPEC, "BC objective differs from its declaration")
         _same(self.config["ppo"], PPO_SPEC, "PPO objective differs from its declaration")
         _same(self.declaration["budget"], self.config["budget"], "declaration changed its complete allocation")
-        _need(self.declaration["schema"] == "nca-learn-jolt-002-execution/v1"
-              and self.declaration["automatic_retry"] is False and self.declaration["automatic_extension"] is False,
+        _need(self.declaration["automatic_retry"] is False and self.declaration["automatic_extension"] is False,
               "declaration allowed continuation or automatic extension")
         validate_config(root, self.config)
         _same(self.manifest["source_files"], self.declaration["source_files"], "source inventory differs")
@@ -346,6 +421,9 @@ class _Audit:
             _need(review["path"].startswith("docs/evidence/")
                   and file_identity(path)["sha256"] == review["sha256"], "review identity changed")
             record = _json(path)
+            if self.execution_version == 2:
+                from nca.train.jolt_execution_contract import require_prospective_review
+                require_prospective_review(record)
             _need(record["accepted"] is True and record["source_sha256"] == self.manifest["source_sha256"],
                   "review did not accept the frozen source closure")
             reviewer = record.get("reviewer")
@@ -632,6 +710,22 @@ class _Audit:
                 _need(bootstrap == 0. and row["bootstrap_observation_valid"] is False
                       and row["bootstrap_reason"] == "supervisor_value_unavailable",
                       "supervisor override invented a critic value")
+        elif getattr(self, "execution_version", 1) == 2:
+            absent = (type(bootstrap) in (int, float) and bootstrap == 0.
+                      if row["stage"] == "ppo" else bootstrap is None)
+            terminal = (task.done and row["bootstrap_observation_valid"] is True
+                        and row["bootstrap_reason"] == "task_terminal")
+            unattempted = (row["error"] is not None and row["bootstrap_observation_valid"] is False
+                           and row["bootstrap_reason"] == "not_attempted")
+            attempt_failed = (row["error"] is not None and learned and row["stage"] == "ppo"
+                              and not task.done and len(sample.decisions) == planned_maximum
+                              and bool(sample.decisions) and sample.decisions[-1].event.truncated is True
+                              and row["bootstrap_observation_valid"] is False
+                              and row["bootstrap_reason"] == "attempt_failed")
+            _need(absent and (terminal or unattempted or attempt_failed),
+                  "v2 absent bootstrap invented a terminal, attempted value or validity")
+            if attempt_failed:
+                self.partial.append({"episode": row["id"], "reason": "bootstrap_attempt_failed"})
         else:
             _need((bootstrap == 0. if row["stage"] == "ppo" else bootstrap is None)
                   and row["bootstrap_observation_valid"] is True and row["bootstrap_reason"] == "task_terminal",
@@ -658,8 +752,11 @@ class _Audit:
             self.partial.append({"episode": row["id"], "unscored_native_decisions": len(steps) - len(frames)})
         _need(row["supervisor_interventions"] == sum(record.overridden for record in sample.decisions),
               "supervisor intervention count changed")
-        closure = bool(raw.events and raw.events[-1].next_observation
-                       and raw.events[-1].next_observation.get("suspended"))
+        if getattr(self, "execution_version", 1) == 2:
+            closure = _episode_closure_v2(raw, row, deadline_missed=task.deadline_missed)
+        else:
+            closure = bool(raw.events and raw.events[-1].next_observation
+                           and raw.events[-1].next_observation.get("suspended"))
         _need(row["owner_closure_confirmed"] == closure
               and raw.evaluation["owner_closure_confirmed"] == closure, "episode closure has no native fence")
         if row["stage"] == "teacher":
@@ -784,10 +881,13 @@ class _Audit:
         identity = validate_record_chain(path)
         closure = self.worker["closure"]
         durable = closure["durability"]
-        _need(durable["closed"] is True and durable["poisoned"] is False
-              and durable["records"] == durable["record_fsyncs"] == identity["records"]
-              and durable["total_fsyncs"] == identity["records"] + 1
-              and durable["chain_sha256"] == identity["chain_sha256"], "original owner journal did not durably close")
+        if getattr(self, "execution_version", 1) == 2:
+            _durability_v2(durable, identity, system=self.manifest.get("runtime", {}).get("system"))
+        else:
+            _need(durable["closed"] is True and durable["poisoned"] is False
+                  and durable["records"] == durable["record_fsyncs"] == identity["records"]
+                  and durable["total_fsyncs"] == identity["records"] + 1
+                  and durable["chain_sha256"] == identity["chain_sha256"], "original owner journal did not durably close")
         active, pending, serial, finished_ids, uncertain = None, None, 0, [], []
         requests_by_serial = {}
         refused = 0
@@ -1060,7 +1160,8 @@ class _Audit:
                              for identifier in ("authored", "idle", *(name for name in controller_ids() if name.endswith("-final")))}
             _need(open_pairs == expected_open and sum(row["stage"] == "open" for row in self.worker["results"]) == 32
                   and qualification["complete_pairs"], "completed experiment omitted paired open or sealed cases")
-        return {"schema": SCHEMA, "verified": True, "complete": evidence_complete,
+        return {"schema": SCHEMA_V2 if self.execution_version == 2 else SCHEMA,
+                "verified": True, "complete": evidence_complete,
                 "qualified": bool(evidence_complete and qualification["qualified"]),
                 "worker_status": self.worker["status"], "worker_result_sha256": file_identity(self.output / "worker-result.json")["sha256"],
                 "source_sha256": self.manifest["source_sha256"], "config_sha256": sha256_json(self.config),
@@ -1088,7 +1189,8 @@ def verify_output(output: Path, reserve: Callable[[str, int], Any]) -> dict[str,
         audit = _Audit(Path(output), reserve)
         return audit.finish()
     except Exception as exc:
-        return {"schema": SCHEMA, "verified": False, "complete": False, "qualified": False,
+        return {"schema": SCHEMA_V2 if audit is not None and audit.execution_version == 2 else SCHEMA,
+                "verified": False, "complete": False, "qualified": False,
                 "error": {"type": type(exc).__name__, "code": getattr(exc, "code", None),
                           "reason": str(exc) if isinstance(exc, ContractError) and exc.code == "jolt_audit" else None},
                 "verified_episodes": [] if audit is None else audit.verified_rows,

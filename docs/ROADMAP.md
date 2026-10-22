@@ -3,7 +3,7 @@ title: Cybersand behaviour implementation programme
 kind: roadmap
 summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Implementation programme
@@ -74,6 +74,12 @@ not reopen its allocation. The learned 75% mean / 50% every-seed reliability gat
 and all separate morphology gates remain unchanged. Any further physical
 experiment requires a separately commissioned prospective allocation; no retry,
 resume, retuning or extension of this one is admitted.
+
+The [offline execution v2 repair](evidence/2026-10-22-jolt-learning-reliability.md)
+adds checked recording, independent cleanup and exact lifecycle/output binding.
+Its source reviews explicitly exclude prospective experiment admission. The
+48-tick emergency stop remains allocation-aborting, and complete runtime
+feasibility remains unmeasured. This increment supplies no paired learned result.
 
 ## Dependency gates
 

@@ -115,7 +115,7 @@ def _cost_snapshot(budget, rows, snapshot, *, closed, prefix=None):
     return counts
 
 
-def _verify_closed_costs(output, result, audit):
+def _verify_closed_costs(output, result, audit, *, execution_version=1):
     from nca.contracts import sha256_json
     from nca.evaluation.durable_journal import file_identity
 
@@ -125,9 +125,16 @@ def _verify_closed_costs(output, result, audit):
 
     worker, config, declaration = (read(name) for name in ("worker-result.json", "config.json", "declaration.json"))
     prefix, full = (read(name) for name in ("budget-reservations.json", "closed-budget-reservations.json"))
-    _checked(worker.get("schema") == result.get("schema") == "nca-learn-jolt-002-run/v1"
-             and audit.get("schema") == "nca-learn-jolt-002-independent-readback/v1",
+    _checked(type(execution_version) is int and execution_version in (1, 2), "unknown execution version")
+    _checked(worker.get("schema") == result.get("schema") == f"nca-learn-jolt-002-run/v{execution_version}"
+             and audit.get("schema") == f"nca-learn-jolt-002-independent-readback/v{execution_version}",
              "unknown final learning receipt contract")
+    if execution_version == 2:
+        from nca.train.jolt_execution_contract import validate_v2_allocation_identity
+        validate_v2_allocation_identity(declaration)
+        _checked(declaration.get("schema") == "nca-learn-jolt-002-execution/v2"
+                 and type(declaration.get("attempts")) is int and declaration["attempts"] == 1,
+                 "v2 final receipt has another declaration version")
     _checked(prefix.get("schema") == full.get("schema") == "jolt-budget-reservations/v1",
              "unknown final reservation contract")
     before, after = prefix["reservations"], full["reservations"]
@@ -140,6 +147,9 @@ def _verify_closed_costs(output, result, audit):
              and declaration.get("automatic_extension") is False,
              "final costs disagree with the frozen declaration")
     manifest = read("manifest.json")
+    if execution_version == 2:
+        _checked(manifest.get("schema") == "nca-learn-jolt-002-run/v2",
+                 "v2 final receipt has another manifest version")
     _checked(sha256_json(worker.get("manifest")) == sha256_json(manifest)
              and manifest.get("config_sha256") == sha256_json(config)
              and manifest.get("declaration_sha256") == sha256_json(declaration)
@@ -197,7 +207,7 @@ def _verify_closed_costs(output, result, audit):
             "readback_deltas": {key: final[key] - original[key] for key in sorted(readback_counters)}}
 
 
-def verify_inventory(output):
+def verify_inventory(output, *, execution_version=1):
     from nca.evaluation.durable_journal import file_identity, validate_record_chain
     output = Path(output)
     value = _read_json(output / "inventory.json")
@@ -215,21 +225,60 @@ def verify_inventory(output):
     chain = validate_record_chain(output / "owner-journal.jsonl")
     result = _read_json(output / "result.json")
     audit = _read_json(output / "independent-readback.json")
-    costs = _verify_closed_costs(output, result, audit)
-    return {"inventory_verified": True, "files": len(files), "journal": chain,
+    costs = _verify_closed_costs(output, result, audit, execution_version=execution_version)
+    if execution_version == 2:
+        durable = result["closure"]["durability"]
+        _checked(durable.get("schema") == "nca-owner-journal-durability/v2"
+                 and durable.get("closed_verified") is True
+                 and durable.get("poisoned") is False
+                 and durable.get("closed_identity") == chain
+                 and durable.get("readback_records") == chain["records"],
+                 "v2 inventory lacks independently verified original journal closure")
+    verdict = {"inventory_verified": True, "files": len(files), "journal": chain,
             "readback_verified": audit["verified"], "readback_complete": audit["complete"], "status": result["status"],
             "qualified": result["qualification"]["qualified"], "costs_verified": True,
             "closed_costs": costs}
+    if execution_version == 2:
+        verdict["inventory_identity"] = file_identity(output / "inventory.json")
+    return verdict
 
 
-def freeze(args):
+def verify_execution_v2(output, *, terminal_stdout, observed_exit_code):
+    """Bind original lifecycle completion to this exact worker's evidence."""
+    from nca.evaluation.durable_journal import file_identity
+    from nca.train.jolt_executor import verify_lifecycle
+    output = Path(output)
+    lifecycle = output.with_name(output.name + "-lifecycle")
+    result = verify_lifecycle(lifecycle, terminal_stdout=terminal_stdout,
+        observed_exit_code=observed_exit_code,
+        expected_declaration=file_identity(output / "declaration.json"))
+    if not result["completed"]:
+        return {**result, "scope": "bound_execution_and_worker_output", "qualified": False}
+    inventory = verify_inventory(output, execution_version=2)
+    manifest = _read_json(output / "manifest.json")
+    _checked(result["worker_inventory"] == inventory,
+             "executor independently verified a different worker inventory")
+    _checked(manifest.get("schema") == "nca-learn-jolt-002-run/v2"
+             and manifest.get("whole_process_started_monotonic") == result["whole_process_started_monotonic"],
+             "executor and worker do not share the original invocation clock")
+    return {**result, "scope": "bound_execution_and_worker_output", "qualified": inventory["qualified"]}
+
+
+def freeze(args, *, execution_version=1):
     import numpy
     import torch
     from nca.adapters.godot import inspect_host
     from nca.contracts import sha256_json
     from nca.evaluation.durable_journal import file_identity, publish_json
     from nca.train.jolt_admission import validate_config
-    from nca.train.jolt_screen import DECLARATION_SCHEMA, source_inventory, runtime_identity
+    from nca.train.jolt_screen import DECLARATION_SCHEMA, DECLARATION_SCHEMA_V2, source_inventory, runtime_identity
+    if type(execution_version) is not int or execution_version not in (1, 2):
+        raise ValueError("unknown execution version")
+    if execution_version == 2:
+        from nca.train.jolt_execution_contract import validate_v2_allocation_identity
+        allocation = validate_v2_allocation_identity({
+            "allocation_id": getattr(args, "allocation_id", None),
+            "authorization_ref": getattr(args, "authorization_ref", None)})
     config = json.loads(args.config.read_text())
     validate_config(ROOT, config)
     inventory = source_inventory(ROOT)
@@ -238,6 +287,9 @@ def freeze(args):
         resolved = path.resolve()
         relative = resolved.relative_to(ROOT).as_posix()
         record = json.loads(resolved.read_text())
+        if execution_version == 2:
+            from nca.train.jolt_execution_contract import require_prospective_review
+            require_prospective_review(record)
         if record.get("accepted") is not True or record.get("source_sha256") != sha256_json(inventory):
             raise ValueError("review does not accept the complete current source closure")
         reviewer = record.get("reviewer")
@@ -251,7 +303,7 @@ def freeze(args):
         raise ValueError("two independent source/admission reviews are required")
     if subprocess.check_output(["git", "-C", str(ROOT), "status", "--porcelain"], text=True).strip():
         raise ValueError("publish the clean reviewed source before freezing execution")
-    declaration = {"schema": DECLARATION_SCHEMA, "attempts": 1,
+    declaration = {"schema": DECLARATION_SCHEMA if execution_version == 1 else DECLARATION_SCHEMA_V2, "attempts": 1,
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "authorization": "Owner continuation of issue #62; one prospective allocation after independent implementation and admission review.",
         "source_revision": subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip(),
@@ -261,6 +313,9 @@ def freeze(args):
         "independent_reviews": reviews, "budget": config["budget"],
         "sealed_rule": "all six fixed final checkpoint hashes precede every sealed outcome, including authored and idle",
         "automatic_retry": False, "automatic_extension": False}
+    if execution_version == 2:
+        declaration.update(**allocation,
+            authorization="Separately commissioned allocation recorded at authorization_ref; this declaration does not reopen v1.")
     publish_json(args.declaration, declaration)
     print(json.dumps({"source_revision": declaration["source_revision"],
                       "declaration_sha256": sha256_json(declaration), "physical_execution_started": False}))
@@ -379,7 +434,8 @@ def execute(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("freeze", "run", "worker", "inventory"))
+    parser.add_argument("mode", choices=("freeze", "run", "worker", "inventory",
+                                         "freeze-v2", "run-v2", "worker-v2", "inventory-v2", "lifecycle-v2"))
     parser.add_argument("--config", type=Path, default=ROOT / "configs/learning/jolt-learn-002-v1.json")
     parser.add_argument("--declaration", type=Path)
     parser.add_argument("--checkout", type=Path)
@@ -387,24 +443,40 @@ def main():
     parser.add_argument("--output", type=Path)
     parser.add_argument("--review", type=Path, action="append", default=[])
     parser.add_argument("--whole-started", type=float)
+    parser.add_argument("--allocation-id")
+    parser.add_argument("--authorization-ref")
+    parser.add_argument("--terminal-stdout", type=Path)
+    parser.add_argument("--observed-exit-code", type=int)
     args = parser.parse_args()
-    if args.mode == "inventory":
-        print(json.dumps(verify_inventory(args.output)))
+    execution_version = 2 if args.mode.endswith("-v2") else 1
+    if args.mode == "lifecycle-v2":
+        if args.output is None or args.terminal_stdout is None or args.observed_exit_code is None:
+            parser.error("lifecycle-v2 requires output, original terminal stdout, and independently observed CLI exit")
+        result = verify_execution_v2(args.output, terminal_stdout=args.terminal_stdout,
+                                     observed_exit_code=args.observed_exit_code)
+        print(json.dumps(result))
+        return 0 if result["completed"] else 2
+    if args.mode in ("inventory", "inventory-v2"):
+        print(json.dumps(verify_inventory(args.output, execution_version=execution_version)))
         return 0
     if any(value is None for value in (args.declaration, args.checkout, args.godot)):
         parser.error("declaration, checkout and godot are required")
-    if args.mode == "freeze":
-        freeze(args)
+    if args.mode in ("freeze", "freeze-v2"):
+        freeze(args, execution_version=execution_version)
         return 0
     if args.output is None:
         parser.error("output is required")
     if args.mode == "run":
         return execute(args)
+    if args.mode == "run-v2":
+        from nca.train.jolt_executor import execute as execute_v2
+        return execute_v2(args, whole_started=ENTRY_MONOTONIC, script=Path(__file__).resolve())
     if args.whole_started is None or not 0 < args.whole_started <= ENTRY_MONOTONIC:
         parser.error("worker requires the original supervised invocation clock")
     from nca.train.jolt_screen import run
     result = run(root=ROOT, checkout=args.checkout, godot=args.godot, output=args.output,
-                 config_path=args.config, declaration_path=args.declaration, whole_started=args.whole_started)
+                 config_path=args.config, declaration_path=args.declaration, whole_started=args.whole_started,
+                 execution_version=execution_version)
     return 0 if result["status"] in ("completed", "capped", "failed") else 2
 
 

@@ -1,0 +1,213 @@
+{
+  "accepted": true,
+  "accepted_properties": [
+    "V2 declaration syntax, exact integer attempts, single-allocation metadata and unchanged 1,800-second maximum are checked before the executor can start a worker. Consumed v1 declarations are rejected.",
+    "Freeze, worker admission and independent auditor require explicitly prospective reviews. These offline software reviews have offline_scope_only=true and prospective_experiment_admitted=false and cannot admit a physical experiment.",
+    "V2 inventory verification enforces matching declaration, manifest, worker, result and audit versions and binds the exact inventory.json identity, complete raw journal closure and conserved cost reservations.",
+    "Final CLI verification combines independently read lifecycle evidence with the exact worker declaration bytes, original monotonic origin and independently regenerated inventory; same-count swapped artifact bytes are rejected.",
+    "The executor creates at most one worker, retains immutable stage and failure receipts and requires confirmed child/tree closure. It checks phase reserves after cleanup, synchronization and exit-receipt publication.",
+    "Durable terminal candidates cannot establish success alone. A post-publication stdout verdict and independently observed zero outer CLI exit remain required. Missing output, failed publication, unknown cleanup and time overruns cannot qualify completion.",
+    "Legacy v1 defaults and historical evidence remain distinct. Stable v2 supervisor retirement diagnostics preserve the original 48-tick emergency stop, cancellation authority, invocation deadline and failed-result semantics."
+  ],
+  "base_revision": "f7466f014552699069ccd96268174cfde120c5b6",
+  "ci_correction": {
+    "correction": "Translate the raw monotonic clock to epoch 2000 while preserving real elapsed deltas. Replace only the executor module time reference so subprocess wait and child sleep retain their real clocks. Allow two seconds of synthetic phase headroom with a four-second sleeping child.",
+    "failed_head": "f7466f014552699069ccd96268174cfde120c5b6",
+    "failure": "A test subtracted 1769.8 seconds from the arbitrary real monotonic epoch; fresh CI runners could therefore supply a nonpositive invocation origin, correctly rejected by execute before a child was spawned.",
+    "failure_record": "https://github.com/techrote/neural-cyber-automata/pull/70#issuecomment-6329201366",
+    "initial_ci_status": "The original failed CI result remains evidence of the initial fixture defect; this local review does not assert that hosted CI has passed after the correction.",
+    "regression": "Run real-child timeout assertions against both the normal raw clock and a synthetic near-zero raw epoch. Both require a positive invocation origin, a spawned and exited nonzero child, timeout=true and no verification child.",
+    "scope": "Only tests/test_jolt_learning_executor_v2.py changed in the source closure. Production origin validation, deadlines, reserves, cleanup and admission remain byte-identical."
+  },
+  "created_utc": "2026-10-21T23:56:42.828476+00:00",
+  "examined_files": {
+    "src/nca/controllers/jolt_learned.py": "8ac31038129dfd2a8e7d97ad8cf54e153c9164ab7481ad4d1bb17bbd5ef1b5a2",
+    "src/nca/evaluation/jolt_learning_audit.py": "3984290d05cb42dfe07c0fab6310575045136933a23befa9e9ce148317f70ec0",
+    "src/nca/train/jolt_execution_contract.py": "7a5e66be239d1e71c7cb2278d95964e708e4903602990d405180a0ea18b5ec48",
+    "src/nca/train/jolt_executor.py": "67d63d815a1a3c2fc9679981f86bb017a8a9dc9341bff2a48034421ab383f601",
+    "src/nca/train/jolt_screen.py": "450e2f67069cbf2539e6406c299a3fb464d2690ff39b3c3eaf9ca9ac857b8a7d",
+    "tests/test_jolt_learning_audit.py": "2008d588ecef8dc8b157fe860bd09da88246049bd0b9bb59b93efb274946107e",
+    "tests/test_jolt_learning_executor.py": "e842f33bb36b3eebef7917559e403470495cfec58d3c5ed7adb99e8147df4520",
+    "tests/test_jolt_learning_executor_v2.py": "600fe7c3ee3d2faac26816a99a1fd6c37d0c0feb0e3f791949be51903971888e",
+    "tests/test_jolt_reliability.py": "efc221b220dae6616942ccb0414bd8fd14df5754ac718f988112fa7f8019d56d",
+    "tools/learn_jolt.py": "65c5a6aeda99b8f91162cb3c4eaf9eaaf6155672d91d8d10c4da4ac7067f84e8"
+  },
+  "independence_disclosure": "This reviewer authored the new executor, shared allocation identity validator and executor tests, and independently cross-reviewed the parent CLI, worker admission and auditor integration. The journal reviewer separately reviewed the executor and identified its corrected reserve-timing mismatch. This record does not represent an independent review of its own authored implementation.",
+  "issue": 62,
+  "limits": [
+    "No replacement physical invocation, original checkpoint execution, policy training experiment, historical evidence repair or old auditor replay occurred during this review. Synthetic unit tests may construct small test models and exercise contract code.",
+    "Disposable Python subprocess tests validate lifecycle behavior; they do not qualify Godot host execution, learned control, performance, owner feel or morphology.",
+    "The mechanism of the original missing owner-journal suffix and absent executor receipts remains unknown. New checks do not retroactively change the failed allocation.",
+    "The unchanged emergency retirement can still stop a future learned allocation; this software acceptance predicts neither experiment completion nor scientific qualification.",
+    "SIGKILL, interpreter loss or unavailable storage can prevent final receipts. Surviving intermediate receipts are never promoted to successful completion.",
+    "Issue 62 remains open until its paired learned objective and unchanged acceptance are met. A separately commissioned prospective allocation and review are still required before further physical or neural experimental work."
+  ],
+  "offline_scope_only": true,
+  "open_software_findings": [],
+  "prospective_experiment_admitted": false,
+  "resolved_findings": [
+    {
+      "id": "phase_reserve_producer_reader_mismatch",
+      "resolution": "Checks after cleanup/stream sync and exit publication now match lifecycle readback reserve enforcement; worker and verifier delayed-publication regressions fail closed.",
+      "source": "Independent journal review"
+    },
+    {
+      "id": "commission_identity_only_checked_by_freeze",
+      "resolution": "Shared bounded identity checks now apply across freeze, executor, worker, final inventory and audit; syntax checks do not assert that the linked comment grants permission.",
+      "source": "Executor CLI cross-review"
+    },
+    {
+      "id": "standalone_v2_inventory_schema_relabeling",
+      "resolution": "Exact v2 declaration and manifest schemas and integer attempt count are enforced alongside worker/result/audit versions.",
+      "source": "Executor CLI cross-review"
+    },
+    {
+      "id": "offline_reviews_must_not_admit_execution",
+      "resolution": "Prospective review scope is explicit and checked in freeze, worker and audit. This software-only record cannot satisfy it.",
+      "source": "Final integration review"
+    },
+    {
+      "id": "timeout_fixture_assumed_large_monotonic_epoch",
+      "resolution": "The synthetic fixture now translates a real-progressing clock to a positive epoch. Explicit near-zero uptime coverage passes while the production positive-origin guard and all deadline/cleanup checks remain unchanged.",
+      "source": "Hosted CI failure on the initial PR 70 head"
+    }
+  ],
+  "review_history": [
+    {
+      "hash_format": "SHA-256 of original UTF-8 review bytes; the complete original record follows without reinterpretation.",
+      "record": {
+        "accepted": true,
+        "accepted_properties": [
+          "V2 declaration syntax, exact integer attempts, single-allocation metadata and unchanged 1,800-second maximum are checked before the executor can start a worker. Consumed v1 declarations are rejected.",
+          "Freeze, worker admission and independent auditor require explicitly prospective reviews. These offline software reviews have offline_scope_only=true and prospective_experiment_admitted=false and cannot admit a physical experiment.",
+          "V2 inventory verification enforces matching declaration, manifest, worker, result and audit versions and binds the exact inventory.json identity, complete raw journal closure and conserved cost reservations.",
+          "Final CLI verification combines independently read lifecycle evidence with the exact worker declaration bytes, original monotonic origin and independently regenerated inventory; same-count swapped artifact bytes are rejected.",
+          "The executor creates at most one worker, retains immutable stage and failure receipts and requires confirmed child/tree closure. It checks phase reserves after cleanup, synchronization and exit-receipt publication.",
+          "Durable terminal candidates cannot establish success alone. A post-publication stdout verdict and independently observed zero outer CLI exit remain required. Missing output, failed publication, unknown cleanup and time overruns cannot qualify completion.",
+          "Legacy v1 defaults and historical evidence remain distinct. Stable v2 supervisor retirement diagnostics preserve the original 48-tick emergency stop, cancellation authority, invocation deadline and failed-result semantics."
+        ],
+        "base_revision": "1c19c5aa7e715575d867675babd19bb08ae58e25",
+        "created_utc": "2026-10-21T23:48:44.503917+00:00",
+        "examined_files": {
+          "src/nca/controllers/jolt_learned.py": "8ac31038129dfd2a8e7d97ad8cf54e153c9164ab7481ad4d1bb17bbd5ef1b5a2",
+          "src/nca/evaluation/jolt_learning_audit.py": "3984290d05cb42dfe07c0fab6310575045136933a23befa9e9ce148317f70ec0",
+          "src/nca/train/jolt_execution_contract.py": "7a5e66be239d1e71c7cb2278d95964e708e4903602990d405180a0ea18b5ec48",
+          "src/nca/train/jolt_executor.py": "67d63d815a1a3c2fc9679981f86bb017a8a9dc9341bff2a48034421ab383f601",
+          "src/nca/train/jolt_screen.py": "450e2f67069cbf2539e6406c299a3fb464d2690ff39b3c3eaf9ca9ac857b8a7d",
+          "tests/test_jolt_learning_audit.py": "2008d588ecef8dc8b157fe860bd09da88246049bd0b9bb59b93efb274946107e",
+          "tests/test_jolt_learning_executor.py": "e842f33bb36b3eebef7917559e403470495cfec58d3c5ed7adb99e8147df4520",
+          "tests/test_jolt_learning_executor_v2.py": "73b12b1b5c26599835bbdb24a3bebdbdda58a5c0577948a075c98e30cc691ded",
+          "tests/test_jolt_reliability.py": "efc221b220dae6616942ccb0414bd8fd14df5754ac718f988112fa7f8019d56d",
+          "tools/learn_jolt.py": "65c5a6aeda99b8f91162cb3c4eaf9eaaf6155672d91d8d10c4da4ac7067f84e8"
+        },
+        "independence_disclosure": "This reviewer authored the new executor, shared allocation identity validator and executor tests, and independently cross-reviewed the parent CLI, worker admission and auditor integration. The journal reviewer separately reviewed the executor and identified its corrected reserve-timing mismatch. This record does not represent an independent review of its own authored implementation.",
+        "issue": 62,
+        "limits": [
+          "No replacement physical invocation, original checkpoint execution, policy training experiment, historical evidence repair or old auditor replay occurred during this review. Synthetic unit tests may construct small test models and exercise contract code.",
+          "Disposable Python subprocess tests validate lifecycle behavior; they do not qualify Godot host execution, learned control, performance, owner feel or morphology.",
+          "The mechanism of the original missing owner-journal suffix and absent executor receipts remains unknown. New checks do not retroactively change the failed allocation.",
+          "The unchanged emergency retirement can still stop a future learned allocation; this software acceptance predicts neither experiment completion nor scientific qualification.",
+          "SIGKILL, interpreter loss or unavailable storage can prevent final receipts. Surviving intermediate receipts are never promoted to successful completion.",
+          "Issue 62 remains open until its paired learned objective and unchanged acceptance are met. A separately commissioned prospective allocation and review are still required before further physical or neural experimental work."
+        ],
+        "offline_scope_only": true,
+        "open_software_findings": [],
+        "prospective_experiment_admitted": false,
+        "resolved_findings": [
+          {
+            "id": "phase_reserve_producer_reader_mismatch",
+            "resolution": "Checks after cleanup/stream sync and exit publication now match lifecycle readback reserve enforcement; worker and verifier delayed-publication regressions fail closed.",
+            "source": "Independent journal review"
+          },
+          {
+            "id": "commission_identity_only_checked_by_freeze",
+            "resolution": "Shared bounded identity checks now apply across freeze, executor, worker, final inventory and audit; syntax checks do not assert that the linked comment grants permission.",
+            "source": "Executor CLI cross-review"
+          },
+          {
+            "id": "standalone_v2_inventory_schema_relabeling",
+            "resolution": "Exact v2 declaration and manifest schemas and integer attempt count are enforced alongside worker/result/audit versions.",
+            "source": "Executor CLI cross-review"
+          },
+          {
+            "id": "offline_reviews_must_not_admit_execution",
+            "resolution": "Prospective review scope is explicit and checked in freeze, worker and audit. This software-only record cannot satisfy it.",
+            "source": "Final integration review"
+          }
+        ],
+        "review_scope": "Software reliability and final CLI, declaration, lifecycle and worker-output binding integration only.",
+        "reviewer": "executor-and-cli-cross-review",
+        "schema": "nca-jolt-reliability-software-review/v1",
+        "source_file_count": 207,
+        "source_inventory_rule": "Exact source_inventory(root) set: src/nca Python and GDScript; top-level tools Python; tests Python; configs/learning JSON excluding jolt-execution-prefixed files; pyproject.toml. Canonical JSON SHA-256 binds all entries.",
+        "source_sha256": "b2649e8b3c3fa53da3392e20723b9a84617d93c2b758acec179b7473bd8aabfb",
+        "source_state": "Reviewed working-tree source before publication; the closure hash, not the base revision alone, identifies the reviewed implementation.",
+        "validation": [
+          {
+            "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor test_jolt_learning_executor_v2 test_jolt_reliability test_jolt_learning_audit -q",
+            "passed": 75,
+            "result": "pass",
+            "runtime": "Optional pinned CPU learner environment",
+            "seconds": 3.584,
+            "skipped": 0,
+            "tests": 75
+          },
+          {
+            "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor test_jolt_learning_executor_v2 test_jolt_reliability test_jolt_learning_audit -q",
+            "passed": 50,
+            "result": "pass with expected optional-runtime skips",
+            "runtime": "Standard Python without optional Torch",
+            "seconds": 1.86,
+            "skipped": 25,
+            "tests": 75
+          },
+          {
+            "command": "git diff --check",
+            "result": "pass"
+          }
+        ]
+      },
+      "review_sha256": "0795272607a50040fdb9e7fc75f6043e0d842a012670731064ad8cf38acce026"
+    }
+  ],
+  "review_scope": "Software reliability and final CLI, declaration, lifecycle and worker-output binding integration only.",
+  "reviewer": "executor-and-cli-cross-review",
+  "schema": "nca-jolt-reliability-software-review/v1",
+  "source_file_count": 207,
+  "source_inventory_rule": "Exact source_inventory(root) set: src/nca Python and GDScript; top-level tools Python; tests Python; configs/learning JSON excluding jolt-execution-prefixed files; pyproject.toml. Canonical JSON SHA-256 binds all entries.",
+  "source_sha256": "a8a4db360e314f5e515dd5f5cacfd9863e95135a41c50061862216bd08e1f297",
+  "source_state": "Reviewed working-tree source after a test-only fresh-runner clock correction; the closure hash identifies the exact reviewed implementation before publication.",
+  "validation": [
+    {
+      "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor test_jolt_learning_executor_v2 test_jolt_reliability test_jolt_learning_audit -q",
+      "passed": 75,
+      "result": "pass",
+      "runtime": "Optional pinned CPU learner environment",
+      "seconds": 6.641,
+      "skipped": 0,
+      "tests": 75
+    },
+    {
+      "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor test_jolt_learning_executor_v2 test_jolt_reliability test_jolt_learning_audit -q",
+      "passed": 50,
+      "result": "pass with expected optional-runtime skips",
+      "runtime": "Standard Python without optional Torch",
+      "seconds": 5.816,
+      "skipped": 25,
+      "tests": 75
+    },
+    {
+      "command": "PYTHONPATH=src:tests python -m unittest test_jolt_learning_executor_v2.RealSyntheticChildTests -v",
+      "passed": 3,
+      "result": "pass including normal and near-zero raw-clock timeout subtests",
+      "runtime": "Standard Python without optional Torch",
+      "seconds": 4.136,
+      "skipped": 0,
+      "tests": 3
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass"
+    }
+  ]
+}
