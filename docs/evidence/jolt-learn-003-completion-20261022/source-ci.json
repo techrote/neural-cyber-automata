@@ -1,0 +1,87 @@
+{
+  "all_five_jobs_passed": true,
+  "learning_cpu_full_suite": {
+    "errors": 0,
+    "failures": 0,
+    "job_url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623804/job/120058002329",
+    "passed": 1176,
+    "scope": "Observed exact final executable source-head hosted suite; original timestamped job log is retained by GitHub.",
+    "seconds": 225.909,
+    "skipped": 6,
+    "tests": 1182
+  },
+  "schema": "nca-jolt-003-source-ci/v1",
+  "scope": "Required source-head software conformance. Final documentation/publication-head checks remain separately required before merge; actual merge and final-head result are recorded in PR73. Pinned-host CI is not LEARN-JOLT-003 experiment admission or execution.",
+  "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "workflows": [
+    {
+      "conclusion": "success",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 120058001939,
+          "name": "actual-host",
+          "status": "completed",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623661/job/120058001939"
+        }
+      ],
+      "run_id": 39845623661,
+      "status": "completed",
+      "workflow": "Pinned host conformance"
+    },
+    {
+      "conclusion": "success",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 120058001649,
+          "name": "cpu (ubuntu-24.04)",
+          "status": "completed",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623666/job/120058001649"
+        },
+        {
+          "conclusion": "success",
+          "id": 120058001947,
+          "name": "cpu (windows-2022)",
+          "status": "completed",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623666/job/120058001947"
+        }
+      ],
+      "run_id": 39845623666,
+      "status": "completed",
+      "workflow": "CPU conformance"
+    },
+    {
+      "conclusion": "success",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 120058002278,
+          "name": "check-docs",
+          "status": "completed",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623705/job/120058002278"
+        }
+      ],
+      "run_id": 39845623705,
+      "status": "completed",
+      "workflow": "docs"
+    },
+    {
+      "conclusion": "success",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 120058002329,
+          "name": "learning-cpu",
+          "status": "completed",
+          "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39845623804/job/120058002329"
+        }
+      ],
+      "run_id": 39845623804,
+      "status": "completed",
+      "workflow": "Optional CPU learning conformance"
+    }
+  ]
+}

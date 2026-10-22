@@ -16,12 +16,17 @@ That commission is conditional on all final source/runtime/resource gates.
 Do not run the commands below without the published passing declaration and
 two passing independent final-source reviews.
 
-**Current admission is refused.** The
-[storage conformance](evidence/jolt-learn-003-storage-conformance-20261022.json)
-projects 841.063 seconds for the three audit reservation passes under its
-predeclared conservative method, above the unchanged 600-second audit interval.
-Other audit work and complete memory feasibility remain additional requirements.
-No executable passing declaration or physical invocation is published.
+**Current admission is refused.** The [completion evidence](evidence/2026-10-22-learn-jolt-003-completion.md)
+and [refusal record](evidence/jolt-learn-003-completion-20261022/admission-refusal.json)
+retain unresolved complete pipeline time and full-worker/native memory gates.
+The typed assessment covers all phases, including nine reservation and three
+complete journal-chain passes. Its synthetic projections are planning evidence,
+not actual experiment durations or a sufficient larger budget. The requested
+3,900-second audit would leave 2,700 active seconds under the retained whole
+ceiling and other tail reserves; that schedule is not admitted. The original
+7,200-second ceiling and 600-second audit reserve remain unchanged. Three fresh reviews
+accept offline software only; none admits physical execution. No passing
+execution declaration or experimental invocation is published.
 
 ## Prepare the exact environment
 

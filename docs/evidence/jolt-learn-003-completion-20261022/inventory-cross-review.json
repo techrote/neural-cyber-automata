@@ -1,0 +1,194 @@
+{
+  "accepted": true,
+  "accepted_scope": "Offline software correctness, static inventory/wrapper integration, and truthful synthetic feasibility reporting only; final-head hosted checks remain a separate merge requirement.",
+  "authored_changes_rechecked_without_claiming_independence": [
+    "Only declared artifact files and their required ancestor directories are accepted; unexpected empty directories, noncanonical names, symlinks, nonregular entries and hard links are refused before artifact hashing.",
+    "Windows DirEntry.stat may expose a zero link count. The final scan obtains no-follow metadata through Path.lstat, and the new regression requires both an unchanged valid tree to pass and a real outside hard-link alias to fail.",
+    "Final lifecycle inventory rejects empty directories, FIFO/special entries and hard links, while existing exact-stage/raw-stream/observed-exit requirements remain intact."
+  ],
+  "complete_pipeline_feasibility_established": false,
+  "configuration": {
+    "canonical_sha256": "239e2432d652414130217b51ffb8002aff67aeaa1694979d0081cfa3c341f353",
+    "file_sha256": "76129b50e37774d20b46d34b82d4ca66b06c989838b44332ad57306453dddbf2",
+    "path": "configs/learning/jolt-learn-003-v1.json",
+    "unchanged": true
+  },
+  "created_utc": "2026-10-22T20:06:48.668763+00:00",
+  "examined_files": {
+    "src/nca/evaluation/jolt_journal_v3.py": "ebb03b6ad6716a527b10d48e0f467856e87cfffc1f2872235db3063b0739f6a2",
+    "src/nca/evaluation/jolt_learning_audit.py": "571b973816e1c4d862a418d27bf50a92bc00c15b36b649334dd11ff7fc982137",
+    "src/nca/train/jolt_budget_v3.py": "fec87f764b9f9e79eb9c24ea42c5ccda729917e7fe386e4791581cc5dbeba06c",
+    "src/nca/train/jolt_cli_v3.py": "f9a226559bdd359ae51f77a613ca9b64492cd931de8eb70d19376ec9d2c4c8ff",
+    "src/nca/train/jolt_execution_v3.py": "d3550b76be3f50fe44c31417d5e82018b0523e3e9f5c5025f39827cfd8433d5f",
+    "src/nca/train/jolt_executor_v3.py": "c67bafddbb18d5596dc0ad44c6816d7ca29d5befa92dd86f81b946a44e8cd444",
+    "src/nca/train/jolt_screen.py": "1f27bb3f4afdbebe3c8fa20f790ff528e0ababef6415816f5a88954f6433279c",
+    "src/nca/train/jolt_storage_v3.py": "c2a7622416c69eb633b57f34840c710036565e6625bd73a325b493784bb06713",
+    "tests/test_jolt_cli_v3.py": "edbd49cde9a6c019bb9e37584c877c857f08c980983188ac77d99a97bb6b9ecd",
+    "tests/test_jolt_executor_v3.py": "627eec9320aa0683385435474324c994336243e8649e13860c637cbbf874a818",
+    "tests/test_jolt_pipeline_envelope_v3.py": "8e89836eed3f0879094b71a9bba564596fdcc7a57bc1a0df080445a73c8b5062",
+    "tools/check_jolt_pipeline_envelope_v3.py": "ace3ef74404fbdada61b9b04539232c54998ea1d2d6fe934dc8c9027a61ff711"
+  },
+  "experiment_allocation_consumed": false,
+  "final_source_delta_from_prior_full_suite": [
+    "src/nca/train/jolt_cli_v3.py",
+    "tests/test_jolt_cli_v3.py"
+  ],
+  "host_revision_required_not_executed": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "hosted_final_head_checks": "Required before merge. This cross-review does not assert that pending or subsequent hosted checks have passed.",
+  "independence_disclosure": "This reviewer authored the strict v3 worker inventory scan, lifecycle single-link check, their negative controls, and the Windows DirEntry portability correction/regression. This is not an independent implementation review of those authored changes. Independent cross-review covers the root-authored verify_execution declaration prehash fix and new typed pipeline conformance helper/tests, their integration, evidence identities, and reporting limits. Other reviewers must independently cover the authored inventory changes.",
+  "independently_accepted_properties": [
+    "verify_execution checks the output root and uses bounded file_identity_v3 on declaration.json before lifecycle binding. Its no-follow regular-file/single-link check rejects static FIFO or hard-link substitution before opening that declaration.",
+    "The final typed pipeline helper contains no host, learner or checkpoint execution path. Its report permanently separates completed synthetic sampling from experiment admission and whole-pipeline feasibility.",
+    "Typed event counts close to 115110 journal records, 38338 owner requests, 38338 owner responses and 6464 episode starts. The declared source walk includes three journal-chain reads and nine reservation parse/replay passes across closure, audit, publication and external verification.",
+    "Independent arithmetic readback reproduced every recorded projection from the maximum fixed sample, source count/byte maximum, sample size and planning factor four. These are planning estimates with unresolved terms, not proven upper execution times.",
+    "The corrected deadline fields declare a 180-second sampling deadline measured from script entry, whole_process_hard_deadline_enforced=false, and explicit exclusion of final report publication and observed exit. Separate observed-exit evidence retains actual complete direct-child duration and exit.",
+    "The helper source closure contains the normal 244 files plus the historical morphology profile shape. Both independently recomputed closures match their records; the differing 244-file and 245-file hashes are correctly distinguished.",
+    "The requested audit arithmetic totals 3900 seconds; preserving the old 7200 ceiling and 600 other-tail seconds leaves 2700 active seconds. It is explicitly arithmetic only and does not rewrite the executable allocation."
+  ],
+  "issue": 62,
+  "learned_family_qualified": false,
+  "limits": [
+    "Accepted only for offline software scope. No passing prospective execution declaration is created by this review; all original physical experiment gates remain required.",
+    "The conservative component estimates exclude unresolved work and exceed several original phase allocations. They do not establish a safe enlarged budget or complete CPU/native memory/time feasibility.",
+    "Inventory checks address static closed-tree substitutions. No hostile concurrent-filesystem security or race-proof open guarantee is claimed.",
+    "The 180-second helper guard applies to sampling; publication and original process exit are represented separately, not included in a fictional complete hard bound.",
+    "The 1181-test and 73-test transcripts bind the prior source. Final portability-delta tests and required final-head hosted checks must remain separately identified.",
+    "No learned family, owner feel, or morphology continuation is accepted. Issue 62 and morphology issue 16 retain their existing gates; the new learning allocation remains unspent.",
+    "Historical LEARN-JOLT-002 bytes, consumed allocation and failed outcomes remain unchanged."
+  ],
+  "offline_scope_only": true,
+  "open_software_findings": [],
+  "prospective_experiment_admitted": false,
+  "pull_request": 73,
+  "resolved_findings": [
+    {
+      "id": "unexpected_empty_or_special_inventory_entries",
+      "resolution": "Complete static entry-type and ancestor-directory verification replaces a file-only rglob inventory."
+    },
+    {
+      "id": "pre_inventory_declaration_hash_could_open_fifo",
+      "resolution": "Root wrapper uses existing bounded regular/single-link file_identity_v3 before its initial declaration hash."
+    },
+    {
+      "id": "synthetic_sampling_deadline_overstated_as_whole_process_maximum",
+      "resolution": "Explicit sampling-only deadline fields and false whole-process hard-bound flag, plus separate retained original output and observed exit."
+    },
+    {
+      "id": "windows_direntry_zero_link_count_false_rejection",
+      "resolution": "Use Path.lstat for actual no-follow file metadata; valid-tree and outside-hardlink regression added."
+    }
+  ],
+  "retained_pipeline_evidence": {
+    "component_projection_seconds_excluding_unresolved": {
+      "active": 18864.25638012876,
+      "audit": 8058.123357910334,
+      "closure": 1323.666022749878,
+      "publication": 459.61819860065833,
+      "verification": 1370.062645619195
+    },
+    "direct_child_timeout_seconds": 210,
+    "measurement_scope": "Offline synthetic direct-child tool only; not physical experiment lifecycle evidence.",
+    "observed_complete_process_seconds": 23.145674724000855,
+    "observed_exit_code": 0,
+    "observed_exit_receipt": {
+      "bytes": 607,
+      "sha256": "cc9c30288d6023bb9108b784fa6e4cbb8b3d61ca02a056b15a6a7e23918100cf"
+    },
+    "observed_timeout": false,
+    "original_stdout_stderr": {
+      "bytes": 1145,
+      "sha256": "15090e8359da8820b4ef441f8db7f1900479ebd25ffa8bb6157970f036dbcb5a"
+    },
+    "report": {
+      "bytes": 83092,
+      "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+    },
+    "report_name": "jolt-learn-003-typed-pipeline-20261022.json",
+    "source_clean": true,
+    "source_file_count": 245,
+    "source_sha256": "6b4a05a8331d75189ab2d5f098498164c24d1d134b7c3c634e0a7d2b40012496",
+    "unresolved_terms": [
+      "Native host startup, reset, stepping, transport, cancellation and process memory are unmeasured here.",
+      "Episode dataclass construction, history/retirement/metric validation and semantic journal replay are not timed by storage specimens.",
+      "Neural fitting, inference, authentication and audit forwards require separate source/runtime-bound CPU evidence.",
+      "Full-worker peak memory includes retained PPO transitions, metrics/results, auditor copies, models, native process and allocator overhead; specimen RSS is not that bound.",
+      "Complete reservation publication writes/fsync, small-file open/stat latency, source admission and fixed JSON publication are not established by read throughput.",
+      "Page-cache behavior and type/shape surrogates make these factor-four observations planning estimates, not universal worst-case execution guarantees.",
+      "Final process reaping, stream fsync, receipts and observed outer exit must still fit their original shared-clock phases."
+    ]
+  },
+  "reviewer": "inventory-and-pipeline-cross-review",
+  "runtime": {
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "interop_threads": 1,
+    "kernel": "6.18.55",
+    "libc": [
+      "glibc",
+      "2.39"
+    ],
+    "logical_cpus_available": 9,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "threads": 1,
+    "torch": "2.8.0+cpu"
+  },
+  "runtime_verification_scope": "Read the final source-freeze runtime binding; independently rechecked installed Torch 2.8.0+cpu and NumPy 2.3.5 metadata and matched pipeline Python/system/machine/CPU identities. No physical runtime or model was executed for this final review.",
+  "schema": "nca-jolt-003-offline-cross-review/v1",
+  "source_clean_at_independent_readback": true,
+  "source_file_count": 244,
+  "source_inventory_rule": "Exact source_inventory set: src/nca Python/GDScript, top-level tools Python, tests Python, configs/learning JSON excluding jolt-execution-prefixed files, and pyproject.toml; every file and canonical closure hash independently recomputed.",
+  "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "source_url": "https://github.com/techrote/neural-cyber-automata/commit/c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "validation_readback": [
+    {
+      "name": "prior-source full offline suite",
+      "passed": 1122,
+      "scope": "Original root-produced transcript independently read; not rerun here and not relabeled as a final-source full-suite run.",
+      "seconds": 139.259,
+      "skipped": 59,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests": 1181,
+      "transcript": {
+        "bytes": 216089,
+        "sha256": "2467d6073e0922a4414c1d9c79c76474232797c5d4f30cb42c2a102d5ec10c7e"
+      }
+    },
+    {
+      "name": "prior-source focused suite",
+      "passed": 73,
+      "scope": "Original root-produced transcript independently read; predates the two-file Windows portability correction.",
+      "seconds": 46.157,
+      "skipped": 0,
+      "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+      "tests": 73,
+      "transcript": {
+        "bytes": 13756,
+        "sha256": "0401d29ee7d3a9f6b2225940ddf1f30c9228e083a705e1e1067cd3114eeb8f49"
+      }
+    },
+    {
+      "name": "final-source inventory and lifecycle targeted suite",
+      "passed": 26,
+      "scope": "Final portable source bytes tested by root in consistent execution environment; original transcript independently read, including actual socket rejection and Windows metadata regression.",
+      "seconds": 0.547,
+      "skipped": 0,
+      "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+      "tests": 26,
+      "transcript": {
+        "bytes": 4723,
+        "sha256": "3834bf2b817c739900b4611ef5ca04ab3af6751252aea026ec328f7427cb4e48"
+      }
+    },
+    {
+      "details": "Recomputed all 244 source file hashes, extended 245-file pipeline closure, config raw/canonical hashes, report/log identities, every projection formula, deadline labels and source bindings.",
+      "name": "independent final identity and arithmetic readback",
+      "result": "pass"
+    }
+  ]
+}

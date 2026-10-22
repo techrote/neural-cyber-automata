@@ -34,6 +34,12 @@ If feasibility remains unresolved, publish admission failure before spending
 the allocation. No retry, resume, extension, tuning, reseeding or host change is
 included. Learned, owner-feel and morphology gates remain separate.
 
+The [completion record](evidence/2026-10-22-learn-jolt-003-completion.md) accepts
+the reviewed offline software and publishes the permitted admission refusal.
+Complete time and memory feasibility remain unresolved. The requested larger
+audit allocation was assessed without silently enlarging the retained whole
+ceiling; no executable budget change or physical invocation occurred.
+
 ### D-018 — Calculate and review a separately versioned Jolt follow-up
 
 [ACCEPTED] 2026-10-22 by owner: calculate and review a new allocation and create

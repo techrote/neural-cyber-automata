@@ -15,11 +15,14 @@ original learning workload and qualification gates. The [runbook](../LEARN_JOLT_
 describes prospective admission and one-invocation operation. Software
 conformance alone does not admit the experiment or establish a useful learner.
 
-The [synthetic storage assessment](../evidence/jolt-learn-003-storage-conformance-20261022.json)
-fails the conservative complete-time admission envelope. Its projected three
-reservation passes alone exceed the 600-second audit interval. No experiment
-allocation was opened. The [coupled CPU report](../evidence/jolt-learn-003-cpu-conformance-20261022.json)
-does not resolve that blocker or establish whole-worker memory feasibility.
+The [offline completion evidence](../evidence/2026-10-22-learn-jolt-003-completion.md)
+records three fresh independent reviews and the final source-bound typed
+pipeline assessment. Complete original-clock time and full-worker/native memory
+remain unresolved, so prospective physical admission is refused and allocation
+`learn-jolt-003-20261022-a1` remains unspent. The requested audit increase to at
+least 3,900 seconds does not establish feasibility under the retained 7,200-second
+whole ceiling. Executable phase budgets and all 39 counters remain unchanged;
+the original storage and coupled CPU reports remain historical component evidence.
 
 ## Version boundaries and unchanged inputs
 
@@ -90,6 +93,13 @@ An override without a model value receives no critic loss. Reward terms, actor
 and critic masks, physical length-16 windows and GAE cuts are unchanged. Safe
 terminal failure uses zero bootstrap at the versioned episode boundary without
 rewriting raw per-tick task flags or making a new value observation.
+
+At a verified administrative cutoff immediately following a masked emergency
+row, the persisted next-observation peek and its real value/forward costs remain
+unchanged. The v3 learning projection uses zero internal bootstrap for that
+masked final row; the original mask gap already cuts GAE. This narrowly scoped
+projection avoids a legacy validator rejection and does not alter legacy rollout
+semantics, raw task flags, losses or the recorded peek.
 
 **No terminal penalty is added.** Original mask gaps cut return propagation;
 retaining the failed outcome does not supply a new negative learning signal or

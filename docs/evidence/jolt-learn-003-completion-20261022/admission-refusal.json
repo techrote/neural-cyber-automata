@@ -1,0 +1,158 @@
+{
+  "admitted": false,
+  "all_39_operation_ceilings_unchanged": true,
+  "allocation_costs": {
+    "experiment_host_starts": 0,
+    "experiment_invocations": 0,
+    "open_comparison_rows": 0,
+    "physical_decisions": 0,
+    "physical_teacher_episodes": 0,
+    "physical_ticks": 0,
+    "sealed_comparison_rows": 0,
+    "trained_policy_checkpoints_from_this_allocation": 0
+  },
+  "allocation_id": "learn-jolt-003-20261022-a1",
+  "authorization_reference": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584",
+  "component_planning_estimates_seconds_excluding_unresolved": {
+    "active": 18864.25638012876,
+    "audit": 8058.123357910334,
+    "closure": 1323.666022749878,
+    "publication": 459.61819860065833,
+    "verification": 1370.062645619195
+  },
+  "config_file_sha256": "76129b50e37774d20b46d34b82d4ca66b06c989838b44332ad57306453dddbf2",
+  "config_sha256": "239e2432d652414130217b51ffb8002aff67aeaa1694979d0081cfa3c341f353",
+  "cost_scope": "Zero counts apply to this experimental allocation. Synthetic test/model/optimizer work and normal hosted host conformance are separate software checks, not physical learning allocation execution.",
+  "created_utc": "2026-10-22T20:10:12.761440+00:00",
+  "decision": "refused before experiment",
+  "estimate_limits": "Factor-four projections from fixed synthetic maxima are planning evidence only: not measured experiment durations, universal worst-case guarantees, proven minimum durations, or a sufficient enlarged allocation.",
+  "executable_budget_changed": false,
+  "execution_declaration": null,
+  "experiment_allocation_consumed": false,
+  "experimental_output_opened": false,
+  "gates": {
+    "available_disk": "observed above exact required bound during final diagnostic",
+    "complete_original_clock_time_feasibility": "unresolved; multiple component planning estimates exceed retained phase allowances",
+    "full_worker_and_native_peak_memory": "unresolved; helper RSS and shared cgroup snapshots do not establish it",
+    "prospective_declaration_and_passing_execution_reviews": "not issued; blocked by time and memory gates",
+    "software_independent_offline_review": "accepted only within disclosed offline scope",
+    "storage_bytes_and_readers": "source-bounded; exact object retained"
+  },
+  "host_revision_required_not_executed": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "independent_offline_reviews": {
+    "envelope-review.json": {
+      "bytes": 24485,
+      "sha256": "5fb88f7a688af2fe3a1da8217f3124fb9e8e0174b5a49ad974b38fcb76850ca6"
+    },
+    "inventory-cross-review.json": {
+      "bytes": 13269,
+      "sha256": "c93030a22028e910d1b3c1f5bda40d6ef92684d3b482675194c4e3b58988fffa"
+    },
+    "semantic-review.json": {
+      "bytes": 24549,
+      "sha256": "82829e88fac99e03c96402b9151326b8e52658554c915abf636a5800fb83715c"
+    }
+  },
+  "measurement_report": {
+    "bytes": 83092,
+    "path": "typed-pipeline-conformance.json",
+    "sha256": "a52d0ec865d86a57e3fc32643ad24f565fb783a46e098e7ff2a0fa06f28a2f34"
+  },
+  "measurement_source_closure_includes_additional_profile": true,
+  "measurement_source_sha256": "6b4a05a8331d75189ab2d5f098498164c24d1d134b7c3c634e0a7d2b40012496",
+  "next_admission_requirement": "Establish complete source/runtime-bound time, storage and full-worker/native memory feasibility; match executable enforcement to actual owner authority; obtain fresh prospective reviews and publish/read back a passing declaration before opening any physical invocation.",
+  "offline_scope_only": true,
+  "original_audit_seconds": 600,
+  "original_whole_seconds": 7200,
+  "prospective_experiment_admitted": false,
+  "qualification": {
+    "issue_62_remains_open": true,
+    "learned_family_qualified": false,
+    "morphology_16_released": false,
+    "original_thresholds_and_denominators_unchanged": true,
+    "owner_feel_accepted": false
+  },
+  "requested_audit_assessment": {
+    "arithmetic_only_not_an_authorized_budget_revision": true,
+    "episode_seconds": 900,
+    "journal_seconds": 900,
+    "neural_seconds": 900,
+    "remaining_active_seconds": 2700,
+    "requested_combined_audit_seconds": 3900,
+    "reservation_seconds": 1200,
+    "unchanged_other_tail_seconds": 600,
+    "unchanged_whole_ceiling_seconds": 7200
+  },
+  "runtime": {
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "interop_threads": 1,
+    "kernel": "6.18.55",
+    "libc": [
+      "glibc",
+      "2.39"
+    ],
+    "logical_cpus_available": 9,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.14",
+    "system": "Linux",
+    "threads": 1,
+    "torch": "2.8.0+cpu"
+  },
+  "schema": "nca-jolt-003-admission-refusal/v1",
+  "source_file_count": 244,
+  "source_revision": "c3246acada9447ecc94b93c8c25425ecf7fa0214",
+  "source_sha256": "c6113b08d7bf7416d29a4d1df578b0155ba8409e84765ac6603ce3a8171b3ecd",
+  "source_tree": "3c7ca2a126493e8fda45d6de0da28eb506b06420",
+  "stage_decisions": 18944,
+  "stage_episode_starts": 6464,
+  "stage_ticks": 113664,
+  "storage_bounds": {
+    "authored_episode_starts": 84,
+    "authored_metrics_bytes": 49152,
+    "complete_lifecycle_files": 16,
+    "confirmed_decisions": 18944,
+    "episode_starts": 6464,
+    "largest_episode_uncompressed_bytes": 5308416,
+    "lifecycle_files": 17,
+    "maximum_journal_records": 115110,
+    "maximum_worker_fixed_bytes": 8388608,
+    "maximum_worker_result_bytes": 64795296,
+    "ordinary_json_reader_bytes": 67108864,
+    "other_metrics_bytes": 8192,
+    "outer_stdout_stderr_and_exit_files": 3,
+    "pieces": {
+      "checkpoints": 37748736,
+      "fixed_ordinary_json": 872415232,
+      "learning_json": 442368,
+      "lifecycle_and_original_outer_evidence": 20971520,
+      "live_reservation_spool": 488699892,
+      "metrics": 56393728,
+      "owner_journal": 7543848960,
+      "raw_episode_gzip": 2909979485,
+      "sample_episode_gzip": 2909979485,
+      "two_published_reservation_prefixes": 981203416
+    },
+    "raw_episode_reader_bytes": 33554432,
+    "raw_per_family_bytes": 2906652672,
+    "required_disk_bytes_including_1_gib_reserve": 16895424646,
+    "reservation_reader_bytes": 536870912,
+    "sample_reader_bytes": 67108864,
+    "schema": "nca-jolt-bounded-serialization/v3",
+    "source_requires_independent_runtime_time_and_memory_admission": true,
+    "total_artifact_bytes": 15821682822,
+    "worker_files": 19469
+  },
+  "unresolved_terms": [
+    "Native host startup, reset, stepping, transport, cancellation and process memory are unmeasured here.",
+    "Episode dataclass construction, history/retirement/metric validation and semantic journal replay are not timed by storage specimens.",
+    "Neural fitting, inference, authentication and audit forwards require separate source/runtime-bound CPU evidence.",
+    "Full-worker peak memory includes retained PPO transitions, metrics/results, auditor copies, models, native process and allocator overhead; specimen RSS is not that bound.",
+    "Complete reservation publication writes/fsync, small-file open/stat latency, source admission and fixed JSON publication are not established by read throughput.",
+    "Page-cache behavior and type/shape surrogates make these factor-four observations planning estimates, not universal worst-case execution guarantees.",
+    "Final process reaping, stream fsync, receipts and observed outer exit must still fit their original shared-clock phases.",
+    "Two raw reservation file-identity hash passes during publication are additional source-confirmed I/O and are not individually timed by the canonical reservation-pass surrogate."
+  ]
+}

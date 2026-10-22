@@ -17,6 +17,13 @@ adds synthetic software tests and no experimental run row. The consumed
 LEARN-JOLT-002 allocation and its unknown complete wall time remain unchanged;
 no replacement physical invocation, resumed checkpoint or learned comparison is recorded.
 
+The [LEARN-JOLT-003 offline completion](evidence/2026-10-22-learn-jolt-003-completion.md)
+adds exact-source software reviews and typed synthetic pipeline conformance,
+with prospective physical admission refused. Allocation `learn-jolt-003-20261022-a1`
+remains unopened and unspent; no physical learning run row or trained comparison
+is added. Synthetic neural tests and normal hosted host conformance remain
+separate software checks. Original learned and morphology gates remain intact.
+
 The [IK runtime software evidence](evidence/2026-10-21-ik-runtime-software.md)
 records small CPU conformance and failure fixtures, not a measured CUDA run.
 No actual CUDA device qualification, matched throughput comparison or learned

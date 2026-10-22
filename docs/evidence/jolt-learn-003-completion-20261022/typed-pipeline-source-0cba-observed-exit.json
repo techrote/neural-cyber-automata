@@ -1,0 +1,18 @@
+{
+  "direct_child_timeout_seconds": 210,
+  "experiment_allocation_consumed": false,
+  "observed_complete_process_seconds": 23.239907906001463,
+  "observed_exit_code": 0,
+  "report": {
+    "bytes": 83109,
+    "sha256": "23289060b16a72751cc4d387c8da93e23ede8d907087cdec4d96f8d3ac1cbbfc"
+  },
+  "schema": "nca-offline-tool-observed-exit/v1",
+  "source_revision": "0cba752e70194a437223682939edd36f25a2e1dc",
+  "stdout_stderr": {
+    "bytes": 1154,
+    "sha256": "6b79b98c222818edc1bec7704875049d4b434d22bcf91e5d5d3d7d8d87861434"
+  },
+  "timed_out": false,
+  "tool": "tools/check_jolt_pipeline_envelope_v3.py"
+}
