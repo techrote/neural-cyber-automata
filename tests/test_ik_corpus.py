@@ -5,6 +5,7 @@ from dataclasses import replace
 import hashlib
 import importlib.util
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -14,7 +15,7 @@ from unittest.mock import patch
 
 from nca.contracts import ContractError, canonical_json, sha256_json
 from nca.ik.data import (DatasetConfig, build_split_plan, fit_normalization,
-                         generate_sample, iter_tasks)
+                         generate_sample, iter_tasks, validate_sample)
 from nca.ik.profiles import runner_right_sole_profile
 from nca.ik.reference import SolverConfig
 from nca.train.ik_corpus import (
@@ -182,6 +183,40 @@ class IKCorpusTests(unittest.TestCase):
         def corrupt(rows):
             rows[0]["label"]["teacher"]["status"] = "invalid_input"
         self._replace_shard("training", corrupt)
+        with self.assertRaises(ContractError):
+            self.read()
+
+    def test_cross_platform_one_ulp_analytic_point_is_explicitly_scoped(self):
+        # The original Linux label 7.1951845160020005 and Windows replay
+        # 7.195184516002 are adjacent binary64 values, not equal values.
+        self.assertEqual(math.nextafter(7.195184516002, math.inf), 7.1951845160020005)
+        sample = next(s for s in self.training if s.label.analytic.points)
+        original = sample.label.analytic
+        saved = original.points[0][1]
+        points = ((original.points[0][0], math.nextafter(saved, math.inf)),) + original.points[1:]
+        modified = replace(sample, label=replace(
+            sample.label, analytic=replace(original, points=points)))
+        with self.assertRaises(ContractError):
+            validate_sample(modified, self.config)
+        # Only the pinned accepted archive reader may request this compatibility
+        # branch after manifest, shard and original-registry verification.
+        validate_sample(modified, self.config, _accepted_archive=True)
+        further = ((original.points[0][0],
+                    math.nextafter(math.nextafter(saved, math.inf), math.inf)),) + original.points[1:]
+        with self.assertRaises(ContractError):
+            validate_sample(replace(sample, label=replace(
+                sample.label, analytic=replace(original, points=further))),
+                self.config, _accepted_archive=True)
+        changed_mask = replace(modified, label=replace(
+            modified.label, pose_loss=not modified.label.pose_loss))
+        with self.assertRaises(ContractError):
+            validate_sample(changed_mask, self.config, _accepted_archive=True)
+
+    def test_rehashed_one_ulp_fixture_label_still_refused(self):
+        def edit(rows):
+            value = rows[0]["label"]["analytic"]["points"][0][1]
+            rows[0]["label"]["analytic"]["points"][0][1] = math.nextafter(value, math.inf)
+        self._replace_shard("training", edit)
         with self.assertRaises(ContractError):
             self.read()
 
