@@ -8,6 +8,13 @@ verified: 2026-10-22
 
 # Implementation progress
 
+[22 October LEARN-JOLT-003] The owner reported CI green after D-020,
+but no long run occurred. D-021 adds an explicitly manual, source-admitted
+long-run workflow that calls the actual observer. This is preparatory
+execution infrastructure only: physical allocation remains unopened and
+unspent until full worker/native memory admission and independent reviews.
+The six-hour GitHub-hosted service limit remains external.
+
 ## Checkpoint archive
 
 - [19 October, 00:09–19:09 UTC](progress/2026-10-19-early.md): initial programme,
