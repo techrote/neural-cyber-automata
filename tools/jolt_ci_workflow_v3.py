@@ -55,11 +55,14 @@ def _publish(path, value):
         stream.write(content)
         stream.flush()
         os.fsync(stream.fileno())
-    descriptor = os.open(path.parent, os.O_RDONLY)
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
+    # The production execution lane is Linux; Windows unit-test fixtures
+    # cannot fsync a directory handle using the POSIX API.
+    if os.name != "nt":
+        descriptor = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
 
 
 def _source_revision():
@@ -246,7 +249,9 @@ def inventory(args):
     root = Path(args.root)
     rows = {}
     errors = []
-    if root.exists():
+    if not root.is_dir() or root.is_symlink():
+        errors.append({"entry": ".", "error": "missing_or_substituted_evidence_root"})
+    else:
         for path in sorted(root.rglob("*")):
             relative = path.relative_to(root).as_posix()
             kind = path.lstat().st_mode
