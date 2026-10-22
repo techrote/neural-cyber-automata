@@ -220,9 +220,12 @@ class ProcessEnvelopeTests(unittest.TestCase):
 
     def test_posix_termination_targets_the_child_process_group(self):
         self.child.wait.return_value = -9
-        with patch.object(envelope.os, "name", "posix"), patch.object(envelope.os, "killpg", create=True) as kill:
+        kill_signal = 9
+        with patch.object(envelope.os, "name", "posix"), \
+                patch.object(envelope.os, "killpg", create=True) as kill, \
+                patch.object(envelope.signal, "SIGKILL", kill_signal, create=True):
             result = envelope._terminate(self.child)
-        kill.assert_called_once_with(self.child.pid, envelope.signal.SIGKILL)
+        kill.assert_called_once_with(self.child.pid, kill_signal)
         self.child.wait.assert_called_once_with(timeout=5)
         self.assertEqual(result, -9)
 

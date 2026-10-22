@@ -15,6 +15,11 @@ The source is [`data.py`](../src/nca/ik/data.py); the
 access. These are nominal geometric tasks, **not ACT004 physical episodes**.
 CUDA training, learned quality, export and physical tracking retain their separate gates.
 
+The [22 October declared corpus](evidence/2026-10-22-ik-datasets.md) retains all
+10,220 scheduled outcomes, meets final population minima and preserves the
+unopened candidate-scoring registry. Its exact source and immutable bytes remain
+identified separately from later documentation and test-only integration changes.
+
 ## Frozen recipe and curriculum
 
 The [prospective configuration](../configs/ik/datasets/runner_v1.json) is
