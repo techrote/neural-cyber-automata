@@ -24,7 +24,7 @@ verified: 2026-10-22
   implementation, prospective admission, recovered consumed failure and publication.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
-- [22 October reliability](progress/2026-10-22-learning-reliability.md) and [allocation planning](progress/2026-10-22-learning-allocation.md): offline repair and reviewed follow-up; [IK datasets](progress/2026-10-22-ik-datasets.md): one declared CPU corpus. [Jolt offline completion](progress/2026-10-22-learning-completion.md) records review fixes and complete pipeline admission refusal.
+- [22 October reliability](progress/2026-10-22-learning-reliability.md) and [allocation planning](progress/2026-10-22-learning-allocation.md): offline repair and reviewed follow-up; [IK datasets](progress/2026-10-22-ik-datasets.md): one declared CPU corpus. [Jolt offline completion](progress/2026-10-22-learning-completion.md) records review fixes and complete pipeline admission refusal. [CUDA qualification](progress/2026-10-22-ik-cuda-qualification.md) records Windows V100/CPU smoke, step-eight resume and independent complete readback for #51.
 
 ## 2026-10-20 19:17 UTC — JOLT-RECOVERY-003 begins from preserved replay
 

@@ -140,7 +140,7 @@ actual CUDA learning, exact CPU export and physical tracking evidence.
 | Issue | Deliverable | Dependency | Evidence state |
 |---|---|---|---|
 | [#50](https://github.com/techrote/neural-cyber-automata/issues/50) | Registered rig/effector/target/result contracts | Entry | Nominal profile and software fixtures |
-| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | [Software conformance](evidence/2026-10-21-ik-runtime-software.md); actual CUDA and matched measurements unqualified |
+| [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | [Software conformance](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 CUDA/CPU qualification](evidence/2026-10-22-ik-cuda-qualification.md); 32 steps per lane with step-8 resume; Linux CUDA remains unmeasured |
 | [#52](https://github.com/techrote/neural-cyber-automata/issues/52) | Batched FK and independent numerical IK | #50 | [Independent geometry/reference implementation and conformance](evidence/2026-10-21-ik-kinematics.md); actual CUDA parity unmeasured |
 | [#53](https://github.com/techrote/neural-cyber-automata/issues/53) | Branch-aware data/curriculum and sealed family splits | #52 | [Dataset implementation](IK_DATASETS.md) and [complete 10,220-task CPU corpus](evidence/2026-10-22-ik-datasets.md); final candidate scoring remains sealed |
 | [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | Unmeasured |

@@ -1,0 +1,212 @@
+{
+  "comparison_measured": true,
+  "cross_device_bit_identity": false,
+  "lanes": {
+    "cpu": {
+      "attempt_count": 2,
+      "charged_samples": 1024,
+      "charged_seconds": 19.28200000000652,
+      "charged_steps": 32,
+      "committed_steps": 32,
+      "declaration_sha256": "e428fbd68e95073eaff4f7e3e2904d3a45d9890ad9ea561ced262d9921a95bc0",
+      "device": "cpu",
+      "environment_sha256": "f04a600bc35406e3b9c096115b97e895978f52628d63e78da78a3d6b06dd76eb",
+      "final_model_sha256": "fdaea689743ad2c3be3c92d85c020897b5155b01c94156c542b6a987a28ef1dd",
+      "initial_model_sha256": "449552d441648395f0317d47b71c197783daba85f56424396fcbc5cfb445c905",
+      "lineage_limits": [],
+      "memory_per_attempt": [
+        {
+          "allocated_bytes": null,
+          "device": "cpu",
+          "free_bytes": null,
+          "measurement": "CUDA allocator counters do not measure CPU memory",
+          "peak_allocated_bytes": null,
+          "peak_reserved_bytes": null,
+          "reserved_bytes": null,
+          "total_bytes": null
+        },
+        {
+          "allocated_bytes": null,
+          "device": "cpu",
+          "free_bytes": null,
+          "measurement": "CUDA allocator counters do not measure CPU memory",
+          "peak_allocated_bytes": null,
+          "peak_reserved_bytes": null,
+          "reserved_bytes": null,
+          "total_bytes": null
+        }
+      ],
+      "outer_invocation_seconds": 10.0126821,
+      "preflight": {
+        "allocator_memory_fraction": null,
+        "architecture": "AMD64",
+        "architecture_route": null,
+        "compiled_architectures": [],
+        "config_sha256": "31600ef59d3491f48c22ff7bcb086de5c8df78f1588cfbbb67064a8e075e5350",
+        "cpu_processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+        "cuda_build": "12.6",
+        "cudnn_version": 91002,
+        "driver": null,
+        "environment_sha256": "f04a600bc35406e3b9c096115b97e895978f52628d63e78da78a3d6b06dd76eb",
+        "gpu": null,
+        "logical_cpu_count": 12,
+        "memory": {
+          "free_bytes": null,
+          "total_bytes": null
+        },
+        "numpy": "2.3.5",
+        "os": "Windows",
+        "os_release": "11",
+        "precision": {
+          "autocast": false,
+          "compilation": false,
+          "cublas_workspace_config": ":4096:8",
+          "cudnn_allow_tf32": false,
+          "cudnn_benchmark": false,
+          "cudnn_deterministic": true,
+          "deterministic_algorithms": true,
+          "deterministic_warn_only": false,
+          "dtype": "float32",
+          "matmul_allow_tf32": false,
+          "matmul_precision": "highest",
+          "torch_threads": 1
+        },
+        "python": "3.12.10",
+        "python_implementation": "CPython",
+        "qualification": "unmeasured",
+        "reason": null,
+        "requested_device": "cpu",
+        "schema": "nca-ik-device/v1",
+        "source_sha256": "fb3ebcb0a77e3db377d95e8f2e82eac463320c3f1b708dddb85f316ef1df6434",
+        "status": "ready",
+        "torch": "2.8.0+cu126",
+        "torch_build_config_sha256": "39fc996f9a7576f7d777f02b1eb2b460b7cbad05855c11c6d040f1f94003c69d",
+        "torch_git_version": "a1cb3cc05d46d198467bebbb6e8fba50a325d4e7"
+      },
+      "qualification": "cpu_smoke_passed",
+      "run_id": "ik-944a47df0d5546fda0970bb6cd9957a2",
+      "synchronized_samples_per_second": 13474.55297104945,
+      "terminal_record_sha256": "0f4316f96e7696e20ebc273eef8706bd13efa41165a6b8387b1fcf2e5bcc89b4",
+      "timing_totals": {
+        "checkpoint_seconds": 0.15700000000651926,
+        "cuda_event_seconds": null,
+        "generation_seconds": 0.031000000017229468,
+        "loading_seconds": 1.922000000020489,
+        "preflight_seconds": 4.139999999955762,
+        "synchronized_training_seconds": 0.0759950999636203
+      }
+    },
+    "cuda": {
+      "attempt_count": 2,
+      "charged_samples": 1024,
+      "charged_seconds": 24.4210000000312,
+      "charged_steps": 32,
+      "committed_steps": 32,
+      "declaration_sha256": "3ae256c6c6a60769d54c8b9aa4fc14acfb1b697e9bf5cf4f25eafc14fb84b65c",
+      "device": "cuda:0",
+      "environment_sha256": "b6e5f083d9e1e35d66691f9fb60c98c83aceddd7e74694cec926d6206657ffc5",
+      "final_model_sha256": "debfb6bf3fd291e6c616d50f5d3694e88457992356aa46268f7ae34ae3e15891",
+      "initial_model_sha256": "449552d441648395f0317d47b71c197783daba85f56424396fcbc5cfb445c905",
+      "lineage_limits": [],
+      "memory_per_attempt": [
+        {
+          "allocated_bytes": 67120128,
+          "device": "cuda:0",
+          "free_bytes": 16498425856,
+          "measurement": "PyTorch allocator; external CUDA allocations are excluded",
+          "peak_allocated_bytes": 68178432,
+          "peak_reserved_bytes": 69206016,
+          "reserved_bytes": 69206016,
+          "total_bytes": 17031102464
+        },
+        {
+          "allocated_bytes": 67120128,
+          "device": "cuda:0",
+          "free_bytes": 16498425856,
+          "measurement": "PyTorch allocator; external CUDA allocations are excluded",
+          "peak_allocated_bytes": 68178432,
+          "peak_reserved_bytes": 69206016,
+          "reserved_bytes": 69206016,
+          "total_bytes": 17031102464
+        }
+      ],
+      "outer_invocation_seconds": 15.1479878,
+      "preflight": {
+        "allocator_memory_fraction": 0.5,
+        "architecture": "AMD64",
+        "architecture_route": "sm_70",
+        "compiled_architectures": [
+          "sm_61",
+          "sm_70",
+          "sm_75",
+          "sm_80",
+          "sm_86",
+          "sm_90"
+        ],
+        "config_sha256": "31600ef59d3491f48c22ff7bcb086de5c8df78f1588cfbbb67064a8e075e5350",
+        "cpu_processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+        "cuda_build": "12.6",
+        "cudnn_version": 91002,
+        "driver": "581.80",
+        "environment_sha256": "b6e5f083d9e1e35d66691f9fb60c98c83aceddd7e74694cec926d6206657ffc5",
+        "gpu": {
+          "capability": [
+            7,
+            0
+          ],
+          "multiprocessors": 80,
+          "name": "Tesla V100-SXM2-16GB",
+          "total_memory_bytes": 17031102464
+        },
+        "logical_cpu_count": 12,
+        "memory": {
+          "free_bytes": 16697720832,
+          "total_bytes": 17031102464
+        },
+        "numpy": "2.3.5",
+        "os": "Windows",
+        "os_release": "11",
+        "precision": {
+          "autocast": false,
+          "compilation": false,
+          "cublas_workspace_config": ":4096:8",
+          "cudnn_allow_tf32": false,
+          "cudnn_benchmark": false,
+          "cudnn_deterministic": true,
+          "deterministic_algorithms": true,
+          "deterministic_warn_only": false,
+          "dtype": "float32",
+          "matmul_allow_tf32": false,
+          "matmul_precision": "highest",
+          "torch_threads": 1
+        },
+        "python": "3.12.10",
+        "python_implementation": "CPython",
+        "qualification": "unmeasured",
+        "reason": null,
+        "requested_device": "cuda:0",
+        "schema": "nca-ik-device/v1",
+        "source_sha256": "fb3ebcb0a77e3db377d95e8f2e82eac463320c3f1b708dddb85f316ef1df6434",
+        "status": "ready",
+        "torch": "2.8.0+cu126",
+        "torch_build_config_sha256": "39fc996f9a7576f7d777f02b1eb2b460b7cbad05855c11c6d040f1f94003c69d",
+        "torch_git_version": "a1cb3cc05d46d198467bebbb6e8fba50a325d4e7"
+      },
+      "qualification": "cuda_smoke_passed",
+      "run_id": "ik-da321827bee543cd9ddb1b040b6bffcd",
+      "synchronized_samples_per_second": 2082.493590691363,
+      "terminal_record_sha256": "37a67e150b8c4eb6bfa7d6e19ee379a5fbe5ffa2d16a2d110613771199a65c59",
+      "timing_totals": {
+        "checkpoint_seconds": 0.21500000002561137,
+        "cuda_event_seconds": 0.4913138008117675,
+        "generation_seconds": 0.0,
+        "loading_seconds": 2.0630000000237487,
+        "preflight_seconds": 8.312000000034459,
+        "synchronized_training_seconds": 0.49171820003539324
+      }
+    }
+  },
+  "quality_qualification": false,
+  "schema": "nca-ik-cuda-qualification-publication/v1",
+  "source_revision": "95873260c2411da320cac40d28644df2a45e6738"
+}
