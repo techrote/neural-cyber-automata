@@ -73,6 +73,13 @@ software; its original CPU models and raw durations remain visible.
 No operator should retroactively normalize historical reports that did not
 include a measured calibration.
 
+The first explicit [measured CPU reference](../evidence/jolt-003-cpu-reference-20261023.json)
+is Intel Xeon Platinum 8573C, with a fixed SHA-256 throughput of
+1,643,390,192.84 bytes/second from
+[nonexperimental run #39873284613](https://github.com/techrote/neural-cyber-automata/actions/runs/39873284613).
+This is an observed reference calibration, not a minimum throughput, runner
+capacity assertion, training benchmark or physical experiment.
+
 ## Admission boundaries
 
 This is **not** an automatic memory-admission waiver. Existing required
