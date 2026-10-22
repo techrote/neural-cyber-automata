@@ -8,13 +8,6 @@ verified: 2026-10-22
 
 # Implementation progress
 
-[22 October LEARN-JOLT-003] The owner reported CI green after D-020,
-but no long run occurred. D-021 adds an explicitly manual, source-admitted
-long-run workflow that calls the actual observer. This is preparatory
-execution infrastructure only: physical allocation remains unopened and
-unspent until full worker/native memory admission and independent reviews.
-The six-hour GitHub-hosted service limit remains external.
-
 ## Checkpoint archive
 
 - [19 October, 00:09–19:09 UTC](progress/2026-10-19-early.md): initial programme,
@@ -31,7 +24,7 @@ The six-hour GitHub-hosted service limit remains external.
   implementation, prospective admission, recovered consumed failure and publication.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
-- [22 October reliability](progress/2026-10-22-learning-reliability.md) and [allocation planning](progress/2026-10-22-learning-allocation.md): offline repair and reviewed follow-up; [IK datasets](progress/2026-10-22-ik-datasets.md): one declared CPU corpus. [Jolt offline completion](progress/2026-10-22-learning-completion.md) records the historical refusal; [time-limit removal](progress/2026-10-22-learning-time-limits.md) records D-020 and the CI handoff.
+- [22 October reliability](progress/2026-10-22-learning-reliability.md) and [allocation planning](progress/2026-10-22-learning-allocation.md): offline repair and reviewed follow-up; [IK datasets](progress/2026-10-22-ik-datasets.md): one declared CPU corpus. [Jolt offline completion](progress/2026-10-22-learning-completion.md) records the historical refusal; [time-limit removal](progress/2026-10-22-learning-time-limits.md) records D-020; [manual CI](progress/2026-10-22-jolt-ci.md) records D-021.
 
 ## 2026-10-20 19:17 UTC — JOLT-RECOVERY-003 begins from preserved replay
 
