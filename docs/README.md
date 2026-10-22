@@ -11,6 +11,7 @@ verified: 2026-10-22
 | Question | Owning page |
 |---|---|
 | What exists now? | [STATE.md](STATE.md) |
+| How do we preflight and dispatch the *actual* Jolt-003 training run? | [Manual admitted long-run workflow and single-use claim](LEARN_JOLT_003_RUNBOOK.md#github-actions-long-run-dispatch) |
 | What changed in the mission and old tasks? | [SCOPE_AND_MIGRATION.md](SCOPE_AND_MIGRATION.md) |
 | What is the main recommendation? | [Research prepass](research/PREPASS.md) |
 | Which physical and neural controllers should we compare? | [Control methods](research/CONTROL_METHODS.md) |
