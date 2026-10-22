@@ -3,7 +3,7 @@ title: Compute lanes and measurement requirements
 kind: reference
 summary: Measured CPU learning and host lanes, with explicit limits for unqualified devices and deployment.
 owns: [hardware.lanes]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Compute lanes
@@ -14,7 +14,9 @@ The Linux CPU learning and physical-host lanes have executed the bounded
 [run ledger](RUNS.md). These establish scoped software and workload evidence.
 The exact [Torch CPU deployment bundle](TORCH_RUNTIME_EXPORT.md) has composite
 qualification from the original physical run and separate completed pose evidence.
-GPU/accelerator lanes, Windows physical runtime and owner feel remain unmeasured.
+The separate [Windows V100 IK smoke](evidence/2026-10-22-ik-cuda-qualification.md)
+has actual device evidence. Other accelerator lanes, Windows physical runtime
+and owner feel remain unmeasured.
 Device availability alone does not establish compatibility or useful throughput.
 
 | Lane | Role | Current evidence or remaining requirement |
@@ -23,7 +25,7 @@ Device availability alone does not establish compatibility or useful throughput.
 | Linux Torch CPU deployment | Exact evaluated BC1103 external controller | 600.521 active seconds: 95.163 ticks/s with one learned actor; 77.673 with one learned plus one authored actor. Standalone full-decision p95 2.713 ms; continuous realtime pacing remains unqualified |
 | Windows CPU package | Installation and protocol conformance | Package CI passes; physical Windows gameplay and pacing remain unmeasured |
 | Compatible accelerator | Batched network updates after host profiling | Device/driver/runtime report, supported operations, actual smoke training and memory/time |
-| Optional IK CPU/CUDA runtime | Fixed Runner inverse-workload smoke and optimizer-boundary resume | [CPU software conformance](evidence/2026-10-21-ik-runtime-software.md); actual CUDA device and matched throughput remain unmeasured |
+| Optional IK CPU/CUDA runtime | Fixed Runner inverse-workload smoke and optimizer-boundary resume | [Software conformance](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md): 32 steps / 1,024 samples each on CPU and CUDA; both resume from step 8 |
 | Legacy K80 | Optional independent experiments if a compatible stack is justified | Separate environment/architecture verification and workload benchmark |
 | Target game platform | Final inference and feel qualification | Exact host/profile, measured latency and gameplay comparison |
 
@@ -37,5 +39,12 @@ The [IK setup and resume guide](IK_RUNTIME.md) creates a separate environment
 with Torch 2.8.0+cu126 or the CPU comparison wheel. Availability is only preflight;
 actual FP32 data/model/loss/gradient/optimizer placement, finite updates and
 unchanged prospective budgets determine the smoke result. The initial software
-environment exposes no NVIDIA device. CUDA memory/timing, driver compatibility
-and Windows optional-runtime execution have no measured qualification here.
+environment exposed no NVIDIA device. A later declared Windows 11 / CPython
+3.12.10 / Torch 2.8.0+cu126 / NumPy 2.3.5 execution qualifies the Tesla
+V100-SXM2-16GB (sm_70), installed driver 581.80, for that fixed workload.
+The CPU match uses the same CUDA wheel on an AMD Ryzen 5 5600X with one Torch
+thread. Synchronized training totals are 0.491718200 seconds CUDA versus
+0.075995100 seconds CPU; the tiny checked workload shows no GPU speedup.
+CUDA peak allocator memory is 68,178,432 allocated / 69,206,016 reserved bytes;
+driver/context/external allocations and CPU RSS are not measured by those counters.
+Linux CUDA, other GPUs and the historical actor learner retain their separate gates.

@@ -1,0 +1,13 @@
+{
+  "archive": {
+    "bytes": 1579701,
+    "member_count": 310,
+    "name": "ik-cuda-qualification-20261022.zip",
+    "sha256": "1735d1d51bb08bb619e461d4eb7153abd59aad8bf3802838d3f4b9ee04f3eb30",
+    "url": "https://github.com/techrote/neural-cyber-automata/releases/download/ik-cuda-qualification-20261022/ik-cuda-qualification-20261022.zip"
+  },
+  "independent_review_sha256": "cdb50208d196ece331094608b96b4d5823a32253ad39d32348b6490a75a3121d",
+  "inventory_sha256": "35ed65b19efd1c5fd221583b435e7127505076c51256522de4e1a9e36ecb627c",
+  "schema": "nca-ik-cuda-qualification-index/v1",
+  "summary_sha256": "a6d5ffb6ad9b5bb21d7552ae16eb50147efb196e45ec455ce1d072d69e62b30f"
+}

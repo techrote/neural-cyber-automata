@@ -30,7 +30,7 @@ verified: 2026-10-22
 | How is the first CUDA IK task defined and qualified? | [IK contracts](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and [host handoff](IK_HOST_HANDOFF.md) |
 | How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How are geometric IK data, guarded splits and final-suite access handled? | [IK datasets](IK_DATASETS.md) and [configuration recipes](../configs/ik/datasets/README.md); [declared corpus and evidence](evidence/2026-10-22-ik-datasets.md) |
-| How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md) and [software evidence](evidence/2026-10-21-ik-runtime-software.md) |
+| How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |
