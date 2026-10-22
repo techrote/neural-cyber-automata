@@ -142,11 +142,36 @@ substitute freshly generated data. The preparation session confirmed the
 archive's availability and recorded size; the unavailable workspace prevented
 executing a new original-archive byte readback here. Its previous accepted
 readback remains identified in the index. CPU fixture verification is not a new
-readback of those 7,280 training/tuning rows. The existing dataset validators
-require exact replay and independently recomputed labels; original-corpus
-validation on Windows must succeed before GPU initialization. Cross-platform
-arithmetic compatibility is not inferred from newly generated CI fixtures.
-A refusal here remains a CPU preflight blocker, with the original bytes retained.
+readback of those 7,280 training/tuning rows. The original corpus remains byte-identical. A 23 October 2026 Windows run-host
+preflight authenticated the original archive but reported a binary64 arithmetic
+difference in `training-00000.jsonl` row 4, analytic `points[0][1]`:
+retained `7.1951845160020005`, Windows `7.195184516002` (one ULP).
+This is not evidence of archive corruption or authorization to change labels.
+
+The accepted-v1 reader now has a **narrowly source-bound compatibility rule**:
+only after verifying the exact published manifest, original registry and each
+training/tuning shard's retained byte size and SHA-256 can its independent
+label replay admit a one-`math.nextafter` binary64 step in analytic FK
+**point coordinates only**. Original label bytes, analytic configurations,
+statuses, teacher results, branch identities, endpoint/error checks and all
+supervision masks must remain **exactly equal**. A second ULP, any other
+numeric difference, rehashed development fixture or altered identity still
+refuses. Normal fixture replay remains strict. Neither the corpus nor the
+generator, numerical teacher, normalization or final suite is changed.
+
+The restored, original archive and its retained copy were separately read back
+as 7,340,716 bytes, SHA-256
+`97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce`.
+An offline Linux binary64 forward computation of 7,120 solved permitted
+training/tuning samples matched **all 14,240 stored analytic point coordinates
+exactly**; no final payloads were inspected in this check. This does not
+establish the unchanged original archive's full Windows semantic admission.
+
+**Stop condition remains in force:** qualified Windows CPU preflight must run
+again on the patched executable commit and succeed through normalization, with
+two independent prospective source/declaration-bound reviews before the first
+CUDA allocation. New source/CI evidence cannot be re-labelled as the
+original blocked execution, and no CUDA or final-suite action is implied.
 
 Sampling preserves each complete chronological trajectory group within a batch,
 keeps the declared curriculum stage order and deterministically shuffles whole
