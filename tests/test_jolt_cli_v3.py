@@ -1,4 +1,5 @@
 """Adversarial independent readback of original v3 cost phases and prefixes."""
+from contextlib import contextmanager
 from copy import deepcopy
 import hashlib
 import json
@@ -125,6 +126,35 @@ class ClosedInventoryV3Tests(unittest.TestCase):
             self.assertTrue(result["inventory_verified"])
             self.assertEqual(result["files"], 4)
             self.assertFalse(result["qualified"])
+
+    def test_windows_zero_direntry_link_metadata_uses_real_nofollow_file_metadata(self):
+        real_scandir = os.scandir
+        @contextmanager
+        def windows_scandir(path):
+            with real_scandir(path) as entries:
+                proxies = []
+                for entry in entries:
+                    values = list(entry.stat(follow_symlinks=False))
+                    # Windows DirEntry.stat omits these fields; Path.lstat
+                    # still supplies the actual identity and hard-link count.
+                    values[1:4] = [0, 0, 0]
+                    proxies.append(mock.Mock(path=entry.path,
+                        stat=mock.Mock(return_value=os.stat_result(values))))
+                yield iter(proxies)
+        for linked in (False, True):
+            with self.subTest(linked=linked), tempfile.TemporaryDirectory() as temp:
+                parent = Path(temp)
+                folder = parent / "output"
+                folder.mkdir()
+                self.fixture(folder)
+                if linked:
+                    os.link(folder / "episodes/teacher/sample.json", parent / "outside-alias")
+                with mock.patch("nca.train.jolt_cli_v3.os.scandir", side_effect=windows_scandir):
+                    if linked:
+                        with self.assertRaisesRegex(ContractError, "hard links"):
+                            self.verify(folder)
+                    else:
+                        self.assertTrue(self.verify(folder)["inventory_verified"])
 
     def test_unexpected_empty_directories_fail_at_root_and_beneath_declared_ancestors(self):
         for relative in ("extra", "episodes/teacher/extra", "episodes/extra/nested"):

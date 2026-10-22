@@ -242,7 +242,9 @@ def verify_inventory(output):
             for entry in entries:
                 path = Path(entry.path)
                 relative = path.relative_to(output).as_posix()
-                metadata = entry.stat(follow_symlinks=False)
+                # Windows DirEntry.stat reports st_nlink as zero; lstat
+                # supplies the real link count without following symlinks.
+                metadata = path.lstat()
                 mode = metadata.st_mode
                 _need(not stat.S_ISLNK(mode), "closed inventory cannot contain links")
                 if stat.S_ISDIR(mode):
