@@ -221,7 +221,7 @@ def claim(args):
     identifier = posted.get("id")
     if type(identifier) is not int or identifier < 1:
         raise ValueError("GitHub did not return a durable issue claim identity")
-    reread = _github_api(ISSUE_COMMENTS + "/" + str(identifier), token)
+    reread = _github_api("https://api.github.com/repos/" + REPOSITORY + "/issues/comments/" + str(identifier), token)
     if reread.get("body") != body or reread.get("id") != identifier:
         raise ValueError("independent claim readback differs from publication")
     _publish(args.receipt, {
