@@ -142,6 +142,7 @@ def attest(args):
     from nca.adapters.godot import inspect_host
     from nca.train.jolt_admission_v3 import validate_execution_v3, validate_resource_admission
     from nca.train.jolt_runtime_v3 import capability_sha256, cpu_calibration_v3
+    from nca.train.jolt_screen import runtime_identity
 
     declaration = _read(args.declaration)
     config = _read(args.config)
@@ -153,7 +154,7 @@ def attest(args):
                         timeout=config["budget"]["maximum_owner_transport_seconds"])
     validate_execution_v3(ROOT, declaration, config=config, host_identity=host)
     validate_resource_admission(declaration, output_parent=output.parent)
-    current_runtime = __import__("nca.train.jolt_screen", fromlist=["runtime_identity"]).runtime_identity()
+    current_runtime = runtime_identity()
     receipt = {
         "schema": "nca-jolt-003-ci-frozen-declaration-readback/v1",
         "source_revision": _source_revision(),
@@ -200,6 +201,7 @@ def _prior_claim(token):
 
 def claim(args):
     """Permanent cross-run claim BEFORE opening the one physical invocation."""
+    from nca.train.jolt_runtime_v3 import capability_sha256
     env = os.environ
     if (env.get("GITHUB_REPOSITORY") != REPOSITORY
             or env.get("GITHUB_EVENT_NAME") != "workflow_dispatch"
@@ -232,8 +234,7 @@ def claim(args):
         "Executable source: " + declaration["source_revision"],
         "Declaration SHA-256: " + _hash(args.declaration),
         "Observed CPU model (advisory only): " + str(declaration["runtime"].get("cpu_model")),
-        "Pinned software capability SHA-256: " + __import__("nca.train.jolt_runtime_v3",
-            fromlist=["capability_sha256"]).capability_sha256(declaration["runtime"]),
+        "Pinned software capability SHA-256: " + capability_sha256(declaration["runtime"]),
         "No assertion of training completion or qualification.",
     )))
     posted = _github_api(ISSUE_COMMENTS, token, body={"body": body})
