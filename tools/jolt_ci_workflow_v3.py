@@ -92,6 +92,7 @@ def probe(args):
     from nca.contracts import sha256_json
     from nca.train.jolt_admission_v3 import validate_config_v3
     from nca.train.jolt_screen import source_inventory, runtime_identity
+    from nca.train.jolt_runtime_v3 import capability_contract_v3, capability_sha256, cpu_calibration_v3
     from nca.train.jolt_storage_v3 import storage_bounds_v3
 
     config = _read(args.config)
@@ -106,13 +107,19 @@ def probe(args):
     disk = shutil.disk_usage(output_parent)
     required = bounds["required_disk_bytes_including_1_gib_reserve"]
     files = source_inventory(ROOT)
+    hardware = runtime_identity()
+    calibration = cpu_calibration_v3()
     report = {
         "schema": "nca-jolt-003-ci-preflight/v1",
         "recorded_utc": datetime.now(timezone.utc).isoformat(),
         "source_revision": _source_revision(),
         "source_sha256": sha256_json(files),
         "config_sha256": sha256_json(config),
-        "runtime": runtime_identity(),
+        "runtime": hardware,
+        "runtime_software_contract": capability_contract_v3(hardware),
+        "runtime_software_contract_sha256": capability_sha256(hardware),
+        "cpu_calibration": calibration,
+        "cpu_normalization_use": "diagnostic_elapsed_seconds_only; not a policy or quality gate",
         "allocation_id": ALLOCATION,
         "serialisation_bounds": bounds,
         "disk": {"free_bytes": disk.free, "required_bytes": required,
@@ -134,6 +141,7 @@ def attest(args):
     """Independent declaration readback after freeze; recheck actual free disk."""
     from nca.adapters.godot import inspect_host
     from nca.train.jolt_admission_v3 import validate_execution_v3, validate_resource_admission
+    from nca.train.jolt_runtime_v3 import capability_sha256, cpu_calibration_v3
 
     declaration = _read(args.declaration)
     config = _read(args.config)
@@ -145,11 +153,16 @@ def attest(args):
                         timeout=config["budget"]["maximum_owner_transport_seconds"])
     validate_execution_v3(ROOT, declaration, config=config, host_identity=host)
     validate_resource_admission(declaration, output_parent=output.parent)
+    current_runtime = __import__("nca.train.jolt_screen", fromlist=["runtime_identity"]).runtime_identity()
     receipt = {
         "schema": "nca-jolt-003-ci-frozen-declaration-readback/v1",
         "source_revision": _source_revision(),
         "declaration_sha256": _hash(args.declaration),
         "allocation_id": ALLOCATION,
+        "original_execution_runtime": current_runtime,
+        "portable_cpu_capability_sha256": capability_sha256(current_runtime),
+        "cpu_calibration": cpu_calibration_v3(),
+        "hardware_recorded_but_not_admission_matching": True,
         "full_source_runtime_resource_and_reviews_admitted": True,
         "execution_started": False,
     }
@@ -218,6 +231,9 @@ def claim(args):
         "Run: " + env["GITHUB_RUN_ID"] + ", first attempt",
         "Executable source: " + declaration["source_revision"],
         "Declaration SHA-256: " + _hash(args.declaration),
+        "Observed CPU model (advisory only): " + str(declaration["runtime"].get("cpu_model")),
+        "Pinned software capability SHA-256: " + __import__("nca.train.jolt_runtime_v3",
+            fromlist=["capability_sha256"]).capability_sha256(declaration["runtime"]),
         "No assertion of training completion or qualification.",
     )))
     posted = _github_api(ISSUE_COMMENTS, token, body={"body": body})
