@@ -3,7 +3,7 @@ title: Optional IK runtime operations
 kind: guide
 summary: Isolated FP32 device setup, bounded smoke declarations, immutable attempts and training-boundary resume.
 owns: [ik.runtime_operations]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Optional IK runtime operations
@@ -14,11 +14,12 @@ The runtime smoke exercises geometric inputs, forward/backward operations and
 optimizer state. It is conformance evidence, not a useful learned IK result,
 the independent reference solver in #52, or physical tracking qualification.
 
-The software path and hardware evidence have separate status. No actual CUDA
-device has been qualified by the initial implementation environment. Linux and
-Windows instructions describe an operator route; only an identified execution
-and its retained evidence qualify that platform/runtime/device combination.
-The existing CPU package and historical learner environments retain their pins.
+The software path and hardware evidence have separate status. The
+[22 October Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md)
+exercises real CUDA forward/backward/Adam, placement and same-device resume,
+with a matched CPU measurement. It qualifies that identified FP32 smoke lane;
+Linux CUDA and useful learned IK remain unmeasured. The existing CPU package
+and historical learner environments retain their pins.
 
 ## Install one isolated lane
 

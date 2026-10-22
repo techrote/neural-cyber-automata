@@ -22,6 +22,11 @@ a bounded fixed-profile inverse-workload smoke and complete optimizer-boundary
 resume. Its [CPU software conformance](evidence/2026-10-21-ik-runtime-software.md)
 does not establish actual CUDA execution, a general inverse solver or IK quality.
 
+The later [Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md)
+adds actual CUDA optimization/placement, same-device resume and matched CPU
+costs. It uses the fixed smoke geometry, not the independent batched-FK CUDA
+fixture, learned-quality evaluation or physical host.
+
 The [dataset increment](IK_DATASETS.md) adds deterministic geometric tasks,
 branch/status-aware labels, guarded family splits and single-use final evaluation
 access. Its data-quality evidence does not qualify a learned inverse model.
