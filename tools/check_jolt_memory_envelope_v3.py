@@ -18,7 +18,10 @@ import math
 import os
 from pathlib import Path
 import platform
-import resource
+try:
+    import resource
+except ImportError:  # Windows may inspect the script; measurement is Linux-only.
+    resource = None
 import shutil
 import subprocess
 import sys
@@ -34,7 +37,7 @@ STRESS_SEED = 991003
 RESULT_ROWS = 6464
 AUTHORED_ROWS = 84
 MAX_PPO_DECISIONS_PER_UPDATE = 256
-CPU_RUNNER_ADVERTISED_BYTES = 16 * 1024 ** 3
+CPU_RUNNER_ADVERTISED_BYTES = 16_000_000_000
 SOURCE_SCHEMA = "nca-jolt-003-memory-diagnostic/v1"
 
 
@@ -342,7 +345,7 @@ def measure(args):
             "PPO proxies do not provide the entire validated JoltTransition/episode object graph.",
             "Linux VmRSS and /proc/self VmHWM are observed values, not hard memory ceilings or a guarantee for all future host/native allocations.",
             "Sampling can miss transients; simultaneous process RSS double-counts shared pages and is conservative compared with total unique PSS.",
-            "GitHub public ubuntu-24.04 advertises 16GiB; /proc/meminfo and v1/v2 cgroup values may refer to a shared host. Missing quotas are not assumed infinite.",
+            "GitHub public ubuntu-24.04 advertises 16 GB; /proc/meminfo and v1/v2 cgroup values may refer to a shared host. Missing quotas are not assumed infinite.",
             "No source/runtime-bound accepted prospective independent human/agent reviews are supplied by this measurement.",
         ],
     }
