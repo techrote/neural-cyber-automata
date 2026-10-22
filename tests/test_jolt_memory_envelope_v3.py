@@ -48,7 +48,7 @@ class MemoryTelemetryTests(unittest.TestCase):
         result = sampler.record()
         self.assertGreaterEqual(result["samples"], 2)
         self.assertEqual(result["native_samples"], 0)
-        self.assertIsNone(result["maximum_child_rss_bytes"])
+        self.assertIsNone(result["maximum_native_rss_bytes"])
         self.assertIsNone(result["maximum_overlapping_worker_plus_native_rss_bytes"])
         self.assertTrue(result["child_exit_seen"] or sampler.child_exit_seen)
 
