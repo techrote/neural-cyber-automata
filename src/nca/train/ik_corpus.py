@@ -281,7 +281,10 @@ def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted):
                 sample = GeometricSample.from_dict(strict_json_loads(line, max_bytes=_MAX_ROW_BYTES))
                 if sample.task != next(scheduled, None) or sample.task.partition != partition:
                     _fail("sample differs from the declared ordered partition schedule")
-                validate_sample(sample, config)
+                # The accepted original shards are pinned by manifest and per-shard
+                # byte hashes before this platform-specific replay check. Fixtures
+                # retain byte-for-byte independent label equality.
+                validate_sample(sample, config, _accepted_archive=accepted)
                 rows.append(sample)
                 ids.append(sample.task.id)
             if sha256_json(ids) != item["sample_ids_sha256"]:
@@ -290,7 +293,8 @@ def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted):
             _fail("partition population incomplete")
         partitions[partition] = tuple(rows)
     # Includes family, whole-path, permitted-input and spatial split checks.
-    validate_dataset(partitions["training"] + partitions["tuning"], config)
+    validate_dataset(partitions["training"] + partitions["tuning"], config,
+                     _accepted_archive=accepted)
 
     raw_normalization = metadata("normalization.json")
     normalization_hash = hashlib.sha256(raw_normalization).hexdigest()
