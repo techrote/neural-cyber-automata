@@ -22,7 +22,7 @@ jobs:
       - name: Checkout the exact commit being measured
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
       - uses: actions/setup-python@v5
@@ -86,7 +86,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: jolt-003-memory-prepass-${{ github.run_id }
-          path: ${{ runner.temp }/jolt-003-memory-report.json
+          name: jolt-003-memory-prepass-${{ github.run_id }}
+          path: ${{ runner.temp }}/jolt-003-memory-report.json
           retention-days: 90
           if-no-files-found: warn
