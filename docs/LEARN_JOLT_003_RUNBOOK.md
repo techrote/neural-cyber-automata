@@ -38,6 +38,9 @@ must first be merged onto the repository's default branch alongside the
 configuration-v2 dependency. It is **not** triggered by green pull-request CI,
 ordinary push events or unit-test success. It runs on a pinned CPU-only Linux
 runtime and invokes the actual learner only in its admitted `execute` mode.
+The workflow explicitly passes `--unbounded` to `tools/host_setup.py`, removing
+host download/import/setup timeouts in this manual lane while preserving the
+previous bounded defaults for ordinary conformance CI.
 
 1. Dispatch `preflight` to inspect the exact configuration, source closure,
    pinned CPU runtime, host identity, storage envelope, free disk and bounded
