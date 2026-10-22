@@ -123,6 +123,16 @@ def ik_analytic_solver(**kwargs):
     return AnalyticTwoLink(**kwargs)
 
 
+def ik_compact_model(**kwargs):
+    from .ik.models import build_model
+    return build_model(**kwargs)
+
+
+def ik_compact_training_step(**kwargs):
+    from .train.ik import IKTrainer
+    return IKTrainer(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -152,6 +162,10 @@ def builtin_registry() -> Registry:
                       ("nominal-geometry", "bounded-reference", "source-bound", "point-ik-2d"))
     registry.register("ik_solver", "planar-analytic-2r", 1, ik_analytic_solver,
                       ("nominal-geometry", "independent-comparator", "multiple-branches"))
+    registry.register("policy", "runner-compact-ik", 1, ik_compact_model,
+                      ("optional-torch", "nominal-geometry", "bounded-reference", "explicit-device", "masked"))
+    registry.register("trainer", "runner-compact-ik-step", 1, ik_compact_training_step,
+                      ("optional-torch", "training-only", "single-update", "explicit-device", "software-foundation"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
     registry.register("adapter", "recorded-playback", 1, RecordedEnv,
                       ("recorded_fixture", "reset-step", "owned-observation"))
