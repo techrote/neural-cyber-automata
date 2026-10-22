@@ -25,7 +25,7 @@ from nca.contracts import ContractError, strict_json_loads
 from nca.evaluation.durable_journal import file_identity, sync_directory
 from nca.train.jolt_execution_v3 import (
     COUNTERS, STAGES, PHASE_OFFSETS, WORKER_PHASES, RESERVATION_RECORDS_MAX,
-    OriginalClockV3, validate_budget_v3,
+    OriginalClockV3, phase_offsets_v3, validate_budget_v3,
 )
 
 RESERVATIONS_SCHEMA = "jolt-budget-reservations/v3"
@@ -54,14 +54,16 @@ def _file_key(value):
     return value.st_dev, value.st_ino, value.st_mode, value.st_nlink
 
 
-def _validate_row(row, index):
+def _validate_row(row, index, *, phase_offsets=PHASE_OFFSETS):
     if (not isinstance(row, dict) or set(row) != {"index", "elapsed_seconds", "stage", "cleanup", "increments", "phase"}
             or type(row["index"]) is not int or row["index"] != index
             or type(row["cleanup"]) is not bool or row["stage"] not in (None, *STAGES)
             or row["phase"] not in WORKER_PHASES
             or type(row["elapsed_seconds"]) not in (int, float)
             or not math.isfinite(row["elapsed_seconds"])
-            or not 0 <= row["elapsed_seconds"] < PHASE_OFFSETS[row["phase"]]
+            or row["elapsed_seconds"] < 0
+            or (phase_offsets[row["phase"]] is not None
+                and row["elapsed_seconds"] >= phase_offsets[row["phase"]])
             or not isinstance(row["increments"], dict) or not row["increments"]):
         _error("reservation has an invalid versioned shape, phase or original time")
     for key, amount in row["increments"].items():
@@ -77,7 +79,13 @@ class ReservationRecords:
     EOF, and unchanged file identity/length. The caller must exhaust iteration
     before trusting it. No per-record dictionaries survive the consumer loop.
     """
-    def __init__(self, path):
+    def __init__(self, path, *, budget=None):
+        # Missing mode information always retains the historical finite clock.
+        # Only an explicitly validated budget may interpret a later timestamp
+        # under the owner's no-wall-clock-limit mode. Header bytes stay exact.
+        if budget is not None:
+            validate_budget_v3(budget)
+        self.phase_offsets = phase_offsets_v3(7200 if budget is None else budget["maximum_wall_seconds"])
         self.path = Path(path)
         info = self.path.lstat()
         if (not stat.S_ISREG(info.st_mode) or info.st_nlink != 1
@@ -121,7 +129,8 @@ class ReservationRecords:
                 if not line.endswith(suffix) or len(line) > MAX_RECORD_BYTES + len(suffix):
                     _error("reservation has a truncated or oversized canonical row")
                 encoded = line[:-len(suffix)]
-                row = _validate_row(strict_json_loads(encoded, max_bytes=MAX_RECORD_BYTES), index)
+                row = _validate_row(strict_json_loads(encoded, max_bytes=MAX_RECORD_BYTES), index,
+                                    phase_offsets=self.phase_offsets)
                 if _encoded(row) != encoded:
                     _error("reservation row is not canonical")
                 yield row
@@ -143,19 +152,23 @@ def budget_exhaustion_v3(error):
         or code.startswith("budget_stage_"))
 
 
-def reservation_records(path):
-    return ReservationRecords(path)
+def reservation_records(path, *, budget=None):
+    return ReservationRecords(path, budget=budget)
 
 
 class BudgetLedgerV3:
-    """One fresh append-only ledger, exact counters and original phase cutoffs."""
+    """One fresh append-only ledger, exact counters and declared clock mode."""
     def __init__(self, budget, *, started=None, spool_path, monotonic=time.monotonic):
         validate_budget_v3(budget)
+        self.budget = deepcopy(budget)
         self._clock = monotonic
-        self.original_clock = OriginalClockV3(monotonic() if started is None else started, monotonic=monotonic)
+        self.original_clock = OriginalClockV3(monotonic() if started is None else started,
+            maximum_wall_seconds=budget["maximum_wall_seconds"], monotonic=monotonic)
         self.started = self.original_clock.started
-        self.seconds, self.reserve_seconds = 7200., 1200.
-        self.deadline, self.active_deadline = self.started + 7200., self.started + 6000.
+        self.seconds, self.reserve_seconds = budget["maximum_wall_seconds"], budget["cleanup_reserve_seconds"]
+        self.deadline = None if self.seconds is None else self.started + self.seconds
+        active = self.original_clock.phase_offsets["active"]
+        self.active_deadline = None if active is None else self.started + active
         self.limits, self.stage_limits = deepcopy(COUNTERS), deepcopy(STAGES)
         self.counts = {key: 0 for key in self.limits}
         self.stage_counts = {stage: {key: 0 for key in limits} for stage, limits in self.stage_limits.items()}
@@ -275,8 +288,8 @@ class BudgetLedgerV3:
             digest.update(b"]")
             return {"schema": SNAPSHOT_SCHEMA, "counts": dict(self.counts),
                     "stage_counts": deepcopy(self.stage_counts),
-                    "wall_seconds": self.original_clock.elapsed(), "maximum_wall_seconds": 7200,
-                    "cleanup_reserve_seconds": 1200, "reservation_count": self._count,
+                    "wall_seconds": self.original_clock.elapsed(), "maximum_wall_seconds": self.seconds,
+                    "cleanup_reserve_seconds": self.reserve_seconds, "reservation_count": self._count,
                     "reservations_sha256": digest.hexdigest(), "closed": self._closed,
                     "refused_or_uncertain_work_refunded": False,
                     "phase": self.phase, "phase_history": deepcopy(self.phase_history)}
@@ -299,7 +312,8 @@ class BudgetLedgerV3:
                     if not line.endswith(b"\n") or len(line) > MAX_RECORD_BYTES + 1:
                         _error("reservation spool has a missing or oversized record")
                     encoded = line[:-1]
-                    row = _validate_row(strict_json_loads(encoded, max_bytes=MAX_RECORD_BYTES), index)
+                    row = _validate_row(strict_json_loads(encoded, max_bytes=MAX_RECORD_BYTES), index,
+                                        phase_offsets=self.original_clock.phase_offsets)
                     if _encoded(row) != encoded:
                         _error("reservation spool is not canonical")
                     if index:
@@ -316,7 +330,7 @@ class BudgetLedgerV3:
                 os.fsync(target.fileno())
             sync_directory(destination.parent)
             independent = hashlib.sha256(b"[")
-            for index, row in enumerate(reservation_records(destination)):
+            for index, row in enumerate(reservation_records(destination, budget=self.budget)):
                 if index % 512 == 0:
                     self.check(cleanup=True)
                 if index:

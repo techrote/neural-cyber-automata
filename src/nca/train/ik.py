@@ -127,7 +127,8 @@ class IKTrainer:
     Counters are process-local diagnostics, not a durable experiment allocation.
     Any failed attempted step poisons this instance; a caller cannot silently
     continue after uncertain optimizer work. The existing checkpoint/ledger
-    integration and measured-run supervisor remain separate implementation work.
+    integration and measured-run supervisor are owned by ik_experiment and
+    ik_run_state; these process-local counters alone never admit a run.
     """
 
     def __init__(self, context: DeviceContext, normalization: Normalization,

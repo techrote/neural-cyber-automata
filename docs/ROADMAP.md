@@ -83,8 +83,10 @@ feasibility remains unmeasured. This increment supplies no paired learned result
 
 The separately commissioned [LEARN-JOLT-003 offline completion](evidence/2026-10-22-learn-jolt-003-completion.md)
 closes reviewed v3 inventory and terminal-learning defects. Its full pipeline
-assessment retains unresolved original-clock time and full-worker/native memory
-gates, so prospective admission is refused and the conditional allocation remains
+assessment records the historical finite-time refusal. The later
+[D-020 revision](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci)
+removes operational time limits and requests CI followed by a stop. Full-worker/native
+memory and final-source admission remain unresolved; the allocation remains
 unspent. It supplies no paired learned result, qualified family or morphology
 release; #62 and T-106 retain the existing requirements.
 
@@ -143,7 +145,7 @@ actual CUDA learning, exact CPU export and physical tracking evidence.
 | [#51](https://github.com/techrote/neural-cyber-automata/issues/51) | Optional CUDA runtime and resumable run support | #50 | [Software conformance](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 CUDA/CPU qualification](evidence/2026-10-22-ik-cuda-qualification.md); 32 steps per lane with step-8 resume; Linux CUDA remains unmeasured |
 | [#52](https://github.com/techrote/neural-cyber-automata/issues/52) | Batched FK and independent numerical IK | #50 | [Independent geometry/reference implementation and conformance](evidence/2026-10-21-ik-kinematics.md); actual CUDA parity unmeasured |
 | [#53](https://github.com/techrote/neural-cyber-automata/issues/53) | Branch-aware data/curriculum and sealed family splits | #52 | [Dataset implementation](IK_DATASETS.md) and [complete 10,220-task CPU corpus](evidence/2026-10-22-ik-datasets.md); final candidate scoring remains sealed |
-| [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | [Model/loss/update foundation](IK_TRAINING.md); measured three-seed comparison remains unexecuted |
+| [#54](https://github.com/techrote/neural-cyber-automata/issues/54) | Three-seed compact CUDA IK training | #51, #53 | [CPU preparation and training/scoring harness](IK_TRAINING.md); actual model-path CUDA execution and three-seed comparison remain unexecuted |
 | [#55](https://github.com/techrote/neural-cyber-automata/issues/55) | Host joint-target handoff and NCA adapter | #50, accepted separate Cybersand capability | Specification only |
 | [#56](https://github.com/techrote/neural-cyber-automata/issues/56) | Exact CPU runtime export | #54 | Unimplemented |
 | [#57](https://github.com/techrote/neural-cyber-automata/issues/57) | Physical qualification and runbook for the exported bundle | #55, #56 | Unmeasured |

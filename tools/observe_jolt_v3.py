@@ -24,14 +24,23 @@ sys.path.insert(0, str(ROOT / "src"))
 
 
 def observe(args, *, started, command=None):
+    from nca.contracts import strict_json_loads
     from nca.evaluation.durable_journal import file_identity, sync_directory
     from nca.evaluation.durable_publication import publish_json_v2
-    from nca.train.jolt_execution_v3 import OriginalClockV3
+    from nca.train.jolt_execution_v3 import OriginalClockV3, validate_budget_v3
     from nca.train.jolt_executor_v3 import verify_lifecycle
+    from nca.train.jolt_storage_v3 import file_identity_v3
     from nca.train.jolt_streams_v3 import wait_bounded_child
     import execute_jolt_diagnostic as helper
 
-    clock = OriginalClockV3(started, monotonic=time.monotonic)
+    # Select timing only from the explicit declaration budget. Omitted nulls
+    # cannot turn a historical bounded invocation into an unlimited one.
+    declaration_identity = file_identity_v3(args.declaration, maximum_bytes=1_048_576)
+    declaration = strict_json_loads(Path(args.declaration).read_bytes())
+    budget = validate_budget_v3(declaration.get("budget") if isinstance(declaration, dict) else None)
+    maximum_wall_seconds = budget["maximum_wall_seconds"]
+    clock = OriginalClockV3(started, maximum_wall_seconds=maximum_wall_seconds,
+                            monotonic=time.monotonic)
     output = Path(args.output)
     names = {channel: output.with_name(output.name + "-outer-" + channel + ".log")
              for channel in ("stdout", "stderr")}
@@ -60,7 +69,8 @@ def observe(args, *, started, command=None):
             identity = helper.prepare_process_tree()
             process = subprocess.Popen(child_command, stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
-            wait_bounded_child(process, stdout, stderr, deadline=started + 7200,
+            wait_bounded_child(process, stdout, stderr,
+                               deadline=None if maximum_wall_seconds is None else started + maximum_wall_seconds,
                                monotonic=time.monotonic, maximum_bytes=65536)
             exit_elapsed = clock.elapsed()
         except BaseException as exc:
@@ -68,11 +78,12 @@ def observe(args, *, started, command=None):
         finally:
             try:
                 if identity is not None:
+                    remaining = clock.remaining("finalization")
                     cleanup_confirmed = helper.terminate_owned_tree(process, identity,
-                        grace_seconds=max(0., min(3., 7200 - clock.elapsed())))
+                        grace_seconds=None if remaining is None else min(3., remaining))
                 elif process is not None:
                     process.kill()
-                    process.wait(timeout=3)
+                    process.wait(timeout=None if maximum_wall_seconds is None else 3)
                 if process is not None and process.poll() is not None and exit_elapsed is None:
                     exit_elapsed = clock.elapsed()
             except BaseException as exc:
@@ -89,12 +100,12 @@ def observe(args, *, started, command=None):
         try:
             original = verify_lifecycle(lifecycle, terminal_stdout=names["stdout"],
                 observed_exit_code=code, observed_exit_elapsed_seconds=exit_elapsed,
-                expected_declaration=file_identity(args.declaration))
+                expected_declaration=declaration_identity, expected_budget=budget)
         except BaseException as exc:
             failed(exc, "original_lifecycle_readback")
     receipt = {"schema": "nca-jolt-003-independently-observed-exit/v1",
-        "whole_process_started_monotonic": started, "maximum_wall_seconds": 7200,
-        "allocation_id": output.name, "declaration": file_identity(args.declaration),
+        "whole_process_started_monotonic": started, "maximum_wall_seconds": maximum_wall_seconds,
+        "allocation_id": output.name, "declaration": declaration_identity,
         "exit_observed": code is not None, "observed_exit_code": code,
         "observed_exit_elapsed_seconds": exit_elapsed,
         "stdout": file_identity(names["stdout"]), "stderr": file_identity(names["stderr"]),
@@ -104,17 +115,19 @@ def observe(args, *, started, command=None):
     publish_json_v2(receipt_path, receipt)
     elapsed = clock.elapsed()
     completed = bool(not errors and cleanup_confirmed and code == 0 and original
-                     and original.get("completed") is True and elapsed <= 7200)
+                     and original.get("completed") is True
+                     and (maximum_wall_seconds is None or elapsed <= maximum_wall_seconds))
     # Receipt fsync is observed after publication; it cannot attest to itself.
     print(json.dumps({"schema": "nca-jolt-003-observer-terminal/v1", "completed": completed,
         "observed_exit": file_identity(receipt_path), "wall_seconds": elapsed,
         "original_exit_code": code}), flush=True)
-    return 0 if completed and clock.elapsed() <= 7200 else 2
+    final_elapsed = clock.elapsed()
+    return 0 if completed and (maximum_wall_seconds is None or final_elapsed <= maximum_wall_seconds) else 2
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", type=Path, default=ROOT / "configs/learning/jolt-learn-003-v1.json")
+    parser.add_argument("--config", type=Path, default=ROOT / "configs/learning/jolt-learn-003-v2.json")
     for name in ("declaration", "checkout", "godot", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     args = parser.parse_args()

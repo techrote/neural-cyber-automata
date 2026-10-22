@@ -14,7 +14,35 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-021 — Explicitly gated long-running Jolt CI entry
+
+[ACCEPTED] 2026-10-22 by owner. See the
+[full decision and unchanged admission gates](decisions/2026-10-22-jolt-ci.md).
+
+### D-020 — Remove operational wall-clock limits and rerun CI
+
+[ACCEPTED] 2026-10-22 by owner, after PR #73: remove all time limits, rerun
+CI, then stop until the owner reports its completion. This supersedes D-019's
+operational wall-clock ceilings and time-fit admission requirements. It does
+not launch the conditional physical comparison or authorize merging this change.
+
+The separately versioned [configuration v2](../configs/learning/jolt-learn-003-v2.json)
+uses explicit null wall, phase-reserve and owner-transport limits. Execution v3
+propagates that policy through capture, startup, requests, audit, publication,
+cleanup and independent observation. Elapsed time remains finite telemetry;
+phase ordering, all 39 counters, storage/memory integrity, source/runtime/review
+admission and qualification thresholds retain their requirements. Simulated
+task ticks, recovery deadlines and inference quality thresholds remain unchanged.
+Historical finite configurations, receipts and published evidence stay immutable.
+
+Remove the repository's CI job timeout overrides and synthetic diagnostic wall
+guards. [GitHub-hosted runner limits](https://docs.github.com/en/actions/reference/limits)
+still impose a six-hour job maximum. Queue fresh CI for the changed source,
+then stop; do not wait for its result or consume the experimental allocation.
+
 ### D-019 — Implement and conditionally execute LEARN-JOLT-003
+
+[PARTIALLY SUPERSEDED by D-020: operational time limits and time-fit admission]
 
 [ACCEPTED] 2026-10-22 by owner: complete the prepared
 [LEARN-JOLT-003 task](design/LEARN_JOLT_003_PROMPT.md). The

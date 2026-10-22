@@ -26,7 +26,9 @@ def wait_bounded_child(process, stdout, stderr, *, deadline,
     Every read is at most 64 KiB. No byte beyond a stream's declared maximum is
     written. Overflow revokes the pipes and raises; the supervisor must revoke
     and reap its complete owned process tree in its independently reserved tail.
-    The deadline is absolute on the caller's original clock, including drains.
+    A finite deadline is absolute on the caller's original clock, including
+    drains. An explicit ``None`` removes the wall deadline, retaining byte caps
+    and the requirement to observe process exit and both original stream EOFs.
     """
     if type(maximum_bytes) is not int or not 0 < maximum_bytes <= MAX_STREAM_BYTES:
         raise ValueError("a positive stream limit at most 1 MiB is required")
@@ -40,10 +42,10 @@ def wait_bounded_child(process, stdout, stderr, *, deadline,
                 os.set_blocking(pipe.fileno(), False)
                 selector.register(pipe, selectors.EVENT_READ, index)
             while selector.get_map() or process.poll() is None:
-                remaining = deadline - monotonic()
-                if remaining <= 0:
+                remaining = None if deadline is None else deadline - monotonic()
+                if remaining is not None and remaining <= 0:
                     raise subprocess.TimeoutExpired(process.args, timeout=0)
-                ready = selector.select(timeout=min(.05, remaining))
+                ready = selector.select(timeout=.05 if remaining is None else min(.05, remaining))
                 for key, _ in ready:
                     index = key.data
                     block = os.read(key.fd, STREAM_CHUNK_BYTES)
@@ -58,8 +60,8 @@ def wait_bounded_child(process, stdout, stderr, *, deadline,
                         counts[index] += len(retained)
                     if len(block) > available:
                         raise ContractError("jolt_v3_stream_bytes", "original child output exceeds its 1 MiB stream envelope")
-            remaining = deadline - monotonic()
-            if remaining <= 0:
+            remaining = None if deadline is None else deadline - monotonic()
+            if remaining is not None and remaining <= 0:
                 raise subprocess.TimeoutExpired(process.args, timeout=0)
             return process.wait(timeout=remaining)
     finally:

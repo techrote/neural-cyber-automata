@@ -111,8 +111,10 @@ def terminate_owned_tree(process, owner_start, grace_seconds=3):
 
     Cleanup may run after the hard deadline only to revoke remaining processes;
     a timed-out attempt remains failed and its full elapsed time is retained.
+    Explicit None waits for confirmed termination without a cleanup wall cap.
+    The finite default preserves the historical diagnostic contract.
     """
-    deadline = time.monotonic() + grace_seconds
+    deadline = None if grace_seconds is None else time.monotonic() + grace_seconds
     while True:
         descendants = owned_processes(owner_start)
         for pid, identity in descendants.items():
@@ -128,7 +130,7 @@ def terminate_owned_tree(process, owner_start, grace_seconds=3):
         if (not owned_processes(owner_start) and (process is None or process.poll() is not None)
                 and not direct_children()):
             return True
-        if time.monotonic() >= deadline:
+        if deadline is not None and time.monotonic() >= deadline:
             return False
         time.sleep(.01)
 

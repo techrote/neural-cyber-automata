@@ -1,0 +1,55 @@
+{
+  "schema": "nca-ik-training-plan/v1",
+  "id": "runner-compact-training-v1",
+  "status": "prospective_gpu_gate_not_executed",
+  "candidate": "configs/ik/experiments/runner-compact-v1.json",
+  "training_seeds": [
+    41011,
+    42013,
+    43019
+  ],
+  "epochs": 40,
+  "batch_size": 128,
+  "curriculum": "stage_order_then_seeded_whole_group_shuffle_each_epoch",
+  "checkpoint_every_epochs": 1,
+  "selection": "tuning_lowest_raw_p95_ties_earliest",
+  "mode": "direct_joint_position",
+  "numerical_correction_iterations": 0,
+  "full_reference_fallback_calls": 0,
+  "max_attempts_per_seed": 4,
+  "max_wall_seconds_per_seed": 7200,
+  "max_memory_bytes": 2147483648,
+  "checkpoint_limit_per_seed": 45,
+  "cpu_latency": {
+    "warmup_calls": 100,
+    "measured_calls": 10000,
+    "threads": 1,
+    "batch_size": 1
+  },
+  "final_comparators": 5,
+  "expected_dataset": {
+    "training_rows": 5260,
+    "tuning_rows": 2020,
+    "final_rows": 2940
+  },
+  "measured_execution_admitted": false,
+  "qualified_environment": {
+    "os": "Windows",
+    "os_release": "11",
+    "architecture": "AMD64",
+    "python": "3.12.10",
+    "torch": "2.8.0+cu126",
+    "numpy": "2.3.5",
+    "cuda_build": "12.6",
+    "driver": "581.80",
+    "gpu": {
+      "name": "Tesla V100-SXM2-16GB",
+      "capability": [
+        7,
+        0
+      ],
+      "multiprocessors": 80,
+      "total_memory_bytes": 17031102464
+    }
+  }
+}

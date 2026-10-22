@@ -350,7 +350,8 @@ def load_config(path: str | Path, *, root: str | Path | None = None) -> dict[str
 def validate_config(root_or_config: str | Path | Mapping[str, Any],
                     config: Mapping[str, Any] | None = None) -> None:
     candidate = root_or_config if config is None else config
-    if isinstance(candidate, Mapping) and candidate.get("schema") == "nca-jolt-learn-003/v1":
+    if isinstance(candidate, Mapping) and candidate.get("schema") in {
+            "nca-jolt-learn-003/v1", "nca-jolt-learn-003/v2"}:
         from nca.train.jolt_admission_v3 import validate_config_v3
         validate_config_v3(root_or_config, config)
         return

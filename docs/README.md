@@ -11,6 +11,7 @@ verified: 2026-10-22
 | Question | Owning page |
 |---|---|
 | What exists now? | [STATE.md](STATE.md) |
+| How do we preflight and dispatch the *actual* Jolt-003 training run? | [Manual admitted long-run workflow and single-use claim](LEARN_JOLT_003_RUNBOOK.md#github-actions-long-run-dispatch) |
 | What changed in the mission and old tasks? | [SCOPE_AND_MIGRATION.md](SCOPE_AND_MIGRATION.md) |
 | What is the main recommendation? | [Research prepass](research/PREPASS.md) |
 | Which physical and neural controllers should we compare? | [Control methods](research/CONTROL_METHODS.md) |
@@ -30,7 +31,7 @@ verified: 2026-10-22
 | How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How are geometric IK data, guarded splits and final-suite access handled? | [IK datasets](IK_DATASETS.md) and [configuration recipes](../configs/ik/datasets/README.md); [declared corpus and evidence](evidence/2026-10-22-ik-datasets.md) |
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |
-| What is implemented for compact learned IK, and what remains before the experiment? | [IK training foundation](IK_TRAINING.md) and [candidate specification](../configs/ik/experiments/runner-compact-v1.json) |
+| What is implemented for compact learned IK, and what remains before the experiment? | [IK training and GPU preparation](IK_TRAINING.md), [candidate specification](../configs/ik/experiments/runner-compact-v1.json) and [finite schedule](../configs/ik/experiments/runner-compact-schedule-v1.json) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |
@@ -44,6 +45,7 @@ verified: 2026-10-22
 | What allocation and task are proposed for the next learned Jolt step? | [LEARN-JOLT-003 budget and review](design/LEARN_JOLT_003_ALLOCATION.md), [ready-to-issue task prompt](design/LEARN_JOLT_003_PROMPT.md) |
 | How does the separately commissioned Jolt follow-up preserve safe failures and admit one bounded comparison? | [LEARN-JOLT-003 contracts](design/LEARN_JOLT_003.md) and [operations](LEARN_JOLT_003_RUNBOOK.md) |
 | What completed LEARN-JOLT-003 software review, and why is its experiment not admitted? | [Offline completion, independent reviews and complete pipeline refusal](evidence/2026-10-22-learn-jolt-003-completion.md); [original handover](evidence/2026-10-22-learn-jolt-003-handover.md) |
+| What supersedes the Jolt wall-clock limits, and what is the CI handoff? | [D-020](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci); [timing revision and CI handoff](progress/2026-10-22-learning-time-limits.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
