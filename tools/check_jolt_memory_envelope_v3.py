@@ -169,6 +169,7 @@ class ProcessMemorySampler:
         return {
             "samples": self.samples,
             "native_samples": self.samples_with_child,
+            "child_exit_seen": self.child_exit_seen,
             "maximum_worker_rss_bytes": self.maximum_self_rss,
             "maximum_native_rss_bytes": self.maximum_child_rss,
             "maximum_overlapping_worker_plus_native_rss_bytes": self.maximum_combined_rss,
