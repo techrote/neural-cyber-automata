@@ -18,7 +18,6 @@ import math
 from pathlib import Path
 import platform
 import resource
-import signal
 import statistics
 import sys
 import time
@@ -30,12 +29,8 @@ sys.path.insert(0, str(ROOT / "src"))
 REPETITIONS = 16
 WARMUP_TRIALS = 2
 PLANNING_FACTOR = 4
-MAXIMUM_SECONDS = 60
+MAXIMUM_SECONDS = None
 SYNTHETIC_SEED = 991003
-
-
-def _timeout(signum, frame):
-    raise TimeoutError("bounded synthetic CPU conformance exceeded 60 seconds")
 
 
 def _rss_bytes():
@@ -343,7 +338,7 @@ def measure():
             "No actual native host, transport, physical observation decoding, retirement replay, durable journal, ledger, gzip, full artifact hashing or filesystem sync is timed here.",
             "CPU training-window tensors are measured; complete retained episode/auditor Python objects and the native process are outside this RSS observation.",
             "No learned movement quality, case latency, output qualification or experimental result follows from this synthetic report.",
-            "Complete prospective source/runtime/time/memory/storage admission must independently resolve these missing terms before any experiment.",
+            "Complete prospective source/runtime/memory/storage admission remains required; wall-time measurements are telemetry under the current no-time-limit policy.",
         ],
     }
 
@@ -354,12 +349,7 @@ def main():
     args = parser.parse_args()
     if args.output.exists():
         parser.error("output already exists; original synthetic evidence is immutable")
-    signal.signal(signal.SIGALRM, _timeout)
-    signal.alarm(MAXIMUM_SECONDS)
-    try:
-        result = measure()
-    finally:
-        signal.alarm(0)
+    result = measure()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x") as stream:
         json.dump(result, stream, sort_keys=True, separators=(",", ":"), allow_nan=False)

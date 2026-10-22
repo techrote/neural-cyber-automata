@@ -71,7 +71,7 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 assert 'torch' not in sys.modules
 assert 'nca.controllers.jolt_learned' not in sys.modules
-assert module.fixed_design()['maximum_sampling_seconds_from_script_entry'] == 180
+assert module.fixed_design()['maximum_sampling_seconds_from_script_entry'] is None
 assert module.fixed_design()['whole_process_hard_deadline_enforced'] is False
 """
         result = subprocess.run([sys.executable, "-c", code], cwd=ROOT, text=True, capture_output=True)

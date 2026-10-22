@@ -41,7 +41,8 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def inspect_host(checkout: str | Path, godot: str | Path) -> dict[str, Any]:
+def inspect_host(checkout: str | Path, godot: str | Path, *,
+                 timeout: float | None = 15) -> dict[str, Any]:
     """Reject source/runtime drift before executing host code; return portable evidence."""
     root = Path(checkout).resolve()
     def git(*args: str) -> str:
@@ -80,7 +81,7 @@ def inspect_host(checkout: str | Path, godot: str | Path) -> dict[str, Any]:
         if f"oid sha256:{rapier_digest}" not in pointer:
             raise HostError("Rapier bytes differ from the accepted Git LFS pointer")
         executable = str(Path(shutil.which(str(godot)) or str(godot)).resolve())
-        version = subprocess.check_output([executable, "--version"], text=True, timeout=15).strip()
+        version = subprocess.check_output([executable, "--version"], text=True, timeout=timeout).strip()
         if version != lock["godot_version"] or version != PINNED_GODOT_VERSION:
             raise HostError("Godot version differs from the host lock")
         godot_digest = sha256_file(Path(executable))

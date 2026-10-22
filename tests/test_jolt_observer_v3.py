@@ -12,6 +12,9 @@ from types import SimpleNamespace
 import unittest
 from unittest import mock
 
+from nca.contracts import ContractError
+from nca.train.jolt_execution_v3 import LEGACY_TIMING_SCALARS
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 spec = importlib.util.spec_from_file_location("observe_jolt_v3", ROOT / "tools/observe_jolt_v3.py")
@@ -21,21 +24,56 @@ spec.loader.exec_module(observer)
 
 @unittest.skipUnless(sys.platform.startswith("linux"), "prospective executor requires Linux subreaping")
 class ObserverV3Tests(unittest.TestCase):
-    def fixture(self, root):
+    def fixture(self, root, *, unlimited=False):
         declaration = root / "declaration.json"
-        declaration.write_text("{}\n")
+        budget = json.loads((ROOT / "docs/evidence/jolt-learn-003-allocation-plan-20261022.json").read_bytes())["proposed_budget"]
+        if unlimited:
+            budget.update(dict.fromkeys(LEGACY_TIMING_SCALARS))
+        declaration.write_text(json.dumps({"budget": budget}) + "\n")
         return SimpleNamespace(output=root / "learn-jolt-003-synthetic", declaration=declaration,
                                config=root / "unused", checkout=root / "unused", godot=root / "unused")
 
-    def invoke(self, root, script, *, verdict=None):
-        args = self.fixture(root)
+    def invoke(self, root, script, *, verdict=None, unlimited=False, elapsed_before=0.):
+        args = self.fixture(root, unlimited=unlimited)
         terminal = io.StringIO()
         with redirect_stdout(terminal), mock.patch("nca.train.jolt_executor_v3.verify_lifecycle",
                 return_value=verdict or {"completed": False, "verified": False}) as check:
-            code = observer.observe(args, started=time.monotonic(),
+            code = observer.observe(args, started=time.monotonic() - elapsed_before,
                                     command=[sys.executable, "-c", script])
         receipt = json.loads(args.output.with_name(args.output.name + "-observed-exit.json").read_bytes())
         return code, args, receipt, json.loads(terminal.getvalue()), check
+
+    def test_unlimited_observer_retains_actual_exit_after_historical_deadline(self):
+        with tempfile.TemporaryDirectory() as temp:
+            code, args, receipt, terminal, check = self.invoke(Path(temp), "print('observed')",
+                verdict={"completed": True, "verified": True}, unlimited=True, elapsed_before=100_000.)
+            self.assertEqual(code, 0)
+            self.assertTrue(terminal["completed"])
+            self.assertIsNone(receipt["maximum_wall_seconds"])
+            self.assertEqual(receipt["observed_exit_code"], 0)
+            self.assertGreaterEqual(receipt["observed_exit_elapsed_seconds"], 100_000.)
+            self.assertTrue(receipt["cleanup_confirmed"])
+            self.assertEqual(check.call_args.kwargs["expected_budget"],
+                             json.loads(args.declaration.read_bytes())["budget"])
+            self.assertEqual(args.output.with_name(args.output.name + "-outer-stdout.log").read_bytes(), b"observed\n")
+
+    def test_historical_observer_limit_and_mixed_budget_still_refuse_before_spawn(self):
+        with tempfile.TemporaryDirectory() as temp, mock.patch.object(observer.subprocess, "Popen") as spawn:
+            code, _, receipt, terminal, _ = self.invoke(Path(temp), "unused", elapsed_before=7201.)
+            self.assertEqual(code, 2)
+            self.assertFalse(terminal["completed"])
+            self.assertEqual(receipt["maximum_wall_seconds"], 7200)
+            self.assertFalse(receipt["exit_observed"])
+            spawn.assert_not_called()
+        with tempfile.TemporaryDirectory() as temp:
+            args = self.fixture(Path(temp), unlimited=True)
+            declaration = json.loads(args.declaration.read_bytes())
+            declaration["budget"]["maximum_owner_transport_seconds"] = 15
+            args.declaration.write_text(json.dumps(declaration))
+            with mock.patch.object(observer.subprocess, "Popen") as spawn, self.assertRaises(ContractError):
+                observer.observe(args, started=time.monotonic(), command=["unused"])
+            spawn.assert_not_called()
+            self.assertFalse(args.output.with_name(args.output.name + "-outer-stdout.log").exists())
 
     def test_original_nonzero_exit_and_exact_streams_survive_a_positive_candidate(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -8,8 +8,9 @@ host, rewards, received physical ticks and per-tick flags remain unchanged.
 from __future__ import annotations
 
 import copy
-from dataclasses import asdict, replace
+from dataclasses import asdict, dataclass, replace
 import gzip
+import math
 from pathlib import Path
 import time
 
@@ -35,9 +36,30 @@ from nca.train.jolt_storage_v3 import (
 
 
 MAX_SAMPLE_BYTES_V3 = 64 * 1024 * 1024
-# This remains a nested capture wall guard, not the allocation clock. The v3
-# active ledger also limits it to the remaining original T+6000 interval.
+# Historical bounded declarations retain their nested capture wall guard.
+# The explicitly unlimited declaration uses None at both levels.
 PER_EPISODE_WALL_SECONDS_V3 = 1800.
+
+
+@dataclass(frozen=True)
+class CaptureBudgetV3(RunBudget):
+    """Preserve the decision cap while allowing an explicit absent wall cap."""
+
+    max_seconds: float | None = None
+
+    def validate(self) -> None:
+        if type(self.max_decisions) is not int or self.max_decisions < 1:
+            raise ContractError("invalid_budget", "the capture decision ceiling must be positive")
+        if self.max_seconds is not None and (type(self.max_seconds) not in (int, float)
+                or not math.isfinite(self.max_seconds) or self.max_seconds <= 0):
+            raise ContractError("invalid_budget", "a capture wall ceiling is positive or explicitly absent")
+
+    def exhausted(self, decisions: int, seconds: float) -> bool:
+        if type(decisions) is not int or decisions < 0 or type(seconds) not in (int, float):
+            raise ContractError("invalid_measurement", "budget counters must be nonnegative numbers")
+        if not math.isfinite(seconds) or seconds < 0:
+            raise ContractError("invalid_measurement", "elapsed time must be finite and nonnegative")
+        return decisions >= self.max_decisions or (self.max_seconds is not None and seconds >= self.max_seconds)
 
 
 def write_sample_episode_v3(path, episode, *, check=None):
@@ -119,14 +141,15 @@ def capture_v3(owner, ledger, journal, case, *, identifier, controller_id, kind,
 
     try:
         remaining = ledger.remaining_seconds()
-        if remaining <= 0:
+        if remaining is not None and remaining <= 0:
             ledger.check()
             raise ContractError("jolt_capture_wall", "no original active allocation remains")
+        capture_seconds = None if remaining is None else min(PER_EPISODE_WALL_SECONDS_V3, remaining)
         recorder = EpisodeRecorder(env, identifier, source,
             context=PolicyContext(goal.id, goal.skill, goal.target, goal.pace, goal.tolerance, goal.timeout_seconds),
             seed=case["host_seed"], scenario_family=case["id"],
             split="training" if split == "training" else "evaluation",
-            budget=RunBudget(40, min(PER_EPISODE_WALL_SECONDS_V3, remaining)), source_root=root)
+            budget=CaptureBudgetV3(40, capture_seconds), source_root=root)
         if sha256_json(recorder.profile) != config["profile_sha256"]:
             raise ContractError("jolt_profile", "the accepted physical profile changed")
         context = InvocationContext.create(recorder.initial, goal)

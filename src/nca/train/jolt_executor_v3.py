@@ -31,7 +31,7 @@ from nca.train.jolt_execution_contract import validate_v3_allocation_identity
 from nca.train.jolt_streams_v3 import MAX_STREAM_BYTES, wait_bounded_child
 from nca.train.jolt_execution_v3 import (
     MAXIMUM_WALL_SECONDS, VERIFICATION_RESERVE_SECONDS, FINALIZATION_RESERVE_SECONDS,
-    CHILD_CLEANUP_SECONDS, PHASE_OFFSETS, OriginalClockV3, validate_budget_v3,
+    CHILD_CLEANUP_SECONDS, OriginalClockV3, phase_offsets_v3, validate_budget_v3,
 )
 
 
@@ -74,7 +74,9 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
     # Exclusive directory creation also arbitrates competing executors. A
     # startup failure consumes this path even when it starts no worker.
     lifecycle.mkdir(parents=True)
+    maximum_wall_seconds = MAXIMUM_WALL_SECONDS
     deadline = whole_started + MAXIMUM_WALL_SECONDS
+    child_cleanup_seconds = CHILD_CLEANUP_SECONDS
     errors, receipts, processes = [], {}, {}
     helper = owner_identity = None
     cleanup_confirmed, owned_remaining = False, None
@@ -83,6 +85,10 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
 
     def elapsed():
         return original_clock.elapsed()
+
+    def within_wall_limit(wall_seconds=None):
+        wall = elapsed() if wall_seconds is None else wall_seconds
+        return maximum_wall_seconds is None or wall <= maximum_wall_seconds
 
     def record_error(exc, stage):
         errors.append(_error(exc, stage))
@@ -104,7 +110,8 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
 
     def check_deadline(stage, reserve=0):
         nonlocal timed_out
-        if time.monotonic() >= deadline - reserve:
+        wall = elapsed()
+        if maximum_wall_seconds is not None and wall >= maximum_wall_seconds - reserve:
             timed_out = True
             errors.append({"stage": stage, "type": "DeadlineExceeded", "code": "original_wall_deadline"})
             raise _StopExecution()
@@ -115,10 +122,12 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
         try:
             if helper is None or owner_identity is None:
                 raise RuntimeError("owned process identity was not established")
-            limit = (PHASE_OFFSETS["worker_cleanup"] if phase == "worker"
-                     else PHASE_OFFSETS["verification_cleanup"] if phase == "verification"
-                     else PHASE_OFFSETS["finalization"])
-            grace = max(0., min(3., limit - elapsed()))
+            phase_name = ("worker_cleanup" if phase == "worker"
+                          else "verification_cleanup" if phase == "verification"
+                          else "finalization")
+            limit = original_clock.phase_offsets[phase_name]
+            wall = elapsed()
+            grace = None if limit is None else max(0., min(3., limit - wall))
             current_confirmed = helper.terminate_owned_tree(process, owner_identity, grace_seconds=grace)
             owned_remaining = len(helper.owned_processes(owner_identity))
             current_confirmed = current_confirmed is True and owned_remaining == 0
@@ -131,7 +140,7 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
                 try:
                     if process.poll() is None:
                         process.kill()
-                    process.wait(timeout=3)
+                    process.wait(timeout=None if maximum_wall_seconds is None else 3)
                 except BaseException as fallback:
                     record_error(fallback, phase + "_direct_cleanup")
         cleanup_confirmed = current_confirmed
@@ -148,7 +157,8 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
         # Each stream is synchronized independently even if its peer fails.
         streams = []
         try:
-            check_deadline(phase + "_before_spawn", reserve + CHILD_CLEANUP_SECONDS)
+            child_reserve = None if maximum_wall_seconds is None else reserve + child_cleanup_seconds
+            check_deadline(phase + "_before_spawn", child_reserve)
             with ExitStack() as stack:
                 for channel in ("stdout", "stderr"):
                     streams.append(stack.enter_context((lifecycle / f"{phase}-{channel}.log").open("xb")))
@@ -161,10 +171,11 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
                         "spawned": True, "wall_seconds": elapsed(),
                         "whole_process_started_monotonic": whole_started,
                     })
-                    check_deadline(phase + "_after_spawn", reserve + CHILD_CLEANUP_SECONDS)
+                    check_deadline(phase + "_after_spawn", child_reserve)
                     wait_bounded_child(process, streams[0], streams[1],
-                        deadline=deadline - reserve - CHILD_CLEANUP_SECONDS, monotonic=time.monotonic)
-                    check_deadline(phase + "_after_exit", reserve + CHILD_CLEANUP_SECONDS)
+                        deadline=None if deadline is None else deadline - child_reserve,
+                        monotonic=time.monotonic)
+                    check_deadline(phase + "_after_exit", child_reserve)
                 except subprocess.TimeoutExpired as exc:
                     timed_out = True
                     record_error(exc, phase + "_wait")
@@ -227,19 +238,21 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
                 or sha256_json(config) != declaration.get("config_sha256")
                 or config.get("budget") != declaration.get("budget")):
             raise ContractError("jolt_v3_config", "the executing configuration differs from admission")
+        validate_budget_v3(declaration["budget"])
+        maximum_wall_seconds = declaration["budget"]["maximum_wall_seconds"]
+        original_clock = OriginalClockV3(whole_started, maximum_wall_seconds=maximum_wall_seconds,
+                                        monotonic=time.monotonic)
+        deadline = None if maximum_wall_seconds is None else whole_started + maximum_wall_seconds
+        child_cleanup_seconds = None if maximum_wall_seconds is None else CHILD_CLEANUP_SECONDS
         from nca.train.jolt_admission_v3 import validate_resource_admission
         validate_resource_admission(declaration, output_parent=output.parent)
-        validate_budget_v3(declaration["budget"])
-        seconds = declaration["budget"]["maximum_wall_seconds"]
-        if type(seconds) is not int or seconds != MAXIMUM_WALL_SECONDS:
-            raise ValueError("execution requires the unchanged 7,200-second aggregate backstop")
         declaration_identity = file_identity(declaration_path)
         required_receipt("invocation.json", {
             "schema": "jolt-learning-executor-invocation/v3", "attempts": 1,
             "whole_process_started_monotonic": whole_started,
-            "maximum_wall_seconds": seconds, "declaration": declaration_identity,
-            "absolute_phase_offsets_seconds": dict(PHASE_OFFSETS),
-            "child_cleanup_seconds": CHILD_CLEANUP_SECONDS,
+            "maximum_wall_seconds": maximum_wall_seconds, "declaration": declaration_identity,
+            "absolute_phase_offsets_seconds": dict(original_clock.phase_offsets),
+            "child_cleanup_seconds": child_cleanup_seconds,
             "declaration_schema": DECLARATION_SCHEMA,
             **allocation_identity,
             "physical_execution_started": False, "automatic_retry": False,
@@ -255,10 +268,11 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
             "--config", str(args.config), "--declaration", str(args.declaration),
             "--checkout", str(args.checkout), "--godot", str(args.godot),
             "--output", str(output), "--whole-started", repr(whole_started)]
-        process = run_child("worker", worker, VERIFICATION_RESERVE_SECONDS)
+        process = run_child("worker", worker, declaration["budget"]["executor_verification_reserve_seconds"])
         if not errors and not timed_out and process is not None and process.returncode == 0 and cleanup_confirmed:
             verify_command = [sys.executable, str(script), inventory_mode, "--output", str(output)]
-            checked = run_child("verification", verify_command, FINALIZATION_RESERVE_SECONDS)
+            checked = run_child("verification", verify_command,
+                                declaration["budget"]["executor_finalization_reserve_seconds"])
             if not errors and not timed_out and checked is not None and checked.returncode == 0:
                 stdout = lifecycle / "verification-stdout.log"
                 if stdout.stat().st_size > MAX_VERIFIER_BYTES:
@@ -296,11 +310,11 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
         and verifier and all(verifier.get(key) is True for key in
             ("inventory_verified", "readback_verified", "readback_complete", "costs_verified"))
         and verifier.get("status") == "completed" and cleanup_confirmed
-        and owned_remaining == 0 and elapsed() <= MAXIMUM_WALL_SECONDS)
+        and owned_remaining == 0 and within_wall_limit())
     receipt = {
         "schema": "jolt-learning-executor/v3", "attempts": 1,
         "declaration": declaration_identity, "whole_process_started_monotonic": whole_started,
-        "maximum_wall_seconds": MAXIMUM_WALL_SECONDS, "wall_seconds": elapsed(),
+        "maximum_wall_seconds": maximum_wall_seconds, "wall_seconds": elapsed(),
         "returncode": None if worker is None else worker.returncode,
         "timeout": timed_out, "errors": list(errors), "completion_candidate": complete,
         "cleanup_confirmed": cleanup_confirmed, "owned_processes_remaining": owned_remaining,
@@ -311,15 +325,15 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
         "schema": "jolt-learning-executor-finalization/v3", "executor": executor_identity,
         "wall_seconds_after_executor_publication": elapsed(),
         "whole_process_started_monotonic": whole_started,
-        "maximum_wall_seconds": MAXIMUM_WALL_SECONDS, "errors": list(errors),
+        "maximum_wall_seconds": maximum_wall_seconds, "errors": list(errors),
     })
-    candidate = complete and not errors and elapsed() <= MAXIMUM_WALL_SECONDS
+    candidate = complete and not errors and within_wall_limit()
     terminal_identity = persist("terminal.json", {
         "schema": "jolt-learning-executor-terminal-receipt/v3",
         "completion_candidate": candidate, "requires_observed_zero_exit": True,
         "requires_post_publication_stdout_verdict": True,
         "wall_seconds_before_terminal_publication": elapsed(),
-        "maximum_wall_seconds": MAXIMUM_WALL_SECONDS,
+        "maximum_wall_seconds": maximum_wall_seconds,
         "whole_process_started_monotonic": whole_started,
         "executor": executor_identity, "finalization": finalization_identity,
         "cleanup_confirmed": cleanup_confirmed, "owned_processes_remaining": owned_remaining,
@@ -327,14 +341,14 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
     })
     terminal = {
         "schema": "jolt-learning-executor-terminal/v3", "completed": False,
-        "wall_seconds": elapsed(), "maximum_wall_seconds": MAXIMUM_WALL_SECONDS,
+        "wall_seconds": elapsed(), "maximum_wall_seconds": maximum_wall_seconds,
         "whole_process_started_monotonic": whole_started,
         "terminal_receipt": terminal_identity, "executor": executor_identity,
         "finalization": finalization_identity, "cleanup_confirmed": cleanup_confirmed,
         "owned_processes_remaining": owned_remaining, "errors": list(errors),
     }
     terminal["completed"] = bool(candidate and not errors and terminal_identity is not None
-                                 and terminal["wall_seconds"] <= MAXIMUM_WALL_SECONDS)
+                                 and within_wall_limit(terminal["wall_seconds"]))
     try:
         print(json.dumps(terminal), flush=True)
     except BaseException as exc:
@@ -344,18 +358,19 @@ def execute(args, *, whole_started, script, worker_mode="worker-v3", inventory_m
             "terminal_receipt": terminal_identity, "wall_seconds": elapsed(), "errors": list(errors),
         })
         return 2
-    if elapsed() > MAXIMUM_WALL_SECONDS:
+    if not within_wall_limit():
         persist("late-exit.json", {
             "schema": "jolt-learning-executor-late-exit/v3", "completed": False,
             "terminal_receipt": terminal_identity, "wall_seconds": elapsed(),
-            "maximum_wall_seconds": MAXIMUM_WALL_SECONDS,
+            "maximum_wall_seconds": maximum_wall_seconds,
         })
         return 2
     return 0 if terminal["completed"] else 2
 
 
 def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
-                     observed_exit_elapsed_seconds=None, expected_declaration=None):
+                     observed_exit_elapsed_seconds=None, expected_declaration=None,
+                     expected_budget=None):
     """Read an original terminal/exit pair against all v3 lifecycle evidence.
 
     The caller supplies the *observed* CLI exit, never a return-code field copied
@@ -366,8 +381,16 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
     This verifies executor lifecycle only. The caller must separately verify
     the original worker output and match its declaration; ``expected_declaration``
     may supply that independently read identity directly.
+    Historical bounded interpretation is the default. Unlimited receipts need
+    their independently bound, explicitly null timing budget supplied here.
     """
     lifecycle = Path(lifecycle)
+    if expected_budget is not None:
+        validate_budget_v3(expected_budget)
+    maximum_wall_seconds = (MAXIMUM_WALL_SECONDS if expected_budget is None
+                            else expected_budget["maximum_wall_seconds"])
+    phase_offsets = phase_offsets_v3(maximum_wall_seconds)
+    child_cleanup_seconds = None if maximum_wall_seconds is None else CHILD_CLEANUP_SECONDS
 
     def require(condition, reason):
         if not condition:
@@ -416,7 +439,8 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
     require(expected_declaration is None or executor.get("declaration") == expected_declaration,
             "executor lifecycle belongs to another independently bound declaration")
     if (observed_exit_code != 0 or terminal["completed"] is not True
-            or observed_exit_elapsed_seconds > MAXIMUM_WALL_SECONDS):
+            or (maximum_wall_seconds is not None
+                and observed_exit_elapsed_seconds > maximum_wall_seconds)):
         return {"schema": "jolt-learning-executor-readback/v3", "verified": False, "completed": False,
                 "scope": "executor_lifecycle_only",
                 "terminal_bound": True, "observed_exit_code": observed_exit_code,
@@ -447,8 +471,9 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
     require(type(origin) in (int, float) and math.isfinite(origin),
             "original monotonic origin is absent or invalid")
     for value in (invocation, executor, finalization, durable, terminal):
-        require(type(value.get("maximum_wall_seconds")) is int
-                and value["maximum_wall_seconds"] == MAXIMUM_WALL_SECONDS
+        require("maximum_wall_seconds" in value
+                and type(value["maximum_wall_seconds"]) is type(maximum_wall_seconds)
+                and value["maximum_wall_seconds"] == maximum_wall_seconds
                 and value.get("whole_process_started_monotonic") == origin,
                 "an executor receipt renewed or changed the original allocation")
     require(invocation.get("declaration_schema") == DECLARATION_SCHEMA
@@ -459,8 +484,10 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
             and executor.get("declaration") == invocation.get("declaration"),
             "the original v3 single-invocation declaration changed")
     validate_v3_allocation_identity({**invocation, "schema": DECLARATION_SCHEMA})
-    require(invocation.get("absolute_phase_offsets_seconds") == PHASE_OFFSETS
-            and invocation.get("child_cleanup_seconds") == CHILD_CLEANUP_SECONDS,
+    require(invocation.get("absolute_phase_offsets_seconds") == phase_offsets
+            and "child_cleanup_seconds" in invocation
+            and type(invocation["child_cleanup_seconds"]) is type(child_cleanup_seconds)
+            and invocation["child_cleanup_seconds"] == child_cleanup_seconds,
             "the executor changed original phase or cleanup reserves")
     declaration_identity = invocation.get("declaration")
     require(isinstance(declaration_identity, dict) and set(declaration_identity) == {"bytes", "sha256"}
@@ -492,11 +519,13 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
         durable.get("wall_seconds_before_terminal_publication"), terminal.get("wall_seconds"),
         observed_exit_elapsed_seconds))
     require(all(type(value) in (int, float) and math.isfinite(value)
-                and 0 <= value <= MAXIMUM_WALL_SECONDS for value in ordered_walls)
+                and value >= 0 and (maximum_wall_seconds is None or value <= maximum_wall_seconds)
+                for value in ordered_walls)
             and ordered_walls == sorted(ordered_walls), "lifecycle times are nonfinite, reordered or exceed the original deadline")
-    require(values["worker-exit.json"]["wall_seconds"] < MAXIMUM_WALL_SECONDS - VERIFICATION_RESERVE_SECONDS
-            and values["verification-exit.json"]["wall_seconds"] < MAXIMUM_WALL_SECONDS - FINALIZATION_RESERVE_SECONDS,
-            "child execution consumed the reserved finalization interval")
+    if maximum_wall_seconds is not None:
+        require(values["worker-exit.json"]["wall_seconds"] < maximum_wall_seconds - VERIFICATION_RESERVE_SECONDS
+                and values["verification-exit.json"]["wall_seconds"] < maximum_wall_seconds - FINALIZATION_RESERVE_SECONDS,
+                "child execution consumed the reserved finalization interval")
     require(executor.get("completion_candidate") is True and durable.get("completion_candidate") is True
             and type(executor.get("returncode")) is int and executor["returncode"] == 0
             and executor.get("timeout") is False
@@ -523,6 +552,6 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
             "observed_exit_elapsed_seconds": observed_exit_elapsed_seconds,
             "observed_exit_code": observed_exit_code, "terminal_bound": True,
             "worker_inventory": inventory, "wall_seconds": terminal["wall_seconds"],
-            "maximum_wall_seconds": MAXIMUM_WALL_SECONDS, "declaration": declaration_identity,
+            "maximum_wall_seconds": maximum_wall_seconds, "declaration": declaration_identity,
             "whole_process_started_monotonic": origin,
             "terminal_receipt": files["terminal.json"], "artifacts": len(files)}

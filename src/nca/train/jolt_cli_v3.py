@@ -24,7 +24,7 @@ from nca.train.jolt_admission_v3 import (
 )
 from nca.train.jolt_budget_v3 import reservation_records, SNAPSHOT_SCHEMA
 from nca.train.jolt_execution_v3 import (
-    DECLARATION_SCHEMA, RUN_SCHEMA, PHASE_OFFSETS, WORKER_PHASES, validate_budget_v3,
+    DECLARATION_SCHEMA, RUN_SCHEMA, WORKER_PHASES, phase_offsets_v3, validate_budget_v3,
     validate_allocation_identity_v3,
 )
 
@@ -54,7 +54,8 @@ def _same(left, right, reason):
     _need(sha256_json(left) == sha256_json(right), reason)
 
 
-def _phase_history(snapshot):
+def _phase_history(snapshot, *, maximum_wall_seconds=7200):
+    offsets = phase_offsets_v3(maximum_wall_seconds)
     history, phase = snapshot.get("phase_history"), snapshot.get("phase")
     _need(phase in WORKER_PHASES and isinstance(history, list)
           and len(history) == WORKER_PHASES.index(phase) + 1,
@@ -65,7 +66,8 @@ def _phase_history(snapshot):
               and entry["phase"] == name, "phase order or shape changed")
         elapsed = entry["elapsed_seconds"]
         _need(type(elapsed) in (int, float) and math.isfinite(elapsed)
-              and previous <= elapsed < PHASE_OFFSETS[name], "phase reset or exceeded the original clock")
+              and previous <= elapsed and (offsets[name] is None or elapsed < offsets[name]),
+              "phase reset or exceeded the original clock")
         previous = elapsed
     return {entry["phase"]: entry["elapsed_seconds"] for entry in history}
 
@@ -73,12 +75,14 @@ def _phase_history(snapshot):
 def cost_snapshot_v3(budget, rows, snapshot, *, closed, prefix=None, audit=None):
     """Independent constant-memory counter replay, including exact audit suffix."""
     validate_budget_v3(budget)
+    offsets = phase_offsets_v3(budget["maximum_wall_seconds"])
     _need(snapshot.get("schema") == SNAPSHOT_SCHEMA and snapshot.get("closed") is closed
-          and snapshot.get("maximum_wall_seconds") == 7200
-          and snapshot.get("cleanup_reserve_seconds") == 1200
+          and "maximum_wall_seconds" in snapshot and "cleanup_reserve_seconds" in snapshot
+          and snapshot["maximum_wall_seconds"] == budget["maximum_wall_seconds"]
+          and snapshot["cleanup_reserve_seconds"] == budget["cleanup_reserve_seconds"]
           and snapshot.get("refused_or_uncertain_work_refunded") is False,
           "versioned closed snapshot changed its allocation or closure")
-    history = _phase_history(snapshot)
+    history = _phase_history(snapshot, maximum_wall_seconds=budget["maximum_wall_seconds"])
     if closed:
         _need(snapshot["phase"] == "publication", "closed costs omitted the full reserved tail")
     _need(type(snapshot.get("reservation_count")) is int and snapshot["reservation_count"] == len(rows),
@@ -96,8 +100,10 @@ def cost_snapshot_v3(budget, rows, snapshot, *, closed, prefix=None, audit=None)
     for index, row in enumerate(rows):
         phase, elapsed, stage, increments = row["phase"], row["elapsed_seconds"], row["stage"], row["increments"]
         current = WORKER_PHASES.index(phase)
-        _need(current >= phase_index and phase in history and history[phase] <= elapsed
-              and previous <= elapsed < PHASE_OFFSETS[phase], "reservation renewed or exceeded its phase")
+        _need(type(elapsed) in (int, float) and math.isfinite(elapsed)
+              and current >= phase_index and phase in history and history[phase] <= elapsed
+              and previous <= elapsed and (offsets[phase] is None or elapsed < offsets[phase]),
+              "reservation renewed or exceeded its phase")
         _need(phase == "active" or row["cleanup"] is True, "ordinary work consumed the evidence tail")
         if phase == "closure":
             _need(set(increments) <= {"owner_requests", "owner_cancel", "owner_close", "host_terminations",
@@ -139,7 +145,8 @@ def cost_snapshot_v3(budget, rows, snapshot, *, closed, prefix=None, audit=None)
     _same(snapshot["stage_counts"], stages, "closed stages differ from original reservations")
     elapsed = snapshot.get("wall_seconds")
     _need(type(elapsed) in (int, float) and math.isfinite(elapsed) and previous <= elapsed
-          and max(history.values()) <= elapsed < PHASE_OFFSETS[snapshot["phase"]],
+          and max(history.values()) <= elapsed
+          and (offsets[snapshot["phase"]] is None or elapsed < offsets[snapshot["phase"]]),
           "snapshot exceeded the original phase")
     if audit is not None:
         _need(all(type(audit.get(key)) is int and audit[key] == value for key, value in suffix.items()),
@@ -169,7 +176,7 @@ def verify_closed_costs(output, result, audit):
     _need(manifest.get("config_sha256") == sha256_json(config)
           and manifest.get("declaration_sha256") == sha256_json(declaration)
           and manifest.get("source_sha256") == declaration.get("source_sha256"), "manifest identity changed")
-    before, after = (reservation_records(output / name) for name in
+    before, after = (reservation_records(output / name, budget=config["budget"]) for name in
                     ("budget-reservations.json", "closed-budget-reservations.json"))
     original = cost_snapshot_v3(config["budget"], before, worker["costs_before_readback"], closed=False)
     final = cost_snapshot_v3(config["budget"], after, result["costs"], closed=True,
@@ -287,10 +294,13 @@ def verify_execution(output, *, terminal_stdout, observed_exit_code, observed_ex
     # This binding is checked before the complete tree inventory. Refuse a
     # substituted FIFO/link here instead of opening it in the initial hash.
     declaration_identity = file_identity_v3(output / "declaration.json", maximum_bytes=1_048_576)
+    declaration = _read(output / "declaration.json")
+    _need(isinstance(declaration, dict) and "budget" in declaration,
+          "execution requires its explicitly bound timing and operation budget")
     result = verify_lifecycle(output.with_name(output.name + "-lifecycle"),
         terminal_stdout=terminal_stdout, observed_exit_code=observed_exit_code,
         observed_exit_elapsed_seconds=observed_exit_elapsed_seconds,
-        expected_declaration=declaration_identity)
+        expected_declaration=declaration_identity, expected_budget=declaration["budget"])
     if not result["completed"]:
         return {**result, "scope": "bound_execution_and_worker_output", "qualified": False}
     inventory = verify_inventory(output)
@@ -321,7 +331,8 @@ def build_prospective(args, root):
         "authorization": "Owner-issued LEARN-JOLT-003 prompt; one new allocation conditional on all final prospective gates.",
         "source_revision": subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip(),
         "source_files": source, "source_sha256": sha256_json(source), "config_sha256": sha256_json(config),
-        "host_identity": inspect_host(args.checkout, args.godot), "runtime": runtime_identity(),
+        "host_identity": inspect_host(args.checkout, args.godot,
+            timeout=config["budget"]["maximum_owner_transport_seconds"]), "runtime": runtime_identity(),
         "teacher_prerequisite": config["prerequisite"], "opened_inventory": config["opened_inventory"],
         "split": config["split"], "ppo_case_stream_sha256": sha256_json(config["ppo_case_stream"]),
         "comparison_order_sha256": sha256_json(config["comparison_order"]),

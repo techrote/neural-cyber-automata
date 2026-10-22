@@ -9,26 +9,26 @@ verified: 2026-10-22
 # LEARN-JOLT-003 implementation contracts
 
 [CURRENT] The separately versioned implementation follows the owner-issued
-[task](LEARN_JOLT_003_PROMPT.md) and [D-019](../DECISIONS.md#d-019--implement-and-conditionally-execute-learn-jolt-003).
-Its [configuration](../../configs/learning/jolt-learn-003-v1.json) retains the
+[task](LEARN_JOLT_003_PROMPT.md), [D-019](../DECISIONS.md#d-019--implement-and-conditionally-execute-learn-jolt-003)
+and the later [D-020 timing revision](../DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci).
+Its [configuration v2](../../configs/learning/jolt-learn-003-v2.json) retains the
 original learning workload and qualification gates. The [runbook](../LEARN_JOLT_003_RUNBOOK.md)
 describes prospective admission and one-invocation operation. Software
 conformance alone does not admit the experiment or establish a useful learner.
 
 The [offline completion evidence](../evidence/2026-10-22-learn-jolt-003-completion.md)
 records three fresh independent reviews and the final source-bound typed
-pipeline assessment. Complete original-clock time and full-worker/native memory
-remain unresolved, so prospective physical admission is refused and allocation
-`learn-jolt-003-20261022-a1` remains unspent. The requested audit increase to at
-least 3,900 seconds does not establish feasibility under the retained 7,200-second
-whole ceiling. Executable phase budgets and all 39 counters remain unchanged;
-the original storage and coupled CPU reports remain historical component evidence.
+pipeline assessment under the historical finite-time configuration. D-020 removes
+the operational wall-clock limits and the requirement to fit those former phases.
+Full-worker/native memory and final-source admission remain unresolved; allocation
+`learn-jolt-003-20261022-a1` remains unspent. The owner requests CI followed by a
+stop. Original storage, CPU and timing reports remain historical component evidence.
 
 ## Version boundaries and unchanged inputs
 
 | Contract | Version |
 | --- | --- |
-| Experiment | `nca-jolt-learn-003/v1` |
+| Experiment | `nca-jolt-learn-003/v2` (no wall limit); preserved `/v1` (finite) |
 | Execution declaration | `nca-learn-jolt-003-execution/v3` |
 | Worker run | `nca-learn-jolt-003-run/v1` |
 | Reservations and budget snapshot | `jolt-budget-reservations/v3`, `nca-jolt-learn-budget/v3` |
@@ -41,6 +41,9 @@ The registry exposes trainer `learn-jolt@3` and explicitly selects execution v3.
 Discovery does not import Torch; the old `learn-jolt@2` entry remains unchanged.
 
 Execution v1/v2 paths retain their historical meaning and byte contracts.
+The old experiment v1 configuration retains its exact finite time contract.
+Unlimited timing requires the separately identified experiment v2 configuration;
+all five timing scalars must be explicitly null. Missing or mixed limits fail.
 Policy, action, feature and weight bundles retain their existing v2 contracts;
 their action semantics do not change. Cybersand mechanics, source and native
 artifacts remain unchanged. The teacher is still `authored-jolt-recovery@4`
@@ -132,24 +135,20 @@ work and refused or uncertain work is never refunded. The streaming ledger
 holds counters and one record in memory, with an immutable disk spool and
 independently replayed published prefixes.
 
-| Phase | Absolute end from original T |
-| --- | ---: |
-| Ordinary work | 6,000 s |
-| Worker closure/pre-audit publication | 6,180 s |
-| Complete independent neural audit | 6,780 s |
-| Worker final publication | 6,888 s |
-| Worker exit, cleanup and log sync | 6,900 s |
-| External inventory verifier | 7,128 s |
-| Verifier cleanup and log sync | 7,140 s |
-| Final receipts, original stdout and observed CLI exit | 7,200 s |
+The current configuration has no operational wall-clock cutoff. All phase
+offsets, cleanup intervals and owner-transport limits are explicit nulls, as
+are the original-exit and terminal-receipt ceilings. Capture retains its maximum
+40 decisions with no per-episode wall backstop. Host identity inspection,
+startup, socket operations, child waits and process cleanup share this policy.
 
-The two twelve-second cleanup intervals come from the existing phase reserves.
-They add no time. Near-zero monotonic origins are valid. Every phase uses T;
-no import, child process, audit or publication restarts the clock. Cleanup is
-attempted independently after a recording failure and never turns late work
-into successful completion. The retained capture `RunBudget(40, 1800)` is a
-per-episode wall backstop, further limited by the remaining active interval.
-It is not a new allocation or a replacement for the absolute phase clock.
+Every phase still uses the original monotonic origin. Near-zero origins are
+valid; elapsed values must be finite and nonnegative, and phase history cannot
+move backwards. The independent reader requires the source-bound configuration
+to interpret null limits; missing receipt fields never select unlimited timing.
+Cleanup still proves that the entire owned process tree is gone, including after
+a recording failure. Byte caps and actual observed process exits remain required.
+Historical experiment v1 receipts retain their original 7,200-second ceiling
+and phase checks; current readers do not reinterpret them as unlimited.
 
 Canonical reservation records are capped at 256 bytes and their count at
 1,901,556. Published reservation artifacts remain below the unchanged 512 MiB
@@ -174,7 +173,7 @@ and output identity, exact clean source revision/closure, configuration,
 teacher, opened inventory, split, complete order, host/build and CPU runtime.
 It embeds the original text and file hashes of at least two distinct final
 source reviews, covering terminal/learning/qualification and full
-operation/serialization/deadline feasibility. Review binding excludes only the
+operation/serialization/resource feasibility. Review binding excludes only the
 reviews themselves and creation time, avoiding a self-referential hash.
 
 A review or declaration can be published in a documentation commit after the
@@ -183,6 +182,11 @@ checkout and verifies embedded review bytes. Planning reviews and execution v2
 reviews never satisfy this gate. False, missing or unresolved resource gates
 refuse before physical work. A genuinely unresolved feasibility assessment is
 published as admission failure, leaving this allocation unspent.
+
+For experiment v2, the two time-only resource gates explicitly contain null:
+`original_clock_phase_enforcement` and `complete_pipeline_time_feasibility`.
+The other seven resource gates still require true. No elapsed-time estimate
+must fit a deadline, and a missing gate cannot substitute for an explicit null.
 
 Qualification retains all original denominators and thresholds: 36/48 whole
 family arrivals, at least 8/16 per seed, final-minus-own-initial mean gain of

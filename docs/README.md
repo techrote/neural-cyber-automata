@@ -43,6 +43,7 @@ verified: 2026-10-22
 | What allocation and task are proposed for the next learned Jolt step? | [LEARN-JOLT-003 budget and review](design/LEARN_JOLT_003_ALLOCATION.md), [ready-to-issue task prompt](design/LEARN_JOLT_003_PROMPT.md) |
 | How does the separately commissioned Jolt follow-up preserve safe failures and admit one bounded comparison? | [LEARN-JOLT-003 contracts](design/LEARN_JOLT_003.md) and [operations](LEARN_JOLT_003_RUNBOOK.md) |
 | What completed LEARN-JOLT-003 software review, and why is its experiment not admitted? | [Offline completion, independent reviews and complete pipeline refusal](evidence/2026-10-22-learn-jolt-003-completion.md); [original handover](evidence/2026-10-22-learn-jolt-003-handover.md) |
+| What supersedes the Jolt wall-clock limits, and what is the CI handoff? | [D-020](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci); [timing revision and CI handoff](progress/2026-10-22-learning-time-limits.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |

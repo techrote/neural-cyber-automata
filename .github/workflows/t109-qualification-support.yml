@@ -12,7 +12,6 @@ jobs:
   bundle:
     if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'Prepare T109 qualification support bundle')
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:

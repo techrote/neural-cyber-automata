@@ -1,32 +1,32 @@
 ---
 title: LEARN-JOLT-003 operations
 kind: guide
-summary: Prospective admission, original-clock observation and immutable readback for one conditional fresh Jolt comparison.
+summary: Prospective admission, elapsed-time observation and immutable readback for the Jolt comparison without operational wall-clock limits.
 owns: [learning.jolt003-operations]
 verified: 2026-10-22
 ---
 
 # LEARN-JOLT-003 operations
 
-The [implementation contract](design/LEARN_JOLT_003.md) and owner-issued
-[task](design/LEARN_JOLT_003_PROMPT.md) govern this path. The allocation ID is
+The [implementation contract](design/LEARN_JOLT_003.md), owner-issued
+[task](design/LEARN_JOLT_003_PROMPT.md) and later
+[D-020](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci)
+govern this path. The allocation ID is
 `learn-jolt-003-20261022-a1`; its actual commission is recorded in
 [#62](https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584).
 That commission is conditional on all final source/runtime/resource gates.
 Do not run the commands below without the published passing declaration and
 two passing independent final-source reviews.
 
-**Current admission is refused.** The [completion evidence](evidence/2026-10-22-learn-jolt-003-completion.md)
+**Current instruction: publish the time-limit removal, queue CI, then stop.**
+Do not launch the experiment or merge while waiting for the owner's follow-up.
+The [completion evidence](evidence/2026-10-22-learn-jolt-003-completion.md)
 and [refusal record](evidence/jolt-learn-003-completion-20261022/admission-refusal.json)
-retain unresolved complete pipeline time and full-worker/native memory gates.
-The typed assessment covers all phases, including nine reservation and three
-complete journal-chain passes. Its synthetic projections are planning evidence,
-not actual experiment durations or a sufficient larger budget. The requested
-3,900-second audit would leave 2,700 active seconds under the retained whole
-ceiling and other tail reserves; that schedule is not admitted. The original
-7,200-second ceiling and 600-second audit reserve remain unchanged. Three fresh reviews
-accept offline software only; none admits physical execution. No passing
-execution declaration or experimental invocation is published.
+retain the historical finite-time admission refusal. Configuration v2 removes
+all operational wall-clock ceilings and time-fit gates, including the whole
+invocation, phase reserves, episode capture, host startup/transport, cleanup and
+observation limits. Full-worker/native memory and final-source admission remain
+unresolved. No passing execution declaration or experimental invocation is published.
 
 ## Prepare the exact environment
 
@@ -46,7 +46,7 @@ The static configuration, complete scenario stream and comparison ordering are
 already fixed. Check them without opening a host:
 
 ```sh
-PYTHONPATH=src python -c 'from pathlib import Path; from nca.train.jolt_admission import load_config; load_config(Path("configs/learning/jolt-learn-003-v1.json"), root=Path.cwd())'
+PYTHONPATH=src python -c 'from pathlib import Path; from nca.train.jolt_admission import load_config; load_config(Path("configs/learning/jolt-learn-003-v2.json"), root=Path.cwd())'
 python tools/check_docs.py --strict
 ```
 
@@ -59,8 +59,9 @@ lane; Windows preparation does not substitute for Linux process qualification.
 The resource record binds the exact source closure, configuration, host and
 runtime; includes `storage_bounds_v3()` byte/file totals; and explicitly passes
 serialization, readers, journal bytes, total artifacts/files, peak memory,
-available disk, original-clock enforcement and complete pipeline time
-feasibility. A size ceiling or historical mean runtime does not satisfy every
+available disk. Under configuration v2, `original_clock_phase_enforcement` and
+`complete_pipeline_time_feasibility` must explicitly be null; the seven other
+gates must be true. A size ceiling or historical mean runtime does not satisfy every
 resource gate. Synthetic conformance uses fresh random models and fabricated
 inputs only; no undeclared physical or trained-checkpoint pilot is permitted.
 
@@ -73,7 +74,7 @@ reviews set `offline_scope_only=false` and
 
 ```sh
 python tools/learn_jolt.py freeze-v3 \
-  --config configs/learning/jolt-learn-003-v1.json \
+  --config configs/learning/jolt-learn-003-v2.json \
   --checkout "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
   --output "$NCA_JOLT_OUTPUT" \
   --declaration "$NCA_JOLT_DECLARATION" \
@@ -100,14 +101,14 @@ It never infers process exit from a worker result flag.
 
 ```sh
 python tools/observe_jolt_v3.py \
-  --config configs/learning/jolt-learn-003-v1.json \
+  --config configs/learning/jolt-learn-003-v2.json \
   --declaration "$NCA_JOLT_DECLARATION" \
   --checkout "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
   --output "$NCA_JOLT_OUTPUT"
 ```
 
 Retain the observer's original terminal output and actual exit as well. A lost
-terminal stream, late fsync, nonzero observed CLI exit, failed cleanup or
+terminal stream, failed fsync, nonzero observed CLI exit, failed cleanup or
 incomplete independent verification is not completion. Never rerun the command
 to obtain cleaner evidence. Partial publication paths remain consumed.
 
@@ -118,8 +119,8 @@ retirement evidence; all other failures terminate ordinary work.
 
 ## Read back, publish and interpret
 
-The original executor performs inventory/cost verification inside its reserved
-240-second interval. Later read-only inspection can verify the retained
+The original executor performs inventory/cost verification without a wall-time
+limit. Later read-only inspection can verify the retained
 original stdout and independently observed CLI exit without a host or new
 neural work:
 
@@ -133,7 +134,7 @@ python tools/learn_jolt.py lifecycle-v3 \
 
 Supply actual observed values from the immutable observer receipt, never the
 worker's claimed return code. Later inspection does not repair a missing
-original deadline, receipt or journal suffix. Archive raw evidence and
+original timing policy, receipt or journal suffix. Archive raw evidence and
 checkpoints outside Git, verify complete archive EOF and every immutable file
 identity, and publish concise hashes, costs, result, qualification and limits
 in the repository. Preserve original failed and negative outcomes.

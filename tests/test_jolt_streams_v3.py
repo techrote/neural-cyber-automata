@@ -45,6 +45,20 @@ class BoundedStreamsV3Tests(TestCase):
                 self.assertEqual(len((stdout, stderr)[2-fd].getvalue()), 0)
                 self.assertTrue(child.stdout.closed and child.stderr.closed)
 
+    def test_no_wall_deadline_still_observes_original_exit_and_caps_output(self):
+        child = self.spawn("import os; os.write(1,b'original'); os.write(2,b'error'); raise SystemExit(7)")
+        stdout, stderr = io.BytesIO(), io.BytesIO()
+        self.assertEqual(wait_bounded_child(child, stdout, stderr, deadline=None,
+                                           monotonic=lambda: 1_000_000.), 7)
+        self.assertEqual(stdout.getvalue(), b"original")
+        self.assertEqual(stderr.getvalue(), b"error")
+        self.assertTrue(child.stdout.closed and child.stderr.closed)
+        child = self.spawn("import os; os.write(1,b'12345')")
+        stdout = io.BytesIO()
+        with self.assertRaisesRegex(ContractError, "stream envelope"):
+            wait_bounded_child(child, stdout, io.BytesIO(), deadline=None, maximum_bytes=4)
+        self.assertEqual(stdout.getvalue(), b"1234")
+
     def test_exact_limit_is_accepted_and_deadline_does_not_wait_for_eof(self):
         child = self.spawn("import os; os.write(1,b'x'*1024)")
         stdout = io.BytesIO()

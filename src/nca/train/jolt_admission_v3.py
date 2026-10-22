@@ -26,11 +26,13 @@ from nca.train.jolt_execution_v3 import DECLARATION_SCHEMA, validate_budget_v3
 from nca.train.jolt_execution_contract import validate_v3_allocation_identity
 
 CONFIG_SCHEMA = "nca-jolt-learn-003/v1"
+UNLIMITED_CONFIG_SCHEMA = "nca-jolt-learn-003/v2"
 SPLIT_SCHEMA = "nca-jolt-static-split/v2"
 OPENED_SCHEMA = "nca-jolt-opened-inventory/v2"
 STREAM_SCHEMA = "nca-jolt-ppo-case-stream/v1"
 ALLOCATION_ID = "learn-jolt-003-20261022-a1"
 AUTHORIZATION_REF = "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584"
+CLOCK_AUTHORIZATION_REF = "docs/DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci"
 BASE_CONFIG = "configs/learning/jolt-learn-002-v1.json"
 BASE_CONFIG_SHA256 = "4114806d1317cfb189c8648c530e2667bc0e5f236fc54d44f2f23c7a5a309902"
 BASE_SPLIT = "configs/learning/jolt-static-split-v1.json"
@@ -228,15 +230,23 @@ def validate_config_v3(root_or_config, config=None):
     root = None if config is None else Path(root_or_config)
     if config is None:
         config = root_or_config
-    _need(isinstance(config, dict) and config.get("schema") == CONFIG_SCHEMA
-          and config.get("id") == "learn-jolt-003-v1", "unknown separately versioned experiment")
+    _need(isinstance(config, dict) and (config.get("schema"), config.get("id")) in (
+              (CONFIG_SCHEMA, "learn-jolt-003-v1"),
+              (UNLIMITED_CONFIG_SCHEMA, "learn-jolt-003-v2")),
+          "unknown separately versioned experiment")
     _need(sha256_json({key: config.get(key) for key in FIXED_KEYS}) == FIXED_SEMANTICS_SHA256,
           "fixed learning, policy, teacher, seeds, reward or qualification semantics changed")
     _need(config.get("allocation_id") == ALLOCATION_ID and config.get("authorization_ref") == AUTHORIZATION_REF,
           "configuration does not identify the actual new owner commission")
+    if config["schema"] == UNLIMITED_CONFIG_SCHEMA:
+        _need(config.get("clock_authorization_ref") == CLOCK_AUTHORIZATION_REF,
+              "configuration does not bind the owner-authorized wall-clock revision")
     _need(config.get("execution_version") == 3 and type(config["execution_version"]) is int,
           "configuration has another execution version")
     validate_budget_v3(config["budget"])
+    _need((config["budget"]["maximum_wall_seconds"] is None)
+          == (config["schema"] == UNLIMITED_CONFIG_SCHEMA),
+          "configuration version differs from its declared wall-clock mode")
     _need(sha256_json(config.get("retirement_contract")) == sha256_json(RETIREMENT_CONTRACT),
           "safe-retirement semantics changed")
     _need(config.get("ppo_case_stream") == make_ppo_case_stream(config["cases"]["teacher"]),
@@ -363,8 +373,20 @@ def validate_resource_admission(declaration, *, output_parent=None):
     required = {"canonical_reservation_maximum", "reader_limits", "journal_aggregate_bytes",
                 "total_artifact_bytes", "total_file_count", "peak_resident_memory",
                 "available_disk", "original_clock_phase_enforcement", "complete_pipeline_time_feasibility"}
-    _need(set(record.get("gates", {})) == required and all(value is True for value in record["gates"].values()),
-          "a required serialization/memory/storage/time gate is unresolved")
+    budget = declaration.get("budget")
+    if budget is not None:
+        validate_budget_v3(budget)
+    unlimited = budget is not None and budget["maximum_wall_seconds"] is None
+    expected_gates = {name: True for name in required}
+    if unlimited:
+        # Null records that no deadline feasibility or expiry enforcement is
+        # being claimed. Source-bound reviews still cover the original clock,
+        # ordered phases, complete work, finite counters and all resource gates.
+        expected_gates.update(original_clock_phase_enforcement=None,
+                              complete_pipeline_time_feasibility=None)
+    gates = record.get("gates", {})
+    _need(set(gates) == required and all(gates[name] is expected for name, expected in expected_gates.items()),
+          "a required resource gate is unresolved or differs from the declared wall-clock mode")
     bounds = storage_bounds_v3()
     _need(record.get("serialization") == bounds,
           "resource admission changed the source-derived serialization envelope")
