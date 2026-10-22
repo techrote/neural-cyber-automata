@@ -125,7 +125,7 @@ jobs:
       - name: Prepare and independently identify accepted host
         working-directory: source
         shell: bash
-        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-jolt-003-host" --github-env "$GITHUB_ENV"
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-jolt-003-host" --github-env "$GITHUB_ENV" --unbounded
 
       - name: Read-only resource and source preflight
         working-directory: source
