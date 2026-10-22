@@ -541,7 +541,33 @@ def _malformed_label(specimen):
     raise ContractError("ik_dataset_specimen", "malformed specimen unexpectedly admitted")
 
 
-def validate_sample(sample: GeometricSample, config: DatasetConfig):
+def _authenticated_analytic_point_roundoff(checked, retained):
+    """Allow one binary64 step in analytic FK *points* only, after byte authentication.
+
+    The original v1 archive was generated with Linux libm. A Windows math
+    library can return the adjacent binary64 value for the same trigonometric
+    calculation. This special case is only for the pinned, byte-authenticated
+    archive reader; fixture and normal label replay remain exact.
+    """
+    current, original = checked.analytic, retained.analytic
+    if (current.status != "solved" or current.status != original.status
+            or not current.points or len(current.points) != len(original.points)):
+        return False
+    # Require exact identity of the teacher, configurations, branch, status,
+    # masks, independently checked endpoint/error and every other field.
+    if replace(checked, analytic=replace(current, points=original.points)) != retained:
+        return False
+    for computed, saved in zip(current.points, original.points):
+        if len(computed) != 2 or len(saved) != 2:
+            return False
+        if any(not (math.isfinite(a) and math.isfinite(b)
+                    and (a == b or math.nextafter(a, b) == b))
+               for a, b in zip(computed, saved)):
+            return False
+    return True
+
+
+def validate_sample(sample: GeometricSample, config: DatasetConfig, *, _accepted_archive=False):
     """Check actual retained outcomes without spending another teacher attempt."""
     if not isinstance(sample, GeometricSample):
         raise ContractError("ik_dataset_sample", "typed sample required")
@@ -577,7 +603,8 @@ def validate_sample(sample: GeometricSample, config: DatasetConfig):
     checked = _checked_label(chain,inputs.target_root,current,teacher,solver,
                               lower=(-.72,-.27),upper=(.72,.27),present=inputs.present,
                               measured=inputs.measured,task_mask=inputs.task_mask)
-    if checked != label:
+    if checked != label and not (_accepted_archive
+                                 and _authenticated_analytic_point_roundoff(checked, label)):
         raise ContractError("ik_dataset_label", "label differs from independent retained-result checks")
     if teacher.status == "solved" and not label.pose_loss:
         raise ContractError("ik_dataset_label", "solved label failed independent branch/endpoint/limit checks")
@@ -612,7 +639,7 @@ def _segment_distance(a,b,c,d):
     return min(_point_segment(a,c,d),_point_segment(b,c,d),_point_segment(c,a,b),_point_segment(d,a,b))
 
 
-def validate_dataset(samples, config: DatasetConfig, *, require_complete=False):
+def validate_dataset(samples, config: DatasetConfig, *, require_complete=False, _accepted_archive=False):
     """Reject renamed copies, family/trajectory splits and near path leakage.
 
     Segment checks cover the continuous piecewise-linear root-local target path,
@@ -623,7 +650,7 @@ def validate_dataset(samples, config: DatasetConfig, *, require_complete=False):
     ids, content, groups, trajectories = set(), {}, {}, defaultdict(dict)
     segments = []
     for sample in samples:
-        validate_sample(sample,config)
+        validate_sample(sample,config, _accepted_archive=_accepted_archive)
         task = sample.task
         if task.id in ids:
             raise ContractError("ik_dataset_duplicate", "duplicate sample ID")
