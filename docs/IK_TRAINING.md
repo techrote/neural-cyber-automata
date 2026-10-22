@@ -142,7 +142,9 @@ substitute freshly generated data. The preparation session confirmed the
 archive's availability and recorded size; the unavailable workspace prevented
 executing a new original-archive byte readback here. Its previous accepted
 readback remains identified in the index. CPU fixture verification is not a new
-readback of those 7,280 training/tuning rows. The original corpus remains byte-identical. A 23 October 2026 Windows run-host
+readback of those 7,280 training/tuning rows.
+
+The original corpus remains byte-identical. A 23 October 2026 Windows run-host
 preflight authenticated the original archive but reported a binary64 arithmetic
 difference in `training-00000.jsonl` row 4, analytic `points[0][1]`:
 retained `7.1951845160020005`, Windows `7.195184516002` (one ULP).
