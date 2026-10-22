@@ -466,7 +466,7 @@ def main():
     args = parser.parse_args()
     execution_version = 3 if args.mode.endswith("-v3") else 2 if args.mode.endswith("-v2") else 1
     if args.config is None:
-        args.config = ROOT / ("configs/learning/jolt-learn-003-v1.json" if execution_version == 3
+        args.config = ROOT / ("configs/learning/jolt-learn-003-v2.json" if execution_version == 3
                               else "configs/learning/jolt-learn-002-v1.json")
     if args.mode == "lifecycle-v3":
         if (args.output is None or args.terminal_stdout is None or args.observed_exit_code is None

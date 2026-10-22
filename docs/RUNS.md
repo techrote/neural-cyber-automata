@@ -24,6 +24,10 @@ remains unopened and unspent; no physical learning run row or trained comparison
 is added. Synthetic neural tests and normal hosted host conformance remain
 separate software checks. Original learned and morphology gates remain intact.
 
+[D-020](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci)
+removes operational wall-clock limits and commissions a CI rerun followed by a
+stop. This policy revision adds no experimental run, result or allocation use.
+
 The [IK runtime software evidence](evidence/2026-10-21-ik-runtime-software.md)
 records small CPU conformance and failure fixtures, not a measured CUDA run.
 No actual CUDA device qualification, matched throughput comparison or learned

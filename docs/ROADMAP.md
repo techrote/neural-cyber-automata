@@ -83,8 +83,10 @@ feasibility remains unmeasured. This increment supplies no paired learned result
 
 The separately commissioned [LEARN-JOLT-003 offline completion](evidence/2026-10-22-learn-jolt-003-completion.md)
 closes reviewed v3 inventory and terminal-learning defects. Its full pipeline
-assessment retains unresolved original-clock time and full-worker/native memory
-gates, so prospective admission is refused and the conditional allocation remains
+assessment records the historical finite-time refusal. The later
+[D-020 revision](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci)
+removes operational time limits and requests CI followed by a stop. Full-worker/native
+memory and final-source admission remain unresolved; the allocation remains
 unspent. It supplies no paired learned result, qualified family or morphology
 release; #62 and T-106 retain the existing requirements.
 

@@ -146,9 +146,11 @@ def validate_execution(root, declaration, *, config, host_identity, execution_ve
 
 
 class MeteredOwner:
-    """One pending exchange, exact source packets and a whole-exchange deadline."""
+    """One pending exchange and the declaration's original timing mode."""
 
     def __init__(self, host, ledger, journal, *, transport_seconds=15, execution_version=1):
+        if transport_seconds is None and execution_version != 3:
+            raise ContractError("jolt_owner_transport", "only explicit v3 declarations may omit the transport wall limit")
         self.host, self.ledger, self.journal = host, ledger, journal
         self.transport_seconds = transport_seconds
         self.execution_version = execution_version
@@ -194,20 +196,29 @@ class MeteredOwner:
             self._mark_uncertain()
         self.pending = serial
         self.pending_operation = operation
-        deadline = time.monotonic() + min(self.transport_seconds, self.ledger.remaining_seconds(cleanup=cleanup))
+        began = time.monotonic()
+        remaining = self.ledger.remaining_seconds(cleanup=cleanup)
+        if self.transport_seconds is None:
+            deadline = None if remaining is None else began + remaining
+        else:
+            deadline = began + (self.transport_seconds if remaining is None
+                                else min(self.transport_seconds, remaining))
         note(self.journal, "owner_request", serial=serial, stage=self.stage, operation=operation,
              fields=fields, elapsed_seconds=time.monotonic() - self.ledger.started)
-        # Durability is inside the same operation deadline and cannot renew it.
+        # Durability shares the original timing mode and never renews a cap.
         remaining = self.ledger.remaining_seconds(cleanup=cleanup)
-        if remaining <= 0:
+        if remaining is not None and remaining <= 0:
             raise ContractError("jolt_wall_budget", "the original invocation deadline is exhausted")
         channel = self.host._channel
         original = channel.connection
         timeout = original.gettimeout()
-        channel.connection = _AbsoluteDeadlineSocket(original, deadline, time.monotonic)
+        if deadline is None:
+            original.settimeout(None)
+        else:
+            channel.connection = _AbsoluteDeadlineSocket(original, deadline, time.monotonic)
         try:
             response = self.host.request(operation, **fields)
-            if self.execution_version == 3 and time.monotonic() >= deadline:
+            if self.execution_version == 3 and deadline is not None and time.monotonic() >= deadline:
                 raise ContractError("jolt_owner_exchange_deadline", "complete native response exceeded its original exchange deadline")
         except Exception:
             self._mark_uncertain()
@@ -220,7 +231,7 @@ class MeteredOwner:
                 pass
         try:
             note(self.journal, "owner_response", serial=serial, response=response)
-            if self.execution_version == 3 and time.monotonic() >= deadline:
+            if self.execution_version == 3 and deadline is not None and time.monotonic() >= deadline:
                 raise ContractError("jolt_owner_exchange_deadline", "native response durability exceeded its original exchange deadline")
             if operation == "step":
                 ticks = response.get("actual_ticks")
@@ -571,7 +582,8 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     declaration = json.loads(Path(declaration_path).read_text())
     # Strict read-only admission precedes host construction and any model draw.
     validate_config(root, config)
-    identity = inspect_host(checkout, godot)
+    identity = (inspect_host(checkout, godot, timeout=config["budget"]["maximum_owner_transport_seconds"])
+                if execution_version == 3 else inspect_host(checkout, godot))
     validate_execution(root, declaration, config=config, host_identity=identity,
                        execution_version=execution_version)
     if config["bc"] != BC_SPEC or config["ppo"] != PPO_SPEC:
@@ -626,15 +638,17 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     else:
         journal = DurableJournal(output / "owner-journal.jsonl")
     try:
-        ledger.reserve_many({"host_starts": 1, "host_start_attempts": 1}, allowance_seconds=15)
+        transport_seconds = config["budget"]["maximum_owner_transport_seconds"] if execution_version == 3 else 15
+        ledger.reserve_many({"host_starts": 1, "host_start_attempts": 1}, allowance_seconds=transport_seconds)
         note(journal, "host_start_reserved", counts=ledger.snapshot())
         if execution_version == 3:
             from nca.train.jolt_native_v3 import BoundedGodotHostV3
-            native = BoundedGodotHostV3(checkout, godot, lane="act004", mode="stepped", timeout=15,
+            native = BoundedGodotHostV3(checkout, godot, lane="act004", mode="stepped", timeout=transport_seconds,
                 original_clock=ledger.original_clock, verified_identity=identity)
         else:
             native = GodotHost(checkout, godot, lane="act004", mode="stepped", timeout=15)
-        owner = MeteredOwner(native, ledger, journal, execution_version=execution_version)
+        owner = MeteredOwner(native, ledger, journal, transport_seconds=transport_seconds,
+                             execution_version=execution_version)
         note(journal, "host_started", identity=native.identity)
         for case in config["cases"]["teacher"]:
             episode, row, _ = capture(owner, ledger, journal, case, identifier=f"teacher-{case['id']}",
@@ -903,7 +917,7 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     publish(output / "inventory.json", {"schema": "jolt-closed-inventory/v1", "files": inventory})
     if execution_version == 3:
         ledger.original_clock.check("publication")
-    if time.monotonic() >= ledger.deadline:
+    if ledger.deadline is not None and time.monotonic() >= ledger.deadline:
         raise ContractError("jolt_finalization_deadline", "publication exceeded the original whole-process deadline")
     print(canonical_json({"status": status, "qualified": final["qualification"]["qualified"],
                           "decisions": ledger.counts["decisions"]}), flush=True)

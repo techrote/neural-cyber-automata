@@ -14,7 +14,7 @@ import tempfile
 import threading
 import time
 
-from nca.adapters.godot import GodotHost, PINNED_HOST_REVISION, PHYSICAL_SCHEDULE
+from nca.adapters.godot import GodotHost, HostError, PINNED_HOST_REVISION, PHYSICAL_SCHEDULE
 from nca.adapters.protocol import JsonChannel, PROTOCOL, ProtocolError, owned_json
 from nca.evaluation.jolt_arrival import _AbsoluteDeadlineSocket
 from nca.contracts import ContractError
@@ -28,14 +28,20 @@ class BoundedGodotHostV3(GodotHost):
         # Source/runtime inspection already occurs under the outer original
         # clock before v3 admission. Reusing that exact bound identity avoids
         # silently repeating a separate --version subprocess/startup allowance.
-        if (lane != "act004" or mode != "stepped" or not 0 < timeout <= 15
+        if (lane != "act004" or mode != "stepped"
+                or timeout is not None and (type(timeout) not in (int, float) or not 0 < timeout <= 15)
                 or not isinstance(verified_identity, dict)
                 or verified_identity.get("host_revision") != PINNED_HOST_REVISION):
             raise ContractError("jolt_v3_native_identity", "one already verified pinned stepped physical host is required")
         original_clock.check("active", operation_seconds=timeout)
-        deadline = min(original_clock.started + 6000, time.monotonic() + timeout)
+        active_remaining = original_clock.remaining("active")
+        deadline = (None if timeout is None else time.monotonic() +
+                    (timeout if active_remaining is None else min(timeout, active_remaining)))
+        self._wall_time_unbounded = timeout is None
         def remaining():
             original_clock.check("active")
+            if deadline is None:
+                return None
             value = deadline - time.monotonic()
             if value <= 0:
                 raise ContractError("jolt_v3_native_startup", "the original complete native startup interval expired")
@@ -74,7 +80,9 @@ class BoundedGodotHostV3(GodotHost):
                 raise ProtocolError("nonlocal host connection")
             connection.settimeout(remaining())
             connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-            self._channel = JsonChannel(_AbsoluteDeadlineSocket(connection, deadline, time.monotonic))
+            transport = (connection if deadline is None else
+                         _AbsoluteDeadlineSocket(connection, deadline, time.monotonic))
+            self._channel = JsonChannel(transport)
             hello = self._channel.receive()
             remaining()
             if (hello.get("protocol") != PROTOCOL or hello.get("id") != 0 or hello.get("token") != session_token
@@ -85,8 +93,8 @@ class BoundedGodotHostV3(GodotHost):
                     or not hello.get("native_available") or not hello.get("rapier_available")
                     or hello.get("schedule") != PHYSICAL_SCHEDULE or hello.get("physics_engine") != "Rapier2D"):
                 raise ProtocolError("host capability handshake mismatch")
-            # Every later owner request installs its own absolute same-ledger
-            # exchange deadline; remove the completed handshake wrapper only.
+            # Later owner requests keep the declaration's same-ledger timing
+            # mode; remove any completed bounded handshake wrapper only.
             self._channel.connection = connection
             connection.settimeout(timeout)
             hello.pop("token")
@@ -128,5 +136,26 @@ class BoundedGodotHostV3(GodotHost):
         return value
 
     def close(self, *, graceful=True):
-        super().close(graceful=graceful and not self._diagnostic_failure)
+        if not getattr(self, "_wall_time_unbounded", False):
+            super().close(graceful=graceful and not self._diagnostic_failure)
+        elif not self._closed:
+            if (graceful and not self._diagnostic_failure and self._channel is not None
+                    and self._process is not None and self._process.poll() is None):
+                try:
+                    self._channel.connection.settimeout(None)
+                    self.request("close")
+                except HostError:
+                    pass
+            self._closed = True
+            if self._channel is not None:
+                self._channel.connection.close()
+            if self._process is not None:
+                if self._process.poll() is None:
+                    self._process.terminate()
+                self._process.wait(timeout=None)
+                if hasattr(self, "_reader"):
+                    self._reader.join(timeout=None)
+                if self._process.stdout is not None:
+                    self._process.stdout.close()
+            self._temporary.cleanup()
         self._check_diagnostics()

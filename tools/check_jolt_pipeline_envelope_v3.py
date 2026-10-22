@@ -22,7 +22,6 @@ import os
 from pathlib import Path
 import platform
 import shutil
-import signal
 import subprocess
 import sys
 import tempfile
@@ -49,7 +48,7 @@ from nca.train.jolt_storage_v3 import (
     file_identity_v3, storage_bounds_v3,
 )
 
-MAXIMUM_SECONDS = 180
+MAXIMUM_SECONDS = None
 FACTOR = 4
 JOURNAL_ROWS_PER_TYPE = 16
 READ_REPETITIONS = 4
@@ -62,7 +61,7 @@ HASH_SAMPLE_BYTES = 8 * 1024 * 1024
 def fixed_design():
     return {"maximum_sampling_seconds_from_script_entry": MAXIMUM_SECONDS,
         "whole_process_hard_deadline_enforced": False,
-        "deadline_scope": "sampling; final environment/report publication and observed exit are outside this guard",
+        "deadline_scope": "none; elapsed time is telemetry and fixed sample counts bound the work",
         "planning_factor": FACTOR,
         "journal_rows_per_type": JOURNAL_ROWS_PER_TYPE, "read_repetitions": READ_REPETITIONS,
         "reservation_sample_rows": RESERVATION_SAMPLE_ROWS,
@@ -126,7 +125,7 @@ def templates():
     profile_file = ROOT / "configs/morphology/profiles-v1.json"
     profiles = strict_json_loads(profile_file.read_bytes(), max_bytes=1024*1024)
     profile = profiles["profiles"]["jev"]
-    config_file = ROOT / "configs/learning/jolt-learn-003-v1.json"
+    config_file = ROOT / "configs/learning/jolt-learn-003-v2.json"
     current = strict_json_loads(config_file.read_bytes(), max_bytes=1024*1024)
     if (profiles["host_revision"] != current["host_revision"]
             or sha256_json(profile["definition"]) != current["profile_sha256"]):
@@ -357,7 +356,7 @@ UNRESOLVED = [
     "Full-worker peak memory includes retained PPO transitions, metrics/results, auditor copies, models, native process and allocator overhead; specimen RSS is not that bound.",
     "Complete reservation publication writes/fsync, small-file open/stat latency, source admission and fixed JSON publication are not established by read throughput.",
     "Page-cache behavior and type/shape surrogates make these factor-four observations planning estimates, not universal worst-case execution guarantees.",
-    "Final process reaping, stream fsync, receipts and observed outer exit must still fit their original shared-clock phases.",
+    "Final process reaping, stream fsync, receipts and observed outer exit retain ordering and elapsed telemetry; their durations are not established by these specimens.",
 ]
 
 
@@ -410,10 +409,10 @@ def main():
     if args.output.exists():
         raise SystemExit("synthetic output exists; use a fresh output identity")
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    deadline = ENTRY_MONOTONIC+MAXIMUM_SECONDS
     def check(*_):
-        if time.monotonic() >= deadline:
-            raise TimeoutError("fixed synthetic wall budget exhausted")
+        elapsed = time.monotonic() - ENTRY_MONOTONIC
+        if not math.isfinite(elapsed) or elapsed < 0:
+            raise ValueError("invalid monotonic elapsed-time telemetry")
     report = {"schema": "nca-jolt-003-typed-pipeline-conformance/v1",
         "created_utc": datetime.now(timezone.utc).isoformat(), "fixed_design": fixed_design(),
         "physical_host_started": False, "model_or_checkpoint_executed": False,
@@ -422,11 +421,6 @@ def main():
         "event_counts": event_counts(), "phase_pass_inventory": pass_inventory(),
         "storage_bounds": storage_bounds_v3(), "environment_before": environment(args.output.parent),
         **source_binding(), "completed": False, "unresolved_terms": list(UNRESOLVED)}
-    previous_handler = signal.getsignal(signal.SIGALRM)
-    def timeout(*_):
-        raise TimeoutError("fixed synthetic wall budget exhausted")
-    signal.signal(signal.SIGALRM, timeout)
-    signal.setitimer(signal.ITIMER_REAL, max(.001, deadline-time.monotonic()))
     try:
         with tempfile.TemporaryDirectory(prefix="jolt-pipeline-synthetic-", dir=args.output.parent) as folder:
             folder = Path(folder)
@@ -438,21 +432,15 @@ def main():
             report["reservations"], report["episode_storage"], report["artifact_hash"])
         report["measured_component_sums_seconds_excluding_unresolved"] = {
             phase: sum(parts.values()) for phase, parts in report["planning_components_seconds"].items()}
-        report["requested_audit_reallocation_arithmetic"] = {
-            "reservation_seconds": 1200, "journal_seconds": 900,
-            "episode_seconds": 900, "neural_seconds": 900,
-            "requested_combined_audit_seconds": 3900,
-            "unchanged_whole_ceiling_seconds": 7200,
-            "unchanged_other_tail_seconds": 600,
-            "remaining_active_seconds": 2700,
-            "arithmetic_only_not_an_authorized_budget_revision": True}
+        report["timing_policy"] = {
+            "maximum_wall_seconds": None,
+            "maximum_sampling_seconds": None,
+            "elapsed_time_is_telemetry": True,
+            "fixed_operation_counts_unchanged": True}
         check()
         report["completed"] = True
     except Exception as exc:
         report["error"] = {"type": type(exc).__name__, "code": getattr(exc, "code", None)}
-    finally:
-        signal.setitimer(signal.ITIMER_REAL, 0)
-        signal.signal(signal.SIGALRM, previous_handler)
     report["elapsed_before_report_publication_seconds"] = time.monotonic()-ENTRY_MONOTONIC
     report["environment_after"] = environment(args.output.parent)
     with args.output.open("x") as stream:

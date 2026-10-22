@@ -1,5 +1,6 @@
 """Synthetic original-clock v3 lifecycle and independently observed exit tests."""
 from contextlib import ExitStack, redirect_stdout
+import importlib.util
 import io
 import json
 import os
@@ -14,14 +15,16 @@ from unittest import mock
 
 from nca.contracts import ContractError, sha256_json
 from nca.train import jolt_executor_v3 as executor
-from nca.train.jolt_execution_v3 import PHASE_OFFSETS
+from nca.train.jolt_execution_v3 import PHASE_OFFSETS, LEGACY_TIMING_SCALARS
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ExecutorV3Tests(unittest.TestCase):
-    def fixture(self, root):
+    def fixture(self, root, *, unlimited=False):
         budget = json.loads((ROOT / "docs/evidence/jolt-learn-003-allocation-plan-20261022.json").read_bytes())["proposed_budget"]
+        if unlimited:
+            budget.update(dict.fromkeys(LEGACY_TIMING_SCALARS))
         allocation = "learn-jolt-003-synthetic"
         config = {"allocation_id": allocation, "budget": budget}
         config_path = root / "config.json"
@@ -40,8 +43,8 @@ class ExecutorV3Tests(unittest.TestCase):
     def invoke(self, root, *, origin=0., clock_value=1., worker_code=0, verifier_code=0,
                advance_after=None, advance_to=None, publication_failure=None,
                worker_wait_error=None, cleanup_error=None, stdout_error=False,
-               mutation=None):
-        args = self.fixture(root)
+               mutation=None, unlimited=False, receipt_mutation=None):
+        args = self.fixture(root, unlimited=unlimited)
         if mutation:
             declaration = json.loads(args.declaration.read_bytes())
             mutation(declaration)
@@ -61,6 +64,8 @@ class ExecutorV3Tests(unittest.TestCase):
         def publish(path, value):
             if path.name == publication_failure:
                 raise OSError("synthetic publication failure")
+            if receipt_mutation:
+                receipt_mutation(path.name, value)
             answer = real_publish(path, value)
             if path.name == advance_after:
                 current[0] = advance_to
@@ -75,6 +80,8 @@ class ExecutorV3Tests(unittest.TestCase):
             child.kill.side_effect = kill
             def wait(timeout):
                 waits.append((phase, timeout))
+                if child.returncode is not None:
+                    return child.returncode
                 if phase == "worker" and worker_wait_error and child.returncode is None:
                     raise worker_wait_error
                 child.returncode = worker_code if phase == "worker" else verifier_code
@@ -87,7 +94,7 @@ class ExecutorV3Tests(unittest.TestCase):
             return child
         def bounded_wait(process, stdout, stderr, *, deadline, monotonic):
             process.synthetic_stdout = stdout
-            return process.wait(timeout=deadline - monotonic())
+            return process.wait(timeout=None if deadline is None else deadline - monotonic())
         stdout = io.StringIO()
         with ExitStack() as stack:
             stack.enter_context(mock.patch.dict(sys.modules, {"execute_jolt_diagnostic": helper}))
@@ -104,6 +111,78 @@ class ExecutorV3Tests(unittest.TestCase):
 
     def lifecycle(self, args):
         return args.output.with_name(args.output.name + "-lifecycle")
+
+    def test_unlimited_execution_and_observed_exit_pass_beyond_all_historical_cutoffs(self):
+        with tempfile.TemporaryDirectory() as folder:
+            code, stdout, args, commands, waits, helper = self.invoke(Path(folder), unlimited=True,
+                clock_value=1_000_000., advance_after="terminal.json", advance_to=1_000_100.)
+            self.assertEqual(code, 0)
+            self.assertEqual([command[2] for command in commands], ["worker-v3", "inventory-v3"])
+            self.assertEqual(waits, [("worker", None), ("verification", None)])
+            self.assertTrue(all(call.kwargs["grace_seconds"] is None
+                                for call in helper.terminate_owned_tree.call_args_list))
+            declaration = json.loads(args.declaration.read_bytes())
+            invocation = json.loads((self.lifecycle(args) / "invocation.json").read_bytes())
+            self.assertIsNone(invocation["maximum_wall_seconds"])
+            self.assertIsNone(invocation["child_cleanup_seconds"])
+            self.assertEqual(invocation["absolute_phase_offsets_seconds"], dict.fromkeys(PHASE_OFFSETS))
+            verdict = executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=stdout,
+                observed_exit_code=0, observed_exit_elapsed_seconds=1_000_101.,
+                expected_declaration=executor.file_identity(args.declaration),
+                expected_budget=declaration["budget"])
+            self.assertTrue(verdict["completed"])
+            self.assertIsNone(verdict["maximum_wall_seconds"])
+            self.assertEqual(verdict["observed_exit_elapsed_seconds"], 1_000_101.)
+            self.assertFalse((self.lifecycle(args) / "late-exit.json").exists())
+
+    def test_unlimited_readback_needs_bound_budget_and_explicit_consistent_receipt_fields(self):
+        def mutate_limit(name, value):
+            if name == "invocation.json":
+                value["absolute_phase_offsets_seconds"]["active"] = 6000
+        def omit_cleanup(name, value):
+            if name == "invocation.json":
+                del value["child_cleanup_seconds"]
+        for mutation in (None, mutate_limit, omit_cleanup):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as folder:
+                _, stdout, args, _, _, _ = self.invoke(Path(folder), unlimited=True,
+                                                       receipt_mutation=mutation)
+                budget = json.loads(args.declaration.read_bytes())["budget"]
+                with self.assertRaises(ContractError):
+                    executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=stdout,
+                        observed_exit_code=0, observed_exit_elapsed_seconds=2.)
+                if mutation is not None:
+                    with self.assertRaises(ContractError):
+                        executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=stdout,
+                            observed_exit_code=0, observed_exit_elapsed_seconds=2., expected_budget=budget)
+                else:
+                    for value in ("missing", 7200, False):
+                        terminal = json.loads(stdout)
+                        if value == "missing":
+                            del terminal["maximum_wall_seconds"]
+                        else:
+                            terminal["maximum_wall_seconds"] = value
+                        with self.assertRaises(ContractError):
+                            executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=json.dumps(terminal).encode(),
+                                observed_exit_code=0, observed_exit_elapsed_seconds=2., expected_budget=budget)
+
+    def test_unlimited_mode_keeps_exit_time_and_cleanup_evidence_requirements(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _, stdout, args, _, _, _ = self.invoke(Path(folder), unlimited=True, clock_value=100_000.)
+            budget = json.loads(args.declaration.read_bytes())["budget"]
+            for observed in (None, float("nan"), float("inf"), -1., 99_999.):
+                with self.subTest(observed=observed), self.assertRaises(ContractError):
+                    executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=stdout,
+                        observed_exit_code=0, observed_exit_elapsed_seconds=observed, expected_budget=budget)
+            failed = executor.verify_lifecycle(self.lifecycle(args), terminal_stdout=stdout,
+                observed_exit_code=9, observed_exit_elapsed_seconds=100_001., expected_budget=budget)
+            self.assertFalse(failed["completed"])
+        with tempfile.TemporaryDirectory() as folder:
+            code, stdout, _, commands, waits, _ = self.invoke(Path(folder), unlimited=True,
+                clock_value=100_000., cleanup_error=OSError("synthetic cleanup"))
+            self.assertEqual(code, 2)
+            self.assertEqual(len(commands), 1)
+            self.assertTrue(waits and all(timeout is None for _, timeout in waits))
+            self.assertFalse(json.loads(stdout)["completed"])
 
     def test_complete_negative_comparison_retains_original_clock_and_observed_exit(self):
         for origin in (0., .00001, 10.):
@@ -228,6 +307,42 @@ class ExecutorV3Tests(unittest.TestCase):
                 with self.assertRaisesRegex(ContractError, "directory or special file"):
                     executor.verify_lifecycle(root, terminal_stdout=stdout, observed_exit_code=0,
                                               observed_exit_elapsed_seconds=2.)
+
+
+class OwnedCleanupTimingTests(unittest.TestCase):
+    def helper(self):
+        spec = importlib.util.spec_from_file_location("jolt_cleanup_timing_test", ROOT / "tools/execute_jolt_diagnostic.py")
+        helper = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(helper)
+        return helper
+
+    def test_unlimited_cleanup_waits_until_owned_tree_and_kernel_children_are_empty(self):
+        helper = self.helper()
+        descendant = {42: {"parent": -1, "start": 456, "state": "S"}}
+        clock = SimpleNamespace(monotonic=mock.Mock(side_effect=AssertionError("no cleanup deadline")),
+                                sleep=mock.Mock())
+        with mock.patch.object(helper, "time", clock), \
+             mock.patch.object(helper, "owned_processes", side_effect=[descendant, descendant, {}, {}, {}, {}]) as owned, \
+             mock.patch.object(helper, "_kill_identity") as kill, \
+             mock.patch.object(helper, "direct_children", side_effect=[True, False]):
+            self.assertTrue(helper.terminate_owned_tree(None, 123, grace_seconds=None))
+        self.assertEqual(owned.call_count, 6)
+        self.assertTrue(all(call.args == (123,) for call in owned.call_args_list))
+        kill.assert_called_once_with(42, descendant[42])
+        self.assertEqual(clock.sleep.call_count, 2)
+        clock.monotonic.assert_not_called()
+
+    def test_historical_cleanup_default_still_expires_and_inspection_errors_never_pass(self):
+        helper = self.helper()
+        descendant = {42: {"parent": -1, "start": 456, "state": "S"}}
+        clock = SimpleNamespace(monotonic=mock.Mock(side_effect=[0., 4.]), sleep=mock.Mock())
+        with mock.patch.object(helper, "time", clock), \
+             mock.patch.object(helper, "owned_processes", return_value=descendant), \
+             mock.patch.object(helper, "_kill_identity"):
+            self.assertFalse(helper.terminate_owned_tree(None, 123))
+        with mock.patch.object(helper, "owned_processes", side_effect=OSError("ownership unavailable")):
+            with self.assertRaises(OSError):
+                helper.terminate_owned_tree(None, 123, grace_seconds=None)
 
 
 if __name__ == "__main__":

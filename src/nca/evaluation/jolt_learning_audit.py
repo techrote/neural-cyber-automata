@@ -254,6 +254,9 @@ class _Reservations:
         self.budget, self.rows = budget, rows
         self.check = check
         self.version = 3 if snapshot.get("schema") == "nca-jolt-learn-budget/v3" else 1
+        if self.version == 3:
+            from nca.train.jolt_execution_v3 import validate_budget_v3
+            validate_budget_v3(budget)
         self.counts = {key: 0 for key in budget["counters"]}
         self.stages = {stage: {key: 0 for key in limits} for stage, limits in budget["stages"].items()}
         self.prefixes = {0: (dict(self.counts), deepcopy(self.stages), sha256_json([]), None)}
@@ -271,6 +274,9 @@ class _Reservations:
         previous_phase = 0
         phase_names = ("active", "closure", "audit", "publication")
         phase_ends = {"active": 6000., "closure": 6180., "audit": 6780., "publication": 6888.}
+        if self.version == 3 and budget["maximum_wall_seconds"] is None:
+            phase_ends = {phase: None for phase in phase_names}
+        self.phase_ends = phase_ends
         for index, row in enumerate(rows):
             if self.check is not None:
                 self.check()
@@ -281,7 +287,8 @@ class _Reservations:
                   and row["index"] == index and type(row["cleanup"]) is bool,
                   "reservation order or schema differs")
             elapsed, stage = row["elapsed_seconds"], row["stage"]
-            limit = budget["maximum_wall_seconds"] - (0 if row["cleanup"] else budget["cleanup_reserve_seconds"])
+            limit = (None if self.version == 3 else
+                     budget["maximum_wall_seconds"] - (0 if row["cleanup"] else budget["cleanup_reserve_seconds"]))
             if self.version == 3:
                 phase = row["phase"]
                 _need(phase in phase_names and phase_names.index(phase) >= previous_phase,
@@ -302,7 +309,8 @@ class _Reservations:
                           "host_terminations", "uncertain_ticks", "episodes_aborted", "episodes_completed"},
                           "ordinary or neural work consumed native-closure time")
                 _need(phase != "publication", "publication interval invented model or physical work")
-            _need(type(elapsed) in (int, float) and math.isfinite(elapsed) and previous <= elapsed < limit,
+            _need(type(elapsed) in (int, float) and math.isfinite(elapsed) and previous <= elapsed
+                  and (limit is None or elapsed < limit),
                   "reservation exceeded the original wall deadline")
             _need(stage is None or stage in self.stages, "reservation used an undeclared stage")
             _need(bool(row["increments"]), "empty reservation")
@@ -370,10 +378,11 @@ class _Reservations:
         elapsed = snapshot["wall_seconds"]
         _need(type(elapsed) in (int, float) and math.isfinite(elapsed)
               and (not count or last_elapsed <= elapsed)
-              and elapsed < self.budget["maximum_wall_seconds"], "snapshot exceeds original wall limit")
+              and (self.version == 3 and self.budget["maximum_wall_seconds"] is None
+                   or elapsed < self.budget["maximum_wall_seconds"]), "snapshot exceeds original wall limit")
         if self.version == 3:
             phase_names = ("active", "closure", "audit", "publication")
-            ends = (6000., 6180., 6780., 6888.)
+            ends = tuple(self.phase_ends[name] for name in phase_names)
             history, phase = snapshot.get("phase_history"), snapshot.get("phase")
             _need(phase in phase_names and isinstance(history, list) and 1 <= len(history) <= 4,
                   "versioned budget lost original phase history")
@@ -383,11 +392,13 @@ class _Reservations:
                       and entry["phase"] in phase_names, "phase receipt shape changed")
                 index, instant = phase_names.index(entry["phase"]), entry["elapsed_seconds"]
                 _need(index == previous_phase + 1 and type(instant) in (int, float) and math.isfinite(instant)
-                      and max(0., previous_time) <= instant <= elapsed and instant < ends[index],
+                      and max(0., previous_time) <= instant <= elapsed
+                      and (ends[index] is None or instant < ends[index]),
                       "phase receipt reset or exceeded the original allocation clock")
                 previous_phase, previous_time = index, instant
             _need(history[0]["phase"] == "active" and history[-1]["phase"] == phase
-                  and elapsed < ends[phase_names.index(phase)], "snapshot exceeded its original phase deadline")
+                  and (self.phase_ends[phase] is None or elapsed < self.phase_ends[phase]),
+                  "snapshot exceeded its original phase deadline")
             _same(history, self.phase_history[:len(history)], "snapshot rewrote original phase history")
         return counts
 
@@ -630,7 +641,7 @@ class _Audit:
             from nca.train.jolt_budget_v3 import reservation_records
             _need(self.worker["costs_before_readback"].get("schema") == "nca-jolt-learn-budget/v3",
                   "v3 allocation cannot reinterpret an older budget snapshot")
-            rows = reservation_records(_path(self.output, "budget-reservations.json"))
+            rows = reservation_records(_path(self.output, "budget-reservations.json"), budget=self.config["budget"])
         else:
             reservations = _json(_path(self.output, "budget-reservations.json"), limit=MAX_RESERVATION_BYTES)
             _need(reservations["schema"] == "jolt-budget-reservations/v1", "unknown reservation artifact")

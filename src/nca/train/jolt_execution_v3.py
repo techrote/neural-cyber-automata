@@ -1,4 +1,4 @@
-"""Frozen original-clock and operation contract for LEARN-JOLT-003.
+"""Original elapsed clock and versioned operation contract for LEARN-JOLT-003.
 
 Importing this module starts no host, model, process or experiment. A valid
 contract is necessary but cannot replace its independently reviewed admission.
@@ -34,6 +34,11 @@ PHASE_OFFSETS = {
     "finalization": 7200,
 }
 WORKER_PHASES = ("active", "closure", "audit", "publication")
+LEGACY_TIMING_SCALARS = {
+    "maximum_owner_transport_seconds": 15, "maximum_wall_seconds": 7200,
+    "cleanup_reserve_seconds": 1200, "executor_verification_reserve_seconds": 300,
+    "executor_finalization_reserve_seconds": 60,
+}
 COUNTERS = {
     "attempts": 1, "audit_forward": 37888, "bc_burn_in": 368640,
     "bc_eligible_samples": 307200, "bc_forward": 307200, "bc_optimizer": 23040,
@@ -64,12 +69,15 @@ def validate_budget_v3(budget):
     expected_scalars = {
         "maximum_attempts": 1, "automatic_retry": False, "automatic_extension": False,
         "device": "cpu", "gpu_allowed": False, "torch_threads": 1,
-        "maximum_owner_transport_seconds": 15, "maximum_wall_seconds": 7200,
-        "cleanup_reserve_seconds": 1200, "executor_verification_reserve_seconds": 300,
-        "executor_finalization_reserve_seconds": 60,
+        **LEGACY_TIMING_SCALARS,
     }
     if not isinstance(budget, dict) or set(budget) != set(expected_scalars) | {"counters", "stages"}:
         raise ContractError("jolt_v3_budget", "the exact separately versioned allocation is required")
+    # Explicit null removes every execution/transport wall limit together. An
+    # omitted field, partial conversion or large finite substitute is not this
+    # mode. Original finite budgets retain their historical interpretation.
+    if all(budget[key] is None for key in LEGACY_TIMING_SCALARS):
+        expected_scalars.update({key: None for key in LEGACY_TIMING_SCALARS})
     for key, expected in expected_scalars.items():
         value = budget.get(key)
         if type(value) is not type(expected) or value != expected:
@@ -83,6 +91,15 @@ def validate_budget_v3(budget):
     return budget
 
 
+def phase_offsets_v3(maximum_wall_seconds=MAXIMUM_WALL_SECONDS):
+    """Return the exact historical cutoffs or explicit unlimited phase values."""
+    if maximum_wall_seconds is None:
+        return dict.fromkeys(PHASE_OFFSETS)
+    if type(maximum_wall_seconds) is not int or maximum_wall_seconds != MAXIMUM_WALL_SECONDS:
+        raise ContractError("jolt_v3_clock", "the original wall limit or explicit null is required")
+    return dict(PHASE_OFFSETS)
+
+
 def validate_allocation_identity_v3(declaration):
     if not isinstance(declaration, dict) or declaration.get("schema") != DECLARATION_SCHEMA:
         raise ContractError("jolt_v3_declaration", "a LEARN-JOLT-003 execution-v3 declaration is required")
@@ -91,18 +108,21 @@ def validate_allocation_identity_v3(declaration):
 
 
 class OriginalClockV3:
-    """Absolute phase limits on one finite monotonic clock, including zero.
+    """One finite monotonic origin with historical or explicitly absent limits.
 
     A monotonic epoch is arbitrary. Only elapsed time and non-renewal matter;
     low-uptime systems and a synthetic origin of zero are valid.
     """
-    def __init__(self, started, *, monotonic=time.monotonic):
+    def __init__(self, started, *, maximum_wall_seconds=MAXIMUM_WALL_SECONDS,
+                 monotonic=time.monotonic):
         now = monotonic()
         if (type(started) not in (int, float) or not math.isfinite(started)
                 or type(now) not in (int, float) or not math.isfinite(now) or started > now):
             raise ContractError("jolt_v3_clock", "one original finite monotonic origin is required")
         self.started = float(started)
         self._clock = monotonic
+        self.maximum_wall_seconds = maximum_wall_seconds
+        self.phase_offsets = phase_offsets_v3(maximum_wall_seconds)
 
     def elapsed(self):
         value = self._clock() - self.started
@@ -111,15 +131,21 @@ class OriginalClockV3:
         return value
 
     def remaining(self, phase):
-        if phase not in PHASE_OFFSETS:
+        if phase not in self.phase_offsets:
             raise ContractError("jolt_v3_phase", "an explicit fixed execution phase is required")
-        return max(0., PHASE_OFFSETS[phase] - self.elapsed())
+        elapsed = self.elapsed()
+        offset = self.phase_offsets[phase]
+        return None if offset is None else max(0., offset - elapsed)
 
     def check(self, phase, *, operation_seconds=0):
-        if (type(operation_seconds) not in (int, float) or not math.isfinite(operation_seconds)
-                or operation_seconds < 0):
+        if operation_seconds is None and self.maximum_wall_seconds is None:
+            pass
+        elif (type(operation_seconds) not in (int, float) or not math.isfinite(operation_seconds)
+              or operation_seconds < 0):
             raise ContractError("jolt_v3_clock", "a finite nonnegative operation allowance is required")
-        if phase not in PHASE_OFFSETS:
+        if phase not in self.phase_offsets:
             raise ContractError("jolt_v3_phase", "an explicit fixed execution phase is required")
-        if self.elapsed() + operation_seconds >= PHASE_OFFSETS[phase]:
+        elapsed = self.elapsed()
+        offset = self.phase_offsets[phase]
+        if offset is not None and elapsed + operation_seconds >= offset:
             raise ContractError("jolt_v3_phase_deadline", "the original " + phase + " deadline is exhausted")

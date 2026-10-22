@@ -12,7 +12,8 @@ from unittest import mock
 
 from nca.contracts import ContractError, Record, WireAction, canonical_json, sha256_json
 from nca.train.jolt_execution_v3 import (
-    COUNTERS, STAGES, PHASE_OFFSETS, OriginalClockV3, validate_budget_v3,
+    COUNTERS, STAGES, PHASE_OFFSETS, LEGACY_TIMING_SCALARS, OriginalClockV3,
+    phase_offsets_v3, validate_budget_v3,
 )
 from nca.train.jolt_budget_v3 import (
     BudgetLedgerV3, MAX_PUBLISHED_BYTES, MAX_RECORD_BYTES, RESERVATION_RECORDS_MAX,
@@ -33,6 +34,57 @@ def budget():
 
 
 class OriginalClockTests(unittest.TestCase):
+    def test_explicit_unlimited_clock_keeps_elapsed_and_named_phases_without_expiry(self):
+        current = [0.]
+        clock = OriginalClockV3(0., maximum_wall_seconds=None, monotonic=lambda: current[0])
+        current[0] = 1_000_000.
+        for phase in PHASE_OFFSETS:
+            clock.check(phase, operation_seconds=None)
+            clock.check(phase, operation_seconds=1_000_000.)
+            self.assertIsNone(clock.remaining(phase))
+        self.assertEqual(clock.elapsed(), 1_000_000.)
+        self.assertEqual(clock.phase_offsets, dict.fromkeys(PHASE_OFFSETS))
+        self.assertIsNone(clock.maximum_wall_seconds)
+        with self.assertRaises(ContractError):
+            clock.check("unknown")
+        for allowance in (True, -1, float("nan"), float("inf")):
+            with self.subTest(allowance=allowance), self.assertRaises(ContractError):
+                clock.check("active", operation_seconds=allowance)
+        current[0] = -1.
+        with self.assertRaises(ContractError):
+            clock.check("active", operation_seconds=None)
+        with self.assertRaises(ContractError):
+            clock.remaining("active")
+
+    def test_unlimited_requires_explicit_null_not_a_large_or_nonfinite_limit(self):
+        self.assertEqual(phase_offsets_v3(), PHASE_OFFSETS)
+        self.assertEqual(phase_offsets_v3(None), dict.fromkeys(PHASE_OFFSETS))
+        for limit in (True, 7200., 7201, 1_000_000, float("inf"), float("nan")):
+            with self.subTest(limit=limit), self.assertRaises(ContractError):
+                OriginalClockV3(0., maximum_wall_seconds=limit, monotonic=lambda: 0.)
+        with self.assertRaises(ContractError):
+            OriginalClockV3(0., monotonic=lambda: 0.).check("active", operation_seconds=None)
+
+    def test_unlimited_budget_is_complete_and_keeps_operation_and_stage_caps(self):
+        original = budget()
+        unlimited = {**original, **dict.fromkeys(LEGACY_TIMING_SCALARS)}
+        validate_budget_v3(unlimited)
+        self.assertEqual(unlimited["counters"], original["counters"])
+        self.assertEqual(unlimited["stages"], original["stages"])
+        for field in LEGACY_TIMING_SCALARS:
+            with self.subTest(field=field):
+                mixed = {**unlimited, field: original[field]}
+                with self.assertRaises(ContractError):
+                    validate_budget_v3(mixed)
+                missing = dict(unlimited)
+                del missing[field]
+                with self.assertRaises(ContractError):
+                    validate_budget_v3(missing)
+        changed = deepcopy(unlimited)
+        changed["counters"]["owner_requests"] += 1
+        with self.assertRaises(ContractError):
+            validate_budget_v3(changed)
+
     def test_origin_zero_near_zero_and_arbitrary_epoch_share_exact_elapsed_cutoffs(self):
         for origin in (0., .00001, -10., 12345.):
             with self.subTest(origin=origin):
