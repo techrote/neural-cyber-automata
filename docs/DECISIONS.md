@@ -14,6 +14,9 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-022 — CPU identity advisory for Jolt-003
+[ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
+
 ### D-021 — Explicitly gated long-running Jolt CI entry
 
 [ACCEPTED] 2026-10-22 by owner. See the
