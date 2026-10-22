@@ -45,7 +45,7 @@ verified: 2026-10-22
 | How does the separately commissioned Jolt follow-up preserve safe failures and admit one bounded comparison? | [LEARN-JOLT-003 contracts](design/LEARN_JOLT_003.md) and [operations](LEARN_JOLT_003_RUNBOOK.md) |
 | What completed LEARN-JOLT-003 software review, and why is its experiment not admitted? | [Offline completion, independent reviews and complete pipeline refusal](evidence/2026-10-22-learn-jolt-003-completion.md); [original handover](evidence/2026-10-22-learn-jolt-003-handover.md) |
 | What measured Jolt-003 memory, and which two independent admission reviews remain unresolved? | [Native/synthetic memory qualification prepass and unsigned source-bound review packets](evidence/2026-10-22-jolt003-memory-admission-prepass.md) |
-| Why can Jolt-003 use different CPUs across GitHub runners, and how are timings compared? | [D-022 CPU hardware portability and approximate diagnostic normalization](decisions/2026-10-23-jolt-cpu-portability.md) |
+| Why can Jolt-003 use different CPUs across GitHub runners, and how are timings compared? | [D-022 CPU hardware portability](decisions/2026-10-23-jolt-cpu-portability.md) and [measured Intel/EPYC calibration comparison](evidence/2026-10-23-jolt-cpu-portability-checkpoint.md) |
 | What supersedes the Jolt wall-clock limits, and what is the CI handoff? | [D-020](DECISIONS.md#d-020--remove-operational-wall-clock-limits-and-rerun-ci); [timing revision and CI handoff](progress/2026-10-22-learning-time-limits.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
