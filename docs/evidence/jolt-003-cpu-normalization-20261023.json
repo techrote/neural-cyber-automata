@@ -1,0 +1,56 @@
+{
+  "experimental_admission_inferred": false,
+  "normalization": {
+    "method": "raw_seconds_times_observed_calibration_rate_over_reference_rate",
+    "observed_to_reference_speed_ratio": 0.9535567625782589,
+    "planning_only_not_execution_admission_proof": true,
+    "quality_thresholds_or_physical_results_normalized": false,
+    "raw_seconds": 2.4540159259999967,
+    "reference_seconds_approximate": 2.340043481712045,
+    "schema": "nca-jolt-cpu-normalization/v1"
+  },
+  "not_a_hard_resource_bound": true,
+  "observed_calibration": {
+    "block_bytes": 65536,
+    "bytes_per_second": 1567065831.9367821,
+    "iterations": 1024,
+    "measured_seconds": [
+      0.042823904000002244,
+      0.04282453399999042,
+      0.04284905000000094
+    ],
+    "method": "sha256_64kib_fixed_buffer_v1",
+    "not_a_host_or_neural_workload": true,
+    "repetitions": 3,
+    "runtime_identity_not_a_gate": true,
+    "schema": "nca-jolt-cpu-calibration/v1",
+    "single_core_proxy_only": true
+  },
+  "observed_cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "observed_kernel": "6.17.0-1022-azure",
+  "observed_source_revision": "ebd67df26647ec672018e35dab21cb4125e4e27c",
+  "quality_thresholds_unchanged": true,
+  "reference_calibration": {
+    "block_bytes": 65536,
+    "bytes_per_second": 1643390192.8393824,
+    "iterations": 1024,
+    "measured_seconds": [
+      0.04083562399995344,
+      0.040940815999988445,
+      0.04062013499998329
+    ],
+    "method": "sha256_64kib_fixed_buffer_v1",
+    "not_a_host_or_neural_workload": true,
+    "repetitions": 3,
+    "runtime_identity_not_a_gate": true,
+    "schema": "nca-jolt-cpu-calibration/v1",
+    "single_core_proxy_only": true
+  },
+  "reference_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+  "reference_kernel": "6.17.0-1022-azure",
+  "reference_source_revision": "0ce035ec0440167abb878d90dda22c25ed8d1fe9",
+  "schema": "nca-jolt-cpu-reference-comparison/v1",
+  "scope": "ballpark only; synthetic or preflight diagnostic time",
+  "software_capability_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "training_allocation_consumed": false
+}

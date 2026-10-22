@@ -17,6 +17,12 @@ adds synthetic software tests and no experimental run row. The consumed
 LEARN-JOLT-002 allocation and its unknown complete wall time remain unchanged;
 no replacement physical invocation, resumed checkpoint or learned comparison is recorded.
 
+The later [LEARN-JOLT-003 memory feasibility prepass](evidence/2026-10-22-jolt003-memory-admission-prepass.md)
+measures synthetic worker retention alongside an idle native-host handshake,
+not a physical experiment or a qualified production peak. Two unsigned
+source-bound review packets retain unresolved resource/runtime gates; the
+allocation remains unopened and unspent.
+
 The [LEARN-JOLT-003 offline completion](evidence/2026-10-22-learn-jolt-003-completion.md)
 adds exact-source software reviews and typed synthetic pipeline conformance,
 with prospective physical admission refused. Allocation `learn-jolt-003-20261022-a1`

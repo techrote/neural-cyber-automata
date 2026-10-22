@@ -1,0 +1,119 @@
+{
+  "schema": "nca-jolt-003-source-admission-review-preparation/v1",
+  "scope": "operation_serialization_deadline_feasibility",
+  "intended_required_role": "operation_serialization_deadline_feasibility",
+  "publication_scope": "review_packet_for_independent_signoff_not_an_accepted_review",
+  "review_authority": "none",
+  "reviewer": null,
+  "independent_reviewer_completed": false,
+  "accepted": false,
+  "offline_scope_only": true,
+  "prospective_experiment_admitted": false,
+  "source_revision": "73f44409e799902e33519604a76a46464b300b60",
+  "source_sha256": "9431773c431562d052a420d9ebe8e08b9794eb68e4e7c4da2e0a04a30a7a5fda",
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "runtime_sha256": "9acb06f2b987803206a11c9c95d65819040ff478a976e50127c3d2e7566a7a01",
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "prospective_binding_sha256": null,
+  "physical_execution_started": false,
+  "source_file_review_locators": [
+    "src/nca/train/jolt_budget_v3.py",
+    "src/nca/train/jolt_storage_v3.py",
+    "src/nca/train/jolt_cli_v3.py",
+    "src/nca/train/jolt_admission_v3.py:375-415",
+    "src/nca/train/jolt_executor_v3.py",
+    "src/nca/train/jolt_native_v3.py",
+    "tools/check_jolt_memory_envelope_v3.py",
+    ".github/workflows/jolt-memory-envelope.yml",
+    "tests/test_jolt_memory_envelope_v3.py"
+  ],
+  "observed": [
+    {
+      "metric": "worker_peak_rss_bytes",
+      "value": 491495424
+    },
+    {
+      "metric": "native_idle_peak_rss_bytes",
+      "value": 149385216
+    },
+    {
+      "metric": "max_simultaneously_observed_rss_bytes",
+      "value": 640819200
+    },
+    {
+      "metric": "max_simultaneously_observed_pss_bytes",
+      "value": 628527104
+    },
+    {
+      "metric": "illustrative_4x_overhead_bytes",
+      "value": 2563276800
+    },
+    {
+      "metric": "advertised_public_runner_bytes",
+      "value": 16000000000
+    },
+    {
+      "metric": "runner_memtotal_bytes",
+      "value": 16766414848
+    },
+    {
+      "metric": "runner_memavailable_sample_bytes",
+      "value": 15232327680
+    },
+    {
+      "metric": "serialized_total_artifact_limit_bytes",
+      "value": 15821682822
+    },
+    {
+      "metric": "required_disk_including_reserve_bytes",
+      "value": 16895424646
+    },
+    {
+      "metric": "earlier_preflight_available_disk_bytes",
+      "value": 89738760192
+    },
+    {
+      "metric": "cgroup_v1_v2_memlimit_observed",
+      "value": null
+    }
+  ],
+  "checked_at_preparation": [
+    "Maximum 6,464 synthetic results, 84 authored metric envelopes, 2,560 compact teacher rows, 256 one-row PPO proxies and 22 simultaneous GRU32 policy instances are exercised.",
+    "A real pinned Godot process is sampled during capability handshake; no original actor reset, step, scored case, model training, or sealed holdout is executed.",
+    "Static byte envelopes and available disk from an earlier separate runner are measurable; prospective disk must be rechecked on the execution runner.",
+    "Unlimited wall-clock policy v2 retains all 39 operation ceilings and finite elapsed telemetry. GitHub still has its six-hour hosted-job maximum."
+  ],
+  "unresolved_blocking_findings": [
+    {
+      "id": "OP01",
+      "finding": "Measured native is an idle handshake only; actual native stepped-physics and full worker/audit combined peak is neither observed nor a demonstrated hard upper bound."
+    },
+    {
+      "id": "OP02",
+      "finding": "Retained PPO payloads are shape-count proxies, not complete validated JoltTransition object graphs; static storage-byte maxima do not impose equivalent Python resident-byte ceilings."
+    },
+    {
+      "id": "OP03",
+      "finding": "Only 19 native samples and 49 total samples were observed; transients may be missed. Cgroup v1/v2 memory limits all returned null."
+    },
+    {
+      "id": "OP04",
+      "finding": "The runner memory specimen and earlier preflight were obtained on different EPYC models; exact runtime SHA is not stable across ephemeral GitHub runners."
+    },
+    {
+      "id": "OP05",
+      "finding": "The permanent nonexperimental metric artifact is a time-limited GitHub Actions artifact, not independent durable external publication of complete experimental evidence."
+    },
+    {
+      "id": "OP06",
+      "finding": "No independently authored and accepted prospective resource admission or sealed declaration/readback exists; this packet cannot set peak_resident_memory=true."
+    }
+  ],
+  "evidence": {
+    "preflight_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39866849277",
+    "memory_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39869437855",
+    "memory_report_sha256": "3e23ae5ce187b0dac59a481d6d99b107af4fa17e271139495288a963799bc59d",
+    "allocation_id": "learn-jolt-003-20261022-a1"
+  },
+  "next_action": "Complete a separately declared full-worker/native physical memory feasibility qualification without opening the intended experiment, with hard enforceable resident bound or independently justified complete stress envelope; obtain a genuinely independent source/runtime reviewer, then sign only if every mandatory resource gate is true."
+}

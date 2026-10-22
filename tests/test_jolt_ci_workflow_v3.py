@@ -76,6 +76,13 @@ class SingleAttemptClaimTests(unittest.TestCase):
         self.declaration.write_text(json.dumps({
             "allocation_id": CI.ALLOCATION,
             "source_revision": self.source,
+            "runtime": {
+                "torch":"2.8.0+cpu", "numpy":"2.3.5", "device":"cpu",
+                "threads":1, "interop_threads":1, "python":"3.12.10",
+                "system":"Linux", "kernel":"6.17", "machine":"x86_64",
+                "libc":["glibc","2.39"], "cpu_model":"Synthetic CPU",
+                "logical_cpus_available":1, "deterministic_algorithms":True
+            },
             "independent_reviews": [{}, {}],
         }))
         self.attestation.write_text(json.dumps({
