@@ -7,7 +7,12 @@ on:
     paths:
       - '.github/workflows/jolt-memory-envelope.yml'
       - 'tools/check_jolt_memory_envelope_v3.py'
+      - 'tools/compare_jolt_cpu_v3.py'
+      - 'tools/jolt_ci_workflow_v3.py'
       - 'tests/test_jolt_memory_envelope_v3.py'
+      - 'tests/test_jolt_runtime_portability_v3.py'
+      - 'tests/test_jolt_execution_runtime_portability_v3.py'
+      - 'tests/test_jolt_cpu_reference_v3.py'
       - 'src/nca/**'
       - 'configs/learning/**'
   workflow_dispatch:
@@ -42,6 +47,14 @@ jobs:
         env:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -p 'test_jolt_memory_envelope_v3.py' -v
+
+      - name: CPU portability and diagnostic normalization regressions
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m unittest discover -s tests -p 'test_jolt_runtime_portability_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_execution_runtime_portability_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_cpu_reference_v3.py' -v
 
       - name: Measure retained-worker proxies with original host handshake
         env:
