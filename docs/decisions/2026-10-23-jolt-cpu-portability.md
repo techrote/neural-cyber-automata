@@ -57,6 +57,22 @@ counts or the **actual per-case inference p95 <= 5 ms acceptance gate**.
 Neither the calibration factor nor historical component timing constitutes
 full-pipeline resource feasibility.
 
+Read-only comparison usage, after preserving two original diagnostic JSON
+records with an explicit reference CPU calibration:
+
+```sh
+python tools/compare_jolt_cpu_v3.py \
+  --reference "$REFERENCE_DIAGNOSTIC" \
+  --observed "$OBSERVED_DIAGNOSTIC" \
+  --duration-seconds "$ORIGINAL_DIAGNOSTIC_SECONDS" \
+  --output "$NEW_COMPARISON_RECEIPT"
+```
+
+The comparison refuses missing calibration data or incompatible pinned
+software; its original CPU models and raw durations remain visible.
+No operator should retroactively normalize historical reports that did not
+include a measured calibration.
+
 ## Admission boundaries
 
 This is **not** an automatic memory-admission waiver. Existing required
