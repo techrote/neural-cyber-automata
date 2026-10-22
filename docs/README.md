@@ -42,6 +42,7 @@ verified: 2026-10-22
 | What recording and execution repairs followed that failure? | [Versioned offline reliability repair and remaining experiment gate](evidence/2026-10-22-jolt-learning-reliability.md) |
 | What allocation and task are proposed for the next learned Jolt step? | [LEARN-JOLT-003 budget and review](design/LEARN_JOLT_003_ALLOCATION.md), [ready-to-issue task prompt](design/LEARN_JOLT_003_PROMPT.md) |
 | How does the separately commissioned Jolt follow-up preserve safe failures and admit one bounded comparison? | [LEARN-JOLT-003 contracts](design/LEARN_JOLT_003.md) and [operations](LEARN_JOLT_003_RUNBOOK.md) |
+| What is the LEARN-JOLT-003 handover and why is its experiment not admitted? | [Implementation checkpoint, failed resource admission and remaining review gates](evidence/2026-10-22-learn-jolt-003-handover.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
