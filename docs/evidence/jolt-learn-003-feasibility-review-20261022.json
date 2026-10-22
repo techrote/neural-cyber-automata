@@ -1,0 +1,187 @@
+{
+  "acceptance_scope": "allocation_proposal_for_implementation_and_admission_preparation_only",
+  "accepted": true,
+  "blocking_findings_for_planning_deliverables": [],
+  "completion_under_cap_guaranteed": false,
+  "executable_source_admission_review": false,
+  "fragmentation_assessment": {
+    "interpretation": "Short positive-decision episodes can increase resets, profiles, cancellations, optimizer windows, compressed artifacts and synchronization overhead despite the fixed physical decision total. Short prefixes reduce other neural work, so separate maxima are not a simultaneous runtime forecast. The cap may expire honestly on an admissible expensive workload.",
+    "maximum_total_episode_starts": 6464,
+    "minimum_ppo_episodes_for_24_updates_at_40_decisions_maximum": 168,
+    "observed_owner_requests": 8068,
+    "observed_ppo_average_decisions_per_episode": 36.28484848484848,
+    "observed_total_episode_starts": 229,
+    "proposed_maximum_ppo_episodes": 6144,
+    "proposed_to_observed_owner_request_ratio": 4.75185919682697,
+    "proposed_to_observed_ppo_optimizer_call_ratio": 13.869074492099323,
+    "tight_ppo_burn_in_per_module": 33792
+  },
+  "historical_evidence_limits_preserved": [
+    "963.0812728359988 seconds remains an incomplete internal ledger interval; complete original duration/exit/process-tree closure is unknown.",
+    "The retained 6720-record owner stream does not authenticate the worker-claimed 24195-record full lifetime.",
+    "No cause of the historical missing suffix is inferred.",
+    "The failed original allocation remains consumed, incomplete and nonqualifying; this proposal creates no learned result or morphology release."
+  ],
+  "offline_scope_only": true,
+  "owner_execution_commission_recorded": false,
+  "physical_execution_started": false,
+  "prospective_experiment_admitted": false,
+  "required_before_execution": [
+    "Record a later actual owner commission and distinct new allocation identity; this stored prompt and these reviews are not that authority.",
+    "Create separately versioned configuration, admission, executor/lifecycle, run, outcome, cost and audit contracts; preserve consumed v1/v2 declarations and original evidence.",
+    "Bind at least two independent final executable-source/runtime reviews to exact clean source, configuration, host/profile/runtime, seeds, splits, counters and output identity.",
+    "Enforce the original absolute phase deadlines around imports, work, journal closure, full neural readback, publication, process reaping, stream synchronization and final observed exit. Every operation-specific allowance must fit its applicable phase.",
+    "Ratify the proposed 180/600/120 worker-tail subdivision or justify and freeze an explicit alternative before commission; never consume the reserved external-verifier/finalization intervals silently.",
+    "Prove or enforce canonical record and aggregate artifact bounds, raw/gzip expansion limits, all readers, peak resident memory and available disk for the final source. Historical averages and per-record limits alone do not admit execution.",
+    "Recompute journal/file counts for all new retirement and lifecycle metadata, including additional original stdout/exit evidence and incomplete-publication artifacts.",
+    "Use source reasoning and bounded synthetic conformance to resolve feasibility without an undeclared physical/trained-model pilot. Unresolved feasibility must stop admission before the one attempt.",
+    "Retain positive-decision and per-update episode bounds, complete physical windows and truthful retired-attempt/forward accounting; final source must prove the coupled bootstrap/audit caps.",
+    "Complete all 32 open and 224 sealed comparisons plus independent audit/inventory for a structurally complete result. Never obtain more time by skipping hard cases, audit stages or evidence.",
+    "After a limit/failure, preserve the incomplete or capped result and perform required revocation only; no automatic retry, extension, resume or clock reset. Late mandatory cleanup cannot become timely successful completion.",
+    "Require original terminal stdout, independently observed exit and process-tree closure in addition to durable completion-candidate receipts; proposal acceptance never qualifies learned behavior, owner feel or morphology."
+  ],
+  "resolved_review_findings": [
+    {
+      "finding": "The initial calculator/JSON omitted the journal-record and worker/lifecycle-file count formulas stated in the allocation prose.",
+      "id": "reproducible_artifact_count_traceability",
+      "resolution": "The reviewed final calculator and JSON now include every count term, the raw-episode reader limit, and an explicit additional-outer-stdout/exit indicator. Byte-identical reproduction was confirmed after the change.",
+      "severity": "minor"
+    }
+  ],
+  "review_complete": true,
+  "review_operations": {
+    "benchmarks": 0,
+    "checkpoint_deserializations": 0,
+    "historical_artifact_mutations": 0,
+    "host_starts": 0,
+    "model_constructions": 0,
+    "neural_forwards": 0,
+    "optimizer_calls": 0,
+    "original_auditor_replays": 0,
+    "physical_ticks": 0,
+    "repository_files_written_by_reviewer": 1,
+    "stdlib_only": true,
+    "torch_imports": 0
+  },
+  "reviewed_base_revision": "f23401eb793f9708040c4047a8146ab01ec3befc",
+  "reviewed_files": [
+    {
+      "bytes": 13503,
+      "path": "docs/design/LEARN_JOLT_003_ALLOCATION.md",
+      "sha256": "5a0a805aee56fb7f0cd3f532d8ae9f7b6fee71ae74a37768a3a09deb402448ad"
+    },
+    {
+      "bytes": 16276,
+      "path": "docs/design/LEARN_JOLT_003_PROMPT.md",
+      "sha256": "0c21e3608d19c2a6d34fa9237dfeafbdf2f6c8432e834216cbb4c12f7c5c8bca"
+    },
+    {
+      "bytes": 12108,
+      "path": "docs/evidence/jolt-learn-003-allocation-calculator-20261022.py",
+      "sha256": "86aa470ba902dba0b71e97e2ac69c88fe9ebf01d4bdf916953e04e9206be73cb"
+    },
+    {
+      "bytes": 8148,
+      "path": "docs/evidence/jolt-learn-003-allocation-plan-20261022.json",
+      "sha256": "aca0a40e0bcfd923cb4a5c8737ead39e957fa6858f2cd5a2c84007be3a646774"
+    }
+  ],
+  "reviewed_utc_date": "2026-10-22",
+  "reviewer": "independent-time-storage-feasibility-review",
+  "schema": "nca-learn-jolt-003-allocation-feasibility-review/v1",
+  "storage_and_memory_assessment": {
+    "256_byte_per_record_bound_established": false,
+    "aggregate_artifact_disk_or_peak_memory_bound_established": false,
+    "conditional_256_bytes_per_record_total_MiB_before_envelope": 464.2470703125,
+    "fixed_RAM_minimum_claimed": false,
+    "historical_mean_bytes_per_reservation": 114.68170505845583,
+    "historical_means_are_maximum_byte_proofs": false,
+    "historical_reservation_file_bytes": 59444115,
+    "historical_reservation_records": 518340,
+    "historical_worker_result_bytes": 1040705,
+    "historical_worker_result_rows": 229,
+    "journal_count_times_per_record_limit_GiB": 112.412109375,
+    "journal_per_record_limit_bytes": 1048576,
+    "mean_bytes_per_record_afforded_by_reader_excluding_envelope": 282.33242250031026,
+    "memory_copies": "BudgetLedger retains dictionaries and deep-copies reservations for publication. canonical_json creates plain/frozen validation structures and complete string/byte payloads. Strict parsing creates validation objects. The external verifier retains both parsed reservation histories; the neural auditor also retains indexes, checkpoint objects and owner-request dictionaries. Serialized file size is not peak resident memory.",
+    "ordinary_json_and_sample_reader_limit_bytes": 67108864,
+    "raw_episode_reader_limit_bytes": 33554432,
+    "repeated_io": "The verified writer fsyncs and independently rereads preceding/new records, then replays the complete chain at close. The worker auditor replays the chain again, parses events and episode/sample data, loads checkpoints and replays neural histories. Worker and external inventories hash files; the external verifier replays the chain again and reconstructs both reservation histories.",
+    "reservation_file_estimate_at_historical_mean_MiB": 207.97127184308724,
+    "reservation_file_estimate_at_historical_mean_bytes": 218073684.34413704,
+    "reservation_reader_limit_bytes": 536870912,
+    "worker_result_estimate_for_6464_rows_at_historical_mix_MiB": 28.015191357208653
+  },
+  "timing_assessment": {
+    "active_margin_over_v4_projection_seconds": 1440.084653876448,
+    "active_to_same_blend_ratio": 2.4694414387798456,
+    "different_workload_v4_rate_projection_seconds": 4559.915346123552,
+    "full_new_journal_close_neural_audit_and_external_verification_measured": false,
+    "historical_suffix_counts_fully_owner_authenticated": false,
+    "internal_tail_after_last_reservation_seconds": 47.245558118998815,
+    "interpretation": "The learning blend scales fixed fitting costs with decision counts and omits unmeasured complete audit/executor work. The v4 blend is a completed authored diagnostic with different fitting and audit costs. Neither is a statistical upper bound, completion probability or permission to omit stages.",
+    "last_retained_reservation_elapsed_seconds": 915.835714717,
+    "original_audit_forwards": 0,
+    "original_checkpoint_loads": 0,
+    "original_complete_whole_process_seconds": null,
+    "original_incomplete_internal_ledger_seconds": 963.0812728359988,
+    "original_open_rows": 0,
+    "original_reported_bc_optimizer_calls": 16320,
+    "original_reported_decisions": 7509,
+    "original_reported_ppo_decisions": 5987,
+    "original_reported_ppo_optimizer_calls": 1772,
+    "original_reported_teacher_episodes": 64,
+    "original_sealed_rows": 0,
+    "projections_are_additive": false,
+    "recommendation": "Accept the 7200-second ceiling as a conservative one-attempt planning cap with explicit reserves, not as a completion guarantee or an execution admission.",
+    "same_mixed_work_rate_projection_seconds": 2429.6992452530512,
+    "tail_is_an_isolated_neural_audit_measurement": false
+  },
+  "validation_performed": {
+    "all_three_retained_input_sha256_bindings_match": true,
+    "baseline_reader_limits_checked_in_source": true,
+    "calculator_self_sha256_matches": true,
+    "final_calculator_output_byte_identical_to_reviewed_proposal_bytes": true,
+    "full_pipeline_or_performance_tests_run": false,
+    "independent_phase_counter_and_size_arithmetic_matches": true,
+    "scope": "Standard-library arithmetic, hashing, JSON/calculator reproduction and source/text inspection only."
+  },
+  "verified_planning_math": {
+    "absolute_phase_offsets_seconds": [
+      6000,
+      6900,
+      7140,
+      7200
+    ],
+    "counter_and_artifact_bounds_require_recomputation_for_final_source": true,
+    "counter_names": 39,
+    "episode_starts": 6464,
+    "evaluation_episodes": 256,
+    "executor_lifecycle_files_current_successful_shape": 16,
+    "journal_records_current_shape_plus_one_retirement_note_per_episode_and_stop": 115110,
+    "nested_reserves_seconds": {
+      "ordinary_work_reserve_C": 1200,
+      "verification_reserve_F": 60,
+      "worker_reserve_V": 300
+    },
+    "nonoverlapping_intervals_seconds": {
+      "active_including_startup_and_all_physical_evaluation": 6000,
+      "external_inventory_verification_exit_and_cleanup": 240,
+      "terminal_publication_stdout_and_observed_exit": 60,
+      "worker_closure_neural_readback_publication_exit_and_cleanup": 900
+    },
+    "original_outer_stdout_and_exit_receipts_are_additional": true,
+    "owner_requests": 38338,
+    "physical_decisions": 18944,
+    "physical_requested_ticks": 113664,
+    "reservation_records_loose_upper_bound": 1901556,
+    "whole_process_seconds": 7200,
+    "worker_files_current_successful_shape": 19468,
+    "worker_tail_planning_subdivision_seconds": {
+      "complete_independent_neural_physical_readback": 600,
+      "native_journal_closure_and_pre_audit_publication": 180,
+      "worker_final_publication_exit_and_supervisor_synchronization": 120
+    },
+    "worker_tail_subdivision_is_measured_runtime": false
+  }
+}

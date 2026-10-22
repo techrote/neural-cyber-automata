@@ -1,0 +1,56 @@
+{
+  "schema": "nca-learn-jolt-003-planning-validation/v1",
+  "reviewed_base_revision": "f23401eb793f9708040c4047a8146ab01ec3befc",
+  "recorded_utc": "2026-10-22 06:38:09 UTC",
+  "scope": "Local documentation and allocation-proposal verification only. Hosted publication CI is separate software conformance; no experimental allocation is commissioned or admitted.",
+  "offline_scope_only": true,
+  "prospective_experiment_admitted": false,
+  "owner_execution_commission_recorded": false,
+  "checks": {
+    "core_hashes": {
+      "docs/design/LEARN_JOLT_003_ALLOCATION.md": "5a0a805aee56fb7f0cd3f532d8ae9f7b6fee71ae74a37768a3a09deb402448ad",
+      "docs/design/LEARN_JOLT_003_PROMPT.md": "0c21e3608d19c2a6d34fa9237dfeafbdf2f6c8432e834216cbb4c12f7c5c8bca",
+      "docs/evidence/jolt-learn-003-allocation-calculator-20261022.py": "86aa470ba902dba0b71e97e2ac69c88fe9ebf01d4bdf916953e04e9206be73cb",
+      "docs/evidence/jolt-learn-003-allocation-plan-20261022.json": "aca0a40e0bcfd923cb4a5c8737ead39e957fa6858f2cd5a2c84007be3a646774"
+    },
+    "reviews": [
+      {
+        "path": "docs/evidence/jolt-learn-003-operations-review-20261022.json",
+        "sha256": "55b666c97c6be5a2709b205a6b673e96603790172895552ba215f8a5e2850402",
+        "bindings_verified": true,
+        "experiment_admitted": false
+      },
+      {
+        "path": "docs/evidence/jolt-learn-003-feasibility-review-20261022.json",
+        "sha256": "b591131a969e4cdecdc988f66e1be96420bf140936dd4f60ec2b61e18d576935",
+        "bindings_verified": true,
+        "experiment_admitted": false
+      },
+      {
+        "path": "docs/evidence/jolt-learn-003-acceptance-review-20261022.json",
+        "sha256": "4b3fa4469d209c9fccb2ac183c3b4589120946cbbfadd84107799d22d796eeba",
+        "bindings_verified": true,
+        "experiment_admitted": false
+      }
+    ],
+    "calculator_byte_reproduction": true,
+    "production_config_tests_tools_unchanged": true,
+    "historical_evidence_files_byte_identical": 156
+  },
+  "documentation": {
+    "command": "python tools/check_docs.py --strict",
+    "exit_code": 0,
+    "files_checked": 84,
+    "errors": 0,
+    "warnings": 0
+  },
+  "publication_ci": "Pending; final-head results and merge verification are recorded on the planning PR and issue.",
+  "analysis_operations": {
+    "host_starts": 0,
+    "checkpoint_loads": 0,
+    "model_forwards": 0,
+    "optimizer_calls": 0,
+    "physical_ticks": 0,
+    "benchmarks": 0
+  }
+}

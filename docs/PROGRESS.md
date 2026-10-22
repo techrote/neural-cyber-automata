@@ -24,7 +24,7 @@ verified: 2026-10-22
   implementation, prospective admission, recovered consumed failure and publication.
 - Later checkpoints appear below. Recorded gaps remain explicit; archived entries
   retain their original timestamps, claims and links.
-- [22 October learning reliability checkpoint](progress/2026-10-22-learning-reliability.md): offline recording/execution repair, preserved failed allocation and no new experiment.
+- [22 October reliability](progress/2026-10-22-learning-reliability.md) and [allocation planning](progress/2026-10-22-learning-allocation.md): offline repair, reviewed follow-up proposal and no new experiment.
 
 ## 2026-10-20 19:17 UTC — JOLT-RECOVERY-003 begins from preserved replay
 

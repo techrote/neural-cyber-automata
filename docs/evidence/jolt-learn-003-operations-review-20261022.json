@@ -1,0 +1,134 @@
+{
+  "accepted_for_implementation_preparation": true,
+  "accepted_properties": [
+    "Positive progress and explicit caps of 256 starts per update and 6,144 PPO starts close the zero-decision continuation loophole. Every update retains exactly 256 physical decisions.",
+    "Fixed physical episode windows can create 256 optimizer windows per update, while prefix replay has the separately proved 352-row per-update/per-epoch maximum. Masks and resets cannot enlarge that maximum.",
+    "The 21,144 controller-attempt cap includes one no-forward retirement allowance per learned episode. The 25,248 runtime-forward rectangle and 37,536 coupled audit bound do not invent model calls for retirement.",
+    "Proposal-less emergency intervals retain physical/task observations, actual durations, outcomes and masks, but they supply neither ordinary actor loss nor critic loss. No value is fabricated for those rows.",
+    "The prompt requires explicit retired-attempt evidence, terminal-over-cutoff precedence, zero bootstrap after retirement, unchanged rewards/masks/GAE gaps, and exact new auditor reconciliation.",
+    "The conserved 39-counter shape, unchanged stage caps, one-attempt rule, immutable evidence and legacy version separation remain explicit.",
+    "The stored task prompt and planning reviews do not commission execution. A later owner instruction and independently reviewed final executable-source/runtime/declaration gates are required."
+  ],
+  "clarifications_and_resolved_findings": [
+    {
+      "id": "prior_draft_critic_wording",
+      "resolution": "The preliminary draft phrase suggesting emergency intervals retain critic evidence is clarified: they retain physical/task evidence; proposal-less rows have valid=false and are masked from both actor and critic loss. The final task prompt explicitly preserves this current behavior. No numeric bound changes follow."
+    },
+    {
+      "id": "nonnegative_counter_wording",
+      "resolution": "The report correctly describes 39 nonnegative ceilings; owner_configure and owner_observe are zero."
+    },
+    {
+      "id": "publication_count_reproduction",
+      "resolution": "The calculator and stored JSON now reproduce the journal-note and worker-file sizing formulas that appear in the report. These remain current-shape bounds to recalculate if new metadata adds records or files."
+    }
+  ],
+  "confirmed_bounds": {
+    "audit_forward_backstop": 37888,
+    "bc_burn_in": 368640,
+    "bc_eligible_samples": 307200,
+    "bc_forward": 307200,
+    "bc_optimizer": 23040,
+    "bootstrap_forward_backstop": 12288,
+    "charged_learned_controller_invocations": 21144,
+    "checkpoint_load_breakdown": {
+      "evaluation_cache": 12,
+      "independent_audit": 36
+    },
+    "checkpoint_loads": 48,
+    "checkpoint_writes": 36,
+    "coupled_runtime_plus_bootstrap_bound": 37536,
+    "episode_starts": 6464,
+    "executor_lifecycle_files_current_shape": 16,
+    "journal_records_with_one_retirement_note_per_episode": 115110,
+    "learned_episode_starts": 6360,
+    "module_forward_component_maxima_sum": 880288,
+    "optimizer_calls_total": 47616,
+    "owner_requests": 38338,
+    "physical_decisions": 18944,
+    "physical_learned_rows": 14784,
+    "physical_requested_ticks": 113664,
+    "ppo_authentication_forward_per_module": 6144,
+    "ppo_burn_in_per_module": 33792,
+    "ppo_forward_per_module": 24576,
+    "ppo_optimizer": 24576,
+    "reservation_records_loose_upper_bound": 1901556,
+    "runtime_module_forwards": 25248,
+    "worker_files_current_shape": 19468
+  },
+  "created_utc": "2026-10-22T06:36:35.605250+00:00",
+  "executable_source_admission_review": false,
+  "future_execution_gates": [
+    "Implement and independently test the new versioned continuation, terminal/bootstrap, counter and auditor contracts. Current v1/v2 source cannot execute this proposal unchanged.",
+    "Prove or enforce canonical record sizes, aggregate artifact bytes, bounded reader compatibility, peak memory, available disk and actual phase time before admission. Count bounds and historical averages do not prove resource feasibility.",
+    "Preserve the wider bootstrap/audit backstops unless final source proves the conditional 48 / 25,296 limits under administrative-cutoff and safe-retirement precedence.",
+    "Update every version-specific 1,800 / 120 budget assumption consistently, including admission, executor, lifecycle readback, CLI cost verification and the documented meaning of capture RunBudget(40,1800).",
+    "Bind a real later owner commission, exact clean source closure, configuration, runtime, host/profile, unopened split/order, output identity and independent prospective reviews before one invocation."
+  ],
+  "independence_disclosure": "This reviewer contributed the preliminary operation calculations, then independently checked the separately authored allocation report, next-task prompt, calculator and recorded proposal against pinned source. The final prefix proof uses episode-length cost categories rather than repeating the calculator dynamic program. This record does not claim independent implementation review of future executable source.",
+  "issue": 62,
+  "limits": [
+    "Only standard-library arithmetic, source/JSON reads and calculator execution were used; no learning framework, checkpoint, model, host, physics, benchmark or network operation was invoked for this review.",
+    "Operation maxima are conservative component bounds and may not be simultaneously attained. They do not establish that a complete experiment will finish within 7,200 seconds.",
+    "Broader time/storage and acceptance-semantics reviews are separate. This record accepts implementation preparation only, leaves execution unadmitted, and does not change the failed LEARN-JOLT-002 evidence or issue #62 qualification."
+  ],
+  "new_physical_or_neural_work_performed": false,
+  "offline_scope_only": true,
+  "open_blocking_proposal_findings": [],
+  "owner_execution_commission_recorded": false,
+  "proposal_closure_sha256": "1cbbae8917eda19322b334d8997f0a57ee3b54bba30d2849542af32765d4429c",
+  "prospective_experiment_admitted": false,
+  "review_scope": "Operation caps, fragmentation/prefix proof, counter conservation, publication-count arithmetic, executor reserve relationships and commissioning boundary in the four proposal artifacts; implementation preparation only.",
+  "reviewed_base_revision": "f23401eb793f9708040c4047a8146ab01ec3befc",
+  "reviewed_base_tree": "345549edb928a72c0478cd626a0a154098af85b5",
+  "reviewed_files": {
+    "docs/design/LEARN_JOLT_003_ALLOCATION.md": "5a0a805aee56fb7f0cd3f532d8ae9f7b6fee71ae74a37768a3a09deb402448ad",
+    "docs/design/LEARN_JOLT_003_PROMPT.md": "0c21e3608d19c2a6d34fa9237dfeafbdf2f6c8432e834216cbb4c12f7c5c8bca",
+    "docs/evidence/jolt-learn-003-allocation-calculator-20261022.py": "86aa470ba902dba0b71e97e2ac69c88fe9ebf01d4bdf916953e04e9206be73cb",
+    "docs/evidence/jolt-learn-003-allocation-plan-20261022.json": "aca0a40e0bcfd923cb4a5c8737ead39e957fa6858f2cd5a2c84007be3a646774"
+  },
+  "reviewer": "independent-operations-and-executor-review",
+  "schema": "nca-learn-jolt-003-proposal-review/v1",
+  "supporting_source_files": {
+    "configs/learning/jolt-learn-002-v1.json": "4114806d1317cfb189c8648c530e2667bc0e5f236fc54d44f2f23c7a5a309902",
+    "src/nca/controllers/jolt_learned.py": "8ac31038129dfd2a8e7d97ad8cf54e153c9164ab7481ad4d1bb17bbd5ef1b5a2",
+    "src/nca/controllers/recovery_supervisor.py": "e9a0b19aca661643c4a72acd0293ade72b5b569b8adb9abfca201de70205d09d",
+    "src/nca/data/storage.py": "da194eef8f5b0249f7cc78ec2a36beccc39ebe0af29c9419aaff74746fa21abd",
+    "src/nca/evaluation/durable_journal.py": "ea005165d12c6a30045f6d265df7506a021246dfe6d5a540e118ee2cd5346269",
+    "src/nca/evaluation/jolt_learning_audit.py": "3984290d05cb42dfe07c0fab6310575045136933a23befa9e9ce148317f70ec0",
+    "src/nca/evaluation/verified_journal.py": "08a5a8bdcd700177e850f46023858426515740d6275641393129cb4e31d84228",
+    "src/nca/runs.py": "92eef13e356aab633e38d9a3286d8fdcb6370cde9a4eef494069c76453fd4253",
+    "src/nca/train/jolt_admission.py": "c7f05a357febb137599dfe74b6252a8f6cc4f4f001e11076feea5f800cd9dd9b",
+    "src/nca/train/jolt_executor.py": "67d63d815a1a3c2fc9679981f86bb017a8a9dc9341bff2a48034421ab383f601",
+    "src/nca/train/jolt_learning.py": "5249119d2b52e485c10ef1ea15055e59dac7d732b107587727637045e94f2e05",
+    "src/nca/train/jolt_screen.py": "450e2f67069cbf2539e6406c299a3fb464d2690ff39b3c3eaf9ca9ac857b8a7d",
+    "tools/learn_jolt.py": "65c5a6aeda99b8f91162cb3c4eaf9eaaf6155672d91d8d10c4da4ac7067f84e8"
+  },
+  "validation": [
+    {
+      "check": "stdlib_calculator_reproduction",
+      "command": "python docs/evidence/jolt-learn-003-allocation-calculator-20261022.py",
+      "result": "pass; output is byte-identical to the stored proposal, including when invoked from outside the repository; empty stderr"
+    },
+    {
+      "check": "all_counter_caps",
+      "result": "pass; all 39 exact nonnegative integer caps checked against independent source arithmetic; inherited stage caps match the original configuration"
+    },
+    {
+      "check": "independent_prefix_proof",
+      "result": "pass; maximize 48a + 16b subject to 33a + 17b <= 256, with a and b nonnegative integers. Maximum 352 occurs at a=7, b=1 with 8 spare rows; one 25-row middle episode yields the 7 x 33 + 25 witness. Multiplying by 3 x 8 x 4 gives 33,792 per module."
+    },
+    {
+      "check": "artifact_count_terms",
+      "result": "pass; journal terms sum to 115,110; worker file terms sum to 19,468; 16 current lifecycle files and separate stdout/exit receipts remain explicit"
+    },
+    {
+      "check": "identity_binding",
+      "result": "pass; reviewed base commit/tree, the four proposal hashes, calculator self-hash and all three calculator input hashes match"
+    },
+    {
+      "check": "phase_arithmetic",
+      "result": "pass; offsets 6,000 / 6,900 / 7,140 / 7,200 and disjoint intervals 6,000 / 900 / 240 / 60 preserve the one 7,200-second clock; feasibility is not established by this arithmetic"
+    }
+  ]
+}

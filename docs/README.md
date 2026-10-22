@@ -39,6 +39,7 @@ verified: 2026-10-22
 | How are the separate learned Jolt contracts, static split and single bounded invocation operated? | [LEARN-JOLT-002 runbook](LEARN_JOLT_002_RUNBOOK.md) |
 | What happened to the single learned Jolt allocation? | [Consumed failure, preserved evidence and nonqualification](evidence/2026-10-21-jolt-learn-002.md) |
 | What recording and execution repairs followed that failure? | [Versioned offline reliability repair and remaining experiment gate](evidence/2026-10-22-jolt-learning-reliability.md) |
+| What allocation and task are proposed for the next learned Jolt step? | [LEARN-JOLT-003 budget and review](design/LEARN_JOLT_003_ALLOCATION.md), [ready-to-issue task prompt](design/LEARN_JOLT_003_PROMPT.md) |
 | How do I capture demonstrations and replay consumed input? | [Dataset guide](../configs/datasets/README.md) |
 | How do I compose usable actions and cancel ownership? | [Usable skills](USABLE_SKILLS.md) |
 | How do I run the bounded recurrent actor-learning screen? | [Learning operations](LEARNING.md) |
