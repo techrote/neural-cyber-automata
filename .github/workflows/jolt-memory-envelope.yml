@@ -15,6 +15,7 @@ on:
       - 'tests/test_jolt_cpu_reference_v3.py'
       - 'src/nca/**'
       - 'configs/learning/**'
+      - 'docs/evidence/jolt-003-cpu-reference-20261023.json'
   workflow_dispatch:
 
 permissions:
@@ -68,6 +69,18 @@ jobs:
             --godot "$NCA_GODOT" \
             --output "$RUNNER_TEMP/jolt-003-memory-report.json"
 
+      - name: Normalize measured diagnostic seconds to the saved reference CPU
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          original_seconds=$(python -c 'import json,os,pathlib; print(json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"jolt-003-memory-report.json").read_text())["elapsed_seconds"])')
+          python tools/compare_jolt_cpu_v3.py \
+            --reference docs/evidence/jolt-003-cpu-reference-20261023.json \
+            --observed "$RUNNER_TEMP/jolt-003-memory-report.json" \
+            --duration-seconds "$original_seconds" \
+            --output "$RUNNER_TEMP/jolt-003-cpu-normalization.json"
+
       - name: Independently verify published scope/identities
         env:
           PYTHONPATH: src
@@ -90,6 +103,13 @@ jobs:
           assert report["native_handshake_only"] is True
           assert report["sealed_case_inspection_or_training"] is False
           assert report["synthetic_shape"]["results"] == 6464
+          normalized = json.loads((Path(os.environ["RUNNER_TEMP"])/"jolt-003-cpu-normalization.json").read_bytes())
+          assert normalized["schema"] == "nca-jolt-cpu-reference-comparison/v1"
+          assert normalized["observed_source_revision"] == revision
+          assert normalized["software_capability_sha256"] == report["runtime_software_contract_sha256"]
+          assert normalized["normalization"]["reference_seconds_approximate"] >= 0
+          assert normalized["experimental_admission_inferred"] is False
+          assert normalized["quality_thresholds_unchanged"] is True
           print(json.dumps({"readback_verified":True, "admitted":False,
               "source_revision":revision,
               "report_sha256":hashlib.sha256((Path(os.environ["RUNNER_TEMP"])/"jolt-003-memory-report.json").read_bytes()).hexdigest()}))
@@ -100,6 +120,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jolt-003-memory-prepass-${{ github.run_id }}
-          path: ${{ runner.temp }}/jolt-003-memory-report.json
+          path: |
+            ${{ runner.temp }}/jolt-003-memory-report.json
+            ${{ runner.temp }}/jolt-003-cpu-normalization.json
           retention-days: 90
           if-no-files-found: warn
