@@ -33,7 +33,7 @@ on:
         type: string
         required: false
 
-run-name: "LEARN-JOLT-003 ${{ inputs.mode } / ${{ github.run_id }"
+run-name: "LEARN-JOLT-003 ${{ inputs.mode }} / ${{ github.run_id }}"
 
 concurrency:
   group: nca-learn-jolt-003-20261022-a1
@@ -45,7 +45,7 @@ permissions:
 
 jobs:
   long-run:
-    name: "CPU ${{ inputs.mode } (single-use admission)"
+    name: "CPU ${{ inputs.mode }} (single-use admission)"
     if: github.repository == 'techrote/neural-cyber-automata'
     runs-on: ubuntu-24.04
     env:
@@ -53,12 +53,12 @@ jobs:
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
-      NCA_RUN_MODE: ${{ inputs.mode }
-      NCA_EXECUTABLE_SHA: ${{ inputs.executable_sha }
-      NCA_ADMISSION_SHA: ${{ inputs.admission_sha }
-      NCA_RESOURCE_PATH: ${{ inputs.resource_path }
-      NCA_TERMINAL_REVIEW_PATH: ${{ inputs.terminal_review_path }
-      NCA_ENVELOPE_REVIEW_PATH: ${{ inputs.envelope_review_path }
+      NCA_RUN_MODE: ${{ inputs.mode }}
+      NCA_EXECUTABLE_SHA: ${{ inputs.executable_sha }}
+      NCA_ADMISSION_SHA: ${{ inputs.admission_sha }}
+      NCA_RESOURCE_PATH: ${{ inputs.resource_path }}
+      NCA_TERMINAL_REVIEW_PATH: ${{ inputs.terminal_review_path }}
+      NCA_ENVELOPE_REVIEW_PATH: ${{ inputs.envelope_review_path }}
       NCA_ALLOCATION_ID: learn-jolt-003-20261022-a1
 
     steps:
@@ -86,8 +86,8 @@ jobs:
           elif [[ -n "$NCA_EXECUTABLE_SHA" && ! "$NCA_EXECUTABLE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
             echo "Preflight executable SHA must be a full commit identifier"; exit 2
           fi
-          echo "NCA_EXEC_REF=${{ inputs.executable_sha || github.sha }" >> "$GITHUB_ENV"
-          echo "NCA_ADMISSION_REF=${{ inputs.admission_sha || github.sha }" >> "$GITHUB_ENV"
+          echo "NCA_EXEC_REF=${{ inputs.executable_sha || github.sha }}" >> "$GITHUB_ENV"
+          echo "NCA_ADMISSION_REF=${{ inputs.admission_sha || github.sha }}" >> "$GITHUB_ENV"
           echo "NCA_EVIDENCE_ROOT=$RUNNER_TEMP/nca-jolt-003-evidence" >> "$GITHUB_ENV"
           echo "NCA_JOLT_OUTPUT=$RUNNER_TEMP/nca-jolt-003-evidence/learn-jolt-003-20261022-a1" >> "$GITHUB_ENV"
           echo "NCA_JOLT_DECLARATION=$RUNNER_TEMP/nca-jolt-003-evidence/receipts/declaration.json" >> "$GITHUB_ENV"
@@ -96,7 +96,7 @@ jobs:
       - name: Checkout exact executable source
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.NCA_EXEC_REF }
+          ref: ${{ env.NCA_EXEC_REF }}
           path: source
           persist-credentials: false
 
@@ -104,7 +104,7 @@ jobs:
         if: inputs.mode == 'execute'
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.NCA_ADMISSION_REF }
+          ref: ${{ env.NCA_ADMISSION_REF }}
           path: admission
           persist-credentials: false
 
@@ -173,7 +173,7 @@ jobs:
         working-directory: source
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python tools/jolt_ci_workflow_v3.py claim \
             --declaration "$NCA_JOLT_DECLARATION" \
@@ -220,10 +220,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: "jolt-003-receipts-${{ github.run_id }"
+          name: "jolt-003-receipts-${{ github.run_id }}"
           path: |
-            ${{ runner.temp }/nca-jolt-003-evidence/receipts/
-            ${{ runner.temp }/nca-jolt-003-manifest.json
+            ${{ runner.temp }}/nca-jolt-003-evidence/receipts/
+            ${{ runner.temp }}/nca-jolt-003-manifest.json
           retention-days: 90
           if-no-files-found: warn
           include-hidden-files: true
@@ -232,13 +232,13 @@ jobs:
         if: always() && inputs.mode == 'execute'
         uses: actions/upload-artifact@v4
         with:
-          name: "jolt-003-raw-${{ github.run_id }"
+          name: "jolt-003-raw-${{ github.run_id }}"
           path: |
-            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1/
-            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-lifecycle/
-            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stdout.log
-            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stderr.log
-            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-observed-exit.json
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1/
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-lifecycle/
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stdout.log
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stderr.log
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-observed-exit.json
           retention-days: 90
           if-no-files-found: warn
           include-hidden-files: true
