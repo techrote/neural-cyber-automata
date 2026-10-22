@@ -18,8 +18,11 @@ That commission is conditional on all final source/runtime/resource gates.
 Do not run the commands below without the published passing declaration and
 two passing independent final-source reviews.
 
-**Current instruction: publish the time-limit removal, queue CI, then stop.**
-Do not launch the experiment or merge while waiting for the owner's follow-up.
+**Current instruction (D-021): implement and verify an explicitly gated
+long-running CI entry.** The owner reported CI green with no experiment run,
+then authorized continuation. Green conformance alone does not satisfy
+source/runtime/resource admission. Do not execute while the full-worker
+memory and fresh final-source independent reviews remain unresolved.
 The [completion evidence](evidence/2026-10-22-learn-jolt-003-completion.md)
 and [refusal record](evidence/jolt-learn-003-completion-20261022/admission-refusal.json)
 retain the historical finite-time admission refusal. Configuration v2 removes
@@ -27,6 +30,54 @@ all operational wall-clock ceilings and time-fit gates, including the whole
 invocation, phase reserves, episode capture, host startup/transport, cleanup and
 observation limits. Full-worker/native memory and final-source admission remain
 unresolved. No passing execution declaration or experimental invocation is published.
+
+## GitHub Actions: long-run dispatch
+
+The [manual LEARN-JOLT-003 workflow](../.github/workflows/learn-jolt-003-long-run.yml)
+must first be merged onto the repository's default branch alongside the
+configuration-v2 dependency. It is **not** triggered by green pull-request CI,
+ordinary push events or unit-test success. It runs on a pinned CPU-only Linux
+runtime and invokes the actual learner only in its admitted `execute` mode.
+
+1. Dispatch `preflight` to inspect the exact configuration, source closure,
+   pinned CPU runtime, host identity, storage envelope, free disk and bounded
+   memory telemetry. It does **not** start a physical experiment, open a model
+   or consume allocation `learn-jolt-003-20261022-a1`. Reported cgroup memory
+   is a sample, **not** proof of peak native/worker feasibility.
+2. Resolve the resource admission, including peak worker/native memory and
+   exact current storage/disk requirements. Publish a separate accepted
+   resource record and two independently authored, final-source-bound reviews
+   under `docs/evidence/`, with zero unresolved findings. Preserve all
+   original bytes and the prospective binding. See the admission section below.
+3. Only then dispatch `execute`, supplying a complete 40-character
+   `executable_sha`, a complete 40-character `admission_sha` for the
+   published reviews, and three exact repository-relative JSON paths:
+   `resource_path`, `terminal_review_path`, `envelope_review_path`.
+   Paths must be under `docs/evidence/`; these files are never invented
+   by the workflow. The execution ref must be `main`, first attempt only.
+4. The workflow runs `freeze-v3`, rereads the declaration with the existing
+   source/runtime/review validators and current free-disk gate, then
+   atomically claims the single allocation via a permanent comment on
+   [#62](https://github.com/techrote/neural-cyber-automata/issues/62).
+   The claim is independently reread before the observer can run. Existing
+   claims, reruns or failed reviews stop execution. Concurrent dispatches
+   use a shared non-cancelling concurrency group.
+5. The **real** `tools/observe_jolt_v3.py` subsequently performs teacher
+   collection, BC, recurrent PPO and paired comparisons. Its original
+   stdout/stderr, observed exit, lifecycle and worker files stay outside Git.
+   A clean observed exit permits a further independent inventory readback.
+   Both success and failure paths attempt separate 90-day Actions artifacts
+   for receipts/hash manifest and raw/partial original evidence.
+
+A GitHub-hosted job still has the service's six-hour upper bound, which
+configuration v2 cannot remove. Cancellation, runner loss and hard expiry may
+prevent `always()` artifact-upload steps from running; missing uploads are
+**not** evidence of a completed invocation. GitHub artifacts are temporary:
+complete evidence still requires independent readback and durable
+out-of-Git publication with original member hashes/EOF checks. Once the issue
+claim exists, do not rerun even if the artifact upload fails. Preserve a
+negative result and do not release morphology #16 without the original
+learner-qualification requirements.
 
 ## Prepare the exact environment
 
