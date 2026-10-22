@@ -50,6 +50,18 @@ artifacts remain unchanged. The teacher is still `authored-jolt-recovery@4`
 at physical source `46a22f98dce78be3c4ba534d955e58d5691c7d96`, bound by the exact
 [original prerequisite](../../configs/learning/jolt-prerequisite-v1.json).
 
+With [D-022](../decisions/2026-10-23-jolt-cpu-portability.md), the
+separately versioned portable admission records use a stable CPU software
+capability digest: Linux x86_64, Python 3.12, exact CPU Torch/NumPy versions,
+one Torch/interop thread, and deterministic algorithms. The declaration still
+records original CPU model, kernel, Python patch, libc and available cores.
+Execution reviews compare pinned software, host binary, source/configuration,
+seed and workload identities exactly; CPU hardware names are advisory. Historic
+resource/review schema v1 remains strict; new schema v2 carries the portability
+policy and does not reinterpret old saved reviews. Optional SHA-256 timing
+normalization is **approximate performance telemetry only** and never changes
+the actual inference-latency gate, task outcomes or learned acceptance.
+
 The new configuration hashes the unchanged architecture, seeds, losses,
 hyperparameters, reward, original supervisor and qualification sections.
 It rejects changing those inputs while presenting the change as execution v3.
