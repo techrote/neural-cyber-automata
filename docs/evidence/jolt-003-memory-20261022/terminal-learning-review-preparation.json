@@ -1,0 +1,61 @@
+{
+  "schema": "nca-jolt-003-source-admission-review-preparation/v1",
+  "scope": "terminal_learning_qualification",
+  "intended_required_role": "terminal_learning_qualification",
+  "publication_scope": "review_packet_for_independent_signoff_not_an_accepted_review",
+  "review_authority": "none",
+  "reviewer": null,
+  "independent_reviewer_completed": false,
+  "accepted": false,
+  "offline_scope_only": true,
+  "prospective_experiment_admitted": false,
+  "source_revision": "73f44409e799902e33519604a76a46464b300b60",
+  "source_sha256": "9431773c431562d052a420d9ebe8e08b9794eb68e4e7c4da2e0a04a30a7a5fda",
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "runtime_sha256": "9acb06f2b987803206a11c9c95d65819040ff478a976e50127c3d2e7566a7a01",
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "prospective_binding_sha256": null,
+  "physical_execution_started": false,
+  "source_file_review_locators": [
+    "src/nca/train/jolt_screen.py:628-795",
+    "src/nca/train/jolt_learning.py:100-167",
+    "src/nca/train/jolt_learning.py:313-453",
+    "src/nca/train/jolt_capture_v3.py:92-300",
+    "src/nca/train/jolt_executor_v3.py",
+    "src/nca/train/jolt_admission_v3.py:270-400",
+    "configs/learning/jolt-learn-003-v2.json",
+    "tests/test_jolt_learning_v3.py",
+    "tests/test_jolt_learning_audit_v3.py"
+  ],
+  "checked_at_preparation": [
+    "Three independent BC seeds, frozen teacher data, fixed PPO case stream and case-major evaluation order remain source-bound.",
+    "Worker retains up to 64 compact teacher demonstrations and one 256-decision PPO batch; synthetic memory stress exercises these declared counts without opening cases.",
+    "The v3 verified safe-retirement boundary remains unsuccessful, not a created success or invented task-terminal state.",
+    "No observed trained checkpoint or paired evaluation result is supplied by the memory prepass."
+  ],
+  "unresolved_blocking_findings": [
+    {
+      "id": "TL01",
+      "finding": "No full-source/runtime-bound physical worker trace verifies native stepped physics, actual trained-policy fitting, sealed barrier and final audit within memory capacity."
+    },
+    {
+      "id": "TL02",
+      "finding": "The prospective declaration is not frozen and independently read back; prospective_binding_sha256 is unavailable."
+    },
+    {
+      "id": "TL03",
+      "finding": "An independent reviewer distinct from the diagnostic author has not signed this role; this document is not a role acceptance."
+    },
+    {
+      "id": "TL04",
+      "finding": "Exact runtime changes across ephemeral hosted jobs (EPYC 9V74 preflight versus EPYC 7763 memory specimen), preventing automatic read-across into an execution declaration."
+    }
+  ],
+  "evidence": {
+    "preflight_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39866849277",
+    "memory_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39869437855",
+    "memory_report_sha256": "3e23ae5ce187b0dac59a481d6d99b107af4fa17e271139495288a963799bc59d",
+    "allocation_id": "learn-jolt-003-20261022-a1"
+  },
+  "next_action": "Independent source owner must inspect complete terminal and qualification paths, verify the exact reviewed execution commit/runtime and memory evidence, sign only when all blockers are resolved; never re-label this preparation file as an accepted review."
+}
