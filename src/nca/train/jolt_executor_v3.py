@@ -381,6 +381,7 @@ def verify_lifecycle(lifecycle, *, terminal_stdout, observed_exit_code,
     files = {}
     for path in lifecycle.iterdir():
         require(not path.is_symlink() and path.is_file(), "lifecycle contains a link, directory or special file")
+        require(path.stat().st_nlink == 1, "lifecycle cannot contain hard links")
         require(path.stat().st_size <= MAX_STREAM_BYTES, "lifecycle artifact exceeds its frozen 1 MiB envelope")
         files[path.name] = file_identity(path)
 

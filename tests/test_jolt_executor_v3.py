@@ -2,6 +2,7 @@
 from contextlib import ExitStack, redirect_stdout
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -191,6 +192,40 @@ class ExecutorV3Tests(unittest.TestCase):
                     path = root / ("worker-stdout.log" if kind == "stream" else "worker-exit.json")
                     path.write_bytes(path.read_bytes() + b" ")
                 with self.assertRaises(ContractError):
+                    executor.verify_lifecycle(root, terminal_stdout=stdout, observed_exit_code=0,
+                                              observed_exit_elapsed_seconds=2.)
+
+    def test_final_lifecycle_rejects_unexpected_empty_directory(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _, stdout, args, _, _, _ = self.invoke(Path(folder))
+            root = self.lifecycle(args)
+            (root / "unexpected-empty").mkdir()
+            with self.assertRaisesRegex(ContractError, "directory or special file"):
+                executor.verify_lifecycle(root, terminal_stdout=stdout, observed_exit_code=0,
+                                          observed_exit_elapsed_seconds=2.)
+
+    @unittest.skipUnless(hasattr(os, "link"), "hard links require filesystem support")
+    def test_final_lifecycle_rejects_byte_identical_outside_hardlink(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _, stdout, args, _, _, _ = self.invoke(Path(folder))
+            root = self.lifecycle(args)
+            os.link(root / "terminal.json", Path(folder) / "outside-terminal-alias")
+            with self.assertRaisesRegex(ContractError, "hard links"):
+                executor.verify_lifecycle(root, terminal_stdout=stdout, observed_exit_code=0,
+                                          observed_exit_elapsed_seconds=2.)
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "FIFO entries require POSIX")
+    def test_final_lifecycle_rejects_fifo_without_opening_it(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _, stdout, args, _, _, _ = self.invoke(Path(folder))
+            root = self.lifecycle(args)
+            os.mkfifo(root / "unexpected-fifo")
+            identity = executor.file_identity
+            def regular_identity(path):
+                self.assertNotEqual(path.name, "unexpected-fifo", "FIFO must never be opened")
+                return identity(path)
+            with mock.patch.object(executor, "file_identity", side_effect=regular_identity):
+                with self.assertRaisesRegex(ContractError, "directory or special file"):
                     executor.verify_lifecycle(root, terminal_stdout=stdout, observed_exit_code=0,
                                               observed_exit_elapsed_seconds=2.)
 

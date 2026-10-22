@@ -69,6 +69,38 @@ if TORCH_AVAILABLE:
             return {"cancelled": True, "observation": self.view}
 
 
+    class SyntheticBoundaryOwner(SyntheticRetirementOwner):
+        """Fixed receipt sequences for task/supervisor boundary precedence.
+
+        Motion and suspension are fabricated native-shaped data. No physical
+        host or checkpoint is used to discover these explicitly chosen cases.
+        """
+
+        def __init__(self, boundary):
+            if boundary not in ("arrival", "deadline", "deadline_emergency", "quiet_exit"):
+                raise ValueError("unknown synthetic boundary")
+            self.boundary = boundary
+            super().__init__(start_emergency={"quiet_exit": 0, "deadline_emergency": 192}.get(boundary, 1000))
+
+        def observation(self, tick, action, **kwargs):
+            result = super().observation(tick, action, **kwargs)
+            if self.boundary == "arrival" and tick >= 1:
+                result["position"] = [48., 0.]
+            if self.boundary == "quiet_exit" and tick >= 36:
+                result["rotation"] = 0.
+            if tick == 240:
+                result.update(suspended=True, action={}, control_generation=result["control_generation"] + 1)
+                result["observation_id"] = ":".join(str(result[key]) for key in
+                    ("run_id", "epoch", "actor_id", "control_generation", "tick"))
+            return result
+
+        def transition(self, traces):
+            result = super().transition(traces)
+            if self.view["tick"] == 240:
+                result.update(terminated=True, finished=True)
+            return result
+
+
     class SyntheticLedger:
         def __init__(self):
             self.counts = Counter()
@@ -92,8 +124,8 @@ if TORCH_AVAILABLE:
 @unittest.skipUnless(TORCH_AVAILABLE, "optional CPU learning extra is not installed")
 class JoltV3CaptureTests(unittest.TestCase):
     def capture(self, output, *, kind="residual", maximum_decisions=40,
-                start_emergency=0, invalid_cancel=None, identifier="synthetic-v3"):
-        owner = SyntheticRetirementOwner(start_emergency=start_emergency, invalid_cancel=invalid_cancel)
+                start_emergency=0, invalid_cancel=None, identifier="synthetic-v3", owner=None):
+        owner = owner or SyntheticRetirementOwner(start_emergency=start_emergency, invalid_cancel=invalid_cancel)
         ledger, journal = SyntheticLedger(), Journal()
         policy = JoltPolicy(kind) if kind in ("bc", "residual") else None
         base = JoltPolicy("bc") if kind == "residual" else None
@@ -106,6 +138,120 @@ class JoltV3CaptureTests(unittest.TestCase):
             generator=torch.Generator().manual_seed(390103), maximum_decisions=maximum_decisions,
             execution_version=3)
         return owner, ledger, journal, result
+
+    def test_ordinary_arrival_keeps_native_task_terminal_without_retirement(self):
+        for kind in ("authored", "idle", "bc", "residual"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                owner, ledger, journal, (sample, row, sequence) = self.capture(
+                    Path(directory), kind=kind, owner=SyntheticBoundaryOwner("arrival"))
+                raw = read_episode(Path(directory) / row["artifact"])
+                self.assertEqual(read_sample_episode_v3(Path(directory) / row["sample_artifact"]).sha256, sample.sha256)
+            self.assertEqual(row["outcome"], {"schema": "nca-jolt-episode-outcome/v3", "kind": "task_terminal",
+                "complete": True, "success": True, "reason": "arrival"})
+            self.assertIsNone(row["retirement"])
+            self.assertEqual(row["decisions"], 2)
+            self.assertEqual(row["consumed_ticks"], 12)
+            self.assertEqual(row["metrics"]["capped_completion_seconds"], .2)
+            self.assertTrue(sample.decisions[-1].event.terminated)
+            self.assertFalse(sample.decisions[-1].event.truncated)
+            self.assertEqual(raw.events[-1].kind, "cancel")
+            self.assertEqual(raw.events[-1].reason, "task_arrival")
+            self.assertEqual(owner.calls, ["reset", "profile", "step", "step", "cancel"])
+            self.assertFalse(any(item["event"] == "safe_retirement_verified" for item in journal.records()))
+            self.assertEqual(ledger.counts["episodes_completed"], 1)
+            self.assertEqual(ledger.counts["bootstrap_forward"], 0)
+            self.assertEqual(row["bootstrap_reason"], "task_terminal")
+            if sequence is not None:
+                self.assertFalse(sequence.terminal_failure)
+                self.assertEqual(sequence.bootstrap_value, 0.)
+                self.assertTrue(sequence.transitions[-1].task_terminal)
+
+    def test_native_tick240_deadline_precedes_coincident_emergency_retirement(self):
+        for boundary in ("deadline", "deadline_emergency"):
+            for kind in ("authored", "idle", "bc", "residual"):
+                with self.subTest(boundary=boundary, kind=kind), tempfile.TemporaryDirectory() as directory:
+                    owner, ledger, journal, (sample, row, sequence) = self.capture(
+                        Path(directory), kind=kind, owner=SyntheticBoundaryOwner(boundary))
+                    raw = read_episode(Path(directory) / row["artifact"])
+                self.assertEqual(row["outcome"], {"schema": "nca-jolt-episode-outcome/v3", "kind": "task_terminal",
+                    "complete": True, "success": False, "reason": "task_deadline"})
+                self.assertIsNone(row["retirement"])
+                self.assertEqual(row["decisions"], 40)
+                self.assertEqual(row["consumed_ticks"], 240)
+                self.assertEqual(row["metrics"]["capped_completion_seconds"], 4.)
+                self.assertTrue(sample.decisions[-1].event.terminated)
+                self.assertFalse(sample.decisions[-1].event.truncated)
+                self.assertEqual(raw.events[-1].kind, "step")
+                self.assertTrue(raw.events[-1].next_observation["suspended"])
+                self.assertEqual(owner.calls.count("step"), 40)
+                self.assertNotIn("cancel", owner.calls)
+                self.assertFalse(any(item["event"] == "safe_retirement_verified" for item in journal.records()))
+                self.assertEqual(ledger.counts["checkpoint_executions"], 40 if kind in ("bc", "residual") else 0)
+                self.assertEqual(ledger.counts["bootstrap_forward"], 0)
+                self.assertEqual(row["bootstrap_reason"], "task_terminal")
+                if boundary == "deadline_emergency":
+                    self.assertTrue(all(record.overridden for record in sample.decisions[-8:]))
+                if sequence is not None:
+                    self.assertFalse(sequence.terminal_failure)
+                    self.assertEqual(sequence.bootstrap_value, 0.)
+                    self.assertTrue(sequence.transitions[-1].task_terminal)
+
+    def test_twelve_quiet_ticks_at_emergency48_resume_ordinary_control(self):
+        for kind in ("authored", "idle", "bc", "residual"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                owner, ledger, journal, (sample, row, sequence) = self.capture(
+                    Path(directory), kind=kind, owner=SyntheticBoundaryOwner("quiet_exit"))
+            self.assertEqual(row["outcome"]["kind"], "task_terminal")
+            self.assertEqual(row["outcome"]["reason"], "task_deadline")
+            self.assertIsNone(row["retirement"])
+            self.assertTrue(all(record.overridden for record in sample.decisions[:8]))
+            ordinary = sample.decisions[8]
+            self.assertEqual(ordinary.event.tick_before, 48)
+            self.assertFalse(ordinary.overridden)
+            self.assertEqual(ordinary.supervision_reason, "ordinary_control")
+            self.assertIsNotNone(ordinary.proposal)
+            self.assertEqual(row["supervisor_interventions"], 8)
+            self.assertFalse(any(item["event"] == "safe_retirement_verified" for item in journal.records()))
+            self.assertEqual(owner.calls.count("step"), 40)
+            if kind in ("bc", "residual"):
+                self.assertEqual(ledger.counts["inference_forward"], 32 * (2 if kind == "residual" else 1))
+            if sequence is not None:
+                self.assertFalse(sequence.terminal_failure)
+                self.assertEqual(row["policy_values"][:8], [None] * 8)
+                self.assertIsNotNone(row["policy_values"][8])
+                self.assertTrue(sequence.transitions[8].reset)
+
+    def test_quiet_exit_at_cutoff_retains_value_without_bootstrapping_a_masked_row(self):
+        torch.manual_seed(188)
+        with tempfile.TemporaryDirectory() as directory:
+            _, ledger, _, (sample, row, sequence) = self.capture(Path(directory), maximum_decisions=8,
+                owner=SyntheticBoundaryOwner("quiet_exit"))
+            raw = read_episode(Path(directory) / row["artifact"])
+            self.assertEqual(read_sample_episode_v3(Path(directory) / row["sample_artifact"]).sha256, sample.sha256)
+        self.assertEqual(row["outcome"]["kind"], "administrative_cutoff")
+        self.assertTrue(row["outcome"]["complete"])
+        self.assertIsNone(row["retirement"])
+        self.assertEqual(row["policy_values"], [None] * 8)
+        self.assertTrue(row["bootstrap_observation_valid"])
+        self.assertEqual(row["bootstrap_reason"], "received_cutoff_observation")
+        self.assertNotEqual(row["bootstrap_value"], 0.)
+        self.assertEqual(row["bootstrap_observation_sha256"], sha256_json(sample.decisions[-1].event.next_observation))
+        self.assertEqual(raw.evaluation["outcome"], row["outcome"])
+        self.assertEqual(ledger.counts["checkpoint_executions"], 8)
+        self.assertEqual(ledger.counts["inference_forward"], 0)
+        self.assertEqual(ledger.counts["bootstrap_forward"], 2)
+        self.assertEqual(sequence.bootstrap_value, 0.)
+        self.assertFalse(sequence.terminal_failure)
+        advantages, returns = generalized_advantages(sequence)
+        self.assertEqual(advantages.tolist(), [0.] * 8)
+        self.assertEqual(returns.tolist(), [0.] * 8)
+        # The execution-v3 projection changes no historical v2 validation.
+        legacy = JoltEpisode(sample.id, sample.split, sample.decisions, sample.status, sample.reason)
+        with self.assertRaisesRegex(ValueError, "invalid final state"):
+            rollout_sequence(legacy, [0.] * 8, bootstrap_value=row["bootstrap_value"], final_observation_valid=True)
+        for invalid in (float("nan"), float("inf")):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                rollout_sequence_v3(sample, [None] * 8, bootstrap_value=invalid, final_observation_valid=True)
 
     def test_shared_safe_rule_completes_unsuccessful_capture_for_every_comparator(self):
         for kind in ("authored", "idle", "bc", "residual"):

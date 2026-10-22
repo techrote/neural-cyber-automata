@@ -11,7 +11,9 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import math
-from pathlib import Path
+import os
+from pathlib import Path, PurePosixPath
+import stat
 import subprocess
 
 from nca.contracts import ContractError, sha256_json, strict_json_loads
@@ -210,20 +212,51 @@ def verify_closed_costs(output, result, audit):
 
 def verify_inventory(output):
     output = Path(output)
-    inventory = _read(output / "inventory.json")
-    _need(inventory.get("schema") == "jolt-closed-inventory/v1" and isinstance(inventory.get("files"), dict),
+    _need(stat.S_ISDIR(output.lstat().st_mode), "closed inventory requires an original directory")
+    inventory_path = output / "inventory.json"
+    inventory_info = inventory_path.lstat()
+    _need(stat.S_ISREG(inventory_info.st_mode) and inventory_info.st_nlink == 1,
+          "closed inventory requires an original regular manifest without links")
+    inventory = _read(inventory_path)
+    _need(isinstance(inventory, dict) and inventory.get("schema") == "jolt-closed-inventory/v1"
+          and isinstance(inventory.get("files"), dict),
           "unknown closed inventory")
     files = inventory["files"]
-    paths = list(output.rglob("*"))
-    _need(not output.is_symlink() and all(not path.is_symlink() for path in paths),
-          "closed inventory cannot contain links")
-    actual = {path.relative_to(output).as_posix() for path in paths if path.is_file()}
-    _need(actual == set(files) | {"inventory.json"}, "closed inventory has missing or extra files")
+    directories = set()
+    for relative in files:
+        _need(isinstance(relative, str) and relative and "\\" not in relative,
+              "closed inventory requires canonical relative file names")
+        name = PurePosixPath(relative)
+        _need(not name.is_absolute() and name.as_posix() == relative and name.parts
+              and ".." not in name.parts and relative != "inventory.json",
+              "closed inventory requires canonical relative file names")
+        directories.update(parent.as_posix() for parent in name.parents if parent != PurePosixPath("."))
+    expected_files = set(files) | {"inventory.json"}
+    actual = set()
+    pending = [output]
+    while pending:
+        # Inspect metadata without opening special entries or following links.
+        # Only ancestors of declared files may be directories: an unexpected
+        # empty tree is evidence drift just as an extra ordinary file is.
+        with os.scandir(pending.pop()) as entries:
+            for entry in entries:
+                path = Path(entry.path)
+                relative = path.relative_to(output).as_posix()
+                metadata = entry.stat(follow_symlinks=False)
+                mode = metadata.st_mode
+                _need(not stat.S_ISLNK(mode), "closed inventory cannot contain links")
+                if stat.S_ISDIR(mode):
+                    _need(relative in directories, "closed inventory has an unexpected directory")
+                    pending.append(path)
+                else:
+                    _need(stat.S_ISREG(mode), "closed inventory contains a special or nonregular file")
+                    _need(metadata.st_nlink == 1, "closed inventory cannot contain hard links")
+                    _need(relative in expected_files, "closed inventory has missing or extra files")
+                    actual.add(relative)
+    _need(actual == expected_files, "closed inventory has missing or extra files")
     for relative, expected in files.items():
         path = output / relative
-        _need(not Path(relative).is_absolute() and ".." not in Path(relative).parts
-              and not path.is_symlink() and path.resolve().is_relative_to(output.resolve())
-              and file_identity(path) == expected, "inventoried bytes changed")
+        _need(file_identity(path) == expected, "inventoried bytes changed")
     from nca.evaluation.jolt_journal_v3 import journal_identity_v3
     chain = journal_identity_v3(output / "owner-journal.jsonl")
     result, audit = _read(output / "result.json"), _read(output / "independent-readback.json")
@@ -246,11 +279,16 @@ def verify_inventory(output):
 
 def verify_execution(output, *, terminal_stdout, observed_exit_code, observed_exit_elapsed_seconds):
     from nca.train.jolt_executor_v3 import verify_lifecycle
+    from nca.train.jolt_storage_v3 import file_identity_v3
     output = Path(output)
+    _need(stat.S_ISDIR(output.lstat().st_mode), "execution requires an original output directory")
+    # This binding is checked before the complete tree inventory. Refuse a
+    # substituted FIFO/link here instead of opening it in the initial hash.
+    declaration_identity = file_identity_v3(output / "declaration.json", maximum_bytes=1_048_576)
     result = verify_lifecycle(output.with_name(output.name + "-lifecycle"),
         terminal_stdout=terminal_stdout, observed_exit_code=observed_exit_code,
         observed_exit_elapsed_seconds=observed_exit_elapsed_seconds,
-        expected_declaration=file_identity(output / "declaration.json"))
+        expected_declaration=declaration_identity)
     if not result["completed"]:
         return {**result, "scope": "bound_execution_and_worker_output", "qualified": False}
     inventory = verify_inventory(output)

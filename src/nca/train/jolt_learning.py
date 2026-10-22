@@ -424,13 +424,30 @@ def rollout_sequence_v3(episode: JoltEpisodeV3, values: Sequence[float | None], 
         raise ValueError("safe failure cannot acquire a bootstrap value observation")
     if len(values) != len(episode.decisions):
         raise ValueError("v3 PPO values must match the exact retained physical rows")
+    if type(bootstrap_value) not in (int, float) or not math.isfinite(bootstrap_value):
+        raise ValueError("v3 PPO requires a finite original cutoff value")
     for record, value in zip(episode.decisions, values):
         if (value is None) != (record.proposal is None):
             raise ValueError("v3 preserves absent model values on value-less override intervals")
     # This zero is an internal masked tensor placeholder, never a model value
     # observation in retained evidence. Invalid rows train neither loss head.
     numeric = [0. if value is None else float(value) for value in values]
-    original = rollout_sequence(episode, numeric, bootstrap_value=bootstrap_value,
+    learning_bootstrap = bootstrap_value
+    if episode.decisions:
+        last = episode.decisions[-1]
+        event = last.event
+        if (episode.outcome["kind"] == "administrative_cutoff"
+                and final_observation_valid is True and last.proposal is None
+                and last.overridden and last.observation_valid and last.admitted
+                and event.valid and event.trace_complete and last.actual_ticks == 6
+                and event.truncated and not event.terminated and event.next_observation is not None):
+            # Recovery can finish at the cutoff peek after a consumed override.
+            # Its real value/observation and forward charges remain in capture
+            # and independent replay. The unchanged GAE mask discards this last
+            # row and cuts the trace, so only its unused tensor placeholder is
+            # zero. Ordinary cutoffs and legacy validation keep their meaning.
+            learning_bootstrap = 0.
+    original = rollout_sequence(episode, numeric, bootstrap_value=learning_bootstrap,
                                 final_observation_valid=final_observation_valid)
     return JoltRolloutSequenceV3(original.episode_id, original.transitions, original.bootstrap_value,
                                 terminal_failure, sha256_json(episode.outcome))

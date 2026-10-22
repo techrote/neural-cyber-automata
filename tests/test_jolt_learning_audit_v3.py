@@ -41,7 +41,7 @@ if TORCH_AVAILABLE:
     from nca.train.jolt_execution_v3 import COUNTERS, STAGES
     from nca.train.jolt_screen import capture
     from nca.train.jolt_storage_v3 import BoundedVerifiedJournalV3, episode_byte_limit
-    from test_jolt_learning_v3 import SyntheticRetirementOwner, SyntheticLedger
+    from test_jolt_learning_v3 import SyntheticBoundaryOwner, SyntheticRetirementOwner, SyntheticLedger
     from test_jolt_screen import FakeSocket, Journal
 
 
@@ -168,8 +168,9 @@ class JoltQualificationV3Tests(unittest.TestCase):
 
 @unittest.skipUnless(TORCH_AVAILABLE, "optional CPU learning extra is not installed")
 class JoltAuditV3Tests(unittest.TestCase):
-    def captured(self, output, *, kind="residual", start_emergency=0, maximum_decisions=40, prior_decisions=0):
-        owner = SyntheticRetirementOwner(start_emergency=start_emergency)
+    def captured(self, output, *, kind="residual", start_emergency=0, maximum_decisions=40, prior_decisions=0,
+                 owner=None):
+        owner = owner or SyntheticRetirementOwner(start_emergency=start_emergency)
         ledger, journal = SyntheticLedger(), Journal()
         torch.manual_seed(188)
         policy = JoltPolicy(kind) if kind in ("bc", "residual") else None
@@ -203,6 +204,70 @@ class JoltAuditV3Tests(unittest.TestCase):
         bundle["proposals"] = [item for item in journal.records() if item["event"] == "decision_proposed"]
         return SimpleNamespace(audit=audit, bundle=bundle, row=row, sample=sample,
                                ledger=ledger, costs=costs, owner=owner, journal=journal, sequence=sequence)
+
+    def test_original_arrival_and_native_deadline_roundtrip_without_safe_failure(self):
+        for boundary, expected_reason, expected_ticks in (("arrival", "arrival", 12),
+                                                          ("deadline", "task_deadline", 240)):
+            for kind in ("authored", "idle", "bc", "residual"):
+                with self.subTest(boundary=boundary, kind=kind), tempfile.TemporaryDirectory() as directory:
+                    fixture = self.captured(Path(directory), kind=kind, owner=SyntheticBoundaryOwner(boundary))
+                    fixture.audit.episode(fixture.bundle)
+                self.assertEqual(fixture.row["outcome"]["kind"], "task_terminal")
+                self.assertEqual(fixture.row["outcome"]["reason"], expected_reason)
+                self.assertIsNone(fixture.row["retirement"])
+                self.assertEqual(fixture.audit.verified_rows[0]["consumed_ticks"], expected_ticks)
+                self.assertEqual(fixture.audit.verified_rows[0]["metrics_sha256"], sha256_json(fixture.row["metrics"]))
+                self.assertEqual(fixture.audit.executions, fixture.ledger.counts["checkpoint_executions"])
+                self.assertEqual(fixture.audit.runtime_forwards, fixture.ledger.counts["inference_forward"])
+                self.assertEqual(fixture.audit.bootstrap_forwards, 0)
+
+    def test_native_deadline_cannot_be_relabelled_as_coincident_emergency_failure(self):
+        for kind in ("authored", "idle", "bc", "residual"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                fixture = self.captured(Path(directory), kind=kind,
+                                        owner=SyntheticBoundaryOwner("deadline_emergency"))
+                fixture.audit.episode(fixture.bundle)
+                self.assertEqual(fixture.row["supervisor_interventions"], 8)
+                self.assertEqual(fixture.row["outcome"]["reason"], "task_deadline")
+                self.assertTrue(fixture.sample.decisions[-1].event.terminated)
+                self.assertEqual(fixture.audit.executions, fixture.ledger.counts["checkpoint_executions"])
+                # A complete consumed task terminal cannot be exchanged for
+                # an unconsumed, would-be 48-tick supervisory attempt.
+                from nca.data.jolt_samples import reconstructed_history
+                final = fixture.sample.decisions[-1]
+                with self.assertRaisesRegex(ContractError, "earlier task terminal"):
+                    validate_safe_retirement_v3(fixture.sample.decisions, final.event.next_observation,
+                        fixture.bundle["goal"], fixture.bundle["context"], reconstructed_history(final),
+                        "ordinary_attempt", after_cancel=final.event.next_observation)
+
+    def test_independent_replay_preserves_quiet_exit_before_emergency_expiry(self):
+        for kind in ("authored", "idle", "bc", "residual"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                fixture = self.captured(Path(directory), kind=kind, owner=SyntheticBoundaryOwner("quiet_exit"))
+                fixture.audit.episode(fixture.bundle)
+            self.assertEqual(fixture.row["supervisor_interventions"], 8)
+            self.assertEqual(fixture.sample.decisions[8].event.tick_before, 48)
+            self.assertFalse(fixture.sample.decisions[8].overridden)
+            self.assertIsNone(fixture.row["retirement"])
+            self.assertEqual(fixture.audit.runtime_forwards, fixture.ledger.counts["inference_forward"])
+            self.assertEqual(fixture.audit.executions, fixture.ledger.counts["checkpoint_executions"])
+            self.assertEqual(fixture.audit.bootstrap_forwards, 0)
+            self.assertEqual(fixture.audit.verified_rows[0]["consumed_ticks"], 240)
+
+    def test_quiet_exit_cutoff_replays_actual_value_and_masked_gae_separately(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.captured(Path(directory), maximum_decisions=8, prior_decisions=248,
+                                    owner=SyntheticBoundaryOwner("quiet_exit"))
+            fixture.audit.episode(fixture.bundle)
+        self.assertEqual(fixture.row["outcome"]["kind"], "administrative_cutoff")
+        self.assertNotEqual(fixture.row["bootstrap_value"], 0.)
+        self.assertEqual(fixture.sequence.bootstrap_value, 0.)
+        self.assertEqual(fixture.audit.bootstrap_forwards, 2)
+        self.assertEqual(fixture.audit.runtime_forwards, 0)
+        self.assertEqual(fixture.audit.executions, 8)
+        self.assertEqual(fixture.costs["audit_forward"], 2)
+        self.assertEqual(fixture.audit.verified_rows[0]["consumed_ticks"], 48)
+        self.assertEqual(fixture.audit.verified_rows[0]["metrics_sha256"], sha256_json(fixture.row["metrics"]))
 
     def test_every_comparator_replays_complete_unsuccessful_native_retirement(self):
         for kind in ("authored", "idle", "bc", "residual"):
