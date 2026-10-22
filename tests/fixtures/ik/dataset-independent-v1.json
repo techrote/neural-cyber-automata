@@ -1,0 +1,59 @@
+{
+  "schema": "nca-ik-independent-dataset-fixtures/v1",
+  "evidence_kind": "opened_development_conformance_only",
+  "physical_episodes": false,
+  "sealed_qualification_coverage": false,
+  "runner": {
+    "profile": "runner-right-sole@1",
+    "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+    "formula": "(3.6,2.8) + R(hip)*(0,4.95) + R(hip+ankle)*(1,1.25)",
+    "branch_formula": "sign(sin(ankle + atan2(1.25,1) - pi/2))",
+    "only_admitted_branch": "negative",
+    "hard_bounds": [[-0.75, 0.75], [-0.3, 0.3]],
+    "command_bounds": [[-0.72, 0.72], [-0.27, 0.27]],
+    "nominal_workspace": [[-0.6, 0.6], [-0.2, 0.2]],
+    "poses": [
+      {"q": [0, 0], "point": [4.6, 9.0]},
+      {"q": [0.1, 0], "point": [3.976036982067691, 9.068859241370589]},
+      {"q": [0, 0.1], "point": [4.470212394469491, 9.093588623244361]},
+      {"q": [0.2, -0.1], "point": [3.486799207033938, 8.994918183558507]}
+    ],
+    "frame": {"root_position": [10, 20], "root_angle": 1.5707963267948966,
+      "point_root": [4.6, 9.0], "point_world": [1.0, 24.6]}
+  },
+  "synthetic_two_link": {
+    "identity": "dataset-fixture-equal-two-link@1",
+    "lengths": [1, 1],
+    "bounds": [[-3.141592653589793, 3.141592653589793], [-3.141592653589793, 3.141592653589793]],
+    "formula": "(cos(q1)+cos(q1+q2), sin(q1)+sin(q1+q2))",
+    "runner_coverage": false,
+    "cases": [
+      {"id": "positive-posture", "target": [1, 1], "current": [0, 0.1],
+        "posture": [0, 0.1], "expected_q": [0, 1.5707963267948966],
+        "branch": "positive", "numeric_status": "solved", "analytic_status": "solved", "pose_loss": true},
+      {"id": "negative-posture", "target": [1, 1], "current": [1, -0.1],
+        "posture": [1, -0.1], "expected_q": [1.5707963267948966, -1.5707963267948966],
+        "branch": "negative", "numeric_status": "solved", "analytic_status": "solved", "pose_loss": true},
+      {"id": "straight-singular", "target": [2, 0], "current": [0, 0],
+        "posture": [0, 0], "expected_q": [0, 0], "branch": "singular",
+        "numeric_status": "solved", "analytic_status": "solved", "pose_loss": true},
+      {"id": "near-singular", "target": [1.9999997500000053, 0],
+        "current": [-0.0005, 0.001], "posture": [-0.0005, 0.001],
+        "expected_q": [-0.0005, 0.001], "branch": "positive",
+        "numeric_status": "solved", "analytic_status": "solved", "pose_loss": true},
+      {"id": "folded-continuum", "target": [0, 0], "current": [0.2, 3.141592653589793],
+        "posture": [0.2, 3.141592653589793], "expected_q": [0.2, 3.141592653589793],
+        "branch": "singular", "numeric_status": "solved", "analytic_status": "solved", "pose_loss": true},
+      {"id": "outside-annulus", "target": [3, 0], "current": [0, 0], "posture": [0, 0],
+        "expected_q": null, "branch": null, "numeric_status": "best_effort",
+        "analytic_status": "geometrically_infeasible", "pose_loss": false},
+      {"id": "iteration-exhausted", "target": [1, 1], "current": [0, 0.1], "posture": [0, 0.1],
+        "max_iterations": 0, "expected_q": null, "branch": null,
+        "numeric_status": "iteration_budget_exhausted", "analytic_status": "solved", "pose_loss": false}
+    ]
+  },
+  "malformed_specimens": [
+    {"id": "nonfinite-target", "encoding": "literal-json-text", "text": "{\"target\":[NaN,1]}", "expected": "nonfinite"},
+    {"id": "duplicate-target-key", "encoding": "literal-json-text", "text": "{\"target\":[0,1],\"target\":[1,0]}", "expected": "duplicate_field"}
+  ]
+}

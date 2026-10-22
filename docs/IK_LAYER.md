@@ -3,7 +3,7 @@ title: Runner point-IK contracts
 kind: reference
 summary: Registered nominal geometry, source-bound IK requests and results, and the boundary to CUDA training and physical tracking.
 owns: [ik.contracts, ik.runner_profile, ik.nominal_geometry]
-verified: 2026-10-21
+verified: 2026-10-22
 ---
 
 # Runner point-IK contracts
@@ -21,6 +21,10 @@ The separate [IK runtime](IK_RUNTIME.md) now supplies optional device support,
 a bounded fixed-profile inverse-workload smoke and complete optimizer-boundary
 resume. Its [CPU software conformance](evidence/2026-10-21-ik-runtime-software.md)
 does not establish actual CUDA execution, a general inverse solver or IK quality.
+
+The [dataset increment](IK_DATASETS.md) adds deterministic geometric tasks,
+branch/status-aware labels, guarded family splits and single-use final evaluation
+access. Its data-quality evidence does not qualify a learned inverse model.
 
 The [acceptance declaration](IK_ACCEPTANCE.md) freezes prospective numerical,
 runtime and physical gates. The [host handoff](IK_HOST_HANDOFF.md) specifies the
