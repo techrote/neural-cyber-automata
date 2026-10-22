@@ -1,0 +1,61 @@
+{
+  "schema": "nca-jolt-cpu-reference/v1",
+  "purpose": "Approximate cross-runner diagnostic time normalization; not training, benchmark qualification or execution admission.",
+  "source_revision": "0ce035ec0440167abb878d90dda22c25ed8d1fe9",
+  "source_sha256": "abcd3af00f9c9d0bf0e272aac8349c390caae80b901ef6794b91a4b33f7ca790",
+  "origin": {
+    "workflow_run_url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39873284613",
+    "artifact_name": "jolt-003-memory-prepass-39873284613",
+    "report_name": "jolt-003-memory-report.json",
+    "report_bytes": 40277,
+    "report_sha256": "8d5ec26733595bca732adc83a62fc28a7fbaafc1d705b1eb9b18b52049049705",
+    "artifact_zip_sha256": "74f155aac946cee3a26493b5e83ffe319eb8f615361d34a4ddbd6da3d3da6dcf"
+  },
+  "runtime": {
+    "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "interop_threads": 1,
+    "kernel": "6.17.0-1022-azure",
+    "libc": [
+      "glibc",
+      "2.39"
+    ],
+    "logical_cpus_available": 4,
+    "machine": "x86_64",
+    "numpy": "2.3.5",
+    "python": "3.12.10",
+    "system": "Linux",
+    "threads": 1,
+    "torch": "2.8.0+cpu"
+  },
+  "runtime_software_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "cpu_calibration": {
+    "block_bytes": 65536,
+    "bytes_per_second": 1643390192.8393824,
+    "iterations": 1024,
+    "measured_seconds": [
+      0.04083562399995344,
+      0.040940815999988445,
+      0.04062013499998329
+    ],
+    "method": "sha256_64kib_fixed_buffer_v1",
+    "not_a_host_or_neural_workload": true,
+    "repetitions": 3,
+    "runtime_identity_not_a_gate": true,
+    "schema": "nca-jolt-cpu-calibration/v1",
+    "single_core_proxy_only": true
+  },
+  "measurement_summary": {
+    "maximum_overlapping_worker_plus_idle_native_rss_bytes": 639930368,
+    "worker_maximum_rss_bytes": 490520576,
+    "native_maximum_rss_bytes": 149475328,
+    "training_run": false,
+    "full_worker_peak_memory_qualified": false
+  },
+  "planning_only": true,
+  "experiments_consumed": 0,
+  "cpu_model_exact_matching_required": false,
+  "normalization_changes_latency_quality_gate": false,
+  "reference_seconds_expression": "raw_seconds * observed_calibration_bytes_per_second / reference_calibration_bytes_per_second"
+}
