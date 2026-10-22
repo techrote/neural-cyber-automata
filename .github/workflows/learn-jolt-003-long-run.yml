@@ -1,0 +1,244 @@
+name: LEARN-JOLT-003 admitted long run
+
+# Deliberately manual. Ordinary CI must never consume the single CPU allocation.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Preflight (no experiment) or single admitted execution"
+        type: choice
+        options:
+          - preflight
+          - execute
+        default: preflight
+        required: true
+      executable_sha:
+        description: "Exact reviewed 40-character executable commit (required for execute)"
+        type: string
+        required: false
+      admission_sha:
+        description: "40-character commit with published resource record and final reviews"
+        type: string
+        required: false
+      resource_path:
+        description: "Resource admission JSON, relative to admission checkout (docs/evidence/...)"
+        type: string
+        required: false
+      terminal_review_path:
+        description: "Final terminal-learning review JSON (docs/evidence/...)"
+        type: string
+        required: false
+      envelope_review_path:
+        description: "Final operation/serialization review JSON (docs/evidence/...)"
+        type: string
+        required: false
+
+run-name: "LEARN-JOLT-003 ${{ inputs.mode } / ${{ github.run_id }"
+
+concurrency:
+  group: nca-learn-jolt-003-20261022-a1
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  long-run:
+    name: "CPU ${{ inputs.mode } (single-use admission)"
+    if: github.repository == 'techrote/neural-cyber-automata'
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONPATH: src
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NCA_RUN_MODE: ${{ inputs.mode }
+      NCA_EXECUTABLE_SHA: ${{ inputs.executable_sha }
+      NCA_ADMISSION_SHA: ${{ inputs.admission_sha }
+      NCA_RESOURCE_PATH: ${{ inputs.resource_path }
+      NCA_TERMINAL_REVIEW_PATH: ${{ inputs.terminal_review_path }
+      NCA_ENVELOPE_REVIEW_PATH: ${{ inputs.envelope_review_path }
+      NCA_ALLOCATION_ID: learn-jolt-003-20261022-a1
+
+    steps:
+      - name: Validate manual request before checking out any executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$NCA_RUN_MODE" != preflight && "$NCA_RUN_MODE" != execute ]]; then
+            echo "Unsupported mode"; exit 2
+          fi
+          if [[ "$NCA_RUN_MODE" == execute ]]; then
+            if [[ "$GITHUB_REF_NAME" != main || "$GITHUB_RUN_ATTEMPT" != 1 ]]; then
+              echo "Execution requires main and the first attempt"; exit 2
+            fi
+            for sha in "$NCA_EXECUTABLE_SHA" "$NCA_ADMISSION_SHA"; do
+              if [[ ! "$sha" =~ ^[0-9a-f]{40}$ ]]; then
+                echo "Execution requires both full immutable commit identifiers"; exit 2
+              fi
+            done
+            for path in "$NCA_RESOURCE_PATH" "$NCA_TERMINAL_REVIEW_PATH" "$NCA_ENVELOPE_REVIEW_PATH"; do
+              if [[ "$path" != docs/evidence/*.json || "$path" == *..* || "$path" == /* ]]; then
+                echo "All admission inputs must be published JSON in docs/evidence"; exit 2
+              fi
+            done
+          elif [[ -n "$NCA_EXECUTABLE_SHA" && ! "$NCA_EXECUTABLE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Preflight executable SHA must be a full commit identifier"; exit 2
+          fi
+          echo "NCA_EXEC_REF=${{ inputs.executable_sha || github.sha }" >> "$GITHUB_ENV"
+          echo "NCA_ADMISSION_REF=${{ inputs.admission_sha || github.sha }" >> "$GITHUB_ENV"
+          echo "NCA_EVIDENCE_ROOT=$RUNNER_TEMP/nca-jolt-003-evidence" >> "$GITHUB_ENV"
+          echo "NCA_JOLT_OUTPUT=$RUNNER_TEMP/nca-jolt-003-evidence/learn-jolt-003-20261022-a1" >> "$GITHUB_ENV"
+          echo "NCA_JOLT_DECLARATION=$RUNNER_TEMP/nca-jolt-003-evidence/receipts/declaration.json" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/nca-jolt-003-evidence/receipts"
+
+      - name: Checkout exact executable source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.NCA_EXEC_REF }
+          path: source
+          persist-credentials: false
+
+      - name: Checkout published independent admission evidence
+        if: inputs.mode == 'execute'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.NCA_ADMISSION_REF }
+          path: admission
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+
+      - name: Install pinned CPU runtime
+        working-directory: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install setuptools==84.0.0 wheel==0.45.1 numpy==2.3.5
+          python -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-build-isolation .
+          python -c "import torch, numpy; assert torch.__version__ == '2.8.0+cpu'; assert numpy.__version__ == '2.3.5'; assert not torch.cuda.is_available()"
+
+      - name: Prepare and independently identify accepted host
+        working-directory: source
+        shell: bash
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-jolt-003-host" --github-env "$GITHUB_ENV"
+
+      - name: Read-only resource and source preflight
+        working-directory: source
+        shell: bash
+        run: |
+          python tools/jolt_ci_workflow_v3.py probe \
+            --config configs/learning/jolt-learn-003-v2.json \
+            --output-parent "$NCA_EVIDENCE_ROOT" \
+            --receipt "$NCA_EVIDENCE_ROOT/receipts/preflight.json"
+
+      # No fallback to synthetic reviews, missing memory evidence or mismatched source.
+      - name: Freeze the single admitted prospective declaration
+        if: inputs.mode == 'execute'
+        working-directory: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/learn_jolt.py freeze-v3 \
+            --config configs/learning/jolt-learn-003-v2.json \
+            --checkout "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
+            --output "$NCA_JOLT_OUTPUT" \
+            --declaration "$NCA_JOLT_DECLARATION" \
+            --resource-admission "$GITHUB_WORKSPACE/admission/$NCA_RESOURCE_PATH" \
+            --review "$GITHUB_WORKSPACE/admission/$NCA_TERMINAL_REVIEW_PATH" \
+            --review "$GITHUB_WORKSPACE/admission/$NCA_ENVELOPE_REVIEW_PATH" \
+            --allocation-id "$NCA_ALLOCATION_ID" \
+            --authorization-ref 'https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584'
+
+      - name: Independently reread the frozen declaration and current disk gate
+        if: inputs.mode == 'execute'
+        working-directory: source
+        shell: bash
+        run: |
+          python tools/jolt_ci_workflow_v3.py attest \
+            --config configs/learning/jolt-learn-003-v2.json \
+            --declaration "$NCA_JOLT_DECLARATION" \
+            --checkout "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
+            --output "$NCA_JOLT_OUTPUT" \
+            --receipt "$NCA_EVIDENCE_ROOT/receipts/freeze-readback.json"
+
+      # The claim is durable on issue #62. It is published *before* any
+      # experiment invocation, and an earlier claim permanently refuses reuse.
+      - name: Record the one-time allocation claim and independently read it back
+        if: inputs.mode == 'execute'
+        working-directory: source
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }
+        run: |
+          python tools/jolt_ci_workflow_v3.py claim \
+            --declaration "$NCA_JOLT_DECLARATION" \
+            --attestation "$NCA_EVIDENCE_ROOT/receipts/freeze-readback.json" \
+            --receipt "$NCA_EVIDENCE_ROOT/receipts/one-time-claim.json"
+
+      - name: Run actual Jolt teacher, BC, PPO and paired comparisons
+        id: training
+        if: inputs.mode == 'execute'
+        working-directory: source
+        shell: bash
+        run: |
+          set -uo pipefail
+          python tools/observe_jolt_v3.py \
+            --config configs/learning/jolt-learn-003-v2.json \
+            --declaration "$NCA_JOLT_DECLARATION" \
+            --checkout "$NCA_HOST_CHECKOUT" --godot "$NCA_GODOT" \
+            --output "$NCA_JOLT_OUTPUT" \
+            > "$NCA_EVIDENCE_ROOT/receipts/observer-cli.stdout" \
+            2> "$NCA_EVIDENCE_ROOT/receipts/observer-cli.stderr"
+          observed=$?
+          printf '%s\n' "$observed" > "$NCA_EVIDENCE_ROOT/receipts/observer-cli.exit"
+          exit "$observed"
+
+      - name: Independent final closed-inventory verification
+        if: inputs.mode == 'execute' && steps.training.outcome == 'success'
+        working-directory: source
+        shell: bash
+        run: |
+          python tools/learn_jolt.py inventory-v3 --output "$NCA_JOLT_OUTPUT" \
+            > "$NCA_EVIDENCE_ROOT/receipts/closed-inventory.json"
+
+      - name: Hash all available original evidence without modifying it
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f source/tools/jolt_ci_workflow_v3.py ]]; then
+            PYTHONPATH=source/src python source/tools/jolt_ci_workflow_v3.py inventory \
+              --root "$RUNNER_TEMP/nca-jolt-003-evidence" \
+              --receipt "$RUNNER_TEMP/nca-jolt-003-manifest.json"
+          fi
+
+      - name: Upload receipts and SHA-256 inventory even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "jolt-003-receipts-${{ github.run_id }"
+          path: |
+            ${{ runner.temp }/nca-jolt-003-evidence/receipts/
+            ${{ runner.temp }/nca-jolt-003-manifest.json
+          retention-days: 90
+          if-no-files-found: warn
+          include-hidden-files: true
+
+      - name: Upload original raw and partial evidence even on failure
+        if: always() && inputs.mode == 'execute'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "jolt-003-raw-${{ github.run_id }"
+          path: |
+            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1/
+            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-lifecycle/
+            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stdout.log
+            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stderr.log
+            ${{ runner.temp }/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-observed-exit.json
+          retention-days: 90
+          if-no-files-found: warn
+          include-hidden-files: true
