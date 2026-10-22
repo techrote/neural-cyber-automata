@@ -30,11 +30,18 @@ GODOT_LINUX_RELEASE = (
 )
 
 
-def run(arguments: list[str], *, env: dict[str, str] | None = None) -> None:
-    subprocess.run(arguments, check=True, env=env, timeout=300)
+def run(arguments: list[str], *, env: dict[str, str] | None = None,
+        timeout: float | None = 300) -> None:
+    subprocess.run(arguments, check=True, env=env, timeout=timeout)
 
 
-def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Path, dict]:
+def prepare(destination: Path, executable: Path | None = None, *,
+            unbounded: bool = False) -> tuple[Path, Path, dict]:
+    # The explicit long-running experimental workflow has no repository
+    # time ceilings. Retain the historical setup timeouts in ordinary CI.
+    git_timeout = None if unbounded else 300
+    download_timeout = None if unbounded else 120
+    host_probe_timeout = None if unbounded else 15
     destination = destination.resolve()
     destination.mkdir(parents=True, exist_ok=True)
     host = destination / "cybersand"
@@ -42,12 +49,12 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
         if host.exists() and any(host.iterdir()):
             raise RuntimeError("destination contains an unrelated nonempty host directory")
         host.mkdir(exist_ok=True)
-        run(["git", "-C", str(host), "init"])
-        run(["git", "-C", str(host), "remote", "add", "origin", "https://github.com/techrote/cybersand.git"])
+        run(["git", "-C", str(host), "init"], timeout=git_timeout)
+        run(["git", "-C", str(host), "remote", "add", "origin", "https://github.com/techrote/cybersand.git"], timeout=git_timeout)
         environment = os.environ.copy()
         environment["GIT_LFS_SKIP_SMUDGE"] = "1"
-        run(["git", "-C", str(host), "fetch", "--depth=1", "origin", PINNED_HOST_REVISION], env=environment)
-        run(["git", "-C", str(host), "checkout", "--detach", "FETCH_HEAD"], env=environment)
+        run(["git", "-C", str(host), "fetch", "--depth=1", "origin", PINNED_HOST_REVISION], env=environment, timeout=git_timeout)
+        run(["git", "-C", str(host), "checkout", "--detach", "FETCH_HEAD"], env=environment, timeout=git_timeout)
     actual = subprocess.check_output(["git", "-C", str(host), "rev-parse", "HEAD"], text=True).strip()
     if actual != PINNED_HOST_REVISION:
         raise RuntimeError("existing checkout is a different revision; select an empty destination")
@@ -59,8 +66,8 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
                      "godot/addons/godot-rapier2d/bin/libgodot_rapier.linux.x86_64-unknown-linux-gnu.so")
     else:
         raise RuntimeError("this setup has no qualified runtime recipe for this platform")
-    run(["git", "-C", str(host), "lfs", "install", "--local"])
-    run(["git", "-C", str(host), "lfs", "pull", f"--include={libraries}", "--exclude="])
+    run(["git", "-C", str(host), "lfs", "install", "--local"], timeout=git_timeout)
+    run(["git", "-C", str(host), "lfs", "pull", f"--include={libraries}", "--exclude="], timeout=git_timeout)
     lock = json.loads((host / "third_party/godot-runtime.lock.json").read_text())
     if executable is None:
         if os.name == "nt":
@@ -69,7 +76,7 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
         if not archive.exists():
             temporary = archive.with_suffix(".download")
             try:
-                with urllib.request.urlopen(GODOT_LINUX_RELEASE, timeout=120) as source, temporary.open("wb") as output:
+                with urllib.request.urlopen(GODOT_LINUX_RELEASE, timeout=download_timeout) as source, temporary.open("wb") as output:
                     remaining = int(lock["editor"]["size"])
                     while remaining > 0:
                         block = source.read(min(1024 * 1024, remaining))
@@ -94,7 +101,7 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
             executable = Path(package.extract(names[0], runtime_dir))
         executable.chmod(executable.stat().st_mode | stat.S_IXUSR)
     executable = executable.resolve()
-    identity = inspect_host(host, executable)
+    identity = inspect_host(host, executable, timeout=host_probe_timeout)
     # Imports initialize engine caches; no tracked host source is changed.
     environment = os.environ.copy()
     for variable, folder in (("XDG_DATA_HOME", "data"), ("XDG_CONFIG_HOME", "config"), ("XDG_CACHE_HOME", "cache")):
@@ -103,10 +110,10 @@ def prepare(destination: Path, executable: Path | None = None) -> tuple[Path, Pa
             path.mkdir(exist_ok=True)
             environment[variable] = str(path)
     imported = subprocess.run([str(executable), "--headless", "--path", str(host / "godot"), "--editor", "--import"],
-                              env=environment, capture_output=True, text=True, timeout=120)
+                              env=environment, capture_output=True, text=True, timeout=download_timeout)
     if imported.returncode or "ERROR:" in imported.stdout or "ERROR:" in imported.stderr:
         raise RuntimeError("Godot import failed: " + imported.stdout[-4000:] + imported.stderr[-4000:])
-    inspect_host(host, executable)
+    inspect_host(host, executable, timeout=host_probe_timeout)
     return host, executable, identity
 
 
@@ -114,9 +121,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--godot", type=Path)
+    parser.add_argument("--unbounded", action="store_true",
+                        help="Remove setup timeouts for the explicitly manual long-running experiment")
     parser.add_argument("--github-env", type=Path, help="Append only host/runtime variables to the supplied CI environment file")
     args = parser.parse_args()
-    host, godot, identity = prepare(args.destination, args.godot)
+    host, godot, identity = prepare(args.destination, args.godot, unbounded=args.unbounded)
     if args.github_env:
         with args.github_env.open("a", encoding="utf-8") as output:
             output.write(f"NCA_HOST_CHECKOUT={host}\nNCA_GODOT={godot}\n")
