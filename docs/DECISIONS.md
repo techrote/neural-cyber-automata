@@ -3,7 +3,7 @@ title: Decisions
 kind: decisions
 summary: Current owner scope and gameplay fidelity, research proposals, and preserved historical decisions.
 owns: [decisions.register]
-verified: 2026-10-20
+verified: 2026-10-22
 ---
 
 # Decisions
@@ -13,6 +13,25 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+
+### D-018 — Calculate and review a separately versioned Jolt follow-up
+
+[ACCEPTED] 2026-10-22 by owner: calculate and review a new allocation and create
+the next project-step prompt following the consumed #62 experiment and PR #70.
+
+This commission covers allocation arithmetic, independent planning review and a
+concrete [LEARN-JOLT-003 task prompt](design/LEARN_JOLT_003_PROMPT.md). The
+[allocation proposal](design/LEARN_JOLT_003_ALLOCATION.md) recommends one fresh
+7,200-second CPU invocation, unchanged fixed training/comparison quantities,
+explicit safe-retirement failure semantics and prospective resource/admission
+gates. These are proposal inputs for a later separately commissioned task.
+
+No experiment, benchmark, checkpoint execution, host modification or extension
+of LEARN-JOLT-002 is commissioned by this preparation. Final executable-source,
+runtime, serialization, memory/storage and budget admission remain required
+before any later invocation. Planning reviews explicitly exclude execution
+admission. Historical failed results and learned/owner-feel/morphology gates
+remain unchanged; #62 remains open.
 
 ### D-017 — Complete the separately commissioned fourth Jolt recovery diagnostic
 

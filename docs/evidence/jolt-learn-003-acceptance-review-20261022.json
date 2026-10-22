@@ -1,0 +1,191 @@
+{
+  "accepted_for_implementation_preparation": true,
+  "blocking_findings_for_preparation": [],
+  "executable_source_review_performed_for_learn_jolt_003": false,
+  "independent_findings": [
+    {
+      "finding": "The prompt explicitly distinguishes stored planning text from a later owner instruction commissioning implementation and execution. It requires a real commission reference, unique allocation identity, exact clean source/runtime/configuration bindings and new prospective independent reviews. New outcome, terminal, execution and audit semantics must be versioned; consumed LEARN-JOLT-002 and legacy v1/v2 behavior and bytes remain unchanged. An identifier format or planning review is not authority.",
+      "id": "A01",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:11-22",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:60-76",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:173-217",
+        "src/nca/train/jolt_screen.py:100-140"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "Commission, versioning and historical evidence"
+    },
+    {
+      "finding": "Only emergency_recovery_deadline can become a complete unsuccessful episode. The prompt requires independent replay of the original 48-tick emergency, final pre-cancel observation, quiet-exit and original-deadline precedence, complete finite native receipts, native cancellation and durable evidence before the next scheduled invocation. Unknown reasons, authority loss, native refusal, uncertainty, cancellation/evidence failure and budget exhaustion abort. The same rule applies to authored, idle, BC and residual comparisons. No retired invocation is renewed.",
+      "id": "A02",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:78-107",
+        "src/nca/controllers/recovery_supervisor.py:121-211",
+        "src/nca/controllers/morphology/conformance.py:155-188"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "Narrow safe-retirement proof"
+    },
+    {
+      "finding": "The prompt preserves raw per-tick task facts and places safe terminal failure at an explicitly versioned episode boundary. It does not falsely claim an actual task deadline or synthesize a physical transition. Safe failure has zero bootstrap, no new value observation or model forward and precedence over administrative cutoff when discovered at its peek. Normal next-controller attempts and cutoff supervisor peeks must be separately recorded and independently replayed; existing transition/auditor event-equality rules require explicit new conversion rather than summary-only relabeling.",
+      "id": "A03",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:96-117",
+        "src/nca/train/jolt_screen.py:334-397",
+        "src/nca/train/jolt_learning.py:288-363",
+        "src/nca/evaluation/jolt_learning_audit.py:674-732"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "Raw facts, terminal boundary and bootstrap"
+    },
+    {
+      "finding": "Failed teacher episodes retain every supported ordinary label and abstention without success filtering. Emergency overrides stay masked and the admitted absence of eligible positive secondary labels remains binding. Existing physical row order, recurrent reset/burn-in and fixed windows remain unchanged. No eligible ordinary teacher data means retain evidence and stop before fitting; replacement demonstration collection is not authorized.",
+      "id": "A04",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:109-123",
+        "src/nca/train/jolt_learning.py:110-139",
+        "src/nca/train/jolt_screen.py:589-629"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "BC labels and unsuccessful demonstrations"
+    },
+    {
+      "finding": "The proposal explicitly freezes reward, actor/critic masks and GAE cuts. Value-less supervisor overrides train neither actor nor critic. Safe retirement does not introduce a terminal penalty or transmit rewards across an emergency gap; consequently retaining a failed episode is not evidence of a new negative learning signal. Original reward remains based only on consumed ticks, including no four-second deadline penalty when that deadline was not reached. Truthful all-masked update diagnostics can include zero optimizer calls; no refill or extra update is authorized to force learning.",
+      "id": "A05",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:109-123",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:136-142",
+        "src/nca/train/task.py:141-150",
+        "src/nca/train/jolt_learning.py:306-325",
+        "src/nca/train/jolt_learning.py:366-391",
+        "src/nca/train/jolt_learning.py:446-523"
+      ],
+      "result": "accepted_with_explicit_design_limitation",
+      "subject": "PPO masks, rewards, GAE and ineffective updates"
+    },
+    {
+      "finding": "The fixed seeded case stream is continuous across updates and consumes one entry per actual episode, including failures. Each episode must contain a retained confirmed decision; zero progress aborts. The explicit 256-start/update and 6,144-total PPO ceilings bound fragmentation while preserving exactly 256 physical rows per update. Completed counters mean receipt-complete captures, including ordinary PPO truncations, rather than task success. Safe-retirement diagnostics cannot authorize extra work or replace a failed case.",
+      "id": "A06",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:125-132",
+        "docs/design/LEARN_JOLT_003_ALLOCATION.md",
+        "src/nca/train/jolt_screen.py:631-665",
+        "src/nca/train/jolt_screen.py:472"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "Progress, deterministic schedule and episode meaning"
+    },
+    {
+      "finding": "Safe failures remain in original denominators with success false and four-second capped completion cost while retaining measured character and latency inputs. Missing metrics cannot become zero or passing. All 32 open and 224 sealed pairs, all three seeds and six-final freeze are required, with no outcome-driven replacement or fitting/selection from open results. Original whole-family success, own-initial and authored improvement, character, latency and integrity gates remain unchanged. A complete valid negative is useful but does not fulfill the learned-actuation objective or justify closing #62, owner-feel acceptance or morphology release.",
+      "id": "A07",
+      "references": [
+        "docs/design/LEARN_JOLT_003_PROMPT.md:102-107",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:219-245",
+        "src/nca/evaluation/jolt_learning.py:83-163",
+        "src/nca/train/task.py:171-202"
+      ],
+      "result": "accepted_for_preparation",
+      "subject": "Failure scoring, full comparison and issue closure"
+    },
+    {
+      "finding": "Independently confirmed unchanged 18,944-decision/113,664-tick stage rectangle, 6,464 starts, 21,144 charged learned-invocation ceiling and 25,248 runtime-module-forward ceiling. Reproduced the 352-row per-update/epoch prefix maximum using an independent integer packing calculation over minimum 33-row/17-row cost classes, giving 33,792 per module. There are exactly 39 nonnegative integer ceilings; only the four documented operation ceilings differ from the original configuration. Counter upper bounds do not grant extra stages/cases or establish time/storage feasibility.",
+      "id": "A08",
+      "references": [
+        "docs/evidence/jolt-learn-003-allocation-calculator-20261022.py",
+        "docs/evidence/jolt-learn-003-allocation-plan-20261022.json",
+        "configs/learning/jolt-learn-002-v1.json",
+        "src/nca/train/jolt_admission.py:139-171"
+      ],
+      "result": "arithmetic_checked_not_runtime_admission",
+      "subject": "Bounded positive progress and attempt charging"
+    },
+    {
+      "finding": "The 6,000/900/240/60-second intervals sum to 7,200 with cumulative offsets 6,000/6,900/7,140/7,200. They are proposed hard boundaries, not measured completion guarantees. The artifacts retain historical rates only as non-additive sensitivities and explicitly require final-source enforcement, full audit/cleanup/publication coverage, reader and serialization bounds, aggregate artifact bytes, peak memory and disk feasibility. Historical average record size is not a maximum. If these gates remain unresolved, the prompt requires admission failure before spending the allocation.",
+      "id": "A09",
+      "references": [
+        "docs/design/LEARN_JOLT_003_ALLOCATION.md",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:161-171",
+        "docs/design/LEARN_JOLT_003_PROMPT.md:191-217",
+        "src/nca/evaluation/jolt_learning_audit.py:47-48",
+        "src/nca/train/jolt_executor.py:33-36"
+      ],
+      "result": "explicitly_unresolved_before_execution",
+      "subject": "Whole-clock timing, artifact readers and memory"
+    }
+  ],
+  "independent_role": "Acceptance and learning-semantics reviewer distinct from proposal author and operation/feasibility reviewers",
+  "limitations": [
+    "This is a proposal acceptance review, not a review or admission of LEARN-JOLT-003 executable source, which does not yet exist.",
+    "No host, benchmark, neural checkpoint load, model execution, training or new physical measurement occurred during this review.",
+    "The proposed 7,200 seconds, artifact estimates and source reasoning do not establish measured throughput or guarantee completion.",
+    "No learned family, owner feel, morphology transfer or issue-closure objective is accepted by this report."
+  ],
+  "offline_checks_performed": [
+    {
+      "check": "Standard-library calculator reproduction",
+      "details": "Executed only the inspected calculator function; reproduced proposal JSON both structurally and byte-for-byte using its declared serialization.",
+      "result": "pass"
+    },
+    {
+      "check": "Input and calculator identity consistency",
+      "details": "Verified all three proposal input SHA-256 bindings and its calculator SHA-256 against original file bytes.",
+      "result": "pass"
+    },
+    {
+      "check": "Independent operation and prefix arithmetic",
+      "details": "Checked positive integer reservation premises, all 39 nonnegative ceilings, unchanged stages, exact four-counter change set, learned invocation/forward rectangles and an independent prefix upper-bound calculation.",
+      "result": "pass"
+    },
+    {
+      "check": "Phase and preparation flags",
+      "details": "Checked the four intervals, absolute cutoffs, one attempt, no retry/extension, offline-only status and absent owner execution commission/admission.",
+      "result": "pass"
+    },
+    {
+      "check": "Source and prose review",
+      "details": "Compared prompt/report semantics with the current capture, supervisor, sample/learning, task metrics, qualifier, auditor and admission source; no physical or neural execution was performed.",
+      "result": "pass_for_preparation"
+    }
+  ],
+  "offline_scope_only": true,
+  "owner_execution_commission_recorded": false,
+  "physical_or_neural_work_performed": false,
+  "prospective_experiment_admitted": false,
+  "required_before_any_experiment": [
+    "An actual later owner instruction commissioning the concrete new one-attempt allocation and a recorded authentic authorization reference.",
+    "Explicit new executable contracts for safe terminal outcomes, raw-boundary interpretation, independent retirement replay, costs, deadlines and closure, without changing legacy behavior.",
+    "Synthetic negative controls for forbidden retirement/cancellation/evidence failures, zero progress, cutoff ties, masks/GAE, deterministic continuation, attempt accounting and complete-negative versus incomplete outcomes.",
+    "Final-source proofs or enforced bounds for all reservations, serialized metadata, reader sizes, artifact count/bytes, peak resident memory, disk and full pipeline timing.",
+    "Frozen clean source/configuration/runtime/host/profile/prerequisite identities, validated unopened held-out cases, exact case/controller order, fresh initial models and fresh teacher collection.",
+    "At least two distinct independent prospective reviews bound to the exact executable source/declaration, plus passing required checks on that source.",
+    "Complete original native and journal closure, all comparison rows, cost reconciliation, independent audit and final inventory/outer stdout/observed exit evidence before any positive or valid-negative result claim."
+  ],
+  "review_date": "2026-10-22",
+  "reviewed_artifacts": [
+    {
+      "bytes": 13503,
+      "path": "docs/design/LEARN_JOLT_003_ALLOCATION.md",
+      "sha256": "5a0a805aee56fb7f0cd3f532d8ae9f7b6fee71ae74a37768a3a09deb402448ad"
+    },
+    {
+      "bytes": 16276,
+      "path": "docs/design/LEARN_JOLT_003_PROMPT.md",
+      "sha256": "0c21e3608d19c2a6d34fa9237dfeafbdf2f6c8432e834216cbb4c12f7c5c8bca"
+    },
+    {
+      "bytes": 12108,
+      "path": "docs/evidence/jolt-learn-003-allocation-calculator-20261022.py",
+      "sha256": "86aa470ba902dba0b71e97e2ac69c88fe9ebf01d4bdf916953e04e9206be73cb"
+    },
+    {
+      "bytes": 8148,
+      "path": "docs/evidence/jolt-learn-003-allocation-plan-20261022.json",
+      "sha256": "aca0a40e0bcfd923cb4a5c8737ead39e957fa6858f2cd5a2c84007be3a646774"
+    }
+  ],
+  "reviewed_base_revision": "f23401eb793f9708040c4047a8146ab01ec3befc",
+  "reviewer": "jolt-allocation-acceptance-reviewer",
+  "schema": "nca-learn-jolt-003-allocation-acceptance-review/v1",
+  "status": "accepted_for_implementation_preparation",
+  "verdict": "No blocking finding in the four reviewed artifacts for implementation and admission preparation. The proposed new experiment remains unimplemented and unadmitted. The stored prompt and this review neither commission nor authorize a physical allocation."
+}

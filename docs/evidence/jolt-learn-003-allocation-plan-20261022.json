@@ -1,0 +1,225 @@
+{
+  "absolute_phase_offsets_seconds": {
+    "external_inventory_exit_cleanup_and_streams_complete": 7140,
+    "ordinary_work_stopped": 6000,
+    "terminal_publication_stdout_and_observed_exit_complete": 7200,
+    "worker_exit_cleanup_and_streams_complete": 6900
+  },
+  "calculator_sha256": "86aa470ba902dba0b71e97e2ac69c88fe9ebf01d4bdf916953e04e9206be73cb",
+  "conditions": [
+    "Only independently verified emergency_recovery_deadline may complete as a safe unsuccessful episode; all other failures stop the allocation.",
+    "Each PPO episode must contain at least one confirmed retained decision; at most 256 starts/update and 6144 total. Zero progress aborts.",
+    "One retirement attempt per learned episode is charged even if no neural forward or physical dispatch follows.",
+    "Keep fixed physical windows, masks, reward, six-tick cadence and forty-decision episode maximum; the prefix proof depends on these.",
+    "The 20000-decision/120000-tick aggregate margin authorizes no work above the unchanged stage caps.",
+    "Bootstrap12288 and audit37888 are conservative backstops; tighter48/25296 estimates require final-source proof.",
+    "Source/runtime/split/serialization/memory/storage/lifecycle admission remains pending, along with a later explicit owner commission."
+  ],
+  "derived_bounds": {
+    "checkpoint_loads": {
+      "evaluation_cache": 12,
+      "independent_audit": 36,
+      "total": 48
+    },
+    "checkpoint_writes": 36,
+    "conditional_tighter_audit_forwards": 25296,
+    "conditional_tighter_bootstrap_forwards": 48,
+    "conditional_tighter_total_module_forwards": 855456,
+    "episodes": 6464,
+    "executor_lifecycle_files_current_shape": 16,
+    "journal_note_bound_terms": {
+      "decision_proposed": 18944,
+      "episode_start_and_finish": 12928,
+      "fixed_notes": 97,
+      "one_retirement_note_per_episode": 6464,
+      "owner_request_and_response": 76676,
+      "possible_allocation_stop_note": 1
+    },
+    "journal_notes_with_one_new_retirement_note_per_episode": 115110,
+    "learned_episode_starts": 6360,
+    "learned_physical_rows": 14784,
+    "module_forwards_with_conservative_bootstrap_and_audit_caps": 880288,
+    "optimizer_calls_bc_plus_ppo": 47616,
+    "outer_stdout_and_exit_receipts_additional": true,
+    "owner_requests": 38338,
+    "physical_decisions": 18944,
+    "physical_requested_ticks": 113664,
+    "ppo_prefix_rows_per_module_all_updates_epochs": 33792,
+    "ppo_prefix_rows_per_update_per_epoch": 352,
+    "ppo_prefix_witness_episode_lengths": [
+      33,
+      33,
+      33,
+      33,
+      33,
+      33,
+      33,
+      17,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "reservation_records_loose_upper_bound": 1901556,
+    "retirement_attempt_allowance_without_forward": 6360,
+    "worker_file_bound_terms": {
+      "checkpoints": 36,
+      "episode_sample_metrics": 19392,
+      "fixed": 13,
+      "learning": 27
+    },
+    "worker_files_current_shape": 19468
+  },
+  "fixed_training": {
+    "bc_epochs_per_seed": 40,
+    "decision_ticks": 6,
+    "final_checkpoints_before_any_sealed_outcome": 6,
+    "maximum_episode_decisions": 40,
+    "open_rows": 32,
+    "ppo_decisions_per_update": 256,
+    "ppo_epochs_per_update": 4,
+    "ppo_updates_per_seed": 8,
+    "sealed_rows": 224,
+    "seeds": [
+      190103,
+      190207,
+      190301
+    ],
+    "teacher_episodes": 64,
+    "unroll": 16
+  },
+  "new_physical_or_neural_work_performed": false,
+  "nonoverlapping_intervals_seconds": {
+    "active_including_startup_training_and_all_physical_evaluation": 6000,
+    "external_inventory_verification_and_cleanup": 240,
+    "terminal_publication_stdout_and_observed_exit": 60,
+    "worker_shutdown_neural_readback_and_publication": 900
+  },
+  "offline_scope_only": true,
+  "owner_execution_commission_recorded": false,
+  "proposed_budget": {
+    "automatic_extension": false,
+    "automatic_retry": false,
+    "cleanup_reserve_seconds": 1200,
+    "counters": {
+      "attempts": 1,
+      "audit_forward": 37888,
+      "bc_burn_in": 368640,
+      "bc_eligible_samples": 307200,
+      "bc_forward": 307200,
+      "bc_optimizer": 23040,
+      "bootstrap_forward": 12288,
+      "checkpoint_executions": 21144,
+      "checkpoint_loads": 48,
+      "checkpoint_writes": 36,
+      "confirmed_ticks": 120000,
+      "decisions": 20000,
+      "episodes_aborted": 6464,
+      "episodes_completed": 6464,
+      "episodes_started": 6464,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 25248,
+      "owner_cancel": 6465,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 6464,
+      "owner_requests": 38338,
+      "owner_reset": 6464,
+      "owner_step": 18944,
+      "ppo_actor_samples": 24576,
+      "ppo_base_burn_in": 33792,
+      "ppo_base_forward": 24576,
+      "ppo_burn_in": 33792,
+      "ppo_critic_samples": 24576,
+      "ppo_forward": 24576,
+      "ppo_optimizer": 24576,
+      "ppo_replay_base_forward": 6144,
+      "ppo_replay_forward": 6144,
+      "refused_ticks": 120000,
+      "requested_ticks": 120000,
+      "uncertain_ticks": 120000
+    },
+    "device": "cpu",
+    "executor_finalization_reserve_seconds": 60,
+    "executor_verification_reserve_seconds": 300,
+    "gpu_allowed": false,
+    "maximum_attempts": 1,
+    "maximum_owner_transport_seconds": 15,
+    "maximum_wall_seconds": 7200,
+    "stages": {
+      "open": {
+        "decisions": 1280,
+        "episodes_started": 32,
+        "requested_ticks": 7680
+      },
+      "ppo": {
+        "decisions": 6144,
+        "episodes_started": 6144,
+        "requested_ticks": 36864
+      },
+      "sealed": {
+        "decisions": 8960,
+        "episodes_started": 224,
+        "requested_ticks": 53760
+      },
+      "teacher": {
+        "decisions": 2560,
+        "episodes_started": 64,
+        "requested_ticks": 15360
+      }
+    },
+    "torch_threads": 1
+  },
+  "proposed_experiment": "LEARN-JOLT-003",
+  "prospective_experiment_admitted": false,
+  "reviewed_base_revision": "f23401eb793f9708040c4047a8146ab01ec3befc",
+  "schema": "nca-learn-jolt-003-allocation-proposal/v1",
+  "serialization_review_inputs_not_byte_bounds": {
+    "aggregate_artifact_and_peak_resident_memory_bound_established": false,
+    "historical_mean_bytes_per_record": 114.68170505845583,
+    "historical_reservation_bytes_per_file": 59444115,
+    "historical_reservation_records": 518340,
+    "journal_record_limit_bytes": 1048576,
+    "ordinary_json_and_uncompressed_sample_reader_limit_bytes": 67108864,
+    "proposed_records_at_historical_mean_bytes_per_file": 218073684.34413704,
+    "raw_episode_reader_limit_bytes": 33554432,
+    "reservation_limit_mean_bytes_per_record_excluding_envelope": 282.33242250031026,
+    "reservation_reader_limit_bytes": 536870912
+  },
+  "source_bindings": [
+    {
+      "path": "configs/learning/jolt-learn-002-v1.json",
+      "sha256": "4114806d1317cfb189c8648c530e2667bc0e5f236fc54d44f2f23c7a5a309902"
+    },
+    {
+      "path": "docs/evidence/jolt-learn-002-costs-20261021.json",
+      "sha256": "8c9bc1486cf978c35ce55e401ea100fb3dccf40f52075fa68d835361ff7ee47a"
+    },
+    {
+      "path": "docs/evidence/jolt-learn-002-forensic-review-20261021.json",
+      "sha256": "fd4c0bfd43c82f4dfb46b416fdee9718d911338a0caddfbb16be17c7b2fcb71b"
+    }
+  ],
+  "status": "proposal_for_implementation_and_admission_preparation",
+  "time_planning_sensitivities_not_runtime_guarantees": {
+    "active_margin_over_v4_projection_seconds": 1440.084653876448,
+    "active_to_same_blend_projection_ratio": 2.4694414387798456,
+    "complete_process_duration_of_original_learning_run": null,
+    "completion_under_cap_guaranteed": false,
+    "different_workload_v4_decisions": 2264,
+    "different_workload_v4_seconds": 544.9560992200022,
+    "full_new_journal_and_neural_audit_measured": false,
+    "incomplete_learning_decisions": 7509,
+    "incomplete_learning_internal_seconds": 963.0812728359988,
+    "projections_are_additive": false,
+    "same_blend_projection_seconds": 2429.6992452530512,
+    "v4_whole_diagnostic_rate_projection_seconds": 4559.915346123552
+  }
+}
