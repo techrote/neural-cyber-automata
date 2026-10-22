@@ -1,4 +1,4 @@
-"""Offline readback of a single immutable LEARN-JOLT-002 invocation.
+"""Versioned offline readback of one immutable Jolt learning invocation.
 
 This reader has no host handle, optimizer, or continuation path. Native
 responses are bound to the original raw capture before task metrics, recurrent
@@ -17,6 +17,7 @@ import math
 from pathlib import Path
 import random
 import re
+from types import SimpleNamespace
 from typing import Any, Callable, Mapping
 
 import torch
@@ -36,6 +37,7 @@ from nca.data import read_episode
 from nca.data.jolt_samples import JoltEpisode, native_packet_matches, validate_history
 from nca.evaluation.durable_journal import MAX_RECORD_BYTES, file_identity, validate_record_chain
 from nca.evaluation.jolt_character import character_metrics
+from nca.evaluation.jolt_journal_v3 import journal_identity_v3
 from nca.evaluation.jolt_learning import POLICY_SEEDS, controller_ids, qualify
 from nca.train.task import HopTask, REWARD_SCHEMA
 
@@ -44,6 +46,8 @@ SCHEMA = "nca-learn-jolt-002-independent-readback/v1"
 RUN_SCHEMA = "nca-learn-jolt-002-run/v1"
 SCHEMA_V2 = "nca-learn-jolt-002-independent-readback/v2"
 RUN_SCHEMA_V2 = "nca-learn-jolt-002-run/v2"
+SCHEMA_V3 = "nca-learn-jolt-003-independent-readback/v3"
+RUN_SCHEMA_V3 = "nca-learn-jolt-003-run/v1"
 MAX_JSON_BYTES = 64 * 1024 * 1024
 MAX_RESERVATION_BYTES = 512 * 1024 * 1024
 PPO_ID = re.compile(r"ppo-seed(190103|190207|190301)-u([0-7])-e([0-9]+)\Z")
@@ -67,10 +71,11 @@ def _near(left: float, right: float, detail: str) -> None:
 
 def _execution_version(worker, manifest, declaration):
     """Require an explicitly matching version; never reinterpret v1 evidence."""
-    version = {RUN_SCHEMA: 1, RUN_SCHEMA_V2: 2}.get(worker.get("schema"))
+    version = {RUN_SCHEMA: 1, RUN_SCHEMA_V2: 2, RUN_SCHEMA_V3: 3}.get(worker.get("schema"))
     _need(version is not None and manifest.get("schema") == worker["schema"],
           "unknown or mismatched worker/manifest contract")
-    _need(declaration.get("schema") == f"nca-learn-jolt-002-execution/v{version}",
+    schema = "nca-learn-jolt-003-execution/v3" if version == 3 else f"nca-learn-jolt-002-execution/v{version}"
+    _need(declaration.get("schema") == schema,
           "execution declaration and result versions differ")
     return version
 
@@ -110,6 +115,37 @@ def _episode_closure_v2(raw, row, *, deadline_missed):
                 and final.next_observation.get("suspended") is True)
 
 
+def _episode_closure_v3(raw, row, *, deadline_missed):
+    """Retirement-proof failure and native cancellation failure stay distinct."""
+    for field in ("retirement_validation_error", "cleanup_phase_error"):
+        _need(field in row and field in raw.evaluation, "v3 capture omitted a separate cleanup/proof status")
+        error = row[field]
+        _same(error, raw.evaluation[field], "raw cleanup/proof error differs: " + field)
+        if error is not None:
+            _need(isinstance(error, Mapping) and set(error) == {"type", "code"}
+                  and isinstance(error["type"], str)
+                  and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", error["type"]) is not None
+                  and (error["code"] is None or isinstance(error["code"], str)
+                       and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", error["code"]) is not None)
+                  and row["error"] is not None and row["outcome"]["complete"] is False,
+                  "cleanup/proof failure was erased or accepted as a complete episode")
+    closure = _episode_closure_v2(raw, row, deadline_missed=deadline_missed)
+    if closure and raw.events[-1].kind == "cancel":
+        from nca.evaluation.jolt_retirement import native_cancellation_v3
+        native_cancellation_v3(raw.events[-1].issued_observation, raw.events[-1].next_observation)
+    return closure
+
+
+def _budget_exhaustion_v3(error):
+    """Only original declared limit errors retain capped-invocation status."""
+    if not isinstance(error, Mapping):
+        return False
+    code = error.get("code")
+    return error.get("type") == "AdmissionError" or (error.get("type") == "ContractError"
+        and isinstance(code, str) and (code == "jolt_v3_phase_deadline"
+            or code.startswith("budget_counter_") or code.startswith("budget_stage_")))
+
+
 def _durability_v2(durable, identity, *, system):
     """Verify the v2 writer's claim against this reader's complete raw stream."""
     fields = {"schema", "closed", "poisoned", "records", "record_fsyncs", "total_fsyncs",
@@ -134,6 +170,23 @@ def _durability_v2(durable, identity, *, system):
           "v2 journal omitted required directory synchronization")
 
 
+def _durability_v3(durable, identity, *, system):
+    """V3 keeps independently verified closure and freezes its byte envelope."""
+    from nca.train.jolt_storage_v3 import MAX_JOURNAL_RECORD_BYTES, MAX_JOURNAL_RECORDS, MAX_JOURNAL_BYTES
+    limits = {"maximum_record_bytes": MAX_JOURNAL_RECORD_BYTES,
+              "maximum_records": MAX_JOURNAL_RECORDS, "maximum_stream_bytes": MAX_JOURNAL_BYTES}
+    _need(isinstance(durable, Mapping) and durable.get("schema") == "nca-owner-journal-durability/v3"
+          and all(type(durable.get(key)) is int and durable[key] == value for key, value in limits.items())
+          and identity["records"] <= MAX_JOURNAL_RECORDS and identity["bytes"] <= MAX_JOURNAL_BYTES,
+          "v3 journal changed or exceeded its prospective aggregate envelope")
+    original = {key: value for key, value in durable.items() if key not in limits}
+    original["schema"] = "nca-owner-journal-durability/v2"
+    _durability_v2(original, identity, system=system)
+
+
+_journal_identity_v3 = journal_identity_v3  # Existing focused conformance callers.
+
+
 def _path(root: Path, name: str) -> Path:
     _need(isinstance(name, str) and bool(name) and not Path(name).is_absolute()
           and ".." not in Path(name).parts, "artifact path escapes its immutable output")
@@ -148,7 +201,40 @@ def _json(path: Path, *, limit: int = MAX_JSON_BYTES) -> Any:
     return strict_json_loads(path.read_bytes(), max_bytes=limit)
 
 
-def _sample(path: Path) -> JoltEpisode:
+def _episode_envelope_v3(path):
+    """Bound decompression before constructing any episode object tree."""
+    from nca.train.jolt_storage_v3 import episode_byte_limit, compressed_byte_limit
+    maximum = episode_byte_limit(40)
+    _need(path.stat().st_size <= compressed_byte_limit(maximum), "v3 episode exceeds its compressed envelope")
+    with gzip.open(path, "rb") as stream:
+        payload = stream.read(maximum + 1)
+    _need(len(payload) <= maximum, "v3 episode expansion exceeds the original byte envelope")
+    envelope = strict_json_loads(payload, max_bytes=maximum)
+    _need(isinstance(envelope, dict) and set(envelope) == {"episode", "sha256"},
+          "v3 episode envelope has undeclared fields")
+    return envelope, len(payload)
+
+
+def _raw_episode_v3(path):
+    from nca.data.records import EpisodeRecord
+    from nca.train.jolt_storage_v3 import episode_byte_limit
+    envelope, size = _episode_envelope_v3(path)
+    episode = EpisodeRecord.from_dict(envelope["episode"])
+    _need(size <= episode_byte_limit(episode.decisions) and episode.sha256 == envelope["sha256"],
+          "v3 raw episode differs from its original identity or per-decision byte bound")
+    return episode
+
+
+def _sample(path: Path, *, execution_version: int = 1) -> JoltEpisode:
+    if execution_version == 3:
+        from nca.data.jolt_samples import JoltEpisodeV3
+        from nca.train.jolt_storage_v3 import episode_byte_limit
+        envelope, size = _episode_envelope_v3(path)
+        episode = JoltEpisodeV3.from_dict(envelope["episode"])
+        _need(size <= episode_byte_limit(len(episode.decisions)), "v3 samples exceeded their original per-decision bound")
+        _need(episode.sha256 == envelope["sha256"], "sample content identity differs")
+        validate_history(episode)
+        return episode
     _need(path.stat().st_size <= MAX_JSON_BYTES, "compressed samples exceed their bounded reader")
     with gzip.open(path, "rb") as stream:
         payload = stream.read(MAX_JSON_BYTES + 1)
@@ -164,24 +250,58 @@ def _sample(path: Path) -> JoltEpisode:
 class _Reservations:
     """Recompute every counter and snapshot from charged, ordered increments."""
 
-    def __init__(self, budget, rows, snapshot):
+    def __init__(self, budget, rows, snapshot, *, check=None):
         self.budget, self.rows = budget, rows
+        self.check = check
+        self.version = 3 if snapshot.get("schema") == "nca-jolt-learn-budget/v3" else 1
         self.counts = {key: 0 for key in budget["counters"]}
         self.stages = {stage: {key: 0 for key in limits} for stage, limits in budget["stages"].items()}
-        self.prefixes = {0: (dict(self.counts), deepcopy(self.stages), sha256_json([]))}
+        self.prefixes = {0: (dict(self.counts), deepcopy(self.stages), sha256_json([]), None)}
         self._cursor = 0
+        self._iterator = iter(rows)
+        self._prefix_elapsed = None
         self._prefix_digest = hashlib.sha256(b"[")
         self._prefix_counts = dict(self.counts)
         self._prefix_stages = deepcopy(self.stages)
         self.used_owner_reservations: set[int] = set()
         self.owner_queues = defaultdict(deque)
+        self.owner_elapsed = {}
+        self.phase_history = deepcopy(snapshot.get("phase_history")) if self.version == 3 else None
         previous = -1.
+        previous_phase = 0
+        phase_names = ("active", "closure", "audit", "publication")
+        phase_ends = {"active": 6000., "closure": 6180., "audit": 6780., "publication": 6888.}
         for index, row in enumerate(rows):
-            _need(set(row) == {"index", "elapsed_seconds", "stage", "cleanup", "increments"}
+            if self.check is not None:
+                self.check()
+            fields = {"index", "elapsed_seconds", "stage", "cleanup", "increments"}
+            if self.version == 3:
+                fields.add("phase")
+            _need(set(row) == fields
                   and row["index"] == index and type(row["cleanup"]) is bool,
                   "reservation order or schema differs")
             elapsed, stage = row["elapsed_seconds"], row["stage"]
             limit = budget["maximum_wall_seconds"] - (0 if row["cleanup"] else budget["cleanup_reserve_seconds"])
+            if self.version == 3:
+                phase = row["phase"]
+                _need(phase in phase_names and phase_names.index(phase) >= previous_phase,
+                      "reservation rolled back its original allocation phase")
+                previous_phase = phase_names.index(phase)
+                limit = phase_ends[phase]
+                _need(phase == "active" or row["cleanup"] is True,
+                      "ordinary work entered the reserved evidence tail")
+                _need(isinstance(self.phase_history, list)
+                      and any(entry.get("phase") == phase and entry.get("elapsed_seconds", float("inf")) <= elapsed
+                              for entry in self.phase_history),
+                      "reservation preceded its original phase entry")
+                if phase == "audit":
+                    _need(stage is None and set(row["increments"]) <= {"audit_forward", "checkpoint_loads"},
+                          "non-audit work consumed the neural-readback interval")
+                elif phase == "closure":
+                    _need(set(row["increments"]) <= {"owner_requests", "owner_cancel", "owner_close",
+                          "host_terminations", "uncertain_ticks", "episodes_aborted", "episodes_completed"},
+                          "ordinary or neural work consumed native-closure time")
+                _need(phase != "publication", "publication interval invented model or physical work")
             _need(type(elapsed) in (int, float) and math.isfinite(elapsed) and previous <= elapsed < limit,
                   "reservation exceeded the original wall deadline")
             _need(stage is None or stage in self.stages, "reservation used an undeclared stage")
@@ -200,9 +320,12 @@ class _Reservations:
             previous = elapsed
             if "owner_requests" in row["increments"]:
                 self.owner_queues[sha256_json({"stage": stage, "increments": row["increments"]})].append(index)
+                self.owner_elapsed[index] = elapsed
         self.snapshot(snapshot)
 
     def snapshot(self, snapshot):
+        if self.check is not None:
+            self.check()
         count = snapshot["reservation_count"]
         _need(type(count) is int and 0 <= count <= len(self.rows), "snapshot names an impossible reservation prefix")
         if count not in self.prefixes:
@@ -212,11 +335,15 @@ class _Reservations:
             # reservation array at each of the 57 fitting boundaries.
             if count < self._cursor:
                 self._cursor = 0
+                self._iterator = iter(self.rows)
+                self._prefix_elapsed = None
                 self._prefix_digest = hashlib.sha256(b"[")
                 self._prefix_counts = {key: 0 for key in self.counts}
                 self._prefix_stages = {stage: {key: 0 for key in values} for stage, values in self.stages.items()}
             while self._cursor < count:
-                row = self.rows[self._cursor]
+                if self.check is not None:
+                    self.check()
+                row = next(self._iterator)
                 if self._cursor:
                     self._prefix_digest.update(b",")
                 self._prefix_digest.update(canonical_json(row).encode())
@@ -225,22 +352,43 @@ class _Reservations:
                     if row["stage"] is not None and key in self._prefix_stages[row["stage"]]:
                         self._prefix_stages[row["stage"]][key] += amount
                 self._cursor += 1
+                self._prefix_elapsed = row["elapsed_seconds"]
+            if self.version == 3 and count == len(self.rows):
+                _need(next(self._iterator, None) is None, "reservation prefix omitted a trailing record")
             digest = self._prefix_digest.copy()
             digest.update(b"]")
-            self.prefixes[count] = dict(self._prefix_counts), deepcopy(self._prefix_stages), digest.hexdigest()
-        counts, stages, digest = self.prefixes[count]
+            self.prefixes[count] = dict(self._prefix_counts), deepcopy(self._prefix_stages), digest.hexdigest(), self._prefix_elapsed
+        counts, stages, digest, last_elapsed = self.prefixes[count]
         _need(snapshot["reservations_sha256"] == digest, "snapshot reservation digest differs")
         _same(snapshot["counts"], counts, "snapshot counters differ from original reservations")
         _same(snapshot["stage_counts"], stages, "snapshot stage counters differ")
-        _need(snapshot["schema"] == "nca-jolt-learn-budget/v1"
+        _need(snapshot["schema"] == f"nca-jolt-learn-budget/v{self.version}"
               and snapshot["maximum_wall_seconds"] == self.budget["maximum_wall_seconds"]
               and snapshot["cleanup_reserve_seconds"] == self.budget["cleanup_reserve_seconds"]
               and snapshot["refused_or_uncertain_work_refunded"] is False,
               "snapshot changed its original budget")
         elapsed = snapshot["wall_seconds"]
         _need(type(elapsed) in (int, float) and math.isfinite(elapsed)
-              and (not count or self.rows[count - 1]["elapsed_seconds"] <= elapsed)
+              and (not count or last_elapsed <= elapsed)
               and elapsed < self.budget["maximum_wall_seconds"], "snapshot exceeds original wall limit")
+        if self.version == 3:
+            phase_names = ("active", "closure", "audit", "publication")
+            ends = (6000., 6180., 6780., 6888.)
+            history, phase = snapshot.get("phase_history"), snapshot.get("phase")
+            _need(phase in phase_names and isinstance(history, list) and 1 <= len(history) <= 4,
+                  "versioned budget lost original phase history")
+            previous_phase, previous_time = -1, -1.
+            for entry in history:
+                _need(isinstance(entry, Mapping) and set(entry) == {"phase", "elapsed_seconds"}
+                      and entry["phase"] in phase_names, "phase receipt shape changed")
+                index, instant = phase_names.index(entry["phase"]), entry["elapsed_seconds"]
+                _need(index == previous_phase + 1 and type(instant) in (int, float) and math.isfinite(instant)
+                      and max(0., previous_time) <= instant <= elapsed and instant < ends[index],
+                      "phase receipt reset or exceeded the original allocation clock")
+                previous_phase, previous_time = index, instant
+            _need(history[0]["phase"] == "active" and history[-1]["phase"] == phase
+                  and elapsed < ends[phase_names.index(phase)], "snapshot exceeded its original phase deadline")
+            _same(history, self.phase_history[:len(history)], "snapshot rewrote original phase history")
         return counts
 
     def owner(self, request):
@@ -250,7 +398,7 @@ class _Reservations:
         queue = self.owner_queues[sha256_json({"stage": request["stage"], "increments": increments})]
         _need(bool(queue), "native owner work has no original atomic reservation")
         index = queue.popleft()
-        _need(self.rows[index]["elapsed_seconds"] <= request["elapsed_seconds"],
+        _need(self.owner_elapsed[index] <= request["elapsed_seconds"],
               "native owner work preceded its reservation")
         self.used_owner_reservations.add(index)
 
@@ -346,14 +494,32 @@ def _advantages(records, values, bootstrap, final_valid):
     return {"advantages": advantages.tolist(), "returns": returns.tolist(), "valid": valid}
 
 
+def _episode_counts_v3(sample):
+    """Retain only bounded fitting-count facts after full independent replay.
+
+    Keeping complete native/sample episodes for all demonstrations would multiply
+    the raw-reader expansion by sixty-four. No later phase needs those views:
+    their original bytes and replay digests are already independently bound.
+    """
+    return SimpleNamespace(id=sample.id, sha256=sample.sha256,
+        decisions=tuple(SimpleNamespace(observation_valid=row.observation_valid,
+            proposal=row.proposal, imitation_eligible=row.imitation_eligible,
+            actor_eligible=row.actor_eligible, actual_ticks=row.actual_ticks,
+            event=SimpleNamespace(valid=row.event.valid, trace_complete=row.event.trace_complete))
+            for row in sample.decisions))
+
+
 class _Audit:
-    def __init__(self, output: Path, reserve: Callable):
+    def __init__(self, output: Path, reserve: Callable, *, check=None):
         self.output, self.reserve = output, reserve
+        self.check = check
+        self._check()
         self.worker = _json(_path(output, "worker-result.json"))
+        self._check()
         self.config = _json(_path(output, "config.json"))
         self.manifest = _json(_path(output, "manifest.json"))
         self.declaration = _json(_path(output, "declaration.json"))
-        self.execution_version = 2 if self.worker.get("schema") == RUN_SCHEMA_V2 else 1
+        self.execution_version = {RUN_SCHEMA_V2: 2, RUN_SCHEMA_V3: 3}.get(self.worker.get("schema"), 1)
         self.models, self.checkpoints = {}, {}
         self.loaded = self.forwards = 0
         self.episodes, self.verified_rows, self.partial = {}, [], []
@@ -370,14 +536,21 @@ class _Audit:
         self.started = self.terminated = False
         self.complete = self.worker["status"] == "completed"
 
+    def _check(self):
+        callback = getattr(self, "check", None)
+        if callback is not None:
+            callback()
+
     def identities(self):
+        self._check()
         from nca.train.jolt_admission import validate_config
         from nca.train.jolt_learning import BC_SPEC, PPO_SPEC
         root = Path(__file__).resolve().parents[3]
         self.execution_version = _execution_version(self.worker, self.manifest, self.declaration)
-        if self.execution_version == 2:
-            from nca.train.jolt_execution_contract import validate_v2_allocation_identity
-            validate_v2_allocation_identity(self.declaration)
+        if self.execution_version in (2, 3):
+            from nca.train.jolt_execution_contract import validate_v2_allocation_identity, validate_v3_allocation_identity
+            (validate_v3_allocation_identity if self.execution_version == 3 else
+             validate_v2_allocation_identity)(self.declaration)
             _need(type(self.declaration.get("attempts")) is int and self.declaration["attempts"] == 1,
                   "exactly one integer invocation is required")
         _need(self.worker["status"] in ("completed", "failed", "capped"), "unknown allocation completion status")
@@ -401,6 +574,7 @@ class _Audit:
         inventory = {path.relative_to(root).as_posix() for path in paths if not path.name.startswith("jolt-execution-")}
         _need(set(self.manifest["source_files"]) == inventory, "source inventory omitted an executing dependency")
         for relative, digest in self.manifest["source_files"].items():
+            self._check()
             _need(file_identity(_path(root, relative))["sha256"] == digest,
                   "executing offline reader differs from frozen source")
         _need(self.manifest["source_revision"] == self.declaration["source_revision"]
@@ -412,8 +586,23 @@ class _Audit:
                    "interop_threads": 1, "deterministic_algorithms": True}.items()),
               "unfrozen runtime")
         _need(torch.__version__ == "2.8.0+cpu", "offline neural replay requires the pinned CPU Torch runtime")
-        reviews = self.declaration["independent_reviews"]
-        _need(len(reviews) >= 2 and len({row["path"] for row in reviews}) == len(reviews),
+        if self.execution_version == 3:
+            from nca.train.jolt_admission_v3 import validate_declaration_reviews, validate_resource_admission
+            _need(self.declaration.get("allocation_id") == self.config["allocation_id"]
+                  and self.declaration.get("authorization_ref") == self.config["authorization_ref"]
+                  and self.declaration.get("teacher_prerequisite") == self.config["prerequisite"]
+                  and self.declaration.get("opened_inventory") == self.config["opened_inventory"]
+                  and self.declaration.get("split") == self.config["split"]
+                  and self.declaration.get("ppo_case_stream_sha256") == sha256_json(self.config["ppo_case_stream"])
+                  and self.declaration.get("comparison_order_sha256") == sha256_json(self.config["comparison_order"]),
+                  "v3 declaration changed prospective cases, comparisons, or allocation identity")
+            _need(self.declaration.get("output_identity") == {"basename": self.config["allocation_id"],
+                  "lifecycle_basename": self.config["allocation_id"] + "-lifecycle", "reuse_forbidden": True},
+                  "v3 declaration changed its original output identity")
+            validate_declaration_reviews(self.declaration)
+            validate_resource_admission(self.declaration)
+        reviews = [] if self.execution_version == 3 else self.declaration["independent_reviews"]
+        _need(self.execution_version == 3 or len(reviews) >= 2 and len({row["path"] for row in reviews}) == len(reviews),
               "two distinct independent source reviews are required")
         reviewers = set()
         for review in reviews:
@@ -431,15 +620,27 @@ class _Audit:
                   "source reviews do not have distinct independent reviewers")
             reviewers.add(reviewer)
         rows = self.worker["results"]
+        if self.execution_version == 3:
+            from nca.train.jolt_storage_v3 import validate_worker_result_v3
+            validate_worker_result_v3(self.worker)
+            self._check()
         self.episodes = {row["id"]: row for row in rows}
         _need(len(self.episodes) == len(rows), "duplicate episode result")
-        reservations = _json(_path(self.output, "budget-reservations.json"), limit=MAX_RESERVATION_BYTES)
-        _need(reservations["schema"] == "jolt-budget-reservations/v1", "unknown reservation artifact")
-        self.budget = _Reservations(self.config["budget"], reservations["reservations"], self.worker["costs_before_readback"])
+        if self.execution_version == 3:
+            from nca.train.jolt_budget_v3 import reservation_records
+            _need(self.worker["costs_before_readback"].get("schema") == "nca-jolt-learn-budget/v3",
+                  "v3 allocation cannot reinterpret an older budget snapshot")
+            rows = reservation_records(_path(self.output, "budget-reservations.json"))
+        else:
+            reservations = _json(_path(self.output, "budget-reservations.json"), limit=MAX_RESERVATION_BYTES)
+            _need(reservations["schema"] == "jolt-budget-reservations/v1", "unknown reservation artifact")
+            rows = reservations["reservations"]
+        self.budget = _Reservations(self.config["budget"], rows, self.worker["costs_before_readback"], check=self._check)
         _need(self.worker["costs_before_readback"]["reservation_count"] == len(self.budget.rows),
               "worker omitted trailing charged reservations")
 
     def checkpoint(self, item):
+        self._check()
         identifier = item["id"]
         match = CHECKPOINT_ID.fullmatch(identifier)
         _need(match is not None and identifier not in self.checkpoints and self.frozen is None,
@@ -448,6 +649,8 @@ class _Audit:
         family, seed, phase = match[1], int(match[2]), match[3]
         _need(family == "residual" or not phase.startswith("u"), "BC has no update-selected checkpoint")
         path = _path(self.output, item["path"])
+        if self.execution_version == 3:
+            _need(path.stat().st_size <= 1024 * 1024, "v3 checkpoint exceeds the frozen 1 MiB envelope")
         _need(item["path"] == "checkpoints/" + identifier + ".pt"
               and file_identity(path)["sha256"] == item["file_sha256"], "checkpoint bytes differ")
         self.reserve("checkpoint_loads", 1)
@@ -498,13 +701,23 @@ class _Audit:
             return policy(torch.tensor([encoded], dtype=next(policy.parameters()).dtype), hidden)
 
     def _read_episode(self, row):
+        self._check()
+        version3 = getattr(self, "execution_version", 1) == 3
         raw_path = _path(self.output, row["artifact"])
         sample_path = _path(self.output, row["sample_artifact"])
         _need(file_identity(raw_path)["sha256"] == row["artifact_sha256"]
               and file_identity(sample_path)["sha256"] == row["sample_sha256"], "episode bytes differ from result")
-        _same(_json(_path(self.output, "metrics/" + row["id"] + ".json")), row,
+        if version3:
+            from nca.train.jolt_storage_v3 import metrics_byte_limit_v3
+            metrics_limit = metrics_byte_limit_v3(row["kind"])
+        else:
+            metrics_limit = MAX_JSON_BYTES
+        _same(_json(_path(self.output, "metrics/" + row["id"] + ".json"), limit=metrics_limit), row,
               "independent metrics artifact differs from worker result")
-        raw, sample = read_episode(raw_path), _sample(sample_path)
+        raw = _raw_episode_v3(raw_path) if version3 else read_episode(raw_path)
+        self._check()
+        sample = _sample(sample_path, execution_version=getattr(self, "execution_version", 1))
+        self._check()
         _need(raw.id == sample.id == row["id"] and row["decisions"] == len(sample.decisions)
               and raw.consumed_ticks == row["consumed_ticks"], "episode identity/count differs")
         _need(raw.learner_revision == self.manifest["source_revision"]
@@ -531,13 +744,19 @@ class _Audit:
         goal = SkillGoal(row["id"], "directed_hop", tuple(case["target"]), .8, 4., 4.)
         context = InvocationContext.create(raw.initial_observation, goal)
         _need(raw.initial_observation["tick"] == 0, "reset renewed a partial invocation")
+        if getattr(self, "execution_version", 1) == 3:
+            _same(raw.evaluation.get("case_stream_entry"), row.get("case_stream_entry"),
+                  "raw episode changed the frozen case-stream position")
+            _need((stage == "ppo") == isinstance(row.get("case_stream_entry"), Mapping),
+                  "case-stream provenance is required exactly for PPO episodes")
         return {"row": row, "raw": raw, "sample": sample, "goal": goal, "context": context,
-                "event_cursor": 0, "proposals": [], "reset": False, "profile": False}
+                "event_cursor": 0, "proposals": [], "reset": False, "profile": False, "retirement_note": None}
 
     @torch.no_grad()
     def episode(self, bundle):
         row, raw, sample = bundle["row"], bundle["raw"], bundle["sample"]
         goal, context = bundle["goal"], bundle["context"]
+        version3 = getattr(self, "execution_version", 1) == 3
         steps = [event for event in raw.events if event.kind == "step"]
         _need(len(sample.decisions) <= len(steps), "sample invented a physical decision")
         _need(row["error"] is not None or len(steps) == len(sample.decisions), "ordinary raw rows were censored")
@@ -565,6 +784,7 @@ class _Audit:
               "episode exceeded its fixed original rollout allocation")
         values, expected_history, rewards = [], ActionHistory(), []
         for index, record in enumerate(sample.decisions):
+            self._check()
             event = record.event
             _same(replace(event, reward=steps[index].reward, terminated=steps[index].terminated,
                           truncated=steps[index].truncated).to_dict(), steps[index].to_dict(),
@@ -649,7 +869,9 @@ class _Audit:
             expected_proposal = None if overridden else expected_action
             _need(record.proposal == expected_proposal, "original ordinary proposal does not replay")
             _same(event.requested_packet["action"], expected_action.to_dict(), "dispatch differs from admitted proposal/override")
-            _need(event.requested_packet["lease_ticks"] == supervision.action_lease_ticks
+            lease = (teacher.diagnostic_state()["action_lease_ticks"]
+                     if version3 and teacher is not None else supervision.action_lease_ticks)
+            _need(event.requested_packet["lease_ticks"] == lease
                   and event.requested_packet["observed_tick"] == observation["tick"]
                   and observation["tick"] + supervision.action_lease_ticks <= context.deadline_tick,
                   "dispatcher renewed lease/deadline")
@@ -682,12 +904,53 @@ class _Audit:
         if row["stage"] == "ppo":
             _need(isinstance(persisted, list) and len(persisted) == len(values),
                   "value evidence does not cover every PPO decision")
-            for actual, expected in zip(persisted, values):
-                _near(actual, expected, "retained value does not replay from original weights/history")
+            for index, (actual, expected) in enumerate(zip(persisted, values)):
+                if version3 and sample.decisions[index].proposal is None:
+                    _need(actual is None, "value-less emergency override invented a model value")
+                else:
+                    _near(actual, expected, "retained value does not replay from original weights/history")
         else:
             _need(persisted is None, "non-PPO result invented fitting values")
         bootstrap = row["bootstrap_value"]
-        if row["bootstrap_observation_sha256"] is not None:
+        safe_retirement = False
+        if version3:
+            from nca.evaluation.jolt_retirement import OUTCOME_SCHEMA, validate_safe_retirement_v3
+            from nca.evaluation.jolt_learning import _validate_outcome_v3
+            _validate_outcome_v3(row)
+            _same(row["outcome"], raw.evaluation.get("outcome"), "raw episode outcome changed")
+            _same(row["outcome"], sample.outcome, "sample episode outcome changed")
+            _same(row.get("retirement"), raw.evaluation.get("retirement"), "raw retirement evidence changed")
+            _same(row.get("retirement"), sample.retirement, "sample retirement evidence changed")
+            safe_retirement = row["outcome"]["kind"] == "safe_retirement"
+            if safe_retirement:
+                _need(not task.done and bool(raw.events) and raw.events[-1].kind == "cancel",
+                      "safe retirement replaced a task terminal or omitted native cancellation")
+                cancelled = raw.events[-1]
+                path = row["retirement"]["path"]
+                _need((path == "ordinary_attempt" and len(sample.decisions) < planned_maximum)
+                      or (path == "cutoff_peek" and row["stage"] == "ppo"
+                          and len(sample.decisions) == planned_maximum),
+                      "safe-retirement attempt does not match the fixed physical boundary")
+                expected = validate_safe_retirement_v3(sample.decisions, cancelled.issued_observation,
+                    goal, context, expected_history, path, after_cancel=cancelled.next_observation)
+                _same(row["retirement"], expected, "safe retirement does not replay from complete physical history")
+                _need(cancelled.reason == "emergency_recovery_deadline",
+                      "native cancellation reason differs from the verified retirement")
+                _need(row["bootstrap_observation_sha256"] is None
+                      and row["bootstrap_observation_valid"] is False
+                      and row["bootstrap_reason"] == "safe_retirement"
+                      and (bootstrap == 0. if row["stage"] == "ppo" else bootstrap is None),
+                      "terminal safe failure invented a bootstrap observation or model value")
+                if learned and path == "ordinary_attempt":
+                    self.executions += 1
+            else:
+                kind = ("integrity_error" if row["error"] is not None else
+                        "task_terminal" if task.done else "administrative_cutoff")
+                _need(row["outcome"]["kind"] == kind,
+                      "versioned episode outcome differs from original physical task/error evidence")
+        if safe_retirement:
+            pass  # No neural forward or physical proposal exists on this path.
+        elif row["bootstrap_observation_sha256"] is not None:
             _need(learned and row["stage"] == "ppo" and bool(sample.decisions) and not task.done,
                   "bootstrap invented after a task terminal or outside PPO")
             observation = sample.decisions[-1].event.next_observation
@@ -710,7 +973,7 @@ class _Audit:
                 _need(bootstrap == 0. and row["bootstrap_observation_valid"] is False
                       and row["bootstrap_reason"] == "supervisor_value_unavailable",
                       "supervisor override invented a critic value")
-        elif getattr(self, "execution_version", 1) == 2:
+        elif getattr(self, "execution_version", 1) in (2, 3):
             absent = (type(bootstrap) in (int, float) and bootstrap == 0.
                       if row["stage"] == "ppo" else bootstrap is None)
             terminal = (task.done and row["bootstrap_observation_valid"] is True
@@ -732,12 +995,20 @@ class _Audit:
                   "a missing final bootstrap view invented value or validity")
         _same(raw.evaluation["reward_terms"], rewards, "retained reward decomposition differs")
         metrics = task.metrics(administratively_capped=not task.done)
-        if row["error"] is not None and row["error"]["type"] != "AdmissionError":
+        if safe_retirement:
+            metrics.update(success=False, reason="emergency_recovery_deadline",
+                           administratively_capped=False, capped_completion_seconds=4.)
+        capped_error = (_budget_exhaustion_v3(row["error"]) if version3 else
+                        row["error"] is not None and row["error"]["type"] == "AdmissionError")
+        if row["error"] is not None and not capped_error:
             metrics["integrity_failure"] = True
+        if version3 and row["error"] is not None:
+            metrics["success"] = False
         _same(row["metrics"], metrics, "task metrics do not replay from original per-tick receipts")
         _same(raw.evaluation["metrics"], metrics, "raw evaluation metrics changed")
         _need(raw.evaluation["task_reward_schema"] == REWARD_SCHEMA, "task reward schema changed")
-        status = ("capped" if row["error"] and row["error"]["type"] == "AdmissionError" else
+        status = ("completed" if safe_retirement else
+                  "capped" if capped_error else
                   "failed" if row["error"] else "completed" if task.done else "capped")
         _need(raw.status == sample.status == status and raw.reason == sample.reason == metrics["reason"],
               "episode completion status differs from its physical task/error evidence")
@@ -752,7 +1023,9 @@ class _Audit:
             self.partial.append({"episode": row["id"], "unscored_native_decisions": len(steps) - len(frames)})
         _need(row["supervisor_interventions"] == sum(record.overridden for record in sample.decisions),
               "supervisor intervention count changed")
-        if getattr(self, "execution_version", 1) == 2:
+        if version3:
+            closure = _episode_closure_v3(raw, row, deadline_missed=task.deadline_missed)
+        elif getattr(self, "execution_version", 1) == 2:
             closure = _episode_closure_v2(raw, row, deadline_missed=task.deadline_missed)
         else:
             closure = bool(raw.events and raw.events[-1].next_observation
@@ -760,7 +1033,7 @@ class _Audit:
         _need(row["owner_closure_confirmed"] == closure
               and raw.evaluation["owner_closure_confirmed"] == closure, "episode closure has no native fence")
         if row["stage"] == "teacher":
-            self.teacher_rows.append((row, sample))
+            self.teacher_rows.append((row, _episode_counts_v3(sample) if version3 else sample))
         elif row["stage"] == "ppo":
             match = PPO_ID.fullmatch(row["id"])
             _need(match is not None, "undeclared PPO rollout identity")
@@ -769,7 +1042,10 @@ class _Audit:
             _need(index == len(group), "PPO physical episodes were reordered")
             expected_source = f"residual-seed{seed}-" + ("initial" if update == 0 else f"u{update}")
             _need(row["controller_id"] == expected_source, "PPO update used another old policy checkpoint")
-            group.append((row, sample))
+            if version3:
+                _need(bool(sample.decisions) and len(group) < 256,
+                      "PPO capture made zero progress or exceeded its fixed start ceiling")
+            group.append((row, _episode_counts_v3(sample) if version3 else sample))
         self.verified_rows.append({"id": row["id"], "raw_sha256": row["artifact_sha256"],
             "sample_sha256": sample.sha256, "decisions": len(sample.decisions),
             "consumed_ticks": raw.consumed_ticks, "metrics_sha256": sha256_json(metrics),
@@ -777,6 +1053,7 @@ class _Audit:
                 row["bootstrap_observation_valid"])) if row["stage"] == "ppo" else None})
 
     def freeze_dataset(self, record):
+        self._check()
         _need(self.dataset is None and self.frozen is None, "dataset was reopened after fitting")
         self.dataset = _json(_path(self.output, "dataset.json"))
         expected_cases = self.config["cases"]["teacher"]
@@ -784,13 +1061,16 @@ class _Audit:
               "teacher dataset censored or reordered a declared case")
         eligible = [decision for _, episode in self.teacher_rows for decision in episode.decisions
                     if decision.imitation_eligible]
-        expected = {"schema": "jolt-demonstrations/v2",
+        version3 = self.execution_version == 3
+        expected = {"schema": "jolt-demonstrations/v3" if version3 else "jolt-demonstrations/v2",
             "episodes": [{"id": episode.id, "sha256": episode.sha256} for _, episode in self.teacher_rows],
             "eligible_samples": len(eligible),
             "fixed_windows_per_epoch": sum(math.ceil(len(episode.decisions) / 16) for _, episode in self.teacher_rows),
             "unsuccessful_episodes_retained": sum(not row["metrics"]["success"] for row, _ in self.teacher_rows),
             "secondary_positive_labels": sum(decision.proposal.secondary for decision in eligible),
             "selection": "all eligible training rows, with no success filter"}
+        if version3:
+            expected["safe_retirements"] = sum(row["outcome"]["kind"] == "safe_retirement" for row, _ in self.teacher_rows)
         _same(self.dataset, expected, "BC dataset omitted failures, abstention or ordinary teacher rows")
         _need(bool(eligible) and expected["secondary_positive_labels"] == 0
               and record["dataset_sha256"] == sha256_json(expected)
@@ -798,6 +1078,7 @@ class _Audit:
               "dataset shape/secondary labels differ from prospective fitting contract")
 
     def fit_start(self, record):
+        self._check()
         _need(self.active_fit is None and self.frozen is None and self.dataset is not None,
               "fitting overlapped or occurred outside the fixed dataset boundary")
         self.budget.snapshot(record["counters"])
@@ -820,9 +1101,13 @@ class _Audit:
             group = self.ppo_groups.get((seed, update), [])
             _need(sum(len(episode.decisions) for _, episode in group) == 256,
                   "PPO fitting did not retain exactly 256 original decisions")
+            if self.execution_version == 3:
+                _need(1 <= len(group) <= 256 and all(len(episode.decisions) > 0 for _, episode in group),
+                      "PPO fitting censored zero-progress captures or exceeded its frozen stream budget")
         self.active_fit = record
 
     def fit_finish(self, record):
+        self._check()
         start = self.active_fit
         _need(start is not None and record["seed"] == start["seed"], "fitting completion has no original start")
         family = "bc" if record["event"] == "bc_fitting_finished" else "residual"
@@ -862,6 +1147,13 @@ class _Audit:
             _need(result["actor_samples"] == eligible and result["excluded_actor_samples"] == 256 - eligible
                   and result["frozen_base_sha256"] == self.checkpoints[f"bc-seed{record['seed']}-final"]["policy_sha256"],
                   "PPO losses or frozen base identity changed")
+            if self.execution_version == 3:
+                _need(result.get("terminal_schema") == "nca-jolt-learning-terminal/v3"
+                      and result.get("confirmed_decisions") == 256
+                      and result.get("episodes") == len(group)
+                      and result.get("safe_retirements") == sum(row["outcome"]["kind"] == "safe_retirement" for row, _ in group)
+                      and result.get("new_terminal_penalty") is False,
+                      "PPO terminal semantics, retained failures or exact update budget changed")
             for key in ("mean_loss", "mean_ratio", "clip_fraction"):
                 _need(result[key] is None or type(result[key]) in (int, float) and math.isfinite(result[key]),
                       "nonfinite PPO diagnostics")
@@ -869,7 +1161,12 @@ class _Audit:
             _need(after[key] - before[key] == expected[key], "fitting reserved cost differs from ordered physical windows: " + key)
         _need(result["optimizer_calls"] == expected["bc_optimizer" if family == "bc" else "ppo_optimizer"],
               "fit result optimizer count differs from reservations")
-        _same(_json(_path(self.output, relative)), result, "fitting artifact changed after publication")
+        if self.execution_version == 3:
+            from nca.train.jolt_storage_v3 import MAX_LEARNING_JSON_BYTES
+            learning_limit = MAX_LEARNING_JSON_BYTES
+        else:
+            learning_limit = MAX_JSON_BYTES
+        _same(_json(_path(self.output, relative), limit=learning_limit), result, "fitting artifact changed after publication")
         self.expected_counts.update({key: value for key, value in expected.items() if key != "checkpoint_writes"})
         self.fit_results.append(result)
         if family == "residual":
@@ -878,10 +1175,13 @@ class _Audit:
 
     def journal(self):
         path = _path(self.output, "owner-journal.jsonl")
-        identity = validate_record_chain(path)
+        version3 = getattr(self, "execution_version", 1) == 3
+        identity = journal_identity_v3(path, check=self._check) if version3 else validate_record_chain(path)
         closure = self.worker["closure"]
         durable = closure["durability"]
-        if getattr(self, "execution_version", 1) == 2:
+        if version3:
+            _durability_v3(durable, identity, system=self.manifest.get("runtime", {}).get("system"))
+        elif getattr(self, "execution_version", 1) == 2:
             _durability_v2(durable, identity, system=self.manifest.get("runtime", {}).get("system"))
         else:
             _need(durable["closed"] is True and durable["poisoned"] is False
@@ -896,11 +1196,24 @@ class _Audit:
         stage_episodes = Counter()
         reset_ids = set()
         scenario_rngs = {seed: random.Random(seed + 300000) for seed in POLICY_SEEDS}
+        scenario_positions = Counter()
+        update_starts = Counter()
+        stage_positions = Counter()
         freeze_seen = opened_seen = False
+        ordinary_stopped = False
+        replay_digest, replay_count, replay_bytes = hashlib.sha256(), 0, 0
+        line_limit = 64 * 1024 if version3 else MAX_RECORD_BYTES
         with path.open("rb") as stream:
-            for line in stream:
-                _need(len(line) <= MAX_RECORD_BYTES, "owner journal record is oversized")
-                record = strict_json_loads(line)
+            for line in iter(lambda: stream.readline(line_limit + 1), b""):
+                self._check()
+                _need(len(line) <= line_limit, "owner journal record is oversized")
+                if version3:
+                    replay_digest.update(line)
+                    replay_count += 1
+                    replay_bytes += len(line)
+                    _need(replay_count <= identity["records"] and replay_bytes <= identity["bytes"],
+                          "journal grew after its independent chain verification")
+                record = strict_json_loads(line, max_bytes=line_limit)
                 event = record["event"]
                 if event == "host_start_reserved":
                     _need(not self.started, "host start was repeated")
@@ -916,6 +1229,7 @@ class _Audit:
                 elif event == "episode_started":
                     _need(self.started and active is None and self.active_fit is None and not self.closed,
                           "episode overlaps work or occurs outside original host lifetime")
+                    _need(not version3 or not ordinary_stopped, "v3 invocation resumed after a fatal evidence failure")
                     _need(record["id"] not in finished_ids, "episode was retried")
                     stage = record["stage"]
                     if stage in ("open", "sealed"):
@@ -927,15 +1241,53 @@ class _Audit:
                     if stage in ("teacher", "ppo"):
                         _need(self.frozen is None, "training data reopened after policy freeze")
                     row = self.episodes.get(record["id"])
+                    if self.execution_version == 3:
+                        entry = record.get("case_stream_entry")
+                        if stage == "ppo":
+                            match = PPO_ID.fullmatch(record["id"])
+                            _need(match is not None, "invalid PPO episode id")
+                            seed, update, episode_index = map(int, match.groups())
+                            position = scenario_positions[seed]
+                            expected_entry = {"seed": seed, "index": position, "update": update}
+                            _same(entry, expected_entry, "PPO start changed its fixed seeded stream position")
+                            _need(position < 2048 and update_starts[(seed, update)] < 256
+                                  and episode_index == update_starts[(seed, update)],
+                                  "PPO stream exhausted or update episodes were replaced")
+                            frozen = self.config["ppo_case_stream"]["seeds"][str(seed)][position]
+                            case = scenario_rngs[seed].choice(self.config["cases"]["teacher"])
+                            _need(record["case_id"] == frozen == case["id"],
+                                  "PPO case differs from the complete precomputed seeded stream")
+                            scenario_positions[seed] += 1
+                            update_starts[(seed, update)] += 1
+                        else:
+                            _need(entry is None, "non-PPO start invented a case-stream position")
+                            identifiers = (["authored"] if stage == "teacher" else
+                                ["authored", "idle"] + [name for name in controller_ids()[2:]
+                                    if stage == "sealed" or name.endswith("-final")])
+                            position = stage_positions[stage]
+                            cases = self.config["cases"][stage]
+                            _need(position < len(cases) * len(identifiers),
+                                  "stage started more than the frozen paired schedule")
+                            _need((record["case_id"], record["controller_id"]) ==
+                                  (cases[position // len(identifiers)]["id"], identifiers[position % len(identifiers)]),
+                                  "case/controller order changed after outcomes")
+                            if stage in ("open", "sealed"):
+                                _same(self.config["comparison_order"][stage][position],
+                                      {"case_id": record["case_id"], "controller_id": record["controller_id"]},
+                                      "paired outcome order differs from the complete frozen comparison stream")
+                            stage_positions[stage] += 1
                     if row is None:
                         active = {"row": None, "start": record, "proposals": [], "event_cursor": 0}
                     else:
                         _need(all(row[key] == record[key] for key in ("id", "case_id", "controller_id", "stage")),
                               "episode result differs from original start")
+                        if self.execution_version == 3:
+                            _same(row.get("case_stream_entry"), record.get("case_stream_entry"),
+                                  "PPO result changed its prospective stream entry")
                         active = self._read_episode(row)
                         if stage == "teacher":
                             _need(row["kind"] == row["controller_id"] == "authored", "teacher dataset used another policy")
-                        if stage == "ppo":
+                        if stage == "ppo" and self.execution_version != 3:
                             match = PPO_ID.fullmatch(row["id"])
                             _need(match is not None, "invalid PPO episode id")
                             case = scenario_rngs[int(match[1])].choice(self.config["cases"]["teacher"])
@@ -945,6 +1297,8 @@ class _Audit:
                 elif event == "decision_proposed":
                     _need(active is not None and pending is None and record["index"] == len(active["proposals"]),
                           "decision was reordered or proposed with unresolved native work")
+                    _need(not active.get("retirement_note"), "retired invocation proposed another action")
+                    _need(not version3 or not ordinary_stopped, "v3 decision resumed after a fatal evidence failure")
                     identity_id = active["row"]["id"] if active["row"] else active["start"]["id"]
                     _need(record["episode_id"] == identity_id, "proposal belongs to another invocation")
                     active["proposals"].append(record)
@@ -954,7 +1308,11 @@ class _Audit:
                     operation = record["operation"]
                     _need(operation in ("reset", "profile", "step", "cancel", "close"),
                           "undeclared native operation")
+                    _need(not version3 or not ordinary_stopped or operation in ("cancel", "close"),
+                          "v3 physical work resumed after a fatal evidence failure")
                     _need(active is not None or operation == "close", "owner request lost its episode")
+                    _need(not active or not active.get("retirement_note"),
+                          "retired invocation performed another native operation")
                     if pending is not None:
                         _need(operation in ("cancel", "close") and not self.complete, "ordinary work resumed after uncertain exchange")
                         if pending["serial"] not in uncertain:
@@ -1040,6 +1398,16 @@ class _Audit:
                                for admission in trace.get("admission", ())):
                             refused += 6
                     pending = None
+                elif event == "safe_retirement_verified":
+                    _need(self.execution_version == 3 and active is not None and active["row"] is not None
+                          and pending is None and not active.get("retirement_note")
+                          and record.get("episode_id") == active["row"]["id"]
+                          and active["event_cursor"] > 0
+                          and active["raw"].events[active["event_cursor"] - 1].kind == "cancel",
+                          "safe retirement lacks its original cancellation boundary")
+                    _same(record.get("retirement"), active["row"].get("retirement"),
+                          "retirement changed after its durable original note")
+                    active["retirement_note"] = record["retirement"]
                 elif event == "episode_finished":
                     _need(active is not None and active["row"] is not None, "episode completion has no retained start/artifact")
                     _same(record["row"], active["row"], "worker result changed original episode completion")
@@ -1048,20 +1416,28 @@ class _Audit:
                     _need(not tail or not self.complete and all(item.kind == "failure" for item in tail),
                           "raw capture contains receipts absent from original owner journal")
                     _need(len(active["proposals"]) >= len(active["sample"].decisions), "sample invented an unjournaled proposal")
+                    if self.execution_version == 3:
+                        _same(active.get("retirement_note"), active["row"].get("retirement"),
+                              "safe failure was continued without its durable retirement evidence")
                     self.episode(active)
                     finished_ids.append(active["row"]["id"])
                     self.expected_counts["episodes_aborted" if active["row"]["error"] else "episodes_completed"] += 1
+                    ordinary_stopped = ordinary_stopped or active["row"]["error"] is not None
                     active = None
                 elif event == "episode_failed_before_capture":
                     _need(active is not None and active["row"] is None and not self.complete,
                           "startup failure was disguised as a completed episode")
                     self.partial.append({"episode": record["id"], "reason": "failed_before_capture"})
+                    ordinary_stopped = True
                     active = None
                 elif event == "fitting_shape_frozen":
+                    _need(not version3 or not ordinary_stopped, "v3 dataset froze after a fatal evidence failure")
                     self.freeze_dataset(record)
                 elif event == "checkpoint_published":
+                    _need(not version3 or not ordinary_stopped, "v3 checkpoint published after a fatal evidence failure")
                     self.checkpoint(record["checkpoint"])
                 elif event in ("bc_fitting_started", "ppo_fitting_started"):
+                    _need(not version3 or not ordinary_stopped, "v3 fitting resumed after a fatal evidence failure")
                     self.fit_start(record)
                 elif event in ("bc_fitting_finished", "ppo_fitting_finished"):
                     self.fit_finish(record)
@@ -1092,6 +1468,7 @@ class _Audit:
                     _need(not self.complete and record["status"] == self.worker["status"], "allocation stop status changed")
                     self.budget.snapshot(record["counters"])
                     _same(record["error"], self.worker["error"], "worker error differs from original stop")
+                    ordinary_stopped = True
                 elif event == "host_terminated":
                     _need(not self.terminated and record["process_exited"] is True
                           and record["native_close_confirmed"] == self.closed, "host termination evidence differs")
@@ -1101,6 +1478,10 @@ class _Audit:
                     self.budget.snapshot(record["counters"])
                 else:
                     _need(False, "undeclared event in original owner journal: " + str(event))
+        if version3:
+            _need(replay_digest.hexdigest() == identity["sha256"]
+                  and replay_count == identity["records"] and replay_bytes == identity["bytes"],
+                  "journal original bytes changed between independent chain verification and replay")
         if pending is not None and pending["serial"] not in uncertain:
             _need(not self.complete, "completed allocation retains an unconfirmed owner request")
             uncertain.append(pending["serial"])
@@ -1151,8 +1532,10 @@ class _Audit:
         self.identities()
         journal = self.journal()
         evidence_complete = self.complete and not self.partial
-        qualification = qualify(self.worker["results"], self.config["cases"]["sealed"], evidence_complete=evidence_complete)
-        _same(self.worker["qualification"], qualify(self.worker["results"], self.config["cases"]["sealed"], evidence_complete=False),
+        qualification = qualify(self.worker["results"], self.config["cases"]["sealed"],
+                                evidence_complete=evidence_complete, execution_version=self.execution_version)
+        _same(self.worker["qualification"], qualify(self.worker["results"], self.config["cases"]["sealed"],
+              evidence_complete=False, execution_version=self.execution_version),
               "worker pre-readback qualification changed")
         if self.complete:
             open_pairs = {(row["case_id"], row["controller_id"]) for row in self.worker["results"] if row["stage"] == "open"}
@@ -1160,7 +1543,8 @@ class _Audit:
                              for identifier in ("authored", "idle", *(name for name in controller_ids() if name.endswith("-final")))}
             _need(open_pairs == expected_open and sum(row["stage"] == "open" for row in self.worker["results"]) == 32
                   and qualification["complete_pairs"], "completed experiment omitted paired open or sealed cases")
-        return {"schema": SCHEMA_V2 if self.execution_version == 2 else SCHEMA,
+        self._check()
+        return {"schema": {1: SCHEMA, 2: SCHEMA_V2, 3: SCHEMA_V3}[self.execution_version],
                 "verified": True, "complete": evidence_complete,
                 "qualified": bool(evidence_complete and qualification["qualified"]),
                 "worker_status": self.worker["status"], "worker_result_sha256": file_identity(self.output / "worker-result.json")["sha256"],
@@ -1175,7 +1559,7 @@ class _Audit:
                     "owner feel and morphology transfer remain unaccepted"]}
 
 
-def verify_output(output: Path, reserve: Callable[[str, int], Any]) -> dict[str, Any]:
+def verify_output(output: Path, reserve: Callable[[str, int], Any], *, check=None) -> dict[str, Any]:
     """Read immutable worker artifacts once; never acquire a host or fit weights.
 
     Invalid evidence returns a retained negative audit, including the already
@@ -1186,10 +1570,10 @@ def verify_output(output: Path, reserve: Callable[[str, int], Any]) -> dict[str,
         raise ValueError("offline replay requires prospective load/forward reservations")
     audit = None
     try:
-        audit = _Audit(Path(output), reserve)
+        audit = _Audit(Path(output), reserve, check=check)
         return audit.finish()
     except Exception as exc:
-        return {"schema": SCHEMA_V2 if audit is not None and audit.execution_version == 2 else SCHEMA,
+        return {"schema": {1: SCHEMA, 2: SCHEMA_V2, 3: SCHEMA_V3}[audit.execution_version] if audit is not None else SCHEMA,
                 "verified": False, "complete": False, "qualified": False,
                 "error": {"type": type(exc).__name__, "code": getattr(exc, "code", None),
                           "reason": str(exc) if isinstance(exc, ContractError) and exc.code == "jolt_audit" else None},

@@ -63,6 +63,16 @@ def learn_jolt_screen(**kwargs):
     return run(**kwargs)
 
 
+def learn_jolt_screen_v3(**kwargs):
+    """Select the fresh execution contract without reinterpreting trainer v2."""
+    from .contracts import ContractError
+    version = kwargs.pop("execution_version", 3)
+    if type(version) is not int or version != 3:
+        raise ContractError("jolt_execution_version", "trainer learn-jolt@3 requires execution v3")
+    from .train.jolt_screen import run
+    return run(execution_version=3, **kwargs)
+
+
 def cpu_export_policy(*args, **kwargs):
     """Construct the optional NumPy runtime only on explicit invocation."""
     from .export import ExportController
@@ -171,6 +181,8 @@ def builtin_registry() -> Registry:
                       ("optional-torch", "cpu", "recurrent", "learned-aim-buttons", "separate-supervisor", "cancellation"))
     registry.register("trainer", "learn-jolt", 2, learn_jolt_screen,
                       ("optional-cpu", "frozen-admission", "bounded-experiment", "recurrent", "source-attribution"))
+    registry.register("trainer", "learn-jolt", 3, learn_jolt_screen_v3,
+                      ("optional-cpu", "frozen-admission", "safe-retirement", "original-clock", "bounded-streaming"))
     registry.register("policy", "jolt-cpu-export", 1, cpu_export_policy,
                       ("optional-numpy", "evaluated-bundle", "runtime-context", "cpu"))
     registry.register("policy", "jolt-torch-cpu-export", 1, torch_cpu_export_policy,

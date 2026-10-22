@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze, execute once, or verify the bounded LEARN-JOLT-002 allocation.
+"""Freeze, execute once, or verify a separately versioned Jolt allocation.
 
 The outer process owns the original clock and process tree. Admission and
 runtime import time are included; a failed invocation cannot be retried under
@@ -47,6 +47,9 @@ def _array_hash(digest):
 
 def _cost_snapshot(budget, rows, snapshot, *, closed, prefix=None):
     """Recompute conserved costs using only the immutable reservation bytes."""
+    if snapshot.get("schema") == "nca-jolt-learn-budget/v3":
+        from nca.train.jolt_cli_v3 import cost_snapshot_v3
+        return cost_snapshot_v3(budget, rows, snapshot, closed=closed, prefix=prefix)
     from nca.contracts import sha256_json
     maximum, reserve = budget["maximum_wall_seconds"], budget["cleanup_reserve_seconds"]
     _checked(type(maximum) is int and maximum == 1800
@@ -116,6 +119,9 @@ def _cost_snapshot(budget, rows, snapshot, *, closed, prefix=None):
 
 
 def _verify_closed_costs(output, result, audit, *, execution_version=1):
+    if execution_version == 3:
+        from nca.train.jolt_cli_v3 import verify_closed_costs
+        return verify_closed_costs(output, result, audit)
     from nca.contracts import sha256_json
     from nca.evaluation.durable_journal import file_identity
 
@@ -208,6 +214,9 @@ def _verify_closed_costs(output, result, audit, *, execution_version=1):
 
 
 def verify_inventory(output, *, execution_version=1):
+    if execution_version == 3:
+        from nca.train.jolt_cli_v3 import verify_inventory as verify_inventory_v3
+        return verify_inventory_v3(output)
     from nca.evaluation.durable_journal import file_identity, validate_record_chain
     output = Path(output)
     value = _read_json(output / "inventory.json")
@@ -265,6 +274,10 @@ def verify_execution_v2(output, *, terminal_stdout, observed_exit_code):
 
 
 def freeze(args, *, execution_version=1):
+    if execution_version == 3:
+        from nca.train.jolt_cli_v3 import freeze as freeze_v3
+        print(json.dumps(freeze_v3(args, ROOT)))
+        return
     import numpy
     import torch
     from nca.adapters.godot import inspect_host
@@ -435,8 +448,9 @@ def execute(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("freeze", "run", "worker", "inventory",
-                                         "freeze-v2", "run-v2", "worker-v2", "inventory-v2", "lifecycle-v2"))
-    parser.add_argument("--config", type=Path, default=ROOT / "configs/learning/jolt-learn-002-v1.json")
+                                         "freeze-v2", "run-v2", "worker-v2", "inventory-v2", "lifecycle-v2",
+                                         "freeze-v3", "run-v3", "worker-v3", "inventory-v3", "lifecycle-v3"))
+    parser.add_argument("--config", type=Path)
     parser.add_argument("--declaration", type=Path)
     parser.add_argument("--checkout", type=Path)
     parser.add_argument("--godot", type=Path)
@@ -447,8 +461,23 @@ def main():
     parser.add_argument("--authorization-ref")
     parser.add_argument("--terminal-stdout", type=Path)
     parser.add_argument("--observed-exit-code", type=int)
+    parser.add_argument("--observed-exit-elapsed-seconds", type=float)
+    parser.add_argument("--resource-admission", type=Path)
     args = parser.parse_args()
-    execution_version = 2 if args.mode.endswith("-v2") else 1
+    execution_version = 3 if args.mode.endswith("-v3") else 2 if args.mode.endswith("-v2") else 1
+    if args.config is None:
+        args.config = ROOT / ("configs/learning/jolt-learn-003-v1.json" if execution_version == 3
+                              else "configs/learning/jolt-learn-002-v1.json")
+    if args.mode == "lifecycle-v3":
+        if (args.output is None or args.terminal_stdout is None or args.observed_exit_code is None
+                or args.observed_exit_elapsed_seconds is None):
+            parser.error("lifecycle-v3 requires output, original stdout and independently observed exit code/time")
+        from nca.train.jolt_cli_v3 import verify_execution
+        result = verify_execution(args.output, terminal_stdout=args.terminal_stdout,
+            observed_exit_code=args.observed_exit_code,
+            observed_exit_elapsed_seconds=args.observed_exit_elapsed_seconds)
+        print(json.dumps(result))
+        return 0 if result["completed"] else 2
     if args.mode == "lifecycle-v2":
         if args.output is None or args.terminal_stdout is None or args.observed_exit_code is None:
             parser.error("lifecycle-v2 requires output, original terminal stdout, and independently observed CLI exit")
@@ -456,12 +485,14 @@ def main():
                                      observed_exit_code=args.observed_exit_code)
         print(json.dumps(result))
         return 0 if result["completed"] else 2
-    if args.mode in ("inventory", "inventory-v2"):
+    if args.mode in ("inventory", "inventory-v2", "inventory-v3"):
         print(json.dumps(verify_inventory(args.output, execution_version=execution_version)))
         return 0
     if any(value is None for value in (args.declaration, args.checkout, args.godot)):
         parser.error("declaration, checkout and godot are required")
-    if args.mode in ("freeze", "freeze-v2"):
+    if args.mode in ("freeze", "freeze-v2", "freeze-v3"):
+        if execution_version == 3 and (args.output is None or args.resource_admission is None):
+            parser.error("freeze-v3 requires the unused output identity and resource-admission record")
         freeze(args, execution_version=execution_version)
         return 0
     if args.output is None:
@@ -471,7 +502,16 @@ def main():
     if args.mode == "run-v2":
         from nca.train.jolt_executor import execute as execute_v2
         return execute_v2(args, whole_started=ENTRY_MONOTONIC, script=Path(__file__).resolve())
-    if args.whole_started is None or not 0 < args.whole_started <= ENTRY_MONOTONIC:
+    if args.mode == "run-v3":
+        from nca.train.jolt_executor_v3 import execute as execute_v3
+        origin = ENTRY_MONOTONIC if args.whole_started is None else args.whole_started
+        if not math.isfinite(origin) or origin > ENTRY_MONOTONIC:
+            parser.error("run-v3 requires one original finite observer clock")
+        return execute_v3(args, whole_started=origin, script=Path(__file__).resolve())
+    valid_origin = (args.whole_started is not None and math.isfinite(args.whole_started)
+                    and args.whole_started <= ENTRY_MONOTONIC
+                    and (execution_version == 3 or args.whole_started > 0))
+    if not valid_origin:
         parser.error("worker requires the original supervised invocation clock")
     from nca.train.jolt_screen import run
     result = run(root=ROOT, checkout=args.checkout, godot=args.godot, output=args.output,

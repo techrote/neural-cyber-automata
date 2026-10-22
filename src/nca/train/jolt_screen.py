@@ -50,6 +50,8 @@ DECLARATION_SCHEMA = "nca-learn-jolt-002-execution/v1"
 RUN_SCHEMA = "nca-learn-jolt-002-run/v1"
 DECLARATION_SCHEMA_V2 = "nca-learn-jolt-002-execution/v2"
 RUN_SCHEMA_V2 = "nca-learn-jolt-002-run/v2"
+DECLARATION_SCHEMA_V3 = "nca-learn-jolt-003-execution/v3"
+RUN_SCHEMA_V3 = "nca-learn-jolt-003-run/v1"
 
 
 def runtime_identity():
@@ -91,6 +93,9 @@ def source_inventory(root):
 
 
 def validate_execution(root, declaration, *, config, host_identity, execution_version=1):
+    if type(execution_version) is int and execution_version == 3:
+        from nca.train.jolt_admission_v3 import validate_execution_v3
+        return validate_execution_v3(root, declaration, config=config, host_identity=host_identity)
     if type(execution_version) is not int or execution_version not in (1, 2):
         raise ContractError("jolt_execution_version", "unknown execution version")
     schema = DECLARATION_SCHEMA if execution_version == 1 else DECLARATION_SCHEMA_V2
@@ -143,9 +148,10 @@ def validate_execution(root, declaration, *, config, host_identity, execution_ve
 class MeteredOwner:
     """One pending exchange, exact source packets and a whole-exchange deadline."""
 
-    def __init__(self, host, ledger, journal, *, transport_seconds=15):
+    def __init__(self, host, ledger, journal, *, transport_seconds=15, execution_version=1):
         self.host, self.ledger, self.journal = host, ledger, journal
         self.transport_seconds = transport_seconds
+        self.execution_version = execution_version
         self.stage = "teacher"
         self.serial = 0
         self.pending = None
@@ -201,6 +207,8 @@ class MeteredOwner:
         channel.connection = _AbsoluteDeadlineSocket(original, deadline, time.monotonic)
         try:
             response = self.host.request(operation, **fields)
+            if self.execution_version == 3 and time.monotonic() >= deadline:
+                raise ContractError("jolt_owner_exchange_deadline", "complete native response exceeded its original exchange deadline")
         except Exception:
             self._mark_uncertain()
             raise
@@ -212,6 +220,8 @@ class MeteredOwner:
                 pass
         try:
             note(self.journal, "owner_response", serial=serial, response=response)
+            if self.execution_version == 3 and time.monotonic() >= deadline:
+                raise ContractError("jolt_owner_exchange_deadline", "native response durability exceeded its original exchange deadline")
             if operation == "step":
                 ticks = response.get("actual_ticks")
                 if type(ticks) is not int or not 0 <= ticks <= 6:
@@ -270,8 +280,14 @@ def _draw(decision, source_sha256):
 
 def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, stage,
             output, root, config, source_sha256, policy=None, base=None, generator=None,
-            maximum_decisions=40, execution_version=1):
+            maximum_decisions=40, execution_version=1, case_stream_entry=None):
     """One invocation; preserve every unsuccessful label and partial tail."""
+    if type(execution_version) is int and execution_version == 3:
+        from nca.train.jolt_capture_v3 import capture_v3
+        return capture_v3(owner, ledger, journal, case, identifier=identifier, controller_id=controller_id,
+            kind=kind, stage=stage, output=output, root=root, config=config, source_sha256=source_sha256,
+            policy=policy, base=base, generator=generator, maximum_decisions=maximum_decisions,
+            case_stream_entry=case_stream_entry)
     from nca.train.jolt_learning import rollout_sequence
     split = {"teacher": "training", "ppo": "training", "open": "open", "sealed": "sealed"}[stage]
     owner.stage = stage
@@ -480,10 +496,16 @@ def capture(owner, ledger, journal, case, *, identifier, controller_id, kind, st
     return sample_episode, row, sequence
 
 
-def _checkpoint(output, ledger, journal, checkpoints, policy, identifier, metadata, *, base=None):
+def _checkpoint(output, ledger, journal, checkpoints, policy, identifier, metadata, *, base=None,
+                execution_version=1):
     ledger.reserve("checkpoint_writes")
     path = output / "checkpoints" / f"{identifier}.pt"
-    receipt = save_policy(path, policy, base_policy=base, metadata={**metadata, "controller_id": identifier})
+    if execution_version == 3:
+        from nca.train.jolt_storage_v3 import save_policy_v3
+        receipt = save_policy_v3(path, policy, base_policy=base,
+            metadata={**metadata, "controller_id": identifier}, check=ledger.check)
+    else:
+        receipt = save_policy(path, policy, base_policy=base, metadata={**metadata, "controller_id": identifier})
     sync_directory(path.parent)
     row = {"id": identifier, "path": path.relative_to(output).as_posix(), **receipt}
     checkpoints.append(row)
@@ -491,7 +513,7 @@ def _checkpoint(output, ledger, journal, checkpoints, policy, identifier, metada
     return row
 
 
-def freeze_candidates(checkpoints, *, destination, source_sha256, journal):
+def freeze_candidates(checkpoints, *, destination, source_sha256, journal, publisher=publish_json):
     """All six finals must exist before opening *any* sealed outcome."""
     expected = {f"{family}-seed{seed}-final" for family in ("bc", "residual") for seed in POLICY_SEEDS}
     finals = [row for row in checkpoints if row["id"] in expected]
@@ -502,7 +524,7 @@ def freeze_candidates(checkpoints, *, destination, source_sha256, journal):
             raise ContractError("jolt_final_freeze", "a final checkpoint changed before the sealed boundary")
     receipt = {"schema": "jolt-six-final-freeze/v1", "source_sha256": source_sha256,
                "finals": finals, "selection": "fixed final epochs/updates; no seed or checkpoint selection"}
-    publish_json(destination / "frozen-finals.json", receipt)
+    publisher(destination / "frozen-finals.json", receipt)
     note(journal, "six_finals_frozen", receipt=receipt, sha256=sha256_json(receipt))
     return receipt
 
@@ -561,21 +583,44 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     torch.set_num_threads(1)
     torch.set_num_interop_threads(1)
     torch.use_deterministic_algorithms(True)
-    ledger = BudgetLedger(config["budget"], started=whole_started)
+    if execution_version == 3:
+        from nca.train.jolt_budget_v3 import BudgetLedgerV3
+        ledger = BudgetLedgerV3(config["budget"], started=whole_started,
+                               spool_path=output / "reservation-ledger.jsonl")
+    else:
+        ledger = BudgetLedger(config["budget"], started=whole_started)
+    publication_closed = False
+
+    def publication_check():
+        if publication_closed:
+            ledger.original_clock.check("publication")
+        else:
+            ledger.check(cleanup=True)
+
+    def publish(path, value, *, maximum_bytes=64 * 1024 * 1024):
+        if execution_version == 3:
+            from nca.train.jolt_storage_v3 import publish_json_v3
+            return publish_json_v3(path, value, maximum_bytes=maximum_bytes, check=publication_check)
+        return publish_json(path, value)
+
     ledger.reserve("attempts")
-    publish_json(output / "declaration.json", declaration)
-    publish_json(output / "config.json", config)
-    run_schema = RUN_SCHEMA if execution_version == 1 else RUN_SCHEMA_V2
+    publish(output / "declaration.json", declaration)
+    publish(output / "config.json", config)
+    run_schema = RUN_SCHEMA_V3 if execution_version == 3 else RUN_SCHEMA if execution_version == 1 else RUN_SCHEMA_V2
     manifest = {"schema": run_schema, "source_revision": declaration["source_revision"],
         "source_sha256": declaration["source_sha256"], "source_files": declaration["source_files"],
         "declaration_sha256": sha256_json(declaration), "config_sha256": sha256_json(config),
         "host_identity": identity, "runtime": declaration["runtime"],
         "whole_process_started_monotonic": whole_started, "created_utc": datetime.now(timezone.utc).isoformat()}
-    publish_json(output / "manifest.json", manifest)
+    publish(output / "manifest.json", manifest)
     results, checkpoints, training_results, demos = [], [], [], []
+    compact_demos, demo_identities, secondary_positive_labels = [], [], 0
     status, failure, native, owner = "incomplete", None, None, None
     recording_errors = []
-    if execution_version == 2:
+    if execution_version == 3:
+        from nca.train.jolt_storage_v3 import BoundedVerifiedJournalV3
+        journal = BoundedVerifiedJournalV3(output / "owner-journal.jsonl")
+    elif execution_version == 2:
         from nca.evaluation.verified_journal import VerifiedDurableJournal
         journal = VerifiedDurableJournal(output / "owner-journal.jsonl")
     else:
@@ -583,27 +628,49 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
     try:
         ledger.reserve_many({"host_starts": 1, "host_start_attempts": 1}, allowance_seconds=15)
         note(journal, "host_start_reserved", counts=ledger.snapshot())
-        native = GodotHost(checkout, godot, lane="act004", mode="stepped", timeout=15)
-        owner = MeteredOwner(native, ledger, journal)
+        if execution_version == 3:
+            from nca.train.jolt_native_v3 import BoundedGodotHostV3
+            native = BoundedGodotHostV3(checkout, godot, lane="act004", mode="stepped", timeout=15,
+                original_clock=ledger.original_clock, verified_identity=identity)
+        else:
+            native = GodotHost(checkout, godot, lane="act004", mode="stepped", timeout=15)
+        owner = MeteredOwner(native, ledger, journal, execution_version=execution_version)
         note(journal, "host_started", identity=native.identity)
         for case in config["cases"]["teacher"]:
             episode, row, _ = capture(owner, ledger, journal, case, identifier=f"teacher-{case['id']}",
                 controller_id="authored", kind="authored", stage="teacher", output=output, root=root,
                 config=config, source_sha256=declaration["source_sha256"], execution_version=execution_version)
-            demos.append(episode)
+            if execution_version == 3:
+                from nca.train.jolt_learning import convert_clone_episode_v3
+                compact_demos.append(convert_clone_episode_v3(episode,
+                    expected_teacher_sha256=JoltRecoveryControllerV4().specification_sha256,
+                    expected_supervisor_sha256=sha256_json(PhysicalRecoverySupervisor().specification())))
+                demo_identities.append({"id": episode.id, "sha256": episode.sha256})
+                secondary_positive_labels += sum(record.imitation_eligible and record.proposal.secondary
+                                                  for record in episode.decisions)
+                del episode
+            else:
+                demos.append(episode)
             results.append(row)
-            print(f"teacher episodes={len(demos)}/{len(config['cases']['teacher'])} decisions={ledger.counts['decisions']}", flush=True)
-        converted = clone_sequences(demos, expected_teacher_sha256=JoltRecoveryControllerV4().specification_sha256,
-            expected_supervisor_sha256=sha256_json(PhysicalRecoverySupervisor().specification()))
-        dataset = {"schema": "jolt-demonstrations/v2", "episodes": [{"id": episode.id, "sha256": episode.sha256} for episode in demos],
+            print(f"teacher episodes={len(demo_identities) if execution_version == 3 else len(demos)}/{len(config['cases']['teacher'])} decisions={ledger.counts['decisions']}", flush=True)
+        converted = (tuple(compact_demos) if execution_version == 3 else clone_sequences(demos,
+            expected_teacher_sha256=JoltRecoveryControllerV4().specification_sha256,
+            expected_supervisor_sha256=sha256_json(PhysicalRecoverySupervisor().specification())))
+        if execution_version == 3 and not any(item.eligible for episode in converted for item in episode.rows):
+            raise ContractError("jolt_teacher_labels", "no eligible ordinary teacher data; no fitting is admitted")
+        dataset = {"schema": "jolt-demonstrations/v3" if execution_version == 3 else "jolt-demonstrations/v2",
+                   "episodes": demo_identities if execution_version == 3 else [{"id": episode.id, "sha256": episode.sha256} for episode in demos],
                    "eligible_samples": sum(row.eligible for episode in converted for row in episode.rows),
                    "fixed_windows_per_epoch": sum(math.ceil(len(episode.rows) / 16) for episode in converted),
                    "unsuccessful_episodes_retained": sum(not row["metrics"]["success"] for row in results),
-                   "secondary_positive_labels": sum(record.imitation_eligible and record.proposal.secondary
+                   "secondary_positive_labels": secondary_positive_labels if execution_version == 3 else
+                       sum(record.imitation_eligible and record.proposal.secondary
                        for episode in demos for record in episode.decisions), "selection": "all eligible training rows, with no success filter"}
+        if execution_version == 3:
+            dataset["safe_retirements"] = sum(row["outcome"]["kind"] == "safe_retirement" for row in results)
         if dataset["secondary_positive_labels"] != 0:
             raise ContractError("jolt_teacher_labels", "qualified v4 provides no positive secondary demonstrations")
-        publish_json(output / "dataset.json", dataset)
+        publish(output / "dataset.json", dataset)
         note(journal, "fitting_shape_frozen", dataset_sha256=sha256_json(dataset),
              bc_optimizer_bound=3 * 40 * dataset["fixed_windows_per_epoch"])
         metadata = {"config_sha256": sha256_json(config), "source_sha256": declaration["source_sha256"],
@@ -616,15 +683,18 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
             ledger.check()
             torch.manual_seed(seed)
             policy = JoltPolicy("bc")
-            _checkpoint(output, ledger, journal, checkpoints, policy, f"bc-seed{seed}-initial", {**metadata, "seed": seed, "phase": "initial"})
+            _checkpoint(output, ledger, journal, checkpoints, policy, f"bc-seed{seed}-initial",
+                {**metadata, "seed": seed, "phase": "initial"}, execution_version=execution_version)
             note(journal, "bc_fitting_started", seed=seed, counters=ledger.snapshot(),
                  reserved_upper_bound=40 * dataset["fixed_windows_per_epoch"])
             fit = train_clone(policy, converted, seed=seed, reserve=ledger.reserve)
             fit.pop("optimizer", None)
             fit.update(seed=seed, family="bc")
             training_results.append(fit)
-            publish_json(output / "learning" / f"bc-seed{seed}.json", fit)
-            _checkpoint(output, ledger, journal, checkpoints, policy, f"bc-seed{seed}-final", {**metadata, "seed": seed, "phase": "final", "epoch": 40})
+            publish(output / "learning" / f"bc-seed{seed}.json", fit,
+                    maximum_bytes=16 * 1024 if execution_version == 3 else 1024 * 1024)
+            _checkpoint(output, ledger, journal, checkpoints, policy, f"bc-seed{seed}-final",
+                {**metadata, "seed": seed, "phase": "final", "epoch": 40}, execution_version=execution_version)
             bc_final[seed] = copy.deepcopy(policy).eval().requires_grad_(False)
             note(journal, "bc_fitting_finished", seed=seed, counters=ledger.snapshot(), result=fit)
             print(f"BC seed={seed} epoch=40 complete", flush=True)
@@ -635,19 +705,30 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
             base = bc_final[seed]
             generator = torch.Generator().manual_seed(seed + 200000)
             order_rng = random.Random(seed + 300000)
+            case_cursor = 0
+            case_lookup = {case["id"]: case for case in config["cases"]["teacher"]}
             optimizer = torch.optim.Adam(residual.parameters(), lr=PPO_SPEC["learning_rate"])
             _checkpoint(output, ledger, journal, checkpoints, residual, f"residual-seed{seed}-initial",
-                {**metadata, "seed": seed, "phase": "initial"}, base=base)
+                {**metadata, "seed": seed, "phase": "initial"}, base=base, execution_version=execution_version)
             for update in range(8):
                 sequences, decision_count, episode_count = [], 0, 0
                 while decision_count < 256:
-                    case = order_rng.choice(config["cases"]["teacher"])
+                    if execution_version == 3:
+                        if episode_count >= 256 or case_cursor >= 2048:
+                            raise ContractError("jolt_ppo_starts", "fixed PPO stream/start ceiling exhausted")
+                        case = case_lookup[config["ppo_case_stream"]["seeds"][str(seed)][case_cursor]]
+                        stream_entry = {"seed": seed, "index": case_cursor, "update": update}
+                        case_cursor += 1
+                    else:
+                        case = order_rng.choice(config["cases"]["teacher"])
+                        stream_entry = None
                     identifier = f"ppo-seed{seed}-u{update}-e{episode_count}"
                     _, row, sequence = capture(owner, ledger, journal, case, identifier=identifier,
                         controller_id=f"residual-seed{seed}-initial" if update == 0 else f"residual-seed{seed}-u{update}",
                         kind="residual", stage="ppo", output=output, root=root, config=config,
                         source_sha256=declaration["source_sha256"], policy=residual, base=base, generator=generator,
-                        maximum_decisions=min(40, 256 - decision_count), execution_version=execution_version)
+                        maximum_decisions=min(40, 256 - decision_count), execution_version=execution_version,
+                        case_stream_entry=stream_entry)
                     if row["decisions"] <= 0 or sequence is None:
                         raise ContractError("jolt_ppo_empty", "a counted rollout must contain retained physical decisions")
                     results.append(row)
@@ -655,18 +736,29 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                     decision_count += row["decisions"]
                     episode_count += 1
                 note(journal, "ppo_fitting_started", seed=seed, update=update, counters=ledger.snapshot())
-                fit = ppo_update(residual, base, optimizer, sequences, seed=seed + update,
+                if execution_version == 3:
+                    from nca.train.jolt_learning import ppo_update_v3
+                    if decision_count != 256:
+                        raise ContractError("jolt_ppo_decisions", "fixed update must contain exactly 256 confirmed decisions")
+                    fit_function = ppo_update_v3
+                else:
+                    fit_function = ppo_update
+                fit = fit_function(residual, base, optimizer, sequences, seed=seed + update,
                                  reserve=ledger.reserve, source_sha256=declaration["source_sha256"])
                 fit.update(seed=seed, family="residual", update=update + 1)
                 training_results.append(fit)
-                publish_json(output / "learning" / f"residual-seed{seed}-u{update+1}.json", fit)
+                publish(output / "learning" / f"residual-seed{seed}-u{update+1}.json", fit,
+                        maximum_bytes=16 * 1024 if execution_version == 3 else 1024 * 1024)
                 _checkpoint(output, ledger, journal, checkpoints, residual, f"residual-seed{seed}-u{update+1}",
-                    {**metadata, "seed": seed, "phase": "update", "completed_updates": update + 1}, base=base)
+                    {**metadata, "seed": seed, "phase": "update", "completed_updates": update + 1},
+                    base=base, execution_version=execution_version)
                 note(journal, "ppo_fitting_finished", seed=seed, update=update, counters=ledger.snapshot(), result=fit)
                 print(f"PPO seed={seed} update={update+1}/8 decisions={(update+1)*256}", flush=True)
             _checkpoint(output, ledger, journal, checkpoints, residual, f"residual-seed{seed}-final",
-                {**metadata, "seed": seed, "phase": "final", "completed_updates": 8}, base=base)
-        freeze = freeze_candidates(checkpoints, destination=output, source_sha256=declaration["source_sha256"], journal=journal)
+                {**metadata, "seed": seed, "phase": "final", "completed_updates": 8},
+                base=base, execution_version=execution_version)
+        freeze = freeze_candidates(checkpoints, destination=output,
+            source_sha256=declaration["source_sha256"], journal=journal, publisher=publish)
         policies = {}
         for item in checkpoints:
             if not item["id"].endswith(("-initial", "-final")):
@@ -678,9 +770,14 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
             candidates = [("authored", "authored", None, None), ("idle", "idle", None, None)]
             candidates.extend((name, policy.kind, policy, base) for name, (policy, base) in policies.items()
                               if stage == "sealed" or name.endswith("-final"))
+            if execution_version == 3:
+                planned = [{"case_id": case["id"], "controller_id": name}
+                           for case in config["cases"][stage] for name, _, _, _ in candidates]
+                if planned != config["comparison_order"][stage]:
+                    raise ContractError("jolt_comparison_order", "case/controller order changed before opening outcomes")
             if stage == "sealed":
                 note(journal, "sealed_outcomes_opened", frozen_finals_sha256=sha256_json(freeze))
-                publish_json(output / "sealed-opened.json", {"frozen_finals_sha256": sha256_json(freeze),
+                publish(output / "sealed-opened.json", {"frozen_finals_sha256": sha256_json(freeze),
                     "source_sha256": declaration["source_sha256"], "before_first_sealed_outcome": True})
             for case in config["cases"][stage]:
                 for name, kind, policy, base in candidates:
@@ -697,7 +794,11 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
         failure = error_record(exc)
         if getattr(exc, "row", None) is not None:
             results.append(exc.row)
-        status = "capped" if type(exc).__name__ == "AdmissionError" else "failed"
+        exhausted = type(exc).__name__ == "AdmissionError"
+        if execution_version == 3:
+            from nca.train.jolt_budget_v3 import budget_exhaustion_v3
+            exhausted = exhausted or budget_exhaustion_v3(exc)
+        status = "capped" if exhausted else "failed"
         try:
             note(journal, "allocation_stopped", status=status, error=failure, counters=ledger.snapshot())
         except BaseException as recording_exc:
@@ -706,7 +807,16 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
             recording_errors.append({"stage": "allocation_stopped_note", "error": error_record(recording_exc)})
             status = "failed"
     finally:
-        if execution_version == 2:
+        if execution_version == 3:
+            try:
+                if ledger.phase == "active":
+                    ledger.enter_phase("closure")
+                elif ledger.phase != "closure":
+                    raise ContractError("jolt_v3_phase", "worker cleanup must occur in its reserved closure interval")
+            except BaseException as exc:
+                recording_errors.append({"stage": "worker_closure_deadline", "error": error_record(exc)})
+                status, failure = "failed", failure or error_record(exc)
+        if execution_version in (2, 3):
             status, failure = close_worker_v2(native, owner, ledger, journal, status=status,
                                              failure=failure, recording_errors=recording_errors)
         elif native is not None:
@@ -739,33 +849,60 @@ def run(*, root, checkout, godot, output, config_path, declaration_path, whole_s
                "refused_ticks": 0 if owner is None else owner.refused_ticks,
                "uncertain_ticks": 0 if owner is None else owner.uncertain_ticks,
                "durability": journal.durability_receipt()}
-    if execution_version == 2:
+    if execution_version in (2, 3):
         closure["recording_errors"] = recording_errors
-    publish_json(output / "budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
-                                                       "reservations": ledger.reservations})
+    if execution_version == 3:
+        ledger.publish_reservations(output / "budget-reservations.json")
+        from nca.evaluation.jolt_learning import qualify_v3
+        qualification_function = qualify_v3
+    else:
+        publish(output / "budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
+                                                           "reservations": ledger.reservations})
+        qualification_function = qualify
     candidate = {"schema": run_schema, "status": status, "error": failure, "manifest": manifest,
         "results": results, "checkpoints": checkpoints, "learning": training_results,
         "costs_before_readback": ledger.snapshot(), "closure": closure,
-        "qualification": qualify(results, config["cases"]["sealed"], evidence_complete=False)}
-    publish_json(output / "worker-result.json", candidate)
+        "qualification": qualification_function(results, config["cases"]["sealed"], evidence_complete=False)}
+    if execution_version == 3:
+        from nca.train.jolt_storage_v3 import validate_worker_result_v3
+        validate_worker_result_v3(candidate, check=publication_check)
+    publish(output / "worker-result.json", candidate)
     # An independently implemented verifier receives only immutable bytes. It
     # cannot obtain the live host, fit weights, or alter the declared outcomes.
     from nca.evaluation.jolt_learning_audit import verify_output
-    audit = verify_output(output, reserve=lambda name, amount=1: ledger.reserve(name, amount, cleanup=True))
-    publish_json(output / "independent-readback.json", audit)
-    publish_json(output / "closed-budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
-                                                              "reservations": ledger.reservations})
+    if execution_version == 3:
+        ledger.enter_phase("audit")
+    audit_options = {"check": lambda: ledger.check(cleanup=True)} if execution_version == 3 else {}
+    audit = verify_output(output, reserve=lambda name, amount=1: ledger.reserve(name, amount, cleanup=True), **audit_options)
+    if execution_version == 3:
+        ledger.check(cleanup=True)
+        ledger.enter_phase("publication")
+    publish(output / "independent-readback.json", audit)
+    if execution_version == 3:
+        ledger.publish_reservations(output / "closed-budget-reservations.json")
+    else:
+        publish(output / "closed-budget-reservations.json", {"schema": "jolt-budget-reservations/v1",
+                                                                  "reservations": ledger.reservations})
     closed_costs = ledger.close()
+    publication_closed = True
     final = {"schema": run_schema, "status": status, "error": failure,
              "worker_result_sha256": file_identity(output / "worker-result.json")["sha256"],
              "audit_sha256": file_identity(output / "independent-readback.json")["sha256"],
              "costs": closed_costs, "closure": closure,
-             "qualification": qualify(results, config["cases"]["sealed"], evidence_complete=audit["verified"] and audit["complete"] and status == "completed")}
-    publish_json(output / "result.json", final)
+             "qualification": qualification_function(results, config["cases"]["sealed"], evidence_complete=audit["verified"] and audit["complete"] and status == "completed")}
+    publish(output / "result.json", final)
     # Exact inventory is sealed only after all publications exist. The external
     # supervisor independently hashes this inventory inside the same deadline.
-    inventory = {path.relative_to(output).as_posix(): file_identity(path) for path in sorted(output.rglob("*")) if path.is_file()}
-    publish_json(output / "inventory.json", {"schema": "jolt-closed-inventory/v1", "files": inventory})
+    if execution_version == 3:
+        from nca.train.jolt_storage_v3 import file_identity_v3
+        inventory = {path.relative_to(output).as_posix(): file_identity_v3(path, check=publication_check)
+                     for path in sorted(output.rglob("*")) if path.is_file()}
+    else:
+        inventory = {path.relative_to(output).as_posix(): file_identity(path)
+                     for path in sorted(output.rglob("*")) if path.is_file()}
+    publish(output / "inventory.json", {"schema": "jolt-closed-inventory/v1", "files": inventory})
+    if execution_version == 3:
+        ledger.original_clock.check("publication")
     if time.monotonic() >= ledger.deadline:
         raise ContractError("jolt_finalization_deadline", "publication exceeded the original whole-process deadline")
     print(canonical_json({"status": status, "qualified": final["qualification"]["qualified"],
