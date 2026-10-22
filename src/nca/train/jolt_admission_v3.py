@@ -24,9 +24,12 @@ from nca.train.jolt_admission import (
 )
 from nca.train.jolt_execution_v3 import DECLARATION_SCHEMA, validate_budget_v3
 from nca.train.jolt_execution_contract import validate_v3_allocation_identity
+from nca.train.jolt_runtime_v3 import capability_sha256, capability_contract_v3, POLICY as CPU_PORTABILITY_POLICY
 
 CONFIG_SCHEMA = "nca-jolt-learn-003/v1"
 UNLIMITED_CONFIG_SCHEMA = "nca-jolt-learn-003/v2"
+PORTABLE_RESOURCE_SCHEMA = "nca-jolt-003-resource-admission/v2"
+PORTABLE_REVIEW_SCHEMA = "nca-learn-jolt-003-source-admission-review/v2"
 SPLIT_SCHEMA = "nca-jolt-static-split/v2"
 OPENED_SCHEMA = "nca-jolt-opened-inventory/v2"
 STREAM_SCHEMA = "nca-jolt-ppo-case-stream/v1"
@@ -274,8 +277,16 @@ def prospective_binding(declaration):
     commit. Their full original bytes are embedded in the final declaration,
     while the executable checkout remains at the exact reviewed source commit.
     """
-    return {key: value for key, value in declaration.items()
-            if key not in {"independent_reviews", "created_utc"}}
+    result = {key: value for key, value in declaration.items()
+              if key not in {"independent_reviews", "created_utc"}}
+    # The v2 resource/review policy binds *capabilities*, not the volatile
+    # GitHub VM model, kernel or number of available logical CPUs. Original
+    # actual runtime metadata remains in the published declaration and receipts.
+    resource = declaration.get("resource_admission")
+    if isinstance(resource, dict) and resource.get("schema") == PORTABLE_RESOURCE_SCHEMA:
+        result["runtime"] = {"cpu_capability_sha256": capability_sha256(declaration["runtime"]),
+                             "policy": CPU_PORTABILITY_POLICY}
+    return result
 
 
 def validate_declaration_reviews(declaration):
@@ -284,6 +295,11 @@ def validate_declaration_reviews(declaration):
           "two independent final executable-source reviews are required")
     reviewers, roles = set(), set()
     binding = sha256_json(prospective_binding(declaration))
+    resource = declaration.get("resource_admission", {})
+    portable = (isinstance(resource, dict) and resource.get("schema") == PORTABLE_RESOURCE_SCHEMA)
+    expected_schema = PORTABLE_REVIEW_SCHEMA if portable else "nca-learn-jolt-003-source-admission-review/v1"
+    runtime_digest = (capability_sha256(declaration["runtime"]) if portable
+                      else sha256_json(declaration["runtime"]))
     for review in reviews:
         _need(isinstance(review, dict) and set(review) == {"path", "file_sha256", "content"},
               "versioned original review bytes are required")
@@ -295,7 +311,7 @@ def validate_declaration_reviews(declaration):
               and hashlib.sha256(content.encode()).hexdigest() == review["file_sha256"],
               "original independent review bytes changed")
         record = strict_json_loads(content, max_bytes=256 * 1024)
-        _need(record.get("schema") == "nca-learn-jolt-003-source-admission-review/v1"
+        _need(record.get("schema") == expected_schema
               and record.get("accepted") is True and record.get("offline_scope_only") is False
               and record.get("prospective_experiment_admitted") is True,
               "offline or planning review cannot admit this allocation")
@@ -304,7 +320,8 @@ def validate_declaration_reviews(declaration):
               and record.get("config_sha256") == declaration["config_sha256"]
               and record.get("prospective_binding_sha256") == binding
               and record.get("host_identity_sha256") == sha256_json(declaration["host_identity"])
-              and record.get("runtime_sha256") == sha256_json(declaration["runtime"]),
+              and record.get("runtime_contract_sha256" if portable else "runtime_sha256") == runtime_digest
+              and (not portable or record.get("cpu_comparison_policy") == CPU_PORTABILITY_POLICY),
               "source/config/runtime/prospective declaration differs from final review")
         reviewer = record.get("reviewer")
         _need(isinstance(reviewer, str) and 1 <= len(reviewer) <= 128 and reviewer not in reviewers,
@@ -341,9 +358,17 @@ def validate_execution_v3(root, declaration, *, config, host_identity):
           and declaration.get("budget") == config["budget"]
           and declaration.get("automatic_retry") is False and declaration.get("automatic_extension") is False,
           "declaration changed its fixed configuration or budget")
-    _need(declaration.get("host_identity") == host_identity and declaration.get("runtime") == runtime_identity(),
-          "host/build/runtime differs from the reviewed declaration")
+    _need(declaration.get("host_identity") == host_identity,
+          "host/build differs from the reviewed declaration")
+    portable = (isinstance(declaration.get("resource_admission"), dict)
+                and declaration["resource_admission"].get("schema") == PORTABLE_RESOURCE_SCHEMA)
+    current_runtime = runtime_identity()
     runtime = declaration["runtime"]
+    if portable:
+        _need(capability_sha256(runtime) == capability_sha256(current_runtime),
+              "pinned CPU software/architecture differs; hardware names are advisory")
+    else:
+        _need(runtime == current_runtime, "historical exact runtime identity differs")
     _need(runtime.get("torch") == "2.8.0+cpu" and runtime.get("numpy") == "2.3.5"
           and runtime.get("device") == "cpu", "the pinned CPU runtime is required")
     _need(declaration.get("teacher_prerequisite") == config["prerequisite"]
@@ -362,14 +387,20 @@ def validate_execution_v3(root, declaration, *, config, host_identity):
 def validate_resource_admission(declaration, *, output_parent=None):
     from nca.train.jolt_storage_v3 import storage_bounds_v3
     record = declaration.get("resource_admission", {})
-    _need(record.get("schema") == "nca-jolt-003-resource-admission/v1"
+    if not isinstance(record, dict):
+        record = {}
+    portable = record.get("schema") == PORTABLE_RESOURCE_SCHEMA
+    _need(record.get("schema") in {"nca-jolt-003-resource-admission/v1", PORTABLE_RESOURCE_SCHEMA}
           and record.get("accepted") is True and record.get("unresolved_blocking_findings") == [],
           "full pipeline resource feasibility is unresolved")
+    runtime_digest = (capability_sha256(declaration["runtime"]) if portable
+                      else sha256_json(declaration["runtime"]))
     _need(record.get("source_sha256") == declaration.get("source_sha256")
           and record.get("config_sha256") == declaration.get("config_sha256")
           and record.get("host_identity_sha256") == sha256_json(declaration["host_identity"])
-          and record.get("runtime_sha256") == sha256_json(declaration["runtime"]),
-          "resource admission describes a different execution")
+          and record.get("runtime_contract_sha256" if portable else "runtime_sha256") == runtime_digest
+          and (not portable or record.get("cpu_comparison_policy") == CPU_PORTABILITY_POLICY),
+          "resource admission describes a different source, software or host")
     required = {"canonical_reservation_maximum", "reader_limits", "journal_aggregate_bytes",
                 "total_artifact_bytes", "total_file_count", "peak_resident_memory",
                 "available_disk", "original_clock_phase_enforcement", "complete_pipeline_time_feasibility"}
@@ -377,6 +408,8 @@ def validate_resource_admission(declaration, *, output_parent=None):
     if budget is not None:
         validate_budget_v3(budget)
     unlimited = budget is not None and budget["maximum_wall_seconds"] is None
+    _need(not portable or unlimited,
+          "portable CPU admission requires the separately authorized unlimited timing mode")
     expected_gates = {name: True for name in required}
     if unlimited:
         # Null records that no deadline feasibility or expiry enforcement is
