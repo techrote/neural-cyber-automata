@@ -262,6 +262,7 @@ def measure(args):
     from nca.adapters.godot import inspect_host
     from nca.train.jolt_admission_v3 import validate_config_v3
     from nca.train.jolt_screen import source_inventory, runtime_identity
+    from nca.train.jolt_runtime_v3 import capability_contract_v3, capability_sha256, cpu_calibration_v3
     from nca.train.jolt_execution_v3 import OriginalClockV3
     from nca.train.jolt_native_v3 import BoundedGodotHostV3
     from nca.train.jolt_storage_v3 import storage_bounds_v3
@@ -276,6 +277,8 @@ def measure(args):
     config = json.loads((ROOT / "configs/learning/jolt-learn-003-v2.json").read_text())
     validate_config_v3(ROOT, config)
     source_files = source_inventory(ROOT)
+    execution_runtime = runtime_identity()
+    cpu_calibration = cpu_calibration_v3()
     output = Path(args.output)
     if output.exists():
         raise RuntimeError("immutable memory evidence output already exists")
@@ -316,7 +319,17 @@ def measure(args):
         "source_sha256": sha256_json(source_files),
         "source_files": source_files,
         "config_sha256": sha256_json(config),
-        "runtime": runtime_identity(),
+        "runtime": execution_runtime,
+        "runtime_software_contract": capability_contract_v3(execution_runtime),
+        "runtime_software_contract_sha256": capability_sha256(execution_runtime),
+        "cpu_calibration": cpu_calibration,
+        "cpu_normalization": {
+            "schema": "nca-jolt-cpu-normalization/v1",
+            "reference_calibration": None,
+            "reference_seconds_approximate": None,
+            "rule": "compare with another pinned-software calibration before estimating reference CPU seconds",
+            "performance_comparison_only_not_memory_bytes_or_quality": True,
+        },
         "host_identity": host_identity,
         "storage_bounds": storage_bounds_v3(),
         "physical_experiment_started": False, "allocation_consumed": False,
@@ -342,6 +355,7 @@ def measure(args):
         },
         "limitations": [
             "A real pinned Godot process is started only for a capability handshake; no case, native reset, physical step, learner or sealed evaluation is opened.",
+            "CPU model, core count, Python patch and kernel release are recorded but not CPU-software admission identity fields; a small SHA256 calibration gives only approximate cross-host throughput comparability.",
             "Synthetic retained results are deliberately byte-padded but not source-complete semantic rows.",
             "PPO proxies do not provide the entire validated JoltTransition/episode object graph.",
             "Linux VmRSS and /proc/self VmHWM are observed values, not hard memory ceilings or a guarantee for all future host/native allocations.",
