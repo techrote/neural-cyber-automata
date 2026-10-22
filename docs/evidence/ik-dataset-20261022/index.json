@@ -1,0 +1,137 @@
+{
+  "acceptance_file_sha256": "cea8642ed41313c9c6fc8f27f288e90aa8743146e5f61a2f0ab2ea86b874aa8b",
+  "all_samples_sha256": "2af514d793dafc8dd38476a9650804b1bd8b8ae5486cf7ec64de4f687e807a82",
+  "archive": {
+    "all_members_read_back": true,
+    "bytes": 7340716,
+    "delivered_version": 0,
+    "file_name": "runner-ik-corpus-v1-20261022.tar.gz",
+    "inventory_sha256": "b129688c794786c3eecf6bb4e185f701437f2c4ae1a390d706da9cd35fa24fc2",
+    "members": 180,
+    "persisted_download_readback_verified": true,
+    "sha256": "97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce",
+    "uncompressed_member_bytes": 48781336
+  },
+  "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+  "counts": {
+    "attempted": 10220,
+    "completed": 10220,
+    "teacher_iterations_actual_lower_bound": 47796,
+    "teacher_iterations_conservative": 47796,
+    "teacher_iterations_reserved": 654080,
+    "unknown_attempts": 0
+  },
+  "declaration_sha256": "126889a65bc889c11bfe7021de50371cfbb1e288669434e74dd5f66a42d110dc",
+  "final_scoring_state": "sealed_unopened",
+  "final_suite_identity_sha256": "aa32e10577e40fb3ab29ba2e1f8ebb8c8324356572da5484609e82f4deba40a1",
+  "generation_cost": {
+    "device": "cpu",
+    "hard_memory_limit_mib": 512,
+    "memory_limit_method": "RLIMIT_AS",
+    "peak_rss_mib": 62.23828125,
+    "whole_process_receipt": "supervisor.json",
+    "worker_module_seconds": 46.96489484199992
+  },
+  "integration_validation": {
+    "dataset_tests_passed": 77,
+    "final_head_checks_and_merge": "https://github.com/techrote/neural-cyber-automata/pull/72",
+    "local_suite_cases": 1065,
+    "local_suite_failures": [
+      {
+        "reason": "Existing sandbox PID-namespace restriction; test passed in hosted Linux CPU, pinned-host and optional-learning checks.",
+        "test": "test_jolt_recovery_v4_executor.RecoveryV4ExecutorTests.test_isolated_python_tree_closes_a_separately_sessioned_descendant"
+      }
+    ],
+    "local_suite_passed": 769,
+    "local_suite_skipped": 295,
+    "windows_initial_failure": "A mocked POSIX signal constant absent on Windows; corrected in test only."
+  },
+  "limits": [
+    "Nominal geometric data quality only; no model training, CUDA, export or physical qualification.",
+    "Teacher timings and original outcomes are immutable; replay guarantees input geometry, not identical teacher elapsed time.",
+    "Final candidate scoring has not opened; structural corpus review is not candidate selection.",
+    "Source and allocation refer to the frozen measured revision, not later test-only or documentation integration commits."
+  ],
+  "manifest_sha256": "86bc852ba3e7dd43f0a64b5374829769d803a1461f0aa53165e14fc76b17fc6c",
+  "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+  "public_artifacts": {
+    "archive-inventory.json": {
+      "bytes": 23444,
+      "sha256": "b129688c794786c3eecf6bb4e185f701437f2c4ae1a390d706da9cd35fa24fc2"
+    },
+    "archive-verification.json": {
+      "bytes": 376,
+      "sha256": "c653d5b65a249cb7f64e8ac0d54266bd9a3be0db1cad00191402cac062d8495f"
+    },
+    "coverage.json": {
+      "bytes": 5532,
+      "sha256": "9529c66b0b184c9977135f490aac7ecb3e0fc47430377e73f5e8cb0be3f2d866"
+    },
+    "declaration.json": {
+      "bytes": 60581,
+      "sha256": "58d8c83b713ddeb538883a7859b280818a0c1a2c04393989db32ba80c2cff0e2"
+    },
+    "manifest.json": {
+      "bytes": 40841,
+      "sha256": "73540d9b337b2385f605d4bb4bfb7b6775def40e28449bfb096e9ead23678ded"
+    },
+    "normalization.json": {
+      "bytes": 705,
+      "sha256": "9fafdc038b0232b5d734ba33a27442a2c56d447b1605928b3972b5085adf38c2"
+    },
+    "process-envelope.json": {
+      "bytes": 1106,
+      "sha256": "06e35819183ae527bf70178bd205407e0eb54d3ebd06e576618e7fd5227166fb"
+    },
+    "publication-review.json": {
+      "bytes": 5382,
+      "sha256": "94c3dec857d3703c3244b82ccf0becc41785db98ed20f3bafbf34a5173ff6d7a"
+    },
+    "source-admission-review.json": {
+      "bytes": 2427,
+      "sha256": "f1967c8b0c0f9d97e76633a38ee5817dcb596fe656d31a1cf1aec5193fe168d9"
+    },
+    "supervisor.json": {
+      "bytes": 1035,
+      "sha256": "319f01b0f111b0f1062d83aa8c7d18d21cb9030ee67a7d67624ca266b54b4ffb"
+    }
+  },
+  "retrieval": {
+    "archive_root": "runner-ik-corpus-v1-20261022",
+    "authenticated_download_url": "https://chatgpt.com/api/library/files/libfile_537bfea777cc8191b243b6d9fefdf55b/download",
+    "availability": "Authorized artifact recipient or maintainer completion handoff; not a public GitHub release asset.",
+    "file_name": "runner-ik-corpus-v1-20261022.tar.gz",
+    "instructions": [
+      "Obtain the named archive through the authenticated artifact link or the issue-completion handoff.",
+      "Verify the exact archive SHA-256 before extraction.",
+      "Extract outside the checkout and retain the complete registry, declaration, corpus and receipts.",
+      "Use tools/ik_dataset.py inspect with the extracted corpus and registry paths.",
+      "Do not regenerate or overwrite the recorded corpus, teacher outcomes or consumed allocation."
+    ]
+  },
+  "reviews": {
+    "publication_checks": 34,
+    "publication_verdict": "accept_geometric_data_quality",
+    "source_admission_checks": 17,
+    "teacher_calls_during_reviews": 0
+  },
+  "run_id": "ik-dataset-fd0fe4dda46a4b89831d51fe0344fa1e",
+  "schedule": {
+    "final_suite_identity_sha256": "aa32e10577e40fb3ab29ba2e1f8ebb8c8324356572da5484609e82f4deba40a1",
+    "partitions": {
+      "final": 2940,
+      "training": 5260,
+      "tuning": 2020
+    },
+    "task_ids_sha256": "c187c72cd8ae6bd71bfd52d5909922c6cc11c1bab06b22f3766d2c62ea8e24a9",
+    "task_values_sha256": "97c837465d1900570064e746cff67cb1533da35499e82abcdeb1697a51d5fc8f",
+    "tasks": 10220
+  },
+  "schema": "nca-ik-dataset-publication-index/v1",
+  "source": {
+    "revision": "1e16c751939d7b276e8ced02b7fc371f34e9c0ee",
+    "source_sha256": "240433e97cafe2992cc217a747b8a0cca418241bc8dac665e3c8e94c3328a3b5",
+    "tree": "1e968cecf421cd3e4e398ab3c410fde76e99377c"
+  },
+  "split_plan_sha256": "d641b2bea1b6810d63c0eed3d4423b369202f63754a5ed077634970d1c7b03ad"
+}
