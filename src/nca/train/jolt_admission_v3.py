@@ -400,7 +400,7 @@ def validate_resource_admission(declaration, *, output_parent=None):
           and record.get("host_identity_sha256") == sha256_json(declaration["host_identity"])
           and record.get("runtime_contract_sha256" if portable else "runtime_sha256") == runtime_digest
           and (not portable or record.get("cpu_comparison_policy") == CPU_PORTABILITY_POLICY),
-          "resource admission describes a different source, software or host")
+          "resource admission describes a different execution")
     required = {"canonical_reservation_maximum", "reader_limits", "journal_aggregate_bytes",
                 "total_artifact_bytes", "total_file_count", "peak_resident_memory",
                 "available_disk", "original_clock_phase_enforcement", "complete_pipeline_time_feasibility"}
