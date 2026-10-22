@@ -187,9 +187,10 @@ class PortableAdmissionTests(unittest.TestCase):
                 test["independent_reviews"][0]["content"] = raw
                 test["independent_reviews"][0]["file_sha256"] = hashlib.sha256(raw.encode()).hexdigest()
             with self.subTest(mutation=mutation), self.assertRaises(Exception):
-                validate_resource_admission(test)
                 if mutation == "review_cpu_policy":
                     validate_declaration_reviews(test)
+                else:
+                    validate_resource_admission(test)
 
     def test_unreviewed_previous_schema_is_not_promoted_to_portable(self):
         declaration = admitted_synthetic_declaration()
