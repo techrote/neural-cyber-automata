@@ -241,8 +241,7 @@ coordinated bridge/accounting/capture streams exist:
 
 - accepted #229 source SHA, native/Rapier/Godot build digests and qualified
   teacher source/evidence identities;
-- exact persistent transport serialization, host-call topology and
-  actual-host conformance evidence;
+- persistent transport serialization is source-prepared as `nca-4ly-flight/1`; accepted host-call topology, actual-host conformance evidence and measured transport costs remain unresolved;
 - exact CPU platform/Python/Torch/thread identities;
 - source-bound ticks/s, decisions/s, reset/call latency and serialization
   throughput on the chosen runner;
