@@ -182,6 +182,7 @@ class FlightRpcTransport:
         expected = {
             "protocol": FLIGHT_PROTOCOL,
             "id": 0,
+            "ok": True,
             "episode_version": EPISODE_VERSION,
             "observation_version": OBSERVATION_VERSION,
             "flat_observation_version": FLAT_OBSERVATION_VERSION,
