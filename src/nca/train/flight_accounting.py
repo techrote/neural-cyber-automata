@@ -940,6 +940,12 @@ class FlightAccountingLedger:
                 _fail("flight_execution_refused", f"work ceiling remains unmeasured: {name}")
             if self._state["charged"][name] + amount > ceiling:
                 _fail("flight_budget_exhausted", f"prospective counter exhausted: {name}")
+            if (stage is not None and name in STAGE_SENSITIVE_COUNTERS
+                    and name not in stage_ceilings[stage]):
+                _fail(
+                    "flight_stage_counter",
+                    f"{name} is not permitted in preregistered stage {stage}",
+                )
             if stage is not None and name in stage_ceilings[stage]:
                 if self._state["stage_counts"][stage][name] + amount > stage_ceilings[stage][name]:
                     _fail("flight_stage_exhausted", f"prospective stage counter exhausted: {stage}.{name}")
