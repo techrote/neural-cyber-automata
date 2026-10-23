@@ -116,6 +116,42 @@ def observe(args, *, started, command=None):
                     exit_elapsed = clock.elapsed()
             except BaseException as exc:
                 failed(exc, "independent_cleanup")
+            # A watchdog may trip immediately after Popen, before the
+            # ordinary stream reader enters its own closing finally. Once
+            # the original process tree has been revoked, preserve any
+            # already-buffered original PIPE prefix (max 64 KiB/channel)
+            # and close BOTH descriptors. Do not invent complete EOF if
+            # cleanup failed or a still-live inheritor owns the pipe.
+            if process is not None:
+                for channel, pipe, stream in (
+                    ("stdout", process.stdout, stdout), ("stderr", process.stderr, stderr)):
+                    if pipe is None or pipe.closed:
+                        continue
+                    try:
+                        os.set_blocking(pipe.fileno(), False)
+                        while True:
+                            try:
+                                block = os.read(pipe.fileno(), 65536)
+                            except BlockingIOError:
+                                break
+                            if not block:
+                                break
+                            allowance = max(0, 65536 - stream.tell())
+                            if allowance:
+                                stream.write(block[:allowance])
+                            if len(block) > allowance:
+                                from nca.contracts import ContractError
+                                failed(ContractError("jolt_v3_stream_bytes",
+                                    "original revocation stream exceeded bounded prefix"),
+                                    channel + "_revoked_stream")
+                                break
+                    except BaseException as exc:
+                        failed(exc, channel + "_revoked_stream")
+                    finally:
+                        try:
+                            pipe.close()
+                        except BaseException as exc:
+                            failed(exc, channel + "_pipe_close")
             if watchdog_required:
                 try:
                     if memory_monitor is None:
