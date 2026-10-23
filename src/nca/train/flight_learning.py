@@ -634,6 +634,8 @@ class FlightTrainingResult:
     completed_epochs: int
     optimizer_updates: int
     sample_presentations: int
+    accounting_attempt_id: str
+    accounting_chain_sha256: str
     epoch_losses: tuple[float, ...]
 
 
@@ -724,9 +726,17 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
             weighted_epoch_loss += float(weighted_batch_loss.detach())
         losses.append(weighted_epoch_loss)
     model.eval()
+    accounting_snapshot = accounting.snapshot()
+    if (accounting_snapshot["pending_reservations"]
+            or accounting_snapshot["failed"]
+            or accounting_snapshot["unknown_consumption"]
+            or accounting_snapshot["poisoned"]):
+        _fail("flight_clone_accounting", "optimizer work did not end in a clean durable accounting state")
     return FlightTrainingResult(
         model, optimizer, shuffle_rng, seed, dataset, BC_EPOCHS,
-        completed_updates, completed_presentations, tuple(losses))
+        completed_updates, completed_presentations,
+        accounting_snapshot["attempt_id"], accounting_snapshot["chain_sha256"],
+        tuple(losses))
 
 
 def _cpu_copy(value: Any) -> Any:
@@ -794,6 +804,8 @@ def checkpoint_lineage(result: FlightTrainingResult, *, checkpoint_id: str,
         "completed_epochs": result.completed_epochs,
         "optimizer_updates": result.optimizer_updates,
         "sample_presentations": result.sample_presentations,
+        "accounting_attempt_id": result.accounting_attempt_id,
+        "accounting_chain_sha256": result.accounting_chain_sha256,
         "learner_revision": learner_revision,
         "learner_source_sha256": learner_source_sha256,
     }
