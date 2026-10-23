@@ -1,6 +1,7 @@
 """Trainer-only learner construction and fail-closed preparation status."""
 from nca.adapters.flight import finite_vector, velocity_action
 from nca.registry import registry
+from nca.train.flight_accounting import execution_gate, preparation_declaration
 
 
 def build_policy():
@@ -16,9 +17,9 @@ def export_preprocessing(flat, outputs):
 
 
 def training_admission():
-    """No user-controlled flag can turn an unfinished dependency into admission."""
-    return {'admitted': False, 'reason': '4ly003_accepted_host_and_teacher_required',
-            'final_access': False, 'training_enabled': False}
+    """Evaluate the immutable preparation declaration; it is deliberately blocked."""
+    gate = execution_gate(preparation_declaration(), current_evidence={})
+    return dict(gate, reason=';'.join(gate['reasons']))
 
 
 registry.register('policy', '4ly-direct-preparation', 1, build_policy,
