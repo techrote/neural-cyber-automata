@@ -123,6 +123,17 @@ class FlightSession:
         self.observation = None
         self.flat_observation = None
 
+    def _abort_after_reply(self, operation: str, exc: BaseException) -> None:
+        """Persist a semantic failure after transport/accounting settled work."""
+        callback = getattr(self.transport, "abort_after_reply", None)
+        if callback is None:
+            return
+        reason = (
+            f"{operation}_semantic_validation:"
+            f"{type(exc).__name__}:{str(exc)}"
+        )[:512]
+        callback(reason)
+
     def _request(self, command: Mapping[str, Any]) -> dict[str, Any]:
         if self.closed or self.failed:
             raise FlightProtocolError("closed or failed session")
@@ -451,8 +462,11 @@ class FlightSession:
                 ticks=0, terminal=False, consumption="confirmed",
             )
             return deepcopy(self.observation)
-        except BaseException:
-            self._poison()
+        except BaseException as exc:
+            try:
+                self._abort_after_reply("reset", exc)
+            finally:
+                self._poison()
             raise
 
     def reset(
@@ -517,8 +531,11 @@ class FlightSession:
                 terminal=self.terminal, consumption="confirmed",
             )
             return deepcopy(reply)
-        except BaseException:
-            self._poison()
+        except BaseException as exc:
+            try:
+                self._abort_after_reply("step", exc)
+            finally:
+                self._poison()
             raise
 
     def _revoke(self, operation: str, *, producer: str) -> dict[str, Any]:
@@ -571,8 +588,11 @@ class FlightSession:
                 ticks=0, terminal=True, consumption="confirmed",
             )
             return deepcopy(authority)
-        except BaseException:
-            self._poison()
+        except BaseException as exc:
+            try:
+                self._abort_after_reply(operation, exc)
+            finally:
+                self._poison()
             raise
 
     def cancel(self) -> dict[str, Any]:
@@ -598,6 +618,9 @@ class FlightSession:
                     "close", self.observation, None,
                     ticks=0, terminal=True, consumption="confirmed",
                 )
+        except BaseException as exc:
+            self._abort_after_reply("close", exc)
+            raise
         finally:
             self.closed = True
             self.terminal = True
@@ -746,8 +769,11 @@ class FlightTeacherCaptureSession(FlightSession):
                 terminal=self.terminal, consumption="confirmed",
             )
             return reply
-        except BaseException:
-            self._poison()
+        except BaseException as exc:
+            try:
+                self._abort_after_reply("teacher_step", exc)
+            finally:
+                self._poison()
             raise
 
 
