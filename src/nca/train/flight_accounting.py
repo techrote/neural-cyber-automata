@@ -865,7 +865,7 @@ class FlightAccountingLedger:
         for reservation_id in list(state["pending"]):
             ledger.mark_unknown(
                 reservation_id, "interrupted_after_reservation_before_durable_outcome")
-        ledger._commit("interruption", {"reason": "process_restarted_for_readback_or_cleanup"})
+        ledger._commit("interruption", {"reason": "process_restarted_same_attempt"})
         return ledger
 
     @classmethod
