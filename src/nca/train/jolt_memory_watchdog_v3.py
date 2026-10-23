@@ -142,7 +142,18 @@ class ProcessTreeWatchdogV3:
                 if current is None:
                     if pid == self.owner_pid:
                         raise ContractError("jolt_v3_memory_unreadable", "observer RSS disappeared")
-                    continue  # Exited descendant; do not invent a live RSS.
+                    # A process that actually exited is no longer resident.
+                    # A *live* descendant whose VmRSS cannot be read must
+                    # refuse, rather than falsely counting zero memory.
+                    try:
+                        still = self.helper._process(pid)
+                    except FileNotFoundError:
+                        continue
+                    if still["start"] != identity["start"]:
+                        raise ContractError("jolt_v3_memory_identity", "descendant PID changed")
+                    if still["state"] == "Z":
+                        continue
+                    raise ContractError("jolt_v3_memory_unreadable", "live descendant has no RSS")
                 if type(current) is not int or current < 0:
                     raise ContractError("jolt_v3_memory_unreadable", "noninteger process RSS")
                 total += current
