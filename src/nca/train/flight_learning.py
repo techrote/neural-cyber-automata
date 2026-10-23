@@ -18,7 +18,16 @@ import random
 import re
 from typing import Any, Mapping, Sequence
 
-from nca.adapters.flight import finite_vector, velocity_action
+from nca.adapters.flight import (
+    ACTION_VERSION,
+    ACTOR_ID,
+    FLAT_CHANNELS,
+    FLAT_OBSERVATION_VERSION,
+    OBSERVATION_VERSION,
+    TRAINER_PROFILE,
+    finite_vector,
+    velocity_action,
+)
 from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads
 from nca.train.flight import build_policy
 from nca.train.flight_accounting import POLICY_SEEDS
@@ -136,39 +145,57 @@ def _validate_observation(value: Any, name: str) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         _fail("flight_capture_observation", f"{name} must be an authoritative owner observation")
     observation = _json_copy(dict(value))
-    if observation.get("version") != "4ly-observation/v1" or observation.get("action_version") != "4ly-action/v1":
+    if (observation.get("version") != OBSERVATION_VERSION
+            or observation.get("action_version") != ACTION_VERSION):
         _fail("flight_capture_schema", f"{name} has an incompatible observation/action schema")
-    for key in ("run_id", "actor_id", "observation_id"):
+    for key in ("run_id", "observation_id"):
         if type(observation.get(key)) is not str or not observation[key]:
             _fail("flight_capture_identity", f"{name}.{key} is missing")
-    if observation["actor_id"] != "Trainer":
-        _fail("flight_capture_profile", "capture is Trainer-only")
+    if observation.get("actor_id") != ACTOR_ID:
+        _fail("flight_capture_profile", "capture is Trainer actor slot 0 only")
     for key in ("epoch", "observed_tick", "control_generation"):
         if type(observation.get(key)) is not int or observation[key] < 0:
             _fail("flight_capture_identity", f"{name}.{key} is invalid")
-    observation["flat"] = list(finite_vector(observation.get("flat"), 54))
     return observation
 
 
-def policy_input(observation: Mapping[str, Any]) -> tuple[float, ...]:
+def _validate_flat(value: Any, observation: Mapping[str, Any], name: str) -> dict[str, Any]:
+    flat = dict(_exact_mapping(
+        value, {"version", "field_count", "source_observation_id", "values"}, name))
+    if flat["version"] != FLAT_OBSERVATION_VERSION or flat["field_count"] != FLAT_CHANNELS:
+        _fail("flight_capture_schema", f"{name} has an incompatible flat observation schema")
+    if flat["source_observation_id"] != observation["observation_id"]:
+        _fail("flight_capture_identity", f"{name} is not bound to its owner observation")
+    flat["values"] = list(finite_vector(flat["values"], FLAT_CHANNELS))
+    return flat
+
+
+def policy_input(observation: Mapping[str, Any],
+                 flat_observation: Mapping[str, Any]) -> tuple[float, ...]:
     """Return only the host-authored 54-value learner view.
 
-    Extra dictionaries (including evaluator-only values or callables) are never
+    Raw owner identity is checked solely to bind the flat view. Extra owner
+    dictionaries (including evaluator-only values or callables) are never
     traversed, serialized or exposed to the model.
     """
-    if not isinstance(observation, Mapping):
-        _fail("flight_policy_observation", "policy input must be an observation mapping")
-    if observation.get("version") != "4ly-observation/v1" or observation.get("action_version") != "4ly-action/v1":
+    if not isinstance(observation, Mapping) or not isinstance(flat_observation, Mapping):
+        _fail("flight_policy_observation", "policy input requires raw and flat owner views")
+    if (observation.get("version") != OBSERVATION_VERSION
+            or observation.get("action_version") != ACTION_VERSION):
         _fail("flight_policy_schema", "scored policy observation schema differs")
-    if observation.get("actor_id") != "Trainer":
-        _fail("flight_policy_profile", "scored policy is Trainer-only")
+    if observation.get("actor_id") != ACTOR_ID:
+        _fail("flight_policy_profile", "scored policy is Trainer actor slot 0 only")
     for key in ("run_id", "observation_id"):
         if type(observation.get(key)) is not str or not observation[key]:
             _fail("flight_policy_identity", f"missing {key}")
     for key in ("epoch", "observed_tick", "control_generation"):
         if type(observation.get(key)) is not int or observation[key] < 0:
             _fail("flight_policy_identity", f"invalid {key}")
-    return finite_vector(observation.get("flat"), 54)
+    if (flat_observation.get("version") != FLAT_OBSERVATION_VERSION
+            or flat_observation.get("field_count") != FLAT_CHANNELS
+            or flat_observation.get("source_observation_id") != observation["observation_id"]):
+        _fail("flight_policy_schema", "flat view is incompatible or belongs to another observation")
+    return finite_vector(flat_observation.get("values"), FLAT_CHANNELS)
 
 
 @dataclass(frozen=True)
@@ -285,7 +312,7 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
     _exact_mapping(record, {
         "schema", "declaration_sha256", "capture_id", "episode_id", "profile",
         "split", "scenario_id", "host_seed", "source", "teacher",
-        "initial_observation", "transitions", "outcome",
+        "initial_observation", "initial_flat_observation", "transitions", "outcome",
     }, "capture")
     if record["schema"] != CAPTURE_SCHEMA:
         _fail("flight_capture_schema", "unsupported capture schema")
@@ -293,7 +320,7 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         _fail("flight_capture_declaration", "capture belongs to another accounting declaration")
     capture_id = _identifier(record["capture_id"], "capture_id")
     episode_id = _identifier(record["episode_id"], "episode_id")
-    if record["profile"] != "Trainer" or record["split"] != "training":
+    if record["profile"] != TRAINER_PROFILE or record["split"] != "training":
         _fail("flight_capture_scope", "only Trainer training capture can enter behavior cloning")
     _identifier(record["scenario_id"], "scenario_id")
     if type(record["host_seed"]) is not int or record["host_seed"] < 0:
@@ -314,9 +341,11 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
     if not isinstance(transitions, list):
         _fail("flight_capture_shape", "transitions must be an ordered array")
 
-    if record["initial_observation"] is None:
-        if transitions or outcome["status"] not in ("failed", "refused", "inconclusive", "canceled"):
-            _fail("flight_capture_initial", "missing initial observation is allowed only for retained non-completions")
+    if record["initial_observation"] is None or record["initial_flat_observation"] is None:
+        if (record["initial_observation"] is not None or record["initial_flat_observation"] is not None
+                or transitions
+                or outcome["status"] not in ("failed", "refused", "inconclusive", "canceled")):
+            _fail("flight_capture_initial", "missing initial raw/flat views are allowed only for retained non-completions")
         exclusions = ("episode_without_authoritative_initial_observation",)
         canonical = canonical_json(record)
         return ValidatedFlightCapture(
@@ -324,7 +353,10 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
             capture_id, episode_id, source_sha, outcome["status"], (), exclusions)
 
     current = _validate_observation(record["initial_observation"], "capture.initial_observation")
+    current_flat = _validate_flat(
+        record["initial_flat_observation"], current, "capture.initial_flat_observation")
     record["initial_observation"] = current
+    record["initial_flat_observation"] = current_flat
     if current["observed_tick"] != 0:
         _fail("flight_capture_initial", "capture must begin at the actual reset tick zero")
 
@@ -334,14 +366,17 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
     saw_terminal = False
     for index, raw in enumerate(transitions):
         transition = dict(_exact_mapping(raw, {
-            "index", "observation", "teacher_action", "physical",
-            "next_observation", "outcome",
+            "index", "observation", "flat_observation", "teacher_action", "physical",
+            "next_observation", "next_flat_observation", "outcome",
         }, f"capture.transitions[{index}]"))
         if transition["index"] != index:
             _fail("flight_capture_order", "transition indices must preserve original order")
         before = _validate_observation(transition["observation"], f"capture.transitions[{index}].observation")
-        if sha256_json(before) != sha256_json(current):
-            _fail("flight_capture_order", "transition source observation differs from preceding authoritative state")
+        before_flat = _validate_flat(
+            transition["flat_observation"], before, f"capture.transitions[{index}].flat_observation")
+        if (sha256_json(before) != sha256_json(current)
+                or sha256_json(before_flat) != sha256_json(current_flat)):
+            _fail("flight_capture_order", "transition source raw/flat views differ from preceding authoritative state")
         teacher_action = _validate_teacher_action(
             transition["teacher_action"], teacher, before, f"capture.transitions[{index}].teacher_action")
         physical = _validate_physical(transition["physical"], f"capture.transitions[{index}].physical")
@@ -355,6 +390,9 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
             if next_observation is None:
                 _fail("flight_capture_physical", "confirmed work requires its authoritative final observation")
             after = _validate_observation(next_observation, f"capture.transitions[{index}].next_observation")
+            after_flat = _validate_flat(
+                transition["next_flat_observation"], after,
+                f"capture.transitions[{index}].next_flat_observation")
             if not _same_lifetime(before, after):
                 _fail("flight_capture_authority", "confirmed transition changed owner lifetime/control identity")
             if after["observation_id"] == before["observation_id"]:
@@ -364,10 +402,18 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
             if physical["consumed_ticks"] != 6 and not terminal:
                 _fail("flight_capture_ticks", "short confirmed work is allowed only on a terminal interval")
             current = after
+            current_flat = after_flat
             transition["next_observation"] = after
+            transition["next_flat_observation"] = after_flat
         else:
-            if next_observation is not None:
-                _validate_observation(next_observation, f"capture.transitions[{index}].next_observation")
+            if next_observation is not None or transition["next_flat_observation"] is not None:
+                if next_observation is None or transition["next_flat_observation"] is None:
+                    _fail("flight_capture_physical", "returned raw/flat views must remain paired")
+                untrusted_after = _validate_observation(
+                    next_observation, f"capture.transitions[{index}].next_observation")
+                _validate_flat(
+                    transition["next_flat_observation"], untrusted_after,
+                    f"capture.transitions[{index}].next_flat_observation")
             uncertain = True
             exclusions.append(f"{index}:{physical['status']}_physical_consumption")
 
@@ -386,12 +432,13 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         if eligible:
             target = finite_vector(teacher_action["admitted_action"], 2)
             samples.append(FlightSample(
-                policy_input(before), target, episode_id, index,
+                policy_input(before, before_flat), target, episode_id, index,
                 physical["consumed_ticks"], terminal))
         elif not exclusions or not exclusions[-1].startswith(f"{index}:"):
             exclusions.append(f"{index}:not_supervised")
 
         transition["observation"] = before
+        transition["flat_observation"] = before_flat
         transition["teacher_action"] = teacher_action
         transition["physical"] = physical
         transition["outcome"] = step_outcome
@@ -822,9 +869,10 @@ class ScoredFlightPolicy:
         self.model = model
         self.policy_sha256 = policy_sha256(model)
 
-    def act(self, observation: Mapping[str, Any]) -> dict[str, list[float]]:
+    def act(self, observation: Mapping[str, Any],
+            flat_observation: Mapping[str, Any]) -> dict[str, list[float]]:
         torch = _torch()
-        features = policy_input(observation)
+        features = policy_input(observation, flat_observation)
         with torch.no_grad():
             outputs = self.model(torch.tensor([features], dtype=torch.float32, device="cpu"))[0]
         if not bool(torch.isfinite(outputs).all()):
