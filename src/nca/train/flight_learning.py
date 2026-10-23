@@ -24,7 +24,9 @@ from nca.adapters.flight import (
     FLAT_CHANNELS,
     FLAT_OBSERVATION_VERSION,
     OBSERVATION_VERSION,
+    CONTROLLER_SHA256,
     TRAINER_PROFILE,
+    TRAINER_PROFILE_SHA256,
     finite_vector,
     velocity_action,
 )
@@ -363,6 +365,12 @@ def declared_capture_source(declaration: FlightDeclaration) -> dict[str, str]:
     }
     if any(value is None for value in source.values()):
         _fail("flight_capture_declaration", "capture source identities remain unresolved")
+    if (source["profile_sha256"] != TRAINER_PROFILE_SHA256
+            or source["controller_sha256"] != CONTROLLER_SHA256):
+        _fail(
+            "flight_capture_declaration",
+            "declared profile/controller differ from the frozen preregistration",
+        )
     return _validate_source(source)
 
 
