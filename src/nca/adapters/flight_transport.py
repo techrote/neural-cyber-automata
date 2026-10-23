@@ -199,6 +199,7 @@ class FlightRpcTransport:
             "lease_ticks": LEASE_TICKS,
             "actor_id": ACTOR_ID,
             "producer": "policy",
+            "teacher_capture": "owner_reference_action_development_only",
             "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
             "controller_sha256": CONTROLLER_SHA256,
             "native_coupling": True,
@@ -221,17 +222,41 @@ class FlightRpcTransport:
         operation = str(command.get("command", ""))
         if operation == "reset":
             split = command.get("split")
+            producer = command.get("producer")
             if split not in ("development", "tuning"):
                 raise FlightProtocolError(
                     "accounted reset requires development or tuning split"
                 )
+            if producer not in ("policy", "teacher"):
+                raise FlightProtocolError(
+                    "accounted reset requires policy or teacher owner source"
+                )
+            if producer == "teacher" and split != "development":
+                raise FlightProtocolError(
+                    "teacher capture reset must use development split"
+                )
             stage = (
                 "capture"
-                if split == "development" and self._capture_labels_per_step
+                if split == "development" and (
+                    producer == "teacher" or self._capture_labels_per_step
+                )
                 else "tuning" if split == "tuning" else None
             )
             return self._accounting.reserve_reset(
                 tuning=split == "tuning", stage=stage)
+        if operation == "teacher_step":
+            if self._capture_labels_per_step:
+                raise FlightProtocolError(
+                    "teacher capture labels must be charged only after durable "
+                    "capture eligibility; transport precharge is forbidden"
+                )
+            repeat = command.get("repeat_ticks")
+            if type(repeat) is not int:
+                raise FlightProtocolError(
+                    "accounted teacher step requires integer repeat_ticks"
+                )
+            return self._accounting.reserve_step(
+                maximum_ticks=repeat, capture_labels=0, stage="capture")
         if operation == "step":
             repeat = command.get("repeat_ticks")
             if type(repeat) is not int:
@@ -280,7 +305,7 @@ class FlightRpcTransport:
         confirmed_ticks = 0
         failed = False
         reason = "host_operation_failed"
-        if operation in ("reset", "step"):
+        if operation in ("reset", "step", "teacher_step"):
             transition = reply.get("transition")
             if not isinstance(transition, Mapping):
                 raise UnknownConsumptionError(
