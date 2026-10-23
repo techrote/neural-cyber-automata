@@ -182,7 +182,7 @@ class DurableAccountingTests(unittest.TestCase):
             resumed.reserve_checkpoint_publication()
         resumed.close("partial_publication")
 
-    def test_checkpoint_lineage_survives_clean_interruption(self):
+    def test_checkpoint_lineage_and_costs_survive_clean_same_attempt_resume(self):
         ledger = self.create()
         first = ledger.reserve_checkpoint_publication()
         ledger.publish_checkpoint(
@@ -192,21 +192,26 @@ class DurableAccountingTests(unittest.TestCase):
         ledger.publish_checkpoint(
             second, checkpoint_id="epoch-10",
             sha256=sha256_json(["fixture", "epoch-10"]), parent_id="epoch-05")
-        ledger._stream.close()  # fixture: process exits between completed operations
+        before = ledger.snapshot()
+        ledger._stream.close()  # fixture: process exits between settled operations
 
         resumed = FlightAccountingLedger.resume(
             ledger.path, self.declaration, attempt_id="attempt-a1",
             current_evidence=self.evidence)
+        snapshot = resumed.snapshot()
         self.assertEqual(
-            resumed.snapshot()["checkpoints"]["epoch-10"]["parent_id"], "epoch-05")
-        self.assertTrue(resumed.snapshot()["interrupted"])
-        with self.assertRaisesRegex(ContractError, "cleanup only"):
-            resumed.reserve_reset()
-        with self.assertRaisesRegex(ContractError, "cannot be resumed again"):
-            FlightAccountingLedger.resume(
-                ledger.path, self.declaration, attempt_id="attempt-a1",
-                current_evidence=self.evidence)
-        resumed.close("fixture_resume")
+            snapshot["checkpoints"]["epoch-10"]["parent_id"], "epoch-05")
+        self.assertTrue(snapshot["interrupted"])
+        self.assertEqual(
+            snapshot["charged"]["checkpoint_publications"],
+            before["charged"]["checkpoint_publications"],
+        )
+        # This is the same durable attempt, not a new attempt or replay: settled
+        # work and lineage remain charged while new budgeted work may continue.
+        reset = resumed.reserve_reset()
+        resumed.complete(reset)
+        self.assertEqual(resumed.snapshot()["charged"]["resets"], 1)
+        resumed.close("fixture_clean_resume")
 
     def test_interrupted_jsonl_write_is_not_repaired_or_replayed(self):
         ledger = self.create()
