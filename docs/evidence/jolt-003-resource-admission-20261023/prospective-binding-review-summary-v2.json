@@ -1,0 +1,19 @@
+{
+  "actual_execution_runner_disk_measured": false,
+  "allocation_claimed_or_executed": false,
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "experiment_admitted": false,
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "independently_ran_pinned_source_build_prospective": false,
+  "object_schema": "nca-learn-jolt-003-execution/v3",
+  "prospective_binding_object_file_sha256": "3c6a74b93ef5aa2d16659155e3287eb3c2b35c501a6c6d2569b6855a628224bd",
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "resource_candidate_file_sha256": "8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7",
+  "resource_candidate_sha256": "6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72",
+  "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "schema": "nca-jolt-003-prospective-binding-offline-reconstruction/v1",
+  "scope": "Exact offline reconstruction from pinned original source inventory, pinned source config summary, native host and runtime, proposed owner-risk-accepted resource candidate; must cross-check by true build_prospective on pinned runner before independent signoff.",
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "two_independent_accepted_v2_reviews": false
+}

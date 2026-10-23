@@ -63,6 +63,60 @@ and the actual per-case inference-p95 <=5 ms gate are **never normalized**.
 Normalizing ballpark throughput does not establish full-worker/native peak
 memory or prospectively accept this allocation.
 
+## Process-tree RSS watchdog and v2 resource review (D-023)
+
+The owner accepted [D-023](decisions/2026-10-23-jolt-resource-risk.md)
+to add a **sampled 8 GiB memory-stop threshold** and proceed with
+source-bound admission review. It does not assert production peak-memory
+qualification or authorize consuming a single-use allocation prematurely.
+
+An accepted portable \`nca-jolt-003-resource-admission/v2\` record must
+bind the exact \`memory_watchdog\` policy from
+\`nca.train.jolt_memory_watchdog_v3.watchdog_policy_v3()\`:
+8,589,934,592 bytes; 0.25 s between RSS samples; original observer plus
+all subreaper-owned descendants (worker, independent verifier and native
+Godot); fail-closed monitoring; no automatic retry. The original outer
+observer samples concurrently with its child-wait loop. On a sampled
+overage, unreadable live RSS or PID identity mismatch, that *same* original
+attempt fails; the established process-tree reaper must revoke/reap it
+and retain original stdout/stderr, exit, closure and watchdog receipts.
+
+The raw Actions artifact includes
+\`learn-jolt-003-20261022-a1-memory-watchdog.json\`, with separate
+file-identity readback from the observed exit. This observer-derived RSS
+threshold is **not** a kernel/cgroup hard limit: a transient memory surge,
+an external process or runner-wide OOM may defeat it before the next sample.
+GitHub's six-hour hosted-job expiry is unchanged.
+
+Nonexperimental memory CI produces the original bounded synthetic/native
+specimen, independent calibration and a
+\`nca-jolt-003-resource-assessment-draft/v2\` with source/config/host
+and portable software hashes. The draft **must** contain
+\`accepted=false\`, \`prospective_experiment_admitted=false\`,
+\`peak_resident_memory=false\` and the unresolved complete-worker peak.
+It cannot replace a passing resource admission or independent review.
+The source-derived artifact size ceiling includes a 1 GiB disk reserve;
+free disk is sampled now but must be rechecked on the execution runner.
+
+**Review A:** a genuinely independent terminal-learning reviewer checks
+the exact clean executable source, safe-retirement/GAE masks and outcome
+semantics, BC/PPO seeds and cases, frozen six-final barrier, all
+qualification thresholds, and original teacher prerequisites.
+
+**Review B:** a different independently authored operations/resource
+reviewer checks the same source closure, CPU software contract and
+pinned native host, 39 counters, journal/reader bounds, available disk,
+sampled RSS limitations, soft watchdog abort/reaping, immutable evidence,
+single-use claim and original observed exit.
+
+Both final reviewer records must use
+\`nca-learn-jolt-003-source-admission-review/v2\` and bind the exact
+\`prospective_binding_sha256\`, same source/config/host/CPU capability
+and zero unresolved blocking findings **before** \`freeze-v3\`.
+Reviewer identities cannot be fabricated from unsigned preparation
+documents or green CI. If either independent reviewer refuses, retain
+that refusal without launching training.
+
 ## GitHub Actions: long-run dispatch
 
 The [manual LEARN-JOLT-003 workflow](../.github/workflows/learn-jolt-003-long-run.yml)

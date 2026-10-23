@@ -22,6 +22,7 @@ from nca.train.jolt_admission_v3 import (
     PORTABLE_RESOURCE_SCHEMA, PORTABLE_REVIEW_SCHEMA,
 )
 from nca.train.jolt_storage_v3 import storage_bounds_v3
+from nca.train.jolt_memory_watchdog_v3 import watchdog_policy_v3
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,6 +58,7 @@ def admitted_synthetic_declaration():
         host_identity_sha256=sha256_json(host),
         runtime_contract_sha256=capability_sha256(declaration["runtime"]),
         cpu_comparison_policy=POLICY, gates=gates,
+        memory_watchdog=watchdog_policy_v3(),
         serialization=bounds,
         required_free_disk_bytes=bounds["required_disk_bytes_including_1_gib_reserve"],
     )
@@ -150,6 +152,25 @@ class NormalizationTests(unittest.TestCase):
 
 
 class PortableAdmissionTests(unittest.TestCase):
+    def test_changed_or_missing_watchdog_prevents_resource_admission(self):
+        original = admitted_synthetic_declaration()
+        validate_resource_admission(original)
+        for change in ("missing", "limit", "disabled", "bool_instead_of_bytes", "interval"):
+            record = deepcopy(original)
+            guard = record["resource_admission"]["memory_watchdog"]
+            if change == "missing":
+                record["resource_admission"].pop("memory_watchdog")
+            elif change == "limit":
+                guard["soft_threshold_bytes"] += 1
+            elif change == "disabled":
+                guard["on_exceedance"] = "record_and_continue"
+            elif change == "bool_instead_of_bytes":
+                guard["soft_threshold_bytes"] = True
+            elif change == "interval":
+                guard["sample_interval_seconds"] = 3.
+            with self.subTest(change=change), self.assertRaises(ContractError):
+                validate_resource_admission(record)
+
     def test_portable_resource_admission_refuses_unresolved_gates(self):
         declaration = admitted_synthetic_declaration()
         validate_resource_admission(declaration)

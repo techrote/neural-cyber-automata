@@ -7,9 +7,13 @@ on:
     paths:
       - '.github/workflows/jolt-memory-envelope.yml'
       - 'tools/check_jolt_memory_envelope_v3.py'
+      - 'tools/assess_jolt_resources_v3.py'
       - 'tools/compare_jolt_cpu_v3.py'
       - 'tools/jolt_ci_workflow_v3.py'
       - 'tests/test_jolt_memory_envelope_v3.py'
+      - 'tests/test_jolt_memory_watchdog_v3.py'
+      - 'tests/test_jolt_observer_memory_v3.py'
+      - 'tests/test_jolt_resource_assessment_v3.py'
       - 'tests/test_jolt_runtime_portability_v3.py'
       - 'tests/test_jolt_execution_runtime_portability_v3.py'
       - 'tests/test_jolt_cpu_reference_v3.py'
@@ -57,6 +61,14 @@ jobs:
           python -m unittest discover -s tests -p 'test_jolt_execution_runtime_portability_v3.py' -v
           python -m unittest discover -s tests -p 'test_jolt_cpu_reference_v3.py' -v
 
+      - name: Watchdog and negative resource-admission regression tests
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m unittest discover -s tests -p 'test_jolt_memory_watchdog_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_observer_memory_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_resource_assessment_v3.py' -v
+
       - name: Measure retained-worker proxies with original host handshake
         env:
           PYTHONPATH: src
@@ -68,6 +80,15 @@ jobs:
             --checkout "$NCA_HOST_CHECKOUT" \
             --godot "$NCA_GODOT" \
             --output "$RUNNER_TEMP/jolt-003-memory-report.json"
+
+      - name: Publish source-bound nonadmitted v2 resource assessment
+        env:
+          PYTHONPATH: src
+        run: |
+          python tools/assess_jolt_resources_v3.py \
+            --config configs/learning/jolt-learn-003-v2.json \
+            --memory-report "$RUNNER_TEMP/jolt-003-memory-report.json" \
+            --output "$RUNNER_TEMP/jolt-003-resource-assessment.json"
 
       - name: Normalize measured diagnostic seconds to the saved reference CPU
         env:
@@ -90,6 +111,8 @@ jobs:
           from pathlib import Path
           from nca.contracts import sha256_json
           from nca.train.jolt_screen import source_inventory
+          from nca.train.jolt_memory_watchdog_v3 import watchdog_policy_v3
+          from nca.train.jolt_admission_v3 import validate_resource_admission
           report = json.loads((Path(os.environ["RUNNER_TEMP"]) / "jolt-003-memory-report.json").read_bytes())
           revision = subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
           assert report["source_revision"] == revision
@@ -103,6 +126,24 @@ jobs:
           assert report["native_handshake_only"] is True
           assert report["sealed_case_inspection_or_training"] is False
           assert report["synthetic_shape"]["results"] == 6464
+          assessment = json.loads((Path(os.environ["RUNNER_TEMP"])/"jolt-003-resource-assessment.json").read_bytes())
+          assert assessment["schema"] == "nca-jolt-003-resource-assessment-draft/v2"
+          assert assessment["source_revision"] == revision
+          assert assessment["source_sha256"] == report["source_sha256"]
+          assert assessment["config_sha256"] == report["config_sha256"]
+          assert assessment["original_report_sha256"] == hashlib.sha256(
+              (Path(os.environ["RUNNER_TEMP"])/"jolt-003-memory-report.json").read_bytes()).hexdigest()
+          assert assessment["memory_watchdog"] == watchdog_policy_v3()
+          assert assessment["gates"]["peak_resident_memory"] is False
+          assert assessment["accepted"] is False
+          assert assessment["prospective_experiment_admitted"] is False
+          assert assessment["experiment_allocation_consumed"] is False
+          try:
+              validate_resource_admission({"resource_admission": assessment})
+          except Exception:
+              pass
+          else:
+              raise AssertionError("unaccepted memory assessment cannot admit the experiment")
           normalized = json.loads((Path(os.environ["RUNNER_TEMP"])/"jolt-003-cpu-normalization.json").read_bytes())
           assert normalized["schema"] == "nca-jolt-cpu-reference-comparison/v1"
           assert normalized["observed_source_revision"] == revision
@@ -123,5 +164,6 @@ jobs:
           path: |
             ${{ runner.temp }}/jolt-003-memory-report.json
             ${{ runner.temp }}/jolt-003-cpu-normalization.json
+            ${{ runner.temp }}/jolt-003-resource-assessment.json
           retention-days: 90
           if-no-files-found: warn

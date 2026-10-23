@@ -390,6 +390,9 @@ def validate_resource_admission(declaration, *, output_parent=None):
     if not isinstance(record, dict):
         record = {}
     portable = record.get("schema") == PORTABLE_RESOURCE_SCHEMA
+    if portable:
+        from nca.train.jolt_memory_watchdog_v3 import validate_watchdog_policy_v3
+        validate_watchdog_policy_v3(record.get("memory_watchdog"))
     _need(record.get("schema") in {"nca-jolt-003-resource-admission/v1", PORTABLE_RESOURCE_SCHEMA}
           and record.get("accepted") is True and record.get("unresolved_blocking_findings") == [],
           "full pipeline resource feasibility is unresolved")
