@@ -171,10 +171,19 @@ func _reset(request_id: int, request: Dictionary) -> void:
 		or request.split not in ["development", "tuning"]:
 		_error(request_id, "reset_schema_or_excluded_split", "none")
 		return
+	# Resolve only public development/tuning metadata before touching the owner.
+	# Final is excluded above, so this never opens the sealed suite.
+	if FlightCourse.scenario(
+		str(request.scenario), int(request.seed), str(request.split)).is_empty():
+		_error(request_id, "unknown_flight_scenario", "none")
+		return
 	if not episode.reset(TRAINER, str(request.scenario), int(request.seed), str(request.split), &"policy"):
-		# CyberPhysicalFlightEpisode mutates public episode state only after the
-		# arena accepts the complete replacement configuration.
-		_error(request_id, "episode_reset_refused: " + episode.last_error, "none")
+		# reset() can fail after arena.configure() (for example during a later
+		# owner/observation step). Once called, we cannot prove the replacement
+		# owner consumed nothing, so automatic replay is forbidden.
+		_error(request_id, "episode_reset_refused: " + episode.last_error, "unknown")
+		_close_owner()
+		exit_after_flush = 2
 		return
 	var transition: Dictionary = episode.transition(0)
 	_reply_transition(request_id, transition, true)
