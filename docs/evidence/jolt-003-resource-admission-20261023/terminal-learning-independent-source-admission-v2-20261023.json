@@ -1,0 +1,209 @@
+{
+  "schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "review_date_utc": "2026-10-23",
+  "reviewer": "OpenAI GPT-6 (ChatGPT terminal-learning source reviewer)",
+  "publication_actor": "techrote (authenticated GitHub connection; not a separate reviewer identity)",
+  "reviewer_identity_kind": "AI assistant; original source inspection in this review session",
+  "independence_statement": "This record is an original terminal-learning analysis, based on direct inspection of the frozen source and original GitHub Actions evidence. It is not the operations/resource review and does not impersonate a second reviewer. Historical reviews were considered only as background, not substituted for the inspected source.",
+  "review_roles": [
+    "terminal_learning_qualification"
+  ],
+  "assignment_issue": "https://github.com/techrote/neural-cyber-automata/issues/62",
+  "implementation_pr": "https://github.com/techrote/neural-cyber-automata/pull/81",
+  "merge_commit": "fb57c32c878485df26c3efeb57cd18d7bc0e9b01",
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "config_path": "configs/learning/jolt-learn-003-v2.json",
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "host_revision": "f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497",
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "source_identity_review": {
+    "status": "pass",
+    "basis": "Compared frozen executable to PR #81 merge via GitHub commit comparison; intervening seven commits change one non-executable workflow and five evidence/documentation files only, not the executable source closure.",
+    "original_prospective_replay_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39885557723",
+    "original_prospective_replay_job_id": 120192800393,
+    "replay_result": "PASS; original source-based build_prospective and exact owner-risk candidate binding SHA-256 comparison succeeded. Diagnostic runner disk passed but actual execution-runner check remained false; allocation was not claimed.",
+    "independently_recomputed_all_261_source_file_hashes_locally": false,
+    "actual_source_inventory_validation": "Verified original GitHub Actions output and source-bound assertions, and independently inspected the selected frozen source. Not a claim that this reviewer separately downloaded and rehashed all 261 source files."
+  },
+  "teacher_prerequisite": {
+    "status": "pass",
+    "teacher_id": "authored-jolt-recovery@4",
+    "accepted_source_revision": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+    "original_result": "docs/evidence/jolt-recovery-v4-result-20261020.json",
+    "independent_reconciliation": "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json",
+    "paired_cases": 32,
+    "teacher_arrivals": 30,
+    "reference_arrivals": 27,
+    "acceptance_checks_passed": 13,
+    "acceptance_checks_total": 13,
+    "limitation": "This accepts the already qualified authored teacher as a prerequisite; it is not evidence of any learned model qualification."
+  },
+  "findings": [
+    {
+      "id": "TERM-01",
+      "topic": "Retirement proof and original authority",
+      "disposition": "closed_pass",
+      "explanation": "The sole recognized complete safe-failure reason is emergency_recovery_deadline. The independent retirement verifier requires original 4-second invocation identity, contiguous pre-cancel observations, all admitted six-tick step receipts, bounded leases, original 48-tick emergency history, unchanged supervisor deadline/quiet ordering and original topology/generation. Unverified retirement aborts.",
+      "source": [
+        "src/nca/evaluation/jolt_retirement.py:103-190",
+        "src/nca/controllers/jolt_learned.py:380-565",
+        "src/nca/train/jolt_capture_v3.py:92-281"
+      ]
+    },
+    {
+      "id": "TERM-02",
+      "topic": "Native cancellation and failure isolation",
+      "disposition": "closed_pass",
+      "explanation": "Revocation checks original actor incarnation, physical state, control-generation increment and cleared action/edge/lease. Missing cancellation or durable retirement proof is an integrity error, not a complete failure or successful invocation; the same retired lifetime cannot restart.",
+      "source": [
+        "src/nca/evaluation/jolt_retirement.py:76-100",
+        "src/nca/train/jolt_capture_v3.py:250-360",
+        "src/nca/evaluation/jolt_learning_audit.py:118-147"
+      ]
+    },
+    {
+      "id": "TERM-03",
+      "topic": "Terminal, bootstrap and GAE semantics",
+      "disposition": "closed_pass",
+      "explanation": "Safe failure uses zero terminal bootstrap without an invented model forward, task terminal or penalty; cutoff-peek retirement takes precedence over administrative cutoff while retaining the raw per-tick cutoff. Value-less emergency overrides cannot acquire actor/critic losses. GAE stops at terminal, invalid/overridden transitions and cutoff under the original gamma/lambda per tick.",
+      "source": [
+        "src/nca/train/jolt_learning.py:313-485",
+        "src/nca/evaluation/jolt_learning_audit.py:767-1065"
+      ]
+    },
+    {
+      "id": "TERM-04",
+      "topic": "BC/PPO and fixed seeded schedule",
+      "disposition": "closed_pass",
+      "explanation": "BC uses all eligible ordinary teacher labels including unsuccessful episodes, no outcome filtering, 40 epochs with recurrent prefix burn-in and original loss weights. PPO authenticates original stochastic proposal/value and immutable BC base before updates, preserves recurrent masks and resets, and requires exactly 256 confirmed six-tick decisions for each of 24 updates. Seeds are 190103, 190207, 190301; PPO case stream is precomputed independently per seed with seed+300000, 2048 entries per seed, without outcome-driven replacement.",
+      "source": [
+        "src/nca/train/jolt_learning.py:111-312",
+        "src/nca/train/jolt_learning.py:485-631",
+        "src/nca/train/jolt_admission_v3.py:81-103",
+        "src/nca/train/jolt_screen.py:660-765"
+      ]
+    },
+    {
+      "id": "TERM-05",
+      "topic": "Six finals, split holdouts and all sealed comparisons",
+      "disposition": "closed_pass",
+      "explanation": "All six fixed BC/residual final checkpoint hashes must exist and be durably frozen before sealed outcomes. The independently audited sealed marker precedes the first sealed case, including authored/idle; the exact fixed case-major order covers 32 open diagnostic and 224 sealed rows. Original failed experiment had five finals, no barriers, zero evaluation rows, and is not upgraded into a successful or trained experiment. Contact/approach and complete opened-inventory split checks reject leakage.",
+      "source": [
+        "src/nca/train/jolt_screen.py:527-542",
+        "src/nca/train/jolt_screen.py:740-810",
+        "src/nca/evaluation/jolt_learning_audit.py:1213-1495",
+        "src/nca/train/jolt_admission_v3.py:104-232"
+      ],
+      "evidence": "docs/evidence/jolt-learn-003-unopened-sealed-proof-20261022.json"
+    },
+    {
+      "id": "TERM-06",
+      "topic": "Original qualification gates",
+      "disposition": "closed_pass",
+      "explanation": "Qualification retains mean final arrival >=0.75, each seed >=0.50, own-initial mean gain >=0.125 and strictly positive lower 95 percent bound over all 27 three-policy-seed resamples, original authored improvement/alternate high-baseline completion rule, ordinary trim +0.5/s, angle +0.1 rad, toward-speed ratio 0.7-1.5, purposeful-airborne loss <=0.125, every-case inference p95 <=5 ms, and zero integrity/admission failures. Every safe failure remains in its declared case denominator.",
+      "source": [
+        "src/nca/evaluation/jolt_learning.py:24-229",
+        "configs/learning/jolt-learn-003-v2.json"
+      ]
+    },
+    {
+      "id": "TERM-07",
+      "topic": "Original evidence and watchdog failure propagation",
+      "disposition": "closed_pass",
+      "explanation": "The 8 GiB/250 ms original-tree watchdog checks sampled RSS and PID identity and rejects unreadable live RSS, but is explicitly soft, not a kernel hard ceiling. Observation, source-based audit, lifecycle and independently observed CLI exit must all report complete; watchdog or evidence failure forces nonzero/failure and never upgrades a failed allocation. The original source has no automatic retry.",
+      "source": [
+        "src/nca/train/jolt_memory_watchdog_v3.py:1-195",
+        "src/nca/train/jolt_streams_v3.py:1-95",
+        "tools/observe_jolt_v3.py:1-245",
+        "src/nca/train/jolt_executor_v3.py:370-550"
+      ]
+    }
+  ],
+  "original_request_findings": [
+    {
+      "id": "TERM-REVIEW-01",
+      "status": "closed_by_this_original_record",
+      "basis": "Original source-bound terminal-learning review authored for one actual reviewer identity."
+    },
+    {
+      "id": "TERM-REVIEW-02",
+      "status": "closed_for_terminal_role",
+      "basis": "Independently inspected learner, native, audit, observed-exit and watchdog failure code; resource peak feasibility remains for the separate operations reviewer."
+    }
+  ],
+  "source_and_evidence_inspected": [
+    "docs/evidence/jolt-003-resource-admission-20261023/terminal-learning-review-request.json",
+    "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json",
+    "docs/evidence/jolt-003-resource-admission-20261023/prospective-binding-review-summary-v2.json",
+    "configs/learning/jolt-learn-003-v2.json",
+    "docs/evidence/jolt-recovery-v4-result-20261020.json",
+    "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json",
+    "docs/evidence/jolt-learn-003-unopened-sealed-proof-20261022.json",
+    "src/nca/evaluation/jolt_retirement.py",
+    "src/nca/train/jolt_capture_v3.py",
+    "src/nca/train/jolt_learning.py",
+    "src/nca/controllers/jolt_learned.py",
+    "src/nca/train/jolt_screen.py",
+    "src/nca/train/jolt_admission_v3.py",
+    "src/nca/train/jolt_cli_v3.py",
+    "src/nca/train/jolt_executor_v3.py",
+    "src/nca/evaluation/jolt_learning_audit.py",
+    "src/nca/evaluation/jolt_learning.py",
+    "src/nca/train/jolt_memory_watchdog_v3.py",
+    "src/nca/train/jolt_streams_v3.py",
+    "tools/observe_jolt_v3.py",
+    "https://github.com/techrote/neural-cyber-automata/actions/runs/39885557723"
+  ],
+  "validation": {
+    "review_record_json_parse": "pass",
+    "direct_source_inspection": "pass",
+    "independent_original_ci_job_log_inspection": "pass",
+    "frozen_source_learning_cpu_workflow": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617154",
+    "frozen_source_learning_cpu_tests": 1258,
+    "frozen_source_learning_cpu_skips": 6,
+    "frozen_source_learning_cpu_result": "pass",
+    "frozen_source_memory_workflow": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159",
+    "final_publication_head_learning_cpu_workflow": "https://github.com/techrote/neural-cyber-automata/actions/runs/39885557678",
+    "final_publication_head_learning_cpu_result": "pass; 1258 tests with six skips",
+    "watchdog_negative_test_observations": [
+      "missing or altered policy rejected before spawn",
+      "live unreadable RSS rejected",
+      "8GiB sampled exceedance stopped original child and preserved noncompletion",
+      "negative resource assessment did not self-admit"
+    ],
+    "reviewer_executed_new_physical_or_training_tests": false,
+    "reviewer_repeated_frozen_source_full_test_suite_locally": false,
+    "reason": "Relied on original separately inspectable GitHub-hosted frozen-source CI logs and performed direct static review; no execute dispatch or experimental fitting."
+  },
+  "residual_risk_boundaries": {
+    "owner_memory_risk_acceptance": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6355227817",
+    "hard_memory_bound_proven": false,
+    "true_complete_worker_peak_measured": false,
+    "sampled_watchdog_cannot_exclude_oom_between_samples": true,
+    "disk_bytes_required_before_claim": 16895424646,
+    "actual_execution_runner_disk_verified": false,
+    "github_hosted_external_six_hour_job_limit_applies": true,
+    "separate_operations_resource_review_required": true,
+    "this_review_does_not_decide_resource_feasibility": true
+  },
+  "accepted": true,
+  "offline_scope_only": false,
+  "prospective_experiment_admitted": true,
+  "admission_scope": "this assigned terminal_learning_qualification role only; NOT a combined all-gates experiment authorization",
+  "unresolved_blocking_findings": [],
+  "global_admission_gates_outstanding": [
+    "An original independently authored and accepted operation_serialization_deadline_feasibility v2 review from a different reviewer",
+    "Both original review JSON byte identities embedded in a passing clean-source prospective declaration",
+    "A fresh passing disk check on the actual execution runner with at least 16895424646 bytes free before the durable one-use claim"
+  ],
+  "experiment_execution_authorized": false,
+  "allocation_id": "learn-jolt-003-20261022-a1",
+  "allocation_claimed": false,
+  "physical_experiment_started": false,
+  "reviewer_disposition": "ACCEPT",
+  "completion_semantics": "This record closes this terminal-learning source review only. It does not certify a learned policy, consume an allocation, run the teacher, claim a measured peak memory bound or waive remaining independent review, declaration and disk gates."
+}
