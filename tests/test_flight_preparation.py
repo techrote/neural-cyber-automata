@@ -486,6 +486,17 @@ class FlightTests(unittest.TestCase):
             session.unknown_consumption["operation"],
             "step",
         )
+        self.assertEqual(
+            session.unknown_consumption["run_id"],
+            observation["run_id"],
+        )
+        self.assertEqual(
+            session.unknown_consumption["observation_id"],
+            observation["observation_id"],
+        )
+        self.assertEqual(
+            session.unknown_consumption["physical_tick"], 0
+        )
         self.assertEqual(owner.tick, 6)
         with self.assertRaises(FlightProtocolError):
             session.step(
