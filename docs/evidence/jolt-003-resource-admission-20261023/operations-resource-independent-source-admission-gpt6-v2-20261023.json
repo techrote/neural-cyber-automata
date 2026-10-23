@@ -1,0 +1,308 @@
+{
+  "schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "reviewer": "openai-chatgpt-gpt6-operations-resource-20261023-independent-session",
+  "reviewer_identity_detail": "GPT-6 (ChatGPT), original independent operations/resource reviewer, distinct from GPT-5.6 Sol terminal reviewer in PR #82. Authenticated GitHub publishing user techrote is not a second reviewer.",
+  "reviewed_date_utc": "2026-10-23",
+  "review_roles": [
+    "operation_serialization_deadline_feasibility"
+  ],
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "reviewed_merged_implementation": "fb57c32c878485df26c3efeb57cd18d7bc0e9b01",
+  "allocation_id": "learn-jolt-003-20261022-a1",
+  "accepted": true,
+  "offline_scope_only": false,
+  "prospective_experiment_admitted": true,
+  "decision": "ACCEPT",
+  "overall_experimental_execution_authorized": false,
+  "execution_disposition": "HOLD",
+  "review_basis": {
+    "frozen_source": "261-file source closure at frozen executable 40d4339a31433572b5433bb344291b3e9303d317",
+    "merged_source_drift": "Frozen-to-PR81-merge compare shows documentation, evidence, and a separate nonexperimental prospective-binding workflow addition, not an executable/source/config change. The frozen CPU training checkout is unchanged.",
+    "admission_kind": "Prospective operations/resource role acceptance with owner-accountable residual memory risk; not measured native peak feasibility, not a hard RSS safety certificate, and not authorization of the physical experiment."
+  },
+  "evidence_inspected": {
+    "original_request": "docs/evidence/jolt-003-resource-admission-20261023/operations-resource-review-request.json",
+    "original_risk_candidate": "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json",
+    "original_prospective_summary": "docs/evidence/jolt-003-resource-admission-20261023/prospective-binding-review-summary-v2.json",
+    "owner_D023": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6355227817",
+    "run_39881617159": {
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159",
+      "job_id": 120180044845,
+      "original_job_log_inspected": true,
+      "artifact_id": 12470423926,
+      "downloaded_zip_sha256": "023f5c3a1228e8c1ed77da205d9e9d3ee6414391a12fb1d0000d6eee71bb6dc5",
+      "original_files_sha256": {
+        "jolt-003-memory-report.json": "ba84131fa5e7c6133b37703b7c6258834bb62f6cf7c36cc15823ca15c528060e",
+        "jolt-003-resource-assessment.json": "e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be",
+        "jolt-003-cpu-normalization.json": "f414a30dc52b8f3dd13596ec026b14f81ff624132873f010bd44a02f44981950"
+      }
+    },
+    "run_39885557723": {
+      "url": "https://github.com/techrote/neural-cyber-automata/actions/runs/39885557723",
+      "job_id": 120192800393,
+      "original_job_log_inspected": true,
+      "artifact_id": 12472417540,
+      "downloaded_zip_sha256": "250bc274e83cbd7c5292e90f30e22347ae6f5ebc76fdaf37bf5921edf3243aab",
+      "original_verification_file_sha256": "ca2a8e96899db98cc5564e5b12369e88c8b8cf9a402f4b68befc0c9400da9827",
+      "original_api_replay": "nca.train.jolt_cli_v3.build_prospective() and nca.train.jolt_admission_v3.prospective_binding() on clean 40d4339 checkout",
+      "original_diagnostic_disk_free_bytes": 89721016320,
+      "actual_execution_runner_disk_check": false,
+      "allocation_claimed": false,
+      "physical_execution_started": false
+    },
+    "other_qualified_learning_cpu_run": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617154",
+    "risk_file_raw_sha256": "8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7",
+    "risk_object_canonical_sha256": "6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72"
+  },
+  "inspected_source_locations": [
+    "src/nca/train/jolt_execution_v3.py",
+    "src/nca/train/jolt_budget_v3.py",
+    "src/nca/train/jolt_storage_v3.py",
+    "src/nca/train/jolt_memory_watchdog_v3.py",
+    "src/nca/train/jolt_streams_v3.py",
+    "src/nca/train/jolt_executor_v3.py",
+    "src/nca/train/jolt_admission_v3.py",
+    "src/nca/train/jolt_cli_v3.py",
+    "src/nca/train/jolt_runtime_v3.py",
+    "src/nca/train/jolt_screen.py",
+    "src/nca/train/jolt_capture_v3.py",
+    "src/nca/train/jolt_native_v3.py",
+    "src/nca/evaluation/jolt_learning_audit.py",
+    "src/nca/evaluation/jolt_journal_v3.py",
+    "tools/observe_jolt_v3.py",
+    "tools/execute_jolt_diagnostic.py",
+    "tools/learn_jolt.py",
+    "tools/assess_jolt_resources_v3.py",
+    "tools/check_jolt_storage_envelope_v3.py",
+    "tools/check_jolt_pipeline_envelope_v3.py",
+    ".github/workflows/learn-jolt-003-long-run.yml",
+    "configs/learning/jolt-learn-003-v2.json"
+  ],
+  "independently_validated_operations": {
+    "method": "Fetched exact frozen code and full configuration and compared each of 39 named COUNTERS values, type, count, total and exact STAGES equality; not just checking number of entries.",
+    "counters": {
+      "attempts": 1,
+      "audit_forward": 37888,
+      "bc_burn_in": 368640,
+      "bc_eligible_samples": 307200,
+      "bc_forward": 307200,
+      "bc_optimizer": 23040,
+      "bootstrap_forward": 12288,
+      "checkpoint_executions": 21144,
+      "checkpoint_loads": 48,
+      "checkpoint_writes": 36,
+      "confirmed_ticks": 120000,
+      "decisions": 20000,
+      "episodes_aborted": 6464,
+      "episodes_completed": 6464,
+      "episodes_started": 6464,
+      "host_start_attempts": 1,
+      "host_starts": 1,
+      "host_terminations": 1,
+      "inference_forward": 25248,
+      "owner_cancel": 6465,
+      "owner_close": 1,
+      "owner_configure": 0,
+      "owner_observe": 0,
+      "owner_profile": 6464,
+      "owner_requests": 38338,
+      "owner_reset": 6464,
+      "owner_step": 18944,
+      "ppo_actor_samples": 24576,
+      "ppo_base_burn_in": 33792,
+      "ppo_base_forward": 24576,
+      "ppo_burn_in": 33792,
+      "ppo_critic_samples": 24576,
+      "ppo_forward": 24576,
+      "ppo_optimizer": 24576,
+      "ppo_replay_base_forward": 6144,
+      "ppo_replay_forward": 6144,
+      "refused_ticks": 120000,
+      "requested_ticks": 120000,
+      "uncertain_ticks": 120000
+    },
+    "all_named_values_equal": true,
+    "sum_of_operation_ceiling_values": 1901556,
+    "stage_ceilings": {
+      "teacher": {
+        "decisions": 2560,
+        "episodes_started": 64,
+        "requested_ticks": 15360
+      },
+      "ppo": {
+        "decisions": 6144,
+        "episodes_started": 6144,
+        "requested_ticks": 36864
+      },
+      "open": {
+        "decisions": 1280,
+        "episodes_started": 32,
+        "requested_ticks": 7680
+      },
+      "sealed": {
+        "decisions": 8960,
+        "episodes_started": 224,
+        "requested_ticks": 53760
+      }
+    },
+    "planned_episode_starts": 6464,
+    "planned_decisions": 18944,
+    "planned_requested_ticks": 113664,
+    "global_decision_backstop": 20000,
+    "global_requested_tick_backstop": 120000,
+    "reservations_and_costs": "Atomic reservation-before-operation; zero progress and unknown/negative counter increments refused; per-stage start/decisions/ticks; no refunds of uncertain, refused or partial work; no replacement episode; one attempt; ordered active/closure/audit/publication phases; independent audit and closed-cost replay of all charged records.",
+    "reference_files": [
+      "src/nca/train/jolt_execution_v3.py",
+      "src/nca/train/jolt_budget_v3.py",
+      "src/nca/train/jolt_screen.py",
+      "src/nca/train/jolt_capture_v3.py",
+      "src/nca/evaluation/jolt_learning_audit.py",
+      "src/nca/train/jolt_cli_v3.py"
+    ]
+  },
+  "independently_validated_serialization": {
+    "method": "Recalculated individual closed-form pieces from writer caps and workload, then summed independently.",
+    "source_bound_total_artifact_bytes": 15821682822,
+    "reserved_bytes": 1073741824,
+    "required_actual_runner_free_disk_bytes": 16895424646,
+    "maximum_journal_records": 115110,
+    "maximum_journal_record_bytes": 65536,
+    "maximum_journal_bytes": 7543848960,
+    "maximum_reservation_records": 1901556,
+    "maximum_reservation_record_bytes": 256,
+    "source_worker_file_count": 19469,
+    "max_lifecycle_file_count": 17,
+    "complete_lifecycle_file_count": 16,
+    "outer_original_stream_exit_files": 3,
+    "raw_episode_reader_bytes": 33554432,
+    "ordinary_json_reader_bytes": 67108864,
+    "reservation_reader_bytes": 536870912,
+    "max_episode_uncompressed_bytes": 5308416,
+    "controls": "Bounded streaming JSON with fsync/SHA-256; gzip closed-stream EOF/expansion/SHA; canonical streaming reservation spool and independent prefix reconstruction; capped raw/sample/checkpoint/metric readers; 1MiB checkpoint writer; 64KiB linked-journal writer up to 115110 records; immutable inode regular-file and nlink==1 checks; journal chain; exact closed inventory with no symlinks, hard links or special entries; complete external exit and receipt readback.",
+    "failures": "Interrupted publication, missing receipt, truncated journal or reservation prefix, failed independent readback, inconsistent exit or nonzero original worker never give a successful experiment terminal. An infrastructure kill may result in absent/incomplete evidence, not a success.",
+    "preclaim_gate_pending": true
+  },
+  "independently_validated_watchdog": {
+    "source": "src/nca/train/jolt_memory_watchdog_v3.py and tools/observe_jolt_v3.py",
+    "soft_rss_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "scope": "Original observer self and start-time-checked Linux subreaper-owned descendants including CLI, worker, native host and verifier",
+    "fail_closed": "Missing/unreadable live VmRSS, PID reuse, nonfinite monitor clock and sampled RSS >= threshold permanently trip original invocation; observer revokes and reaps owned process tree, retains stdout/stderr, actual exit and error/cleanup receipts where infrastructure remains alive. Nonzero observer exit and missing or failed readback cannot produce completed verdict.",
+    "kernel_enforced_hard_limit": false,
+    "between_sample_peak_guaranteed": false,
+    "no_automatic_retry": true,
+    "original_memory_diagnostic": {
+      "synthetic_worker_plus_idle_native_rss_bytes": 641122304,
+      "illustrative_fourfold_bytes": 2564489216,
+      "full_native_ppo_and_audit_peak_measured": false
+    }
+  },
+  "time_and_cpu_verification": {
+    "current_config_scalars_all_explicit_null": [
+      "maximum_wall_seconds",
+      "maximum_owner_transport_seconds",
+      "cleanup_reserve_seconds",
+      "executor_verification_reserve_seconds",
+      "executor_finalization_reserve_seconds"
+    ],
+    "historical_repository_7200_second_limits_reinstated": false,
+    "original_elapsed_monotonic_and_ordered_phases_still_verified": true,
+    "external_github_hosted_job_limit_seconds": 21600,
+    "full_pipeline_runtime_empirically_qualified": false,
+    "cpu_identity_policy": "D-022: CPU hardware model/kernel/cores observations may vary, approximately normalized diagnostic speed is not used for qualification. Pinned Linux x86_64, Python 3.12, torch 2.8.0+cpu, numpy 2.3.5, deterministic single-thread CPU and native host identity remain required. Original raw actual-case inference p95 <=5ms gate remains unchanged."
+  },
+  "exact_hash_methods_and_limits": {
+    "independently_recomputed": [
+      "SHA-256 of both downloaded original Actions ZIP archives and four original JSON evidence members",
+      "Canonical SHA-256 over original 261-entry CI source_files inventory, not an independent rehash of 261 repository bytes",
+      "Host identity and CPU software capability canonical SHA-256 directly from original CI objects",
+      "Risk candidate original file byte SHA-256 and object canonical SHA-256",
+      "All 39 source/config counter values and storage envelope arithmetic"
+    ],
+    "corroborated_by_original_source_executed_CI": [
+      "Exact sha256_json(config) cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51; NOT independently computed from Python canonical bytes in this session",
+      "Actual clean-source build_prospective plus prospective_binding SHA-256 06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba; reviewed implementation and raw CI replay, not a separate local execution of those Python functions"
+    ]
+  },
+  "tests_and_limitations": {
+    "original_CI_negative_tests_verified": "Original Actions log 39881617159 shows all 9 memory-watchdog, 3 original-observer, 4 resource-assessment, 11 portability tests passing, plus other pinned CPU/negative tests; original 39881617154 learning-cpu successful.",
+    "nonexperimental_test_sources_inspected": [
+      "tests/test_jolt_execution_v3.py",
+      "tests/test_jolt_learning_v3.py",
+      "tests/test_jolt_memory_watchdog_v3.py",
+      "tests/test_jolt_observer_memory_v3.py",
+      "tests/test_jolt_executor_v3.py",
+      "tests/test_jolt_wall_limits_v3.py",
+      "tests/test_jolt_streams_v3.py",
+      "tests/test_jolt_evidence_durability.py",
+      "tests/test_jolt_evidence_publication.py",
+      "tests/test_jolt_resource_assessment_v3.py",
+      "tests/test_jolt_pipeline_envelope_v3.py"
+    ],
+    "key_cases": "Stage ceiling/refund refusal, missing/surplus reservation tail, corrupt journal/metrics/gzip EOF, bounded checkpoint, changed PID identity and unreadable live RSS, sampled overage and preserved failure/child reaping, unusable policy refused before spawn, broken original stdout, nonzero/lost exit, corrupted/missing lifecycle receipts, FIFO/hardlink/symlink and extra directory refusal, explicit null timing.",
+    "reviewer_executed_tests": "Offline JSON/ZIP SHA-256 validation, independent original counter comparison, deterministic storage arithmetic, source and original CI logs inspection. No local suite, Godot/native stepping, teacher, BC/PPO, sealed evaluation or checkpoint generation executed.",
+    "negative_test_limitations": "Original observer tests substitute disposable Python children and mock resource/lifecycle validation. No complete full-worker native peak or end-to-end 6-hour timing test has been executed."
+  },
+  "findings": [
+    {
+      "id": "OPS-REVIEW-01",
+      "disposition": "ACCEPT",
+      "closed": true,
+      "source_and_original_evidence": [
+        "D-023 owner comment 6355227817",
+        "run 39881617159 original memory evidence and negative tests",
+        "jolt_memory_watchdog_v3.py",
+        "observe_jolt_v3.py",
+        "execute_jolt_diagnostic.py"
+      ],
+      "decision_reason": "D-023 expressly accepts the unmeasured fully stepped-native, PPO-retained and audit memory peak, sampled-only 8GiB/250ms watchdog, between-sample spikes, kernel OOM and one-use allocation loss. The original implementation fails closed when observer remains alive; owner consent is risk tolerance only. One attempt that may fail and be consumed is admissible under this explicit policy; no physical feasibility or hard RSS bound is asserted.",
+      "residual": "An OOM or infrastructure failure may kill the observer before cleanup receipts and may consume the sole allocation."
+    },
+    {
+      "id": "OPS-REVIEW-02",
+      "disposition": "ACCEPT",
+      "closed": true,
+      "source_and_original_evidence": [
+        "Frozen source budget/storage/observer/executor/admission/auditor implementations",
+        "run 39885557723 exact-source prospective binding receipt and log",
+        "run 39881617159 original negative test log",
+        ".github/workflows/learn-jolt-003-long-run.yml"
+      ],
+      "decision_reason": "All 39 named counters and stages individually match configuration and fail-closed reservation/reconstruction. Original serialization/journal/checkpoint and exact immutable evidence/readback enforce source-bound 15821682822-byte envelope. Frozen source prospective binding is verified by original executed CI API readback, and the eventual-runner disk attestation precedes one-time durable claim. Null repository deadlines preserve elapsed and failure accounting; external 6h job cap remains a disclosed completion risk.",
+      "residual": "The eventual execution-runner disk >=16895424646, final two-review declaration freeze and external 6h full-pipeline completion remain unverified; none is represented as source review execution success."
+    }
+  ],
+  "remaining_risks_and_assumptions": [
+    "No measured peak for full stepped-native host plus retained PPO transitions plus independent auditor; 8GiB RSS watchdog is not kernel enforced and cannot observe all transient peaks.",
+    "GitHub-hosted six-hour job ceiling is external; an unmeasured pipeline may fail/consume allocation before audit or raw-evidence upload.",
+    "Actual execution-runner free disk must be checked independently after host/runtime setup: at least 16895424646 bytes including reserve, before durable claim.",
+    "Every runtime checkout must be clean at frozen executable commit, with bound native host and pinned CPU software capability; CPU hardware normalization must not alter raw inference p95 <=5ms quality gate.",
+    "Two independent accepted reviewer records must be published and validated together: GPT-5.6 Sol in PR #82 is a distinct terminal-role candidate; PR #83 is another terminal review and does not provide operations coverage.",
+    "Any executable modification invalidates this fixed-source record and requires renewed frozen-source admission reviews."
+  ],
+  "unresolved_blocking_findings": [],
+  "execution_handover": {
+    "this_review_role_accepted": true,
+    "assembled_final_two_review_declaration": false,
+    "terminal_reviews_PR82_PR83_existing": true,
+    "publication_account_is_not_second_review": true,
+    "immediate_execution_authorization": false,
+    "required_before_one_attempt": [
+      "Read back accepted distinct terminal reviewer (e.g. PR #82) and this operations reviewer from publication and embed their exact original JSON text and actual SHA256 in prospective declaration.",
+      "Run exact-source freeze-v3 and source/config/runtime/host/prospective-binding/two-review validation; validate declaration without launching training.",
+      "Check actual execution-runner available disk >=16895424646 bytes independently before any durable one-use allocation claim.",
+      "Permit one separately authorized claim and physical run only if all gates pass; do not retry, resume, reseed, extend or issue a second allocation."
+    ],
+    "execute_dispatched": false,
+    "allocation_claimed": false,
+    "physical_experiment_started": false,
+    "close_issue_62": false,
+    "morphology_released": false
+  }
+}
