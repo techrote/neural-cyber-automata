@@ -42,6 +42,39 @@ class Channel:
         return self.response
 
 
+class Accounting:
+    def __init__(self):
+        self.events = []
+        self.next_id = 0
+
+    def _reserve(self, name, **fields):
+        self.next_id += 1
+        reservation = f"r{self.next_id}"
+        self.events.append(("reserve", name, reservation, fields))
+        return reservation
+
+    def reserve_reset(self):
+        return self._reserve("reset")
+
+    def reserve_step(self, **fields):
+        return self._reserve("step", **fields)
+
+    def reserve_cleanup(self, **fields):
+        return self._reserve("cleanup", **fields)
+
+    def reserve_host_call(self, **fields):
+        return self._reserve("host_call", **fields)
+
+    def complete(self, reservation, **fields):
+        self.events.append(("complete", reservation, fields))
+
+    def fail(self, reservation, reason, **fields):
+        self.events.append(("failure", reservation, reason, fields))
+
+    def mark_unknown(self, reservation, reason, **fields):
+        self.events.append(("unknown", reservation, reason, fields))
+
+
 def success(request, **fields):
     return {
         "protocol": FLIGHT_PROTOCOL,
@@ -71,6 +104,62 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(
             channel.sent[0]["op"], "close"
         )
+
+    def test_accounting_reserves_step_before_send_and_records_partial_ticks(self):
+        accounting = Accounting()
+
+        class OrderedChannel(Channel):
+            def send(self, value):
+                self.sent.append(dict(value))
+                accounting.events.append(("send", value["op"]))
+            def receive(self):
+                accounting.events.append(("receive",))
+                return success(
+                    self.sent[-1],
+                    transition={
+                        "ticks_consumed": 3,
+                        "failed": False,
+                        "reason": "terminal",
+                    },
+                )
+
+        transport = FlightRpcTransport(
+            OrderedChannel(),
+            accounting=accounting,
+            capture_labels_per_step=1,
+        )
+        reply = transport.request({
+            "sequence": 1,
+            "command": "step",
+            "repeat_ticks": 6,
+        })
+        self.assertEqual(reply["transition"]["ticks_consumed"], 3)
+        self.assertEqual(accounting.events[0][0:2], ("reserve", "step"))
+        self.assertEqual(
+            accounting.events[0][3],
+            {"maximum_ticks": 6, "capture_labels": 1},
+        )
+        self.assertEqual(accounting.events[1], ("send", "step"))
+        self.assertEqual(accounting.events[2], ("receive",))
+        self.assertEqual(
+            accounting.events[3],
+            ("complete", "r1", {"confirmed_physical_ticks": 3}),
+        )
+
+    def test_accounted_lost_reply_marks_reserved_work_unknown(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(error=ProtocolError("dropped")),
+            accounting=accounting,
+        )
+        with self.assertRaises(UnknownConsumptionError):
+            transport.request({
+                "sequence": 1,
+                "command": "step",
+                "repeat_ticks": 6,
+            })
+        self.assertEqual(accounting.events[0][0:2], ("reserve", "step"))
+        self.assertEqual(accounting.events[-1][0], "unknown")
 
     def test_write_failure_after_send_starts_is_unknown(self):
         channel = Channel(
