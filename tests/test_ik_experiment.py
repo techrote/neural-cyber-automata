@@ -3,10 +3,12 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -15,7 +17,8 @@ from nca.ik.data import DatasetConfig, generate_sample, iter_tasks
 from nca.ik.device import configure_device
 from nca.ik.reference import SolverConfig
 from nca.train.ik_corpus import make_fixture_corpus
-from nca.train.ik_experiment import (PLAN_PATH, allocation_for, supervise, train_attempt,
+from nca.train.ik_experiment import (PLAN_PATH, _qualified_titan_gpu_bytes,
+                                      _titan_visibility, allocation_for, supervise, train_attempt,
                                      validate_plan)
 from nca.train.ik_run_state import IKRunLedger
 
@@ -32,11 +35,66 @@ class IKExperimentContractTests(unittest.TestCase):
         self.assertEqual(plan["training_seeds"], [41011, 42013, 43019])
         self.assertEqual(plan["epochs"] * plan["expected_dataset"]["training_rows"], 210400)
         self.assertEqual(plan["epochs"] * plan["expected_dataset"]["tuning_rows"], 80800)
+        gpu = plan["qualified_environment"]["gpu"]
+        self.assertEqual(gpu["allowed_names"], ["TITAN RTX", "NVIDIA TITAN RTX"])
+        self.assertEqual(gpu["capability"], [7, 5])
+        self.assertEqual(gpu["multiprocessors"], 72)
+        self.assertGreaterEqual(gpu["minimum_total_memory_bytes"], 20 * 1024**3)
+        old_gpu = dict(gpu, allowed_names=["Tesla V100-SXM2-16GB"])
+        with self.assertRaises(ValueError):
+            validate_plan(plan | {"qualified_environment": plan["qualified_environment"] | {"gpu": old_gpu}})
         for key, value in (("epochs", 41), ("batch_size", True),
                            ("max_wall_seconds_per_seed", None), ("mode", "hybrid"),
                            ("measured_execution_admitted", True)):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 validate_plan(plan | {key: value})
+
+
+    def test_titan_uuid_selection_refuses_v100_ordinals_and_multiple_devices(self):
+        uuid = "GPU-12345678-1234-1234-1234-123456789abc"
+        with patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": uuid}):
+            good = SimpleNamespace(stdout=f"TITAN RTX, {uuid}, 581.80\n")
+            with patch("nca.train.ik_experiment.subprocess.run", return_value=good) as probe:
+                fingerprint = _titan_visibility(driver="581.80")
+                self.assertEqual(_titan_visibility(expected_sha256=fingerprint, driver="581.80"),
+                                 fingerprint)
+                self.assertEqual(probe.call_args.args[0][2], uuid)
+            for returned in ("Tesla V100-SXM2-16GB", "NVIDIA V100"):
+                with patch("nca.train.ik_experiment.subprocess.run", return_value=SimpleNamespace(
+                        stdout=f"{returned}, {uuid}, 581.80\n")):
+                    with self.assertRaisesRegex(ValueError, "V100 is prohibited"):
+                        _titan_visibility(driver="581.80")
+            with patch("nca.train.ik_experiment.subprocess.run", return_value=good):
+                with self.assertRaisesRegex(ValueError, "selection changed"):
+                    _titan_visibility(expected_sha256="a" * 64, driver="581.80")
+        for visible in ("0", "1", "0,1", "1,0", "", "GPU-not-an-id"):
+            with self.subTest(visible=visible), patch.dict(
+                    os.environ, {"CUDA_VISIBLE_DEVICES": visible}):
+                with patch("nca.train.ik_experiment.subprocess.run") as probe:
+                    with self.assertRaisesRegex(ValueError, "V100 is prohibited"):
+                        _titan_visibility()
+                    probe.assert_not_called()
+
+    def test_titan_report_requires_real_identity_and_measured_memory(self):
+        plan = json.loads((ROOT / PLAN_PATH).read_text())
+        expected = plan["qualified_environment"]
+        report = {**{key: value for key, value in expected.items() if key != "gpu"},
+                  "status": "ready", "requested_device": "cuda:0",
+                  "gpu": {"name": "NVIDIA TITAN RTX", "capability": [7, 5],
+                          "multiprocessors": 72, "total_memory_bytes": 24 * 1024**3}}
+        self.assertEqual(_qualified_titan_gpu_bytes(report, expected), 24 * 1024**3)
+        for bad in (
+                {**report, "gpu": {**report["gpu"], "name": "Tesla V100-SXM2-16GB"}},
+                {**report, "gpu": {**report["gpu"], "capability": [7, 0]}},
+                {**report, "gpu": {**report["gpu"], "multiprocessors": 80}},
+                {**report, "gpu": {**report["gpu"], "total_memory_bytes": 16 * 1024**3}},
+                {**report, "gpu": {**report["gpu"], "total_memory_bytes": None}},
+                {**report, "driver": "999.00"},
+                {**report, "requested_device": "cuda:1"},
+                {**report, "status": "unavailable"},
+        ):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                _qualified_titan_gpu_bytes(bad, expected)
 
     def test_cli_import_and_help_do_not_import_optional_runtime(self):
         program = """
@@ -90,10 +148,13 @@ class IKExperimentSupervisorTests(unittest.TestCase):
                             return wait(*args, **kwargs)
                         child.wait = interrupt_once
                     return child
-                declaration = {"sha256": "a" * 64, "allocations": {"41011": {}}}
+                declaration = {"sha256": "a" * 64, "allocations": {"41011": {}},
+                               "gpu_visibility_sha256": "b" * 64,
+                               "plan": {"qualified_environment": {"driver": "581.80"}}}
                 with patch("nca.train.ik_experiment.load_declaration", return_value=declaration), \
                      patch("nca.train.ik_experiment.identity_for", return_value={}), \
                      patch("nca.train.ik_experiment._review", return_value={}), \
+                     patch("nca.train.ik_experiment._titan_visibility", return_value="b" * 64), \
                      patch("nca.train.ik_experiment.IKRunLedger.open", return_value=Ledger()), \
                      patch("nca.train.ik_experiment.subprocess.Popen", side_effect=launch):
                     try:
