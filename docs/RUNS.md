@@ -9,8 +9,12 @@ verified: 2026-10-22
 # Run ledger
 
 The [4LY-004 preparation](FLIGHT_LEARNING.md) performs software fixture tests
-only. No physical episode, teacher capture, trained policy or new allocation
-is recorded; host PR #229 qualification remains a hard dependency.
+only. Its durable accounting tests fault-inject interrupted writes, duplicate
+attempts, startup failure, lost replies, partial checkpoint publication,
+consumed attempts, stale evidence and prospective counter exhaustion. No
+physical episode, teacher capture, trained policy or new allocation is recorded;
+host PR #229 qualification and measured resource ceilings remain hard
+dependencies.
 
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
