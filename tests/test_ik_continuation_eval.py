@@ -12,6 +12,35 @@ from nca.evaluation import ik_continuation_eval as api
 
 
 class IKContinuationEvaluationTests(unittest.TestCase):
+    def test_evaluation_child_freeze_and_training_source_are_checked_before_opening(self):
+        from nca.train import ik_continuation as continuation
+        declaration = {"dataset": {"original": True}, "gpu_visibility_sha256": "a" * 64,
+                       "plan": {"qualified_environment": {"driver": "581.80"}}}
+        frozen = {"sha256": "b" * 64}
+        training = {"source_sha256": "c" * 64}
+        amendment = {"sha256": "d" * 64, "source": {"source_sha256": "e" * 64,
+            "revision": "f" * 40}, "evaluation_only": True,
+            "training_execution": training, "frozen_candidates": frozen}
+        review = {"actual": "fixture"}
+        for bad_freeze in (True, False):
+            actual = {"changed": True} if bad_freeze else frozen
+            ledger = SimpleNamespace(inspect=lambda: {"latest_checkpoint": {"state": {
+                "extra_state": {"execution": {"different_training": True}}}}})
+            with patch.object(continuation, "load_amendment", return_value=(declaration, amendment)), \
+                    patch.object(continuation, "_review", return_value=review), \
+                    patch.object(api, "_titan_visibility"), \
+                    patch.object(api, "read_training_corpus", return_value=object()), \
+                    patch.object(api, "corpus_identity", return_value=declaration["dataset"]), \
+                    patch.object(api, "freeze_training", return_value=(actual, {})), \
+                    patch.object(api, "_ledger", return_value=ledger), \
+                    patch.object(api, "open_final_corpus") as opening, \
+                    patch.object(api, "configure_device") as device:
+                with self.assertRaisesRegex(ValueError, "freeze differs|provenance differs"):
+                    api.worker("unused", "amendment.json", "1" * 64, "corpus", "registry",
+                               "review.json", "archive", started=0., review_sha256=sha256_json(review))
+                opening.assert_not_called()
+                device.assert_not_called()
+
     def histories(self, root):
         states, ledgers = {}, {}
         for seed in api.SEEDS:

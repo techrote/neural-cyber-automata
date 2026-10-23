@@ -191,6 +191,22 @@ class IKFinalCorpusTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             self.call()
 
+    def test_large_report_parser_is_bounded_and_small_receipts_stay_small(self):
+        path = self.root / "large-report.json"
+        raw = canonical_json({"rows": ["r" * 1050 for _ in range(2020)]}).encode()
+        self.assertGreater(len(raw), 1_048_576)
+        path.write_bytes(raw)
+        digest = hashlib.sha256(raw).hexdigest()
+        with self.assertRaises(ContractError):
+            api._json(path, sha256=digest)
+        self.assertEqual(len(api._json(path, sha256=digest,
+            maximum=api.MAX_TUNING_REPORT_BYTES)["rows"]), 2020)
+        with self.assertRaises(ContractError):
+            api._json(path, sha256="0" * 64, maximum=api.MAX_TUNING_REPORT_BYTES)
+        path.write_bytes(b" " * (api.MAX_TUNING_REPORT_BYTES + 1))
+        with self.assertRaises(ContractError):
+            api._json(path, maximum=api.MAX_TUNING_REPORT_BYTES)
+
     def test_original_shard_tamper_refuses(self):
         self.fixture_gates()
         path = self.corpus / self.shards[0]["path"]
@@ -254,6 +270,11 @@ class IKFinalCorpusTests(unittest.TestCase):
                     "scheduled_calls": len(self.training.tuning),
                     "received_samples": len(self.training.tuning),
                     "received_predictions": len(self.training.tuning)}
+                # Exercise the real production failure shape: authenticated
+                # tuning evidence exceeds the small-receipt 1 MiB default.
+                if seed == 41011 and epoch == 1:
+                    report["rows"] = [{"raw_error_cells": metric,
+                        "fixture_evidence": "r" * 1050} for _ in range(2020)]
                 raw = canonical_json(report).encode()
                 name = f"tuning-epoch-{epoch:04d}.json"
                 (root / name).write_bytes(raw)

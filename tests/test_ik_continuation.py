@@ -27,7 +27,7 @@ class IKContinuationTests(unittest.TestCase):
         self.new_source = {"revision": "1"*40, "source_sha256": "c"*64,
             "files": {**self.old_source["files"], **api.UPSTREAM_SOURCE_PINS,
                       "src/nca/train/ik_continuation.py": "d"*64}}
-        self.amendment = {"sha256": "e"*64, "source": self.new_source}
+        self.amendment = {"schema": api.SCHEMA, "sha256": "e"*64, "source": self.new_source}
         self.review = {"schema": "nca-ik-continuation-admission/v1",
             "amendment_sha256": "e"*64, "source_sha256": "c"*64,
             "reviewers": ["independent-one", "independent-two"],

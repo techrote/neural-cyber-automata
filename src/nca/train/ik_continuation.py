@@ -27,6 +27,9 @@ from nca.train.ik_experiment import (SEEDS, _source, _titan_visibility,
 from nca.train.ik_run_state import IKRunLedger
 
 SCHEMA = "nca-ik-continuation-amendment/v1"
+EVALUATION_SCHEMA = "nca-ik-evaluation-amendment/v1"
+EVALUATION_SOURCE_DELTA = frozenset(("src/nca/evaluation/ik_final_corpus.py",
+    "src/nca/train/ik_continuation.py", "src/nca/evaluation/ik_continuation_eval.py"))
 ORIGINAL_REVISION = "b9d1ccda294b3111dbb227704d2b8cb867a84a75"
 ORIGINAL_SOURCE_SHA256 = "2e08895a16ca82199feedf9aea0c490e84d44b6c1d3ef623595d3a718e2cb1ae"
 ORIGINAL_DECLARATION_FILE_SHA256 = "c4162e81f2cfbbd9bddfb86fbafc2d4b9c4b62f141197bfbb5e15a6db18b214e"
@@ -47,6 +50,9 @@ _AMENDMENT_FIELDS = frozenset(("schema", "created_utc", "original_declaration_fi
     "runtime", "gpu_visibility_sha256", "dataset", "plan", "allocations", "baseline_ledgers",
     "baseline_files", "final_opened", "scope", "no_new_allocations", "sha256",
     "integrated_upstream_revision", "integrated_upstream_source_pins"))
+_EVALUATION_FIELDS = _AMENDMENT_FIELDS | frozenset(("parent_amendment",
+    "parent_amendment_file_sha256", "parent_admission", "parent_admission_file_sha256",
+    "training_execution", "evaluation_only", "frozen_candidates"))
 
 
 def _read(path):
@@ -65,6 +71,113 @@ def _hash(path):
 
 def _digest(value):
     return type(value) is str and re.fullmatch(r"[a-f0-9]{64}", value) is not None
+
+
+def _canonical_file_hash(value):
+    """immutable_json uses canonical JSON and one terminal newline."""
+    return hashlib.sha256((canonical_json(value) + "\n").encode("utf-8")).hexdigest()
+
+
+def _evaluation_source_delta(parent, actual):
+    old, new = parent["files"], actual["files"]
+    if set(old) != set(new):
+        raise ValueError("evaluation-only source inventory must preserve every parent file")
+    changed = {path for path in new if new[path] != old[path]}
+    if not changed or changed - EVALUATION_SOURCE_DELTA:
+        raise ValueError("evaluation-only source changes exceed the three bounded repair modules")
+    return sorted(changed)
+
+
+def _amendment_record(value, *, evaluation=False):
+    fields = _EVALUATION_FIELDS if evaluation else _AMENDMENT_FIELDS
+    schema = EVALUATION_SCHEMA if evaluation else SCHEMA
+    if (not isinstance(value, dict) or set(value) != fields or value.get("schema") != schema
+            or value.get("sha256") != sha256_json({k: v for k, v in value.items() if k != "sha256"})
+            or value.get("no_new_allocations") is not True or value.get("final_opened") is not False
+            or value.get("integrated_upstream_revision") != UPSTREAM_REVISION
+            or value.get("integrated_upstream_source_pins") != UPSTREAM_SOURCE_PINS
+            or value.get("original_declaration_file_sha256") != ORIGINAL_DECLARATION_FILE_SHA256):
+        raise ValueError("strict immutable original-allocation amendment required")
+
+
+def _declaration_binding(run, amendment):
+    declaration = load_declaration(run, amendment["original_declaration_file_sha256"])
+    if (amendment["original_declaration_sha256"] != declaration["sha256"]
+            or amendment["plan"] != declaration["plan"]
+            or amendment["allocations"] != declaration["allocations"]
+            or amendment["dataset"] != declaration["dataset"]
+            or amendment["runtime"] != declaration["runtime"]
+            or amendment["gpu_visibility_sha256"] != declaration["gpu_visibility_sha256"]
+            or sha256_json(_original_review(Path(run) / "admission-review.json", declaration))
+               != amendment["original_admission_sha256"]):
+        raise ValueError("amendment altered original declaration, allocation or admission")
+    return declaration
+
+
+def _validate_parent(run, parent, parent_file_sha256, admission, admission_file_sha256):
+    """Authenticate historical provenance without claiming its source is current."""
+    _amendment_record(parent)
+    if (not _digest(parent_file_sha256) or _canonical_file_hash(parent) != parent_file_sha256
+            or not _digest(admission_file_sha256)
+            or _canonical_file_hash(admission) != admission_file_sha256):
+        raise ValueError("embedded parent or admission does not match its canonical original file")
+    declaration = _declaration_binding(run, parent)
+    if _source_delta(declaration["source"], parent["source"]) != parent["changed_source_files"]:
+        raise ValueError("historical training amendment source delta differs")
+    _review_value(admission, parent)
+    _baseline_unchanged(run, parent["baseline_files"])
+    return declaration
+
+
+def _completed_training_baseline(run, declaration, parent, corpus):
+    states = _states(run, declaration)
+    execution = execution_identity(parent)
+    for seed in SEEDS:
+        state = states[str(seed)]
+        checkpoint = state["latest_checkpoint"]
+        if (state["active"] or state["unresolved_work"] or not state["can_resume"]
+                or state["last_status"] != "paused" or checkpoint is None
+                or state["charged"]["sample_presentations"] != 210400
+                or state["charged"]["tuning_calls"] != 80800
+                or state["charged"]["evaluation_calls"] != 0
+                or state["charged"]["checkpoints"] >= state["allocation"]["max_checkpoints"]
+                or allocation_for(corpus, declaration["plan"], seed) != state["allocation"]
+                or checkpoint["state"]["extra_state"].get("execution") != execution
+                or checkpoint["state"]["extra_state"].get("completed_epochs") != 40
+                or checkpoint["state"]["sampler"].get("cursor") != 1720):
+            raise ValueError("all three unchanged allocations require complete admitted training and unspent evaluation")
+    from nca.evaluation.ik_continuation_eval import freeze_training
+    frozen, _ = freeze_training(run, declaration, corpus)
+    return states, frozen
+
+
+def _evaluation_baselines(amendment, declaration):
+    """The sealed child must retain complete original-ledger training proofs."""
+    if set(amendment["baseline_ledgers"]) != {str(s) for s in SEEDS}:
+        raise ValueError("all three original evaluation baseline ledgers required")
+    for seed in SEEDS:
+        state = amendment["baseline_ledgers"][str(seed)]
+        cp = state["latest_checkpoint"]
+        if (state["identity"] != identity_for(declaration, seed)
+                or state["allocation"] != declaration["allocations"][str(seed)]
+                or state["active"] or state["unresolved_work"] or not state["can_resume"]
+                or state["last_status"] != "paused" or cp is None
+                or state["remaining_wall_seconds"] <= 0
+                or state["charged"]["sample_presentations"] != 210400
+                or state["charged"]["tuning_calls"] != 80800
+                or state["charged"]["evaluation_calls"] != 0
+                or state["charged"]["checkpoints"] >= state["allocation"]["max_checkpoints"]
+                or cp["state"]["charged"] != state["charged"]
+                or cp["state"]["extra_state"].get("execution") != amendment["training_execution"]
+                or cp["state"]["extra_state"].get("completed_epochs") != 40
+                or len(cp["state"]["extra_state"].get("tuning_history", ())) != 40
+                or cp["state"]["sampler"].get("cursor") != 1720
+                or cp["reference"]["training_state_sha256"] != sha256_json(cp["state"])):
+            raise ValueError("evaluation child lacks complete original admitted training state")
+        relative = f"seed-{seed}/" + cp["path"]
+        expected = amendment["baseline_files"].get(relative)
+        if expected != {"bytes": cp["reference"]["bytes"], "sha256": cp["reference"]["sha256"]}:
+            raise ValueError("evaluation baseline checkpoint is not in the immutable original run inventory")
 
 
 def _source_delta(original, actual):
@@ -193,46 +306,85 @@ def prepare(run, corpus_root, registry, output, *, declaration_digest=ORIGINAL_D
             "cuda_initialized": False, "final_opened": False}
 
 
+def prepare_evaluation(run, prior_amendment_path, prior_filehash, corpus_root, registry, output):
+    """Freeze a new evaluation-only source over the complete old training run."""
+    run, output = Path(run).resolve(), Path(output).resolve()
+    project = _project(None)
+    prior_amendment_path = Path(prior_amendment_path)
+    if (run == output or run in output.parents or output == project or project in output.parents
+            or output.exists() or prior_amendment_path.parent.resolve() == output):
+        raise ValueError("new immutable evaluation amendment directory required")
+    if not _digest(prior_filehash) or _hash(prior_amendment_path) != prior_filehash:
+        raise ValueError("exact historical amendment file SHA-256 required")
+    parent = _read(prior_amendment_path)
+    admission_path = prior_amendment_path.parent / "admission-review.json"
+    admission, admission_filehash = _read(admission_path), _hash(admission_path)
+    declaration = _validate_parent(run, parent, prior_filehash, admission, admission_filehash)
+    _evaluation_outcome_guard(prior_amendment_path)
+    actual = _source(None)
+    delta = _evaluation_source_delta(parent["source"], actual)
+    if runtime_expectation() != parent["runtime"]:
+        raise ValueError("evaluation runtime differs from admitted training runtime")
+    validate_runtime(declaration, parent)
+    corpus = read_training_corpus(corpus_root, registry)
+    if corpus_identity(corpus) != declaration["dataset"]:
+        raise ValueError("original corpus and normalization differ")
+    states, frozen = _completed_training_baseline(run, declaration, parent, corpus)
+    inventory = _inventory(run)
+    body = {k: v for k, v in parent.items() if k != "sha256"}
+    body.update({"schema": EVALUATION_SCHEMA, "created_utc": utc_now(),
+        "parent_amendment": parent, "parent_amendment_file_sha256": prior_filehash,
+        "parent_admission": admission, "parent_admission_file_sha256": admission_filehash,
+        "source": actual, "changed_source_files": delta, "training_execution": execution_identity(parent),
+        "evaluation_only": True, "scope": "evaluate_existing_frozen_three_seed_candidates_only_no_training",
+        "baseline_ledgers": states, "baseline_files": inventory, "frozen_candidates": frozen})
+    amendment = dict(body, sha256=sha256_json(body))
+    _amendment_record(amendment, evaluation=True)
+    _evaluation_baselines(amendment, declaration)
+    output.mkdir(parents=True, exist_ok=False)
+    file_sha = immutable_json(output / "amendment.json", amendment)
+    return {"amendment": amendment, "amendment_file_sha256": file_sha,
+            "cuda_initialized": False, "final_opened": False}
+
+
 def load_amendment(run, amendment_path, expected_sha256, *, allow_pending_evaluation=False):
     """Validate every retained baseline byte and exact current execution source."""
     if not _digest(expected_sha256) or _hash(amendment_path) != expected_sha256:
         raise ValueError("exact immutable amendment file SHA-256 required")
     amendment = _read(amendment_path)
-    if (set(amendment) != _AMENDMENT_FIELDS or amendment.get("schema") != SCHEMA or amendment.get("sha256") != sha256_json(
-            {k: v for k, v in amendment.items() if k != "sha256"})
-            or amendment.get("no_new_allocations") is not True
-            or amendment.get("final_opened") is not False
-            or amendment.get("integrated_upstream_revision") != UPSTREAM_REVISION
-            or amendment.get("integrated_upstream_source_pins") != UPSTREAM_SOURCE_PINS
-            or amendment.get("original_declaration_file_sha256") != ORIGINAL_DECLARATION_FILE_SHA256):
-        raise ValueError("immutable original-allocation amendment required")
-    declaration = load_declaration(run, amendment["original_declaration_file_sha256"])
-    if (amendment["original_declaration_sha256"] != declaration["sha256"]
-            or amendment["plan"] != declaration["plan"]
-            or amendment["allocations"] != declaration["allocations"]
-            or amendment["dataset"] != declaration["dataset"]
-            or amendment["runtime"] != declaration["runtime"]
-            or amendment["gpu_visibility_sha256"] != declaration["gpu_visibility_sha256"]
-            or sha256_json(_original_review(Path(run) / "admission-review.json", declaration))
-               != amendment["original_admission_sha256"]):
-        raise ValueError("amendment altered original declaration, allocation or admission")
-    if (_source(None) != amendment["source"] or runtime_expectation() != amendment["runtime"]
-            or _source_delta(declaration["source"], amendment["source"])
-               != amendment["changed_source_files"]):
+    evaluation = amendment.get("schema") == EVALUATION_SCHEMA
+    _amendment_record(amendment, evaluation=evaluation)
+    declaration = _declaration_binding(run, amendment)
+    if evaluation:
+        parent = amendment["parent_amendment"]
+        _validate_parent(run, parent, amendment["parent_amendment_file_sha256"],
+                         amendment["parent_admission"], amendment["parent_admission_file_sha256"])
+        if (amendment["evaluation_only"] is not True
+                or amendment["scope"] != "evaluate_existing_frozen_three_seed_candidates_only_no_training"
+                or amendment["training_execution"] != execution_identity(parent)
+                or _evaluation_source_delta(parent["source"], amendment["source"])
+                   != amendment["changed_source_files"]):
+            raise ValueError("evaluation child changed training execution or declared repair scope")
+        _evaluation_baselines(amendment, declaration)
+    elif _source_delta(declaration["source"], amendment["source"]) != amendment["changed_source_files"]:
+        raise ValueError("original continuation source delta differs")
+    if _source(None) != amendment["source"] or runtime_expectation() != amendment["runtime"]:
         raise ValueError("current source or runtime differs from the amended declaration")
     _baseline_unchanged(run, amendment["baseline_files"])
     _evaluation_outcome_guard(amendment_path, allow_pending_evaluation=allow_pending_evaluation)
     return declaration, amendment
 
 
-def _review(review_path, amendment):
-    value = _read(review_path)
+def _review_value(value, amendment):
+    evaluation = amendment.get("schema") == EVALUATION_SCHEMA
+    schema = "nca-ik-evaluation-admission/v1" if evaluation else "nca-ik-continuation-admission/v1"
+    verdict = "admit_declared_final_evaluation" if evaluation else "admit_declared_CUDA_continuation"
     if (not isinstance(value, dict)
             or set(value) != {"schema", "amendment_sha256", "source_sha256", "reviewers", "checks", "verdict"}
-            or value["schema"] != "nca-ik-continuation-admission/v1"
+            or value["schema"] != schema
             or value["amendment_sha256"] != amendment["sha256"]
             or value["source_sha256"] != amendment["source"]["source_sha256"]
-            or value["verdict"] != "admit_declared_CUDA_continuation"):
+            or value["verdict"] != verdict):
         raise ValueError("exact amendment/source-bound prospective continuation review required")
     reviewers = value["reviewers"]
     if (not isinstance(reviewers, list) or len(reviewers) < 2
@@ -242,6 +394,15 @@ def _review(review_path, amendment):
             or any(x is not True for x in value["checks"].values())):
         raise ValueError("two genuine distinct reviewers and every completed continuation check required")
     return value
+
+
+def _review(review_path, amendment):
+    return _review_value(_read(review_path), amendment)
+
+
+def _training_scope(amendment):
+    if amendment.get("schema") != SCHEMA or amendment.get("evaluation_only") is True:
+        raise ValueError("evaluation-only amendment cannot admit training or an optimizer attempt")
 
 
 def validate_runtime(declaration, amendment):
@@ -254,6 +415,7 @@ def validate_runtime(declaration, amendment):
 def worker(run, amendment_path, amendment_digest, seed, corpus_root, registry, review_path,
            *, started, review_sha256):
     declaration, amendment = load_amendment(run, amendment_path, amendment_digest)
+    _training_scope(amendment)
     if sha256_json(_review(review_path, amendment)) != review_sha256:
         raise ValueError("continuation review changed after supervisor publication")
     validate_runtime(declaration, amendment)
@@ -291,6 +453,7 @@ def supervise(run, amendment_path, amendment_digest, seed, corpus_root, registry
     started = time.monotonic() if started is None else started
     run = Path(run)
     declaration, amendment = load_amendment(run, amendment_path, amendment_digest)
+    _training_scope(amendment)
     review = _review(review_path, amendment)
     validate_runtime(declaration, amendment)
     frozen = Path(amendment_path).parent / "admission-review.json"
@@ -361,6 +524,9 @@ def main(argv=None):
     for name in ("run", "corpus", "registry", "output"):
         prep.add_argument("--" + name, required=True)
     prep.add_argument("--declaration-sha256", default=ORIGINAL_DECLARATION_FILE_SHA256)
+    eval_prep = sub.add_parser("prepare-evaluation")
+    for name in ("run", "prior-amendment", "prior-amendment-sha256", "corpus", "registry", "output"):
+        eval_prep.add_argument("--" + name, required=True)
     for name in ("train", "_worker"):
         entry = sub.add_parser(name)
         for argument in ("run", "amendment", "amendment-sha256", "corpus", "registry", "review"):
@@ -374,6 +540,9 @@ def main(argv=None):
         if args.command == "prepare":
             value = prepare(args.run, args.corpus, args.registry, args.output,
                             declaration_digest=args.declaration_sha256)
+        elif args.command == "prepare-evaluation":
+            value = prepare_evaluation(args.run, args.prior_amendment, args.prior_amendment_sha256,
+                                       args.corpus, args.registry, args.output)
         else:
             kwargs = {"started": args.started if args.command == "_worker" else ENTRY_STARTED}
             if args.command == "_worker":

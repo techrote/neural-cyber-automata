@@ -155,13 +155,12 @@ batch admission. Preserve the fresh review in the amendment directory.
 python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 41011 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
 python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 42013 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
 python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 43019 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
-python -m nca.evaluation.ik_continuation_eval run --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON --archive ORIGINAL_ACCEPTED_ARCHIVE
 ```
 
 Each training command resumes the existing ledger and checkpoint; it cannot
 grant new steps, presentations, attempts, time, memory or checkpoint slots.
 Verify each supervisor and complete forty-epoch history before proceeding.
-The final command freezes all three tuning-selected identities before opening
+The final phase freezes all three tuning-selected identities before opening
 final shards from the original hash-pinned archive. The pending journal remains
 unread. It uses one supervised worker, retaining the authenticated training
 view across opening, and reserves each seed's full 65,200 final/timing calls
@@ -173,6 +172,45 @@ Publish all histories, frozen candidates, raw comparison and CPU timing
 receipts, aggregate verdicts, costs and independent readback. A measured no-go
 or inconclusive result must be reported honestly; neither permits retuning on
 the opened final suite. This workflow claims no CPU export or physical result.
+
+### Evaluation-only amendment after completed training
+
+The three training commands above describe the admitted training phase at
+`a9c1c837c17d7f042117db22d036b11b8735c236`; they are not instructions to repeat
+the now-completed training. CPU readback found that full tuning reports exceed
+the final reader's original 1 MiB parser bound. The repair explicitly permits
+up to 16 MiB only for authenticated tuning reports. Small registry/opening/event
+receipts retain the 1 MiB bound; malformed, oversized or hash-mismatched reports
+still refuse. Corpus bytes and scoring/selection thresholds do not change.
+
+```powershell
+python -m nca.train.ik_continuation prepare-evaluation --run ORIGINAL_RUN_DIRECTORY --prior-amendment TRAINING_AMENDMENT_JSON --prior-amendment-sha256 TRAINING_AMENDMENT_FILE_SHA256 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --output NEW_EVALUATION_AMENDMENT_DIRECTORY
+```
+
+This CPU-only preparation requires all three inactive, verified complete
+forty-epoch training ledgers, all 120 authenticated tuning reports, unspent
+evaluation calls and no final opening. It embeds the exact parent amendment
+and admission, all completed run file hashes, original remaining allocations,
+old `training_execution` and the actual tuning-only frozen candidates. The new
+source can differ from its parent only in the three evaluation repair modules.
+Both training entry points reject an evaluation-only amendment before opening
+an attempt or CUDA context.
+
+Publish this immutable child and exact-source CI, then obtain two fresh actual
+independent reviews. Their aggregate uses `nca-ik-evaluation-admission/v1`, the
+same five checks and source/amendment/reviewer fields, and affirmative verdict
+`admit_declared_final_evaluation`. The earlier evaluation admission is suspended;
+its historical training approval cannot admit the repaired final phase.
+
+```powershell
+python -m nca.evaluation.ik_continuation_eval run --run ORIGINAL_RUN_DIRECTORY --amendment EVALUATION_AMENDMENT_JSON --amendment-sha256 EVALUATION_AMENDMENT_FILE_SHA256 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review EVALUATION_REVIEW_JSON --archive ORIGINAL_ACCEPTED_ARCHIVE
+```
+
+The worker rechecks the exact frozen candidates and old training provenance
+before opening. Its final checkpoints preserve the old `training_execution`
+and separately record actual new evaluation source. It changes no optimizer
+steps, model parameters, normalization or allocations. Preserve failures and
+unknown outcomes; no final-driven retry or retraining is permitted.
 
 ## CPU verification
 

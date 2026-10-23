@@ -31,6 +31,7 @@ from nca.evaluation.ik_training import (SEEDS, select_tuning_checkpoint,
 
 _TOKEN = object()
 CONTRACT = "nca-ik-authenticated-final-reader/v1"
+MAX_TUNING_REPORT_BYTES = 16 * 1024 * 1024
 ACCEPTED_ARCHIVE_SHA256 = "97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce"
 ACCEPTED_ARCHIVE_BYTES = 7340716
 
@@ -39,8 +40,9 @@ def _fail(detail):
     raise ContractError("ik_final_corpus", detail)
 
 
-def _json(path, *, sha256=None, size=None):
-    return strict_json_loads(_read_bytes(path, expected_sha256=sha256, size=size))
+def _json(path, *, sha256=None, size=None, maximum=1_048_576):
+    return strict_json_loads(_read_bytes(path, expected_sha256=sha256, size=size,
+                                       maximum=maximum), max_bytes=maximum)
 
 
 def _seal(value):
@@ -106,7 +108,8 @@ def _verified_training(run, declaration, corpus, frozen):
             name = f"tuning-epoch-{epoch:04d}.json"
             if item.get("epoch") != epoch or item.get("file") != name:
                 _fail("complete exact epoch tuning cadence required")
-            report = _json(root / name, sha256=item["file_sha256"])
+            report = _json(root / name, sha256=item["file_sha256"],
+                           maximum=MAX_TUNING_REPORT_BYTES)
             if sha256_json(report) != item["report_sha256"]:
                 _fail("tuning semantic receipt mismatch")
             if (report.get("config_sha256") != corpus.config.sha256

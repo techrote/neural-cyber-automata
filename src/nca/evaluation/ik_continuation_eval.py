@@ -92,12 +92,20 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
     execution = {"amendment_sha256": amendment["sha256"],
                  "source_sha256": amendment["source"]["source_sha256"],
                  "source_commit": amendment["source"]["revision"]}
+    training_execution = amendment.get("training_execution", execution)
     _titan_visibility(expected_sha256=declaration["gpu_visibility_sha256"],
         driver=declaration["plan"]["qualified_environment"]["driver"])
     corpus = read_training_corpus(corpus_root, registry)
     if corpus_identity(corpus) != declaration["dataset"]:
         raise ValueError("original corpus identity changed")
     frozen, paths = freeze_training(run, declaration, corpus)
+    if amendment.get("evaluation_only") is True:
+        if frozen != amendment["frozen_candidates"]:
+            raise ValueError("completed training freeze differs from evaluation-only amendment")
+        for seed in SEEDS:
+            state = _ledger(run, declaration, seed).inspect()
+            if state["latest_checkpoint"]["state"]["extra_state"].get("execution") != training_execution:
+                raise ValueError("training provenance differs before final opening")
     out = Path(amendment_path).parent
     immutable_json(out / "frozen-candidates.json", frozen)
     # No attempt exists yet: the final reader independently proves all three
@@ -129,8 +137,10 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
             trainer = trainers[seed] = IKTrainer(context, corpus.normalization, corpus.config)
             sampler = samplers[seed] = PairPreservingSampler(corpus.training, seed, batch_size=128, epochs=40)
             saved[seed] = ledger.resume(trainer, sampler)
-            if saved[seed].get("execution") != execution or not sampler.exhausted:
+            if saved[seed].get("execution") != training_execution or not sampler.exhausted:
                 raise ValueError("completed amended training checkpoint required")
+            saved[seed]["training_execution"] = training_execution
+            saved[seed]["execution"] = execution
             # Every actual final and timing predictor call is reserved before
             # any comparator invocation. No call can evade the original cap.
             token = attempt.reserve("evaluation", calls=65200, call_id="sealed-final-and-cpu-latency")

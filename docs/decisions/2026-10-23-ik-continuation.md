@@ -57,4 +57,17 @@ The V100 remains prohibited. Only the single UUID-isolated TITAN RTX may be
 initialized. Hardware or validation failures that cannot be repaired within
 these gates stop the experiment and must be reported.
 
+After all three training schedules completed and passed independent readback,
+CPU inspection found a final-reader size mismatch: real tuning reports exceed
+its 1 MiB default JSON bound. The narrow repair passes the same explicit 16 MiB
+ceiling to byte authentication and JSON parsing only for tuning reports; small
+receipts retain 1 MiB. An evaluation-only child amendment authenticates the
+parent training amendment/admission, all completed run bytes, original remaining
+allocations, old training provenance and tuning-only frozen candidates. It
+permits source differences only in the three evaluation repair modules and
+cannot authorize a training attempt. Actual evaluation provenance is separate
+from historical training provenance. Fresh exact-source CI and two actual
+evaluation admissions precede any final opening. The earlier final-phase
+admissions are suspended; completed training evidence stays immutable.
+
 © 2026 techrote. All rights reserved.
