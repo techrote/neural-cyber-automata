@@ -1,0 +1,147 @@
+name: Jolt v3 prospective binding — owner-risk candidate (nonexperimental)
+
+# Recompute the exact review candidate using the frozen implementation.
+# Does not open a physical case, train, claim the allocation, or sign reviews.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/jolt-003-prospective-binding.yml'
+      - 'docs/evidence/jolt-003-resource-admission-20261023/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-prospective:
+    name: Recompute pinned-source pre-admission binding without experiment
+    if: github.repository == 'techrote/neural-cyber-automata'
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONPATH: src
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NCA_EXECUTABLE_SHA: 40d4339a31433572b5433bb344291b3e9303d317
+      NCA_SOURCE_SHA256: d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44
+      NCA_RESOURCE_FILE_SHA256: 8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7
+      NCA_RESOURCE_CANONICAL_SHA256: 6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72
+      NCA_PROSPECTIVE_SHA256: 06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba
+
+    steps:
+      - name: Checkout original exact executable source (not mutable PR head)
+        uses: actions/checkout@v4
+        with:
+          ref: 40d4339a31433572b5433bb344291b3e9303d317
+          path: source
+          persist-credentials: false
+
+      - name: Checkout owner-risk review candidate from PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: admission
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+
+      - name: Install pinned CPU learner
+        working-directory: source
+        run: |
+          python -m pip install setuptools==84.0.0 wheel==0.45.1 numpy==2.3.5
+          python -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-build-isolation .
+
+      - name: Prepare pinned native host (no reset, step, PPO or sealed case)
+        working-directory: source
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-jolt-003-host" --github-env "$GITHUB_ENV" --unbounded
+
+      - name: Recompute the exact prospective_binding() under the real source
+        working-directory: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os, shutil, subprocess
+          from pathlib import Path
+          from types import SimpleNamespace
+
+          from nca.contracts import sha256_json, strict_json_loads
+          from nca.train.jolt_cli_v3 import build_prospective
+          from nca.train.jolt_admission_v3 import prospective_binding
+          from nca.train.jolt_runtime_v3 import capability_sha256
+
+          root = Path.cwd()
+          evidence = Path(os.environ["GITHUB_WORKSPACE"]) / "admission" / "docs" / "evidence" / "jolt-003-resource-admission-20261023"
+          resource_path = evidence / "owner-risk-resource-candidate-v2.json"
+          actual_bytes = resource_path.read_bytes()
+          assert hashlib.sha256(actual_bytes).hexdigest() == os.environ["NCA_RESOURCE_FILE_SHA256"]
+          resource = strict_json_loads(actual_bytes, max_bytes=1_048_576)
+          assert sha256_json(resource) == os.environ["NCA_RESOURCE_CANONICAL_SHA256"]
+          assert resource["accepted"] is True and resource["unresolved_blocking_findings"] == []
+          assert resource["full_peak_memory_claimed"] is False
+          assert resource["owner_accepted_memory_risk"]["whole_stepped_native_ppo_and_auditor_peak_measured"] is False
+          assert resource["owner_accepted_memory_risk"]["record"] == "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6355227817"
+
+          output_parent = Path(os.environ["RUNNER_TEMP"]) / "jolt003-binding-probe"
+          output_parent.mkdir(parents=True, exist_ok=False)
+          available = shutil.disk_usage(output_parent).free
+          required = resource["required_free_disk_bytes"]
+          assert available >= required, "Diagnostic runner disk cannot sustain the declared envelope"
+          output = output_parent / "learn-jolt-003-20261022-a1"
+          assert not output.exists()
+          args = SimpleNamespace(
+              config=root / "configs/learning/jolt-learn-003-v2.json",
+              resource_admission=resource_path,
+              checkout=Path(os.environ["NCA_HOST_CHECKOUT"]),
+              godot=Path(os.environ["NCA_GODOT"]),
+              output=output,
+              allocation_id="learn-jolt-003-20261022-a1",
+              authorization_ref="https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6347420584",
+          )
+          declaration = build_prospective(args, root)
+          assert declaration["source_revision"] == os.environ["NCA_EXECUTABLE_SHA"]
+          assert declaration["source_sha256"] == os.environ["NCA_SOURCE_SHA256"]
+          assert declaration["resource_admission"] == resource
+          assert capability_sha256(declaration["runtime"]) == resource["runtime_contract_sha256"]
+          actual_hash = sha256_json(prospective_binding(declaration))
+          report = {
+              "schema": "nca-jolt-003-prospective-binding-source-readback/v1",
+              "frozen_executable_revision": declaration["source_revision"],
+              "source_sha256": declaration["source_sha256"],
+              "config_sha256": declaration["config_sha256"],
+              "host_identity_sha256": sha256_json(declaration["host_identity"]),
+              "runtime_contract_sha256": capability_sha256(declaration["runtime"]),
+              "resource_file_sha256": hashlib.sha256(actual_bytes).hexdigest(),
+              "prospective_binding_sha256": actual_hash,
+              "matches_owner_risk_candidate": actual_hash == os.environ["NCA_PROSPECTIVE_SHA256"],
+              "source_api": "nca.train.jolt_cli_v3.build_prospective + nca.train.jolt_admission_v3.prospective_binding",
+              "diagnostic_runner_available_disk_bytes": available,
+              "required_disk_bytes_including_reserve": required,
+              "diagnostic_runner_disk_check_passed": available >= required,
+              "actual_execution_runner_disk_check_passed": False,
+              "independent_v2_reviewers_accepted": False,
+              "experiment_admitted": False,
+              "physical_experiment_started": False,
+              "allocation_claimed": False
+          }
+          receipt = Path(os.environ["RUNNER_TEMP"]) / "jolt003-prospective-binding-verification.json"
+          with receipt.open("x", encoding="utf-8") as f:
+              json.dump(report, f, sort_keys=True, indent=2)
+              f.write("\n")
+              f.flush()
+              os.fsync(f.fileno())
+          print(json.dumps(report, sort_keys=True))
+          assert report["matches_owner_risk_candidate"], "PROSPECTIVE BINDING CHANGED — re-review required"
+          PY
+
+      - name: Retain source-bound readback (no experiment and no admission)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "jolt-003-prospective-binding-${{ github.run_id }}"
+          path: ${{ runner.temp }}/jolt003-prospective-binding-verification.json
+          retention-days: 90
+          if-no-files-found: warn
