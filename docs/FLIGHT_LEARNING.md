@@ -30,70 +30,78 @@ It performs no optimization; optional Torch is imported only when called.
 Outputs request desired velocity through the authored stabilizer, not rotor
 balancing. No navigation teacher is used inside scored learned inference.
 The preprocessing helper preserves host fixed scaling and validity channels;
-there is no tuning/final-fitted normalization. Any additional learned scaling
-must be versioned, fitted only on authenticated training captures and exported
-with the exact bundle. The current model is feedforward, with no hidden state
-to carry across episodes. Transport failure poisons the session; there is no
+there is no tuning/final-fitted normalization. Any change to preprocessing or
+fitted statistics is a new policy configuration and requires a new
+preregistration. The current model is feedforward, with no hidden state to
+carry across episodes. Transport failure poisons the session; there is no
 automatic host restart or replay of possibly consumed work.
 
 ## Bounded prospective experiment
 
-One configuration, balanced Trainer only, behavior cloning only, three seeds
-74011 / 74013 / 74017. No PPO, sweep, morphology changes or parallel physical
-hosts. One persistent actual host; optional learner device must be separately
-qualified (CPU preferred; CUDA, if justified, TITAN RTX only, never V100).
-Prepare point reaches, arrival/braking/dwell and simple obstacle families;
-freeze exact family membership against the accepted course before admission.
-Development precedes tuning and sealed evaluation by disjoint geometry/start/
-goal families. Teacher qualification holdouts cannot silently become learner
-holdouts, and any opened suite is development evidence only.
+The source-bound design and custody rules are frozen in the
+[4LY-004 prospective preregistration](FLIGHT_PREREGISTRATION.md). The experiment
+shape is one balanced-Trainer CPU behavior-cloned direct policy configuration,
+seeds `74011/74013/74017`, one persistent physical host, and no PPO, sweep,
+morphology expansion, CUDA path or inference-time navigation teacher.
 
-Proposed maximum capture: 120 training episodes, 20 per family for six frozen
-families, at most 960 physical ticks/160 decisions each; 115200 physical ticks,
-19200 action labels. Failed/invalid episodes retained with original outcomes;
-invalid transitions excluded from ordinary supervised rows, never relabeled.
-One shared immutable capture for all seeds. No capture now.
-Per seed: at most 20 passes over admitted valid labels, batch capacity128,
-at most 3000 optimizer updates and384000 presentations, whichever ceiling
-first. Adam LR0.001, mean squared normalized desired-velocity imitation loss;
-at most21 checkpoints (initial plus20). No recurrence or extra diagnostics.
-Stop on nonfinite/lifecycle/accounting errors. One attempt; no automatic retry,
-resume or budget extension. These are proposed ceilings, not issued budgets.
+The six training families are hover (auxiliary), free-space, reversal, arrival,
+obstacles and recovery. Capture uses the public #229 development split only:
+one episode for every learner-family scenario and each registered development
+seed, 44 episodes total. The authoritative source deadlines bound capture to
+68,400 physical ticks and 11,400 decision labels. This supersedes the earlier
+universal 960-tick draft ceiling, which was too short for #229's 2,100-2,400
+tick obstacle/recovery deadlines.
 
-Tuning at epochs5/10/15/20: 30 paired episodes each, five per family, at most
-115200 physical ticks and19200 decisions per seed. Select highest macro family
-success, then lowest collision rate, then earliest epoch; never final scores.
-Future final: 60 paired episodes (ten/family) for each of teacher, neutral,
-untrained and three separately frozen trained seeds: at most345600 ticks and
-57600 decisions across six comparators. These final counts are design only:
-final access allowance remains ZERO until separately declared and admitted.
-Here pairing means shared frozen scenario/seed identities, not additional
-teacher rollouts. Tuning runs only the candidate; any teacher references are
-preexisting frozen evidence and cause no extra physical calls. Final counts
-include exactly one rollout per comparator/case. Fresh teacher tuning runs
-would require a separately declared additional allocation and are excluded.
+Each seed receives at most twenty passes over the admitted immutable capture,
+batch capacity 128, Adam `lr=0.001` and normalized desired-velocity MSE:
+at most 228,000 sample presentations and 1,800 optimizer updates per seed.
+Checkpoints 5/10/15/20 alone are tuning candidates. Tuning uses all registered
+#229 tuning scenario/seed combinations in the five core families: 40 physical
+episodes per checkpoint, 480 across all three seeds and four checkpoints.
+Checkpoint selection is highest equal-weight core-family macro success, then
+lowest contact-tick rate, then earliest epoch. No teacher/control rollout is
+performed for tuning.
 
-Require at least90% mean core-task success,80% every seed and80% every core
-family, zero critical physics/authority violations, and demonstrated learned
-contribution versus neutral/untrained controls. Freeze family weights and
-uncertainty reporting before any capture. Arrival requires accepted host dwell
-and speed criteria, not a high-speed crossing. Report teacher gap, collisions,
+A future learner final is a separately held external 60-case suite, twelve
+cases per core family, never the teacher-qualification holdout. Six comparators
+run exactly once per final case: frozen qualified teacher, zero-input neutral,
+canonical untrained seed-74011 epoch-0 policy and the three selected trained
+seeds. That is 360 final episodes, bounded by source deadlines to 600,480
+physical ticks and 100,080 decisions. Final access allowance remains ZERO until
+the separate custody, declaration, resource and independent-admission gates
+pass. Any opened/disclosed suite is thereafter development evidence and cannot
+be relabeled an untouched final.
+
+Promotion remains at least 90% equal-family mean core success, 80% for every
+trained seed, 80% for every core family, zero critical learned authority/physics
+violations and demonstrated learned contribution versus both neutral and
+untrained controls. Family weighting and learned-contribution rules are
+specified exactly in the preregistration. Arrival requires the accepted host's
+low-speed dwell, not a high-speed crossing. Report teacher gap, collisions,
 overshoot, settling/stalls, chatter, saturation and inference/cadence metrics.
-Final failure/inconclusiveness stops; no automatic new experiment.
+Final failure or inconclusiveness stops the attempt; no automatic retry,
+replacement suite, replay or budget extension exists.
 
 ## Remaining admission gates and Windows checks
 
-No executable training command exists. `training_admission()` always refuses.
-Before adding execution, bind clean learner and accepted host SHAs/builds,
-Trainer/controller/teacher hashes, schemas/cadence, scenario/split commitments,
-runtime and immutable candidate/capture hashes. Implement durable per-attempt
-owner receipts and reservations BEFORE physical work/optimizer work, charging
-failures and preserving unknown consumption. Measure complete capture, host
-starts/resets/calls, tuning, training, startup/cleanup and publication cost.
-Derive actual wall/memory/storage ceilings from qualified #229 throughput;
-missing measurements refuse admission rather than inventing a time allocation.
-Obtain independent source-bound admissions after focused and actual-host tests
-and exact-head CI. Neither fixtures nor this design can qualify flight or #74.
+No executable training command is admitted. `training_admission()` remains
+fail-closed. Before execution can exist, bind a clean learner source to the
+accepted #229 host/build, Trainer/controller/teacher identities, exact
+schemas/cadence, immutable capture/checkpoint identities and unopened
+learner-final custody commitment.
+
+Durable accounting must reserve work before host or optimizer operations,
+retain failures and unknown consumption, and bind the complete declaration.
+The preregistration now supplies non-resource maxima for host starts, resets,
+physical ticks, decisions, capture labels, optimizer updates, sample
+presentations, tuning episodes and checkpoint publications. Exact host-call
+topology, startup/cleanup operation counts, wall time, resident memory, storage
+and publication ceilings remain null until qualified #229/bridge measurements
+exist. Missing measurements refuse admission rather than inventing resources.
+
+Obtain independent source-bound admission only after focused software tests,
+actual-host conformance, accepted teacher qualification and exact-head CI.
+Neither fixtures nor this design can qualify flight or #74.
 
 Windows CPU-only software checks from repository root:
 
@@ -102,9 +110,9 @@ python -m unittest discover -s tests -p test_flight_preparation.py
 python tools/check_docs.py --strict
 ```
 
-The tests use a tiny scripted transport fixture, no Godot/native, optional
-Torch, CUDA or training. Actual host transport/export/realtime qualification
-and teacher acceptance are outstanding; the preparation is intentionally
-incapable of issuing training or final actions.
+The preparation tests use scripted/synthetic fixtures only; they do not run
+Godot/native, collect teacher data, train a model, initialize CUDA or open a
+final payload. Actual-host transport/export/realtime qualification and teacher
+acceptance remain outstanding.
 
 © 2026 techrote. All rights reserved.
