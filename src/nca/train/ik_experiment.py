@@ -444,7 +444,8 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
         "final_opened": False, "learned_quality_qualified": False,
     }
     attempt.finish("paused", reason="training_complete_final_unopened" if sampler.exhausted
-                   else "exact_training_boundary_paused")
+                   else "exact_training_boundary_paused",
+                   publication_reserve_seconds=60. if execution is not None else 5.)
     return result
 
 

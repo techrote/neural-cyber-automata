@@ -141,6 +141,27 @@ class IKFinalCorpusTests(unittest.TestCase):
                 self.call()
         self.assertEqual(list(self.registry.iterdir()), [])
 
+    def test_late_training_overrun_blocks_opening_before_marker_or_payload(self):
+        verified_training = api._verified_training
+        self.fixture_gates()
+        seed = self.root / "run" / "seed-41011"
+        seed.mkdir(parents=True)
+        # This is the real failure shape: a provisional successful terminal
+        # remains on disk when the supervisor's publication check overruns.
+        (seed / "supervisor-start-0001.json").write_text("{}")
+        (seed / "supervisor-result-0001.json").write_text(canonical_json({
+            "returncode": 0, "verified_within_charged_wall": True,
+            "unknown_work_blocks_resume": False,
+            "whole_process_seconds": 1., "charged_wall_seconds": 2.}))
+        (seed / "supervisor-overrun-0001.json").write_text(canonical_json({
+            "resume_forbidden": True}))
+        with patch.object(api, "_verified_training", side_effect=verified_training), \
+                patch.object(api, "_read_rows", side_effect=AssertionError("payload touched")), \
+                patch.object(api.IKRunLedger, "open", side_effect=AssertionError("ledger touched")):
+            with self.assertRaisesRegex(ContractError, "overrun blocks final opening"):
+                self.call()
+        self.assertEqual(list(self.registry.iterdir()), [])
+
     def test_original_bytes_open_after_durable_marker_never_pending(self):
         self.fixture_gates()
         original = Path.open

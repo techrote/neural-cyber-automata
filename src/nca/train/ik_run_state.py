@@ -517,18 +517,22 @@ class IKAttempt:
         self.complete(reservation, receipt)
         return _copy(receipt)
 
-    def finish(self, status, *, reason):
+    def finish(self, status, *, reason, publication_reserve_seconds=5.0):
         if self.closed or status not in _STATUSES or type(reason) is not str or not reason:
             raise ValueError("valid unsealed training outcome and reason required")
         if status in {"paused", "completed"} and self.pending is not None:
             raise ValueError("successful terminal status cannot hide a pending operation")
+        if (type(publication_reserve_seconds) not in (int, float)
+                or not math.isfinite(publication_reserve_seconds)
+                or not 5.0 <= publication_reserve_seconds <= 60.0):
+            raise ValueError("publication reserve must be finite and between five and sixty seconds")
         inventory = _inventory(self.folder)
         observed = time.monotonic() - self.started
         remaining = max(0.0, self.ledger.allocation["max_wall_seconds"]
                         - self.prior["charged_wall_seconds"] - observed)
         # Charge publication/readback before performing it. Missing or late
         # finalization never grants a cheaper continuation.
-        elapsed = observed + min(5.0, remaining)
+        elapsed = observed + min(publication_reserve_seconds, remaining)
         if self.prior["charged_wall_seconds"] + elapsed >= self.ledger.allocation["max_wall_seconds"]:
             status, reason = "capped", "whole_process_wall_allocation_exhausted"
         finish = _publish(self.folder / "finish.json", {

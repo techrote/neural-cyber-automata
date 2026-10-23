@@ -33,13 +33,20 @@ ORIGINAL_DECLARATION_FILE_SHA256 = "c4162e81f2cfbbd9bddfb86fbafc2d4b9c4b62f14119
 ALLOWED_SOURCE_DELTA = frozenset((
     "src/nca/evaluation/ik_training.py", "src/nca/evaluation/ik_final_corpus.py",
     "src/nca/evaluation/ik_continuation_eval.py", "src/nca/train/ik_experiment.py",
-    "src/nca/train/ik_continuation.py", "src/nca/builtins.py"))
+    "src/nca/train/ik_continuation.py", "src/nca/train/ik_run_state.py", "src/nca/builtins.py"))
+UPSTREAM_REVISION = "fb57c32c878485df26c3efeb57cd18d7bc0e9b01"
+UPSTREAM_SOURCE_PINS = {
+    "src/nca/train/jolt_admission_v3.py": "2f7123817b32017ad6db5e22c33299d532f1b32001b2f3a4a3eac2ee41d73f23",
+    "src/nca/train/jolt_memory_watchdog_v3.py": "e13dd0624097f3c59a58b06bf00b808cf1a5dd81387394d5f034f35f95efd22d",
+    "src/nca/train/jolt_streams_v3.py": "efe37079dd58b26db3c79c8b65d9c88bca963d79a927c5db713d849748332d97",
+}
 CHECKS = frozenset(("source_and_cpu_checks", "corpus_and_splits", "allocation_and_resume",
                     "scoring_and_selection", "environment_and_memory_feasibility"))
 _AMENDMENT_FIELDS = frozenset(("schema", "created_utc", "original_declaration_file_sha256",
     "original_declaration_sha256", "original_admission_sha256", "source", "changed_source_files",
     "runtime", "gpu_visibility_sha256", "dataset", "plan", "allocations", "baseline_ledgers",
-    "baseline_files", "final_opened", "scope", "no_new_allocations", "sha256"))
+    "baseline_files", "final_opened", "scope", "no_new_allocations", "sha256",
+    "integrated_upstream_revision", "integrated_upstream_source_pins"))
 
 
 def _read(path):
@@ -67,7 +74,9 @@ def _source_delta(original, actual):
             or not set(old).issubset(new)):
         raise ValueError("original source lineage or complete source inventory differs")
     changed = {path for path in new if path not in old or new[path] != old[path]}
-    if not changed or changed - ALLOWED_SOURCE_DELTA:
+    if (not changed or changed - ALLOWED_SOURCE_DELTA - set(UPSTREAM_SOURCE_PINS)
+            or any(new.get(path) != UPSTREAM_SOURCE_PINS[path]
+                   for path in UPSTREAM_SOURCE_PINS)):
         raise ValueError("continuation source changes exceed the narrow declared extension")
     return sorted(changed)
 
@@ -112,6 +121,8 @@ def execution_identity(amendment):
 def _evaluation_outcome_guard(amendment_path, *, allow_pending_evaluation=False):
     """An uncertain final opening/evaluation can never grant training reuse."""
     folder = Path(amendment_path).parent
+    if any(folder.glob("evaluation-supervisor-overrun*.json")):
+        raise ValueError("final evaluation publication exceeded its charged reserve")
     pending = 0
     for start in folder.glob("evaluation-supervisor-start*.json"):
         terminal = start.with_name(start.name.replace("start", "result", 1))
@@ -167,6 +178,8 @@ def prepare(run, corpus_root, registry, output, *, declaration_digest=ORIGINAL_D
         "original_declaration_sha256": declaration["sha256"],
         "original_admission_sha256": sha256_json(original_review),
         "source": actual, "changed_source_files": delta,
+        "integrated_upstream_revision": UPSTREAM_REVISION,
+        "integrated_upstream_source_pins": UPSTREAM_SOURCE_PINS,
         "runtime": runtime, "gpu_visibility_sha256": visibility,
         "dataset": declaration["dataset"], "plan": declaration["plan"],
         "allocations": declaration["allocations"], "baseline_ledgers": states,
@@ -189,6 +202,8 @@ def load_amendment(run, amendment_path, expected_sha256, *, allow_pending_evalua
             {k: v for k, v in amendment.items() if k != "sha256"})
             or amendment.get("no_new_allocations") is not True
             or amendment.get("final_opened") is not False
+            or amendment.get("integrated_upstream_revision") != UPSTREAM_REVISION
+            or amendment.get("integrated_upstream_source_pins") != UPSTREAM_SOURCE_PINS
             or amendment.get("original_declaration_file_sha256") != ORIGINAL_DECLARATION_FILE_SHA256):
         raise ValueError("immutable original-allocation amendment required")
     declaration = load_declaration(run, amendment["original_declaration_file_sha256"])
@@ -268,7 +283,7 @@ def worker(run, amendment_path, amendment_digest, seed, corpus_root, registry, r
         return result
     except BaseException as exc:
         if ledger.inspect()["active"]:
-            attempt.finish("failed", reason=type(exc).__name__)
+            attempt.finish("failed", reason=type(exc).__name__, publication_reserve_seconds=60.)
         raise
 
 

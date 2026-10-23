@@ -11,6 +11,7 @@ import tempfile
 import time
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from nca.train.ik_run_state import IKRunLedger
 
@@ -73,6 +74,28 @@ assert "numpy" not in sys.modules
 """
         subprocess.run([sys.executable, "-S", "-c", program, str(ROOT / "src")],
                        check=True, capture_output=True)
+
+    def test_publication_reserve_is_conservatively_charged_inside_same_wall_cap(self):
+        for cap, expected, status in ((120., 61., "paused"), (20., 20., "capped")):
+            ledger = IKRunLedger.create(self.path.parent / f"reserve-{int(cap)}",
+                identity=identity(), allocation=allocation(max_wall_seconds=cap))
+            attempt = ledger.begin_attempt()
+            with patch("nca.train.ik_run_state.time.monotonic", return_value=attempt.started+1.):
+                state = attempt.finish("paused", reason="bounded publication",
+                                       publication_reserve_seconds=60.)
+            self.assertEqual(state["charged_wall_seconds"], expected)
+            self.assertEqual(state["last_status"], status)
+            self.assertEqual(state["allocation"]["max_wall_seconds"], cap)
+            self.assertLessEqual(state["charged_wall_seconds"], cap)
+
+    def test_invalid_publication_reserve_cannot_publish_or_grant_time(self):
+        attempt = self.ledger.begin_attempt()
+        for value in (True, -1., 4.999, 60.001, float("nan"), float("inf")):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                attempt.finish("paused", reason="invalid reserve", publication_reserve_seconds=value)
+            self.assertFalse((attempt.folder / "finish.json").exists())
+            self.assertFalse(attempt.closed)
+        attempt.finish("paused", reason="legacy five-second reserve")
 
     def test_identity_limits_and_two_hour_ceiling_are_strict(self):
         for changes in ({"max_wall_seconds": 7201}, {"max_wall_seconds": float("nan")},

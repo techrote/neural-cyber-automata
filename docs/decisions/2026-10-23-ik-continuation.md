@@ -22,8 +22,11 @@ to identify the original allocation lineage. Every new checkpoint, result and
 supervisor receipt additionally identifies the actual execution source and
 amendment. No runtime may claim an old execution source for amended code.
 
-Only the registered continuation runner, authenticated scorer/final reader and
-their lazy registry entries may differ in the executable source closure. The
+Only the registered continuation runner, authenticated scorer/final reader,
+their lazy registry entries and a bounded ledger publication reserve may differ
+in the IK executable source closure. Three unrelated Jolt source files merged
+from main revision `fb57c32c878485df26c3efeb57cd18d7bc0e9b01` have separate exact
+hash pins; this permits no arbitrary upstream or IK changes. The
 model, loss, optimizer, sampler, seeds, forty-epoch schedule, normalization,
 corpus bytes and thresholds stay fixed. CPU checks and CI must pass on the
 committed head before two distinct reviewers admit the actual amendment.
@@ -40,6 +43,11 @@ The final worker retains the authenticated training view from before opening.
 It charges common process startup/opening/comparison/timing overhead to every
 seed, reserves all 65,200 evaluation calls before any comparator invocation,
 and writes a reconciled checkpoint without changing optimizer steps. The
+amended attempts conservatively charge a sixty-second publication reserve
+from the existing wall allocation. The ledger bounds the optional reserve to
+five through sixty seconds and caps its charge at the original remaining wall
+budget. Actual publication time is checked again; a late result blocks reuse.
+The
 five CPU comparators use one thread, batch one, 100 warmups and 10,000 measured
 calls each. Failures and unknown work block reuse; final-driven retuning or
 an automatic retry is not authorized. Pass, no-go and inconclusive outcomes

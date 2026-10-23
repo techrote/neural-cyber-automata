@@ -28,7 +28,7 @@ from nca.ik.checkpoint import load_checkpoint
 from nca.train.ik import IKTrainer
 from nca.evaluation.ik_training import (select_tuning_checkpoint, freeze_candidates,
     evaluate_comparison, model_predictor, reference_predictors, measure_cpu_latency,
-    apply_cpu_utility, aggregate_comparisons)
+    apply_cpu_utility, aggregate_comparisons, _refusal)
 from nca.evaluation.ik_final_corpus import open_final_corpus, _verified_training
 
 
@@ -163,8 +163,12 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
             timing = measure_cpu_latency(nominal, predictors, context=cpu, environment=cpu.report)
             comparison = apply_cpu_utility(comparison, timing)
             digest = immutable_json(out / f"final-comparison-{seed}.json", comparison)
+            refused = sum(_refusal(x.task) is not None for x in final.samples)
             receipt = {"file_sha256": digest, "report_sha256": sha256_json(comparison),
-                "final_calls": 14700, "timing_calls": 50500, "execution": execution,
+                "final_scheduled_decisions": 14700,
+                "final_predictor_invocations": 5*(len(final.samples)-refused),
+                "final_guarded_refusals": 5*refused,
+                "timing_predictor_invocations": 50500, "execution": execution,
                 "accuracy": comparison["accuracy"], "learned_contribution": comparison["learned_contribution"],
                 "practical_utility": comparison["practical_utility"]}
             attempt.complete(saved[seed].pop("evaluation_reservation"), receipt)
@@ -178,12 +182,13 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
         aggregate = aggregate_comparisons(reports)
         immutable_json(out / "three-seed-comparison.json", dict(aggregate, execution=execution))
         for seed in SEEDS:
-            attempts[seed].finish("completed", reason="declared_training_and_sealed_final_evaluation_complete")
+            attempts[seed].finish("completed", reason="declared_training_and_sealed_final_evaluation_complete",
+                                  publication_reserve_seconds=60.)
         return aggregate
     except BaseException as exc:
         for attempt in attempts.values():
             if not attempt.closed:
-                attempt.finish("failed", reason=type(exc).__name__)
+                attempt.finish("failed", reason=type(exc).__name__, publication_reserve_seconds=60.)
         raise
 
 
@@ -195,6 +200,12 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
     review = _review(review_path, amendment)
     review_digest = sha256_json(review)
     out = Path(amendment_path).parent
+    frozen_review = out / "admission-review.json"
+    if frozen_review.exists():
+        if _read(frozen_review) != review:
+            raise ValueError("immutable continuation admission changed")
+    else:
+        immutable_json(frozen_review, review)
     before = {s: _ledger(run, declaration, s).inspect() for s in SEEDS}
     if any(not x["can_resume"] or x["charged"]["evaluation_calls"] != 0 for x in before.values()):
         raise ValueError("all three fresh, resumable final evaluation allocations required")
@@ -205,7 +216,7 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
         "created_utc": utc_now()})
     command = [sys.executable, "-m", "nca.evaluation.ik_continuation_eval", "_worker",
         "--run", str(run), "--amendment", str(amendment_path), "--amendment-sha256", amendment_digest,
-        "--corpus", str(corpus_root), "--registry", str(registry), "--review", str(review_path),
+        "--corpus", str(corpus_root), "--registry", str(registry), "--review", str(frozen_review),
         "--archive", str(archive), "--started", repr(started), "--review-sha256", review_digest]
     with (out / "evaluation-worker.log").open("xb") as log:
         process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)
@@ -238,6 +249,19 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
                 "verified_within_charged_wall": all(x["verified_within_charged_wall"] for x in results.values()),
                 "unknown_work_blocks_resume": any(x["unknown_work_blocks_resume"] for x in results.values())}
     immutable_json(out / "evaluation-supervisor-result.json", terminal)
+    published_elapsed = time.monotonic()-started
+    overrun = [seed for seed in SEEDS if
+        published_elapsed > results[str(seed)]["charged_wall_seconds"]
+        or published_elapsed > before[seed]["remaining_wall_seconds"]]
+    if overrun:
+        immutable_json(out / "evaluation-supervisor-overrun.json", {
+            "schema": "nca-ik-continuation-final-overrun/v1", "resume_forbidden": True,
+            "whole_process_publication_seconds": published_elapsed, "seeds": overrun})
+        for seed in overrun:
+            index = before[seed]["attempt_count"]+1
+            immutable_json(Path(run)/f"seed-{seed}"/f"supervisor-overrun-{index:04d}.json", {
+                "schema": "nca-ik-continuation-final-overrun/v1", "resume_forbidden": True})
+        raise ValueError("final supervisor publication exceeded charged reserve; stop")
     if terminal["unknown_work_blocks_resume"]:
         raise ValueError("final worker outcome failed or uncertain; preserve receipts and stop")
     return terminal

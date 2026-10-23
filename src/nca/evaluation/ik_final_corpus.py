@@ -55,6 +55,11 @@ def _verified_training(run, declaration, corpus, frozen):
     tuning_schedule_sha256 = sha256_json(tuning_ids)
     for seed in SEEDS:
         root = Path(run) / f"seed-{seed}"
+        # A supervisor may discover late publication after writing an otherwise
+        # verified terminal receipt. That durable overrun must block the final
+        # opening itself, before a later begin_attempt would reject it.
+        if any(root.glob("supervisor-overrun-*.json")):
+            _fail("whole-process training overrun blocks final opening")
         ledger = IKRunLedger.open(root, expected_identity=identity_for(declaration, seed),
                                   expected_allocation=declaration["allocations"][str(seed)])
         state = ledger.inspect()

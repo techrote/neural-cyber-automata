@@ -25,7 +25,8 @@ class IKContinuationTests(unittest.TestCase):
             "files": {"src/nca/ik/data.py": "a"*64,
                       "configs/ik/datasets/runner_v1.json": "b"*64}}
         self.new_source = {"revision": "1"*40, "source_sha256": "c"*64,
-            "files": {**self.old_source["files"], "src/nca/train/ik_continuation.py": "d"*64}}
+            "files": {**self.old_source["files"], **api.UPSTREAM_SOURCE_PINS,
+                      "src/nca/train/ik_continuation.py": "d"*64}}
         self.amendment = {"sha256": "e"*64, "source": self.new_source}
         self.review = {"schema": "nca-ik-continuation-admission/v1",
             "amendment_sha256": "e"*64, "source_sha256": "c"*64,
@@ -39,8 +40,8 @@ class IKContinuationTests(unittest.TestCase):
         return path
 
     def test_source_delta_preserves_original_contract_and_config_bytes(self):
-        self.assertEqual(api._source_delta(self.old_source, self.new_source),
-                         ["src/nca/train/ik_continuation.py"])
+        self.assertEqual(set(api._source_delta(self.old_source, self.new_source)),
+                         {"src/nca/train/ik_continuation.py", *api.UPSTREAM_SOURCE_PINS})
         for mutation in ("config", "missing", "unrelated"):
             value = deepcopy(self.new_source)
             if mutation == "config":
@@ -51,6 +52,15 @@ class IKContinuationTests(unittest.TestCase):
                 value["files"]["src/nca/train/ik.py"] = "f"*64
             with self.assertRaises(ValueError):
                 api._source_delta(self.old_source, value)
+        upstream = deepcopy(self.new_source)
+        upstream["files"].update(api.UPSTREAM_SOURCE_PINS)
+        self.assertEqual(set(api._source_delta(self.old_source, upstream)),
+            {"src/nca/train/ik_continuation.py", *api.UPSTREAM_SOURCE_PINS})
+        for name in api.UPSTREAM_SOURCE_PINS:
+            bad = deepcopy(upstream)
+            bad["files"][name] = "0"*64
+            with self.assertRaises(ValueError):
+                api._source_delta(self.old_source, bad)
 
     def test_inventory_preserves_old_bytes_while_new_receipts_append(self):
         target = self.run / "retained.json"
@@ -91,6 +101,9 @@ class IKContinuationTests(unittest.TestCase):
         self.write("evaluation-supervisor-result-0001.json", {
             "unknown_work_blocks_resume": False, "verified_within_charged_wall": True})
         api._evaluation_outcome_guard(amendment_path)
+        self.write("evaluation-supervisor-overrun.json", {"resume_forbidden": True})
+        with self.assertRaises(ValueError):
+            api._evaluation_outcome_guard(amendment_path, allow_pending_evaluation=True)
 
     def test_worker_refuses_metadata_mismatch_before_cuda_or_ledger_attempt(self):
         review_path = self.write("review.json", self.review)
@@ -151,6 +164,34 @@ class IKContinuationTests(unittest.TestCase):
         code = "import sys; import nca.train.ik_continuation; assert 'torch' not in sys.modules"
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_supervisor_timeout_retains_uncertainty_and_blocks_reuse(self):
+        root = self.run / "seed-41011"
+        root.mkdir()
+        review_path = self.write("review.json", self.review)
+        amendment_path = self.root / "amendment.json"
+        declaration = {"sha256": "b"*64, "allocations": {"41011": {"unchanged": True}}}
+        before = {"can_resume": True, "attempt_count": 1, "remaining_wall_seconds": 100.,
+                  "charged_wall_seconds": 28.}
+        after = {"active": True, "unresolved_work": True, "charged_wall_seconds": 28.}
+        process = unittest.mock.Mock(returncode=-1)
+        process.wait.side_effect = [subprocess.TimeoutExpired("fixture-worker", 1.), None]
+        ledger = unittest.mock.Mock()
+        ledger.inspect.side_effect = [before, after]
+        with patch.object(api, "load_amendment", return_value=(declaration, self.amendment)), \
+                patch.object(api, "validate_runtime"), \
+                patch.object(api, "identity_for", return_value={}), \
+                patch.object(api.IKRunLedger, "open", return_value=ledger), \
+                patch.object(api.subprocess, "Popen", return_value=process):
+            with self.assertRaises(ValueError):
+                api.supervise(self.run, amendment_path, "a"*64, 41011,
+                               "unused", "unused", review_path)
+        terminal = json.loads((root / "supervisor-result-0002.json").read_text())
+        self.assertTrue(terminal["timed_out"])
+        self.assertTrue(terminal["unknown_work_blocks_resume"])
+        self.assertFalse(terminal["verified_within_charged_wall"])
+        self.assertEqual(terminal["consumed_or_reserved_wall_seconds"], 100.)
+        process.kill.assert_called_once()
 
 
 if __name__ == "__main__":

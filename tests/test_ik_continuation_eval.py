@@ -79,7 +79,7 @@ class IKContinuationEvaluationTests(unittest.TestCase):
                  patch.object(continuation, "_review", return_value={"fixture": True}), \
                  patch.object(api, "_ledger", return_value=ledger), \
                  patch.object(api.subprocess, "Popen", return_value=fake):
-                with self.assertRaisesRegex(ValueError, "failed or uncertain"):
+                with self.assertRaisesRegex(ValueError, "failed or uncertain|publication exceeded"):
                     api.supervise(run, root / "amendment.json", "c" * 64,
                                   root / "corpus", root / "registry", root / "review", root / "archive")
             terminal = api._read(root / "evaluation-supervisor-result.json")
@@ -90,6 +90,42 @@ class IKContinuationEvaluationTests(unittest.TestCase):
                 self.assertTrue(result["unknown_work_blocks_resume"])
                 self.assertFalse(result["verified_within_charged_wall"])
                 self.assertEqual(result["consumed_or_reserved_wall_seconds"], 100.)
+
+    def test_late_supervisor_publication_overrun_blocks_even_verified_result(self):
+        import nca.train.ik_continuation as continuation
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run = root / "run"
+            before = {"can_resume": True, "charged": {"evaluation_calls": 0},
+                "remaining_wall_seconds": 100., "charged_wall_seconds": 0., "attempt_count": 2}
+            after = {"charged_wall_seconds": 10., "active": False,
+                "unresolved_work": False, "last_status": "completed"}
+            ledgers = {}
+            for seed in api.SEEDS:
+                (run / f"seed-{seed}").mkdir(parents=True)
+                ledgers[seed] = MagicMock()
+                ledgers[seed].inspect.side_effect = [deepcopy(before), deepcopy(after)]
+            fake = SimpleNamespace(returncode=0, wait=lambda **k: None)
+            amendment = {"sha256": "a" * 64, "source": {"source_sha256": "b" * 64}}
+            with patch.object(continuation, "load_amendment", return_value=({}, amendment)), \
+                    patch.object(continuation, "_review", return_value={"fixture": True}), \
+                    patch.object(api, "_ledger", side_effect=lambda r, d, s: ledgers[s]), \
+                    patch.object(api.subprocess, "Popen", return_value=fake), \
+                    patch.object(api.time, "monotonic", side_effect=[1., 5., 11.]):
+                with self.assertRaisesRegex(ValueError, "publication exceeded charged reserve"):
+                    api.supervise(run, root / "amendment.json", "c" * 64,
+                        root / "corpus", root / "registry", root / "review", root / "archive",
+                        started=0.)
+            # Provisional terminal results are retained; the durable overrun
+            # takes precedence after slow inspection/publication crosses 10 s.
+            terminal = api._read(root / "evaluation-supervisor-result.json")
+            self.assertTrue(terminal["verified_within_charged_wall"])
+            self.assertTrue(api._read(root / "evaluation-supervisor-overrun.json")["resume_forbidden"])
+            for seed in api.SEEDS:
+                marker = run / f"seed-{seed}" / "supervisor-overrun-0003.json"
+                self.assertTrue(api._read(marker)["resume_forbidden"])
+            with self.assertRaisesRegex(ValueError, "publication exceeded"):
+                continuation._evaluation_outcome_guard(root / "amendment.json")
 
     def test_all_evaluation_calls_reserved_before_first_comparator_and_failure_seals_attempts(self):
         import nca.train.ik_continuation as continuation
@@ -151,7 +187,7 @@ class IKContinuationEvaluationTests(unittest.TestCase):
                         root / "corpus", root / "registry", root / "review", root / "archive",
                         started=0., review_sha256=sha256_json(review))
             for attempt in attempts.values():
-                attempt.finish.assert_called_once_with("failed", reason="ValueError")
+                attempt.finish.assert_called_once_with("failed", reason="ValueError", publication_reserve_seconds=60.)
                 attempt.complete.assert_not_called()
                 attempt.checkpoint.assert_not_called()
 
