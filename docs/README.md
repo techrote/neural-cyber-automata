@@ -8,7 +8,7 @@ verified: 2026-10-22
 
 # Documentation map
 
-Flight-learning #74: [Trainer preparation and bounded experiment](FLIGHT_LEARNING.md).
+Flight-learning #74: [Trainer preparation](FLIGHT_LEARNING.md) and [prospective preregistration / final custody](FLIGHT_PREREGISTRATION.md).
 
 | Question | Owning page |
 |---|---|
