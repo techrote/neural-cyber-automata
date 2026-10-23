@@ -142,5 +142,8 @@ and failed-finish inventory
 
 No additional modification, new allocation, retraining, export, retuning,
 remaining evaluation or next experiment follows automatically from this no-go.
+The later [saved-evidence regression diagnosis](../design/IK_POLAR_REGRESSION.md)
+localizes hip/tangential error and proposes a single batch-order test without
+authorizing execution or opening the sealed suite.
 
 © 2026 techrote. All rights reserved.

@@ -18,6 +18,10 @@ This analysis reads authenticated original shards, saved outputs, 120 tuning
 reports and 5,160 update receipts. It imports no Torch, runs no predictors or
 optimizers, generates no data and changes no original evidence.
 
+The [post-polar diagnosis and next bounded proposal](IK_POLAR_REGRESSION.md)
+uses saved training/tuning evidence only. The original feature proposal below
+is retained as its historical hypothesis; it grants no further execution.
+
 ## What the retained evidence establishes
 
 All three selected candidates fail the same 0.06-cell raw p95 / 0.18-cell worst
@@ -64,7 +68,7 @@ They suggest optimization/generalization and possible stage-recency effects;
 they do not prove catastrophic forgetting. No within-epoch tuning checkpoints
 exist to establish that mechanism.
 
-## Smallest justified change to test
+## Original feature hypothesis, tested and retained
 
 Propose a versioned **target-feature transform only** in the
 [model input path](../../src/nca/ik/models.py): replace the network's two
@@ -99,8 +103,8 @@ training-only inputs, binding transform version, feature names and original
 input hashes. Preserve the original corpus and v1 normalizer byte-for-byte.
 Publish new derived mean/scale hashes; fit neither from tuning nor final.
 
-This is a testable hypothesis, not a proven sufficient repair or an observed
-v2 result. Existing evidence cannot identify a unique cause. It favors testing
+Before execution this was a testable hypothesis, not a proven sufficient repair.
+The measured v2 result above failed tuning. The original diagnosis favored testing
 a better-conditioned representation before adding capacity, training longer,
 changing losses or enabling a solver. Stage mixing is a plausible second
 hypothesis but must not be changed in this experiment, so attribution stays

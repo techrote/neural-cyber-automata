@@ -13,9 +13,10 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-029 — Prepare matched IK trials; no training; [ACCEPTED SCOPE] 2026-10-23; [endpoint-loss hypothesis, serial/parallel packets and excluded finals](decisions/2026-10-23-ik-matched-preparation.md).
+### D-028 — Polar regression investigation; [ACCEPTED SCOPE] 2026-10-23; [diagnosis and proposal only; no training, criterion relaxation, final opening or accounting reset](design/IK_POLAR_REGRESSION.md).
 ### D-027 — Bounded polar-feature IK follow-up; [ACCEPTED] 2026-10-23; [new conditional TITAN allocation, fresh final and unchanged gates](decisions/2026-10-23-ik-polar-followup.md).
 ### D-026 — Reviewed recovery of the same frozen IK evaluation
-
 [ACCEPTED] 2026-10-23: [preserved markers, accounted costs and no retraining](decisions/2026-10-23-ik-evaluation-recovery.md).
 
 ### D-025 — Preserve the original IK allocation through an admitted source amendment
@@ -182,9 +183,7 @@ and budget recorded before execution. No paid model service or newly acquired
 compute is included. The existing Cybersand public API can be used from an
 adapter owned here; Cybersand source changes retain that project's task process.
 
-Progress checkpoints record source identities, tested results, failures and
-remaining gates. A negative experimental result is preserved; it is not replaced
-with an unsupported success claim or an enlarged unrecorded search.
+Progress checkpoints record source identities, tested results, failures and remaining gates. A negative experimental result is preserved; it is not replaced with an unsupported success claim or an enlarged unrecorded search.
 
 ### D-010 — This repository serves Cybersand behaviour training and testing
 
