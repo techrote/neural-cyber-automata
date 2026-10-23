@@ -593,6 +593,11 @@ def _empty_state(declaration: FlightDeclaration, attempt_id: str) -> dict[str, A
         "sequence": 0,
         "chain_sha256": ZERO_HASH,
         "charged": {name: 0 for name in WORK_COUNTERS},
+        "stage_counts": {
+            stage: {name: 0 for name in limits}
+            for stage, limits in STAGE_CEILINGS.items()
+        },
+        "current_stage": None,
         "confirmed_physical_ticks": 0,
         "pending": {},
         "failures": [],
@@ -626,11 +631,14 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
         return
 
     if kind == "reserve":
-        if set(payload) != {"reservation_id", "increments", "scope", "cleanup"}:
+        if set(payload) != {"reservation_id", "increments", "scope", "cleanup", "stage"}:
             _fail("flight_ledger_shape", "reservation has an invalid shape")
         expected = f"r{state['reservations'] + 1:08d}"
         if payload["reservation_id"] != expected:
             _fail("flight_ledger_sequence", "reservation identity changed")
+        stage = payload["stage"]
+        if stage is not None and stage not in STAGE_CEILINGS:
+            _fail("flight_ledger_stage", "reservation names an undeclared preregistered stage")
         if (type(payload["scope"]) is not str or not payload["scope"]
                 or type(payload["cleanup"]) is not bool or not isinstance(payload["increments"], Mapping)
                 or not payload["increments"]):
@@ -641,6 +649,12 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
             if name not in WORK_COUNTERS or type(amount) is not int or amount <= 0:
                 _fail("flight_ledger_counter", "reservation contains an undeclared counter")
             state["charged"][name] += amount
+            if stage is not None and name in state["stage_counts"][stage]:
+                state["stage_counts"][stage][name] += amount
+        if payload["scope"] == "host_reset":
+            state["current_stage"] = stage
+        elif payload["scope"] == "host_step" and stage in ("capture", "tuning", "final"):
+            state["current_stage"] = stage
         state["reservations"] += 1
         state["pending"][payload["reservation_id"]] = deepcopy(dict(payload))
         return
@@ -766,6 +780,8 @@ def _snapshot(state: Mapping[str, Any], declaration: FlightDeclaration) -> dict[
         "declaration_sha256": state["declaration_sha256"],
         "attempt_id": state["attempt_id"],
         "charged": deepcopy(state["charged"]),
+        "stage_counts": deepcopy(state["stage_counts"]),
+        "current_stage": state["current_stage"],
         "confirmed_physical_ticks": state["confirmed_physical_ticks"],
         "pending_reservations": sorted(state["pending"]),
         "failures": deepcopy(state["failures"]),
@@ -879,24 +895,30 @@ class FlightAccountingLedger:
             _fail("flight_execution_refused", ",".join(gate["reasons"]))
 
     def reserve_many(self, increments: Mapping[str, int], *, scope: str,
-                     cleanup: bool = False) -> str:
+                     cleanup: bool = False, stage: str | None = None) -> str:
         if self._state["closed"] or self._state["poisoned"]:
             _fail("flight_ledger_closed", "closed or uncertain attempt cannot reserve work")
         if self._state["pending"]:
             _fail("flight_ledger_pending", "previous reservation lacks a durable outcome")
         if type(cleanup) is not bool or type(scope) is not str or not scope:
             _fail("flight_ledger_reservation", "reservation scope/cleanup marker is invalid")
+        if stage is not None and stage not in STAGE_CEILINGS:
+            _fail("flight_ledger_stage", f"unknown preregistered stage: {stage}")
+        if stage == "final":
+            _fail("flight_final_access", "learner final work is disabled in this preparation")
         if not isinstance(increments, Mapping) or not increments:
             _fail("flight_ledger_reservation", "nonempty increments are required")
         if (self._state["failed"] or self._state["unknown_consumption"]) and not cleanup:
             _fail("flight_execution_refused",
                   "failed or unknown attempt permits cleanup only")
-        if cleanup and not set(increments) <= {"cleanup_operations", "host_calls"}:
-            _fail("flight_cleanup_scope", "cleanup can reserve only cleanup operations and host calls")
+        if cleanup and (stage is not None or not set(increments) <= {"cleanup_operations", "host_calls"}):
+            _fail("flight_cleanup_scope", "cleanup cannot consume experiment stages or undeclared cleanup work")
         if not cleanup:
             self._gate_before_work()
 
-        ceilings = self.declaration.to_dict()["work_ceilings"]
+        declaration = self.declaration.to_dict()
+        ceilings = declaration["work_ceilings"]
+        stage_ceilings = declaration["stage_ceilings"]
         normalized: dict[str, int] = {}
         for name, amount in increments.items():
             if name not in WORK_COUNTERS or type(amount) is not int or amount <= 0:
@@ -906,6 +928,9 @@ class FlightAccountingLedger:
                 _fail("flight_execution_refused", f"work ceiling remains unmeasured: {name}")
             if self._state["charged"][name] + amount > ceiling:
                 _fail("flight_budget_exhausted", f"prospective counter exhausted: {name}")
+            if stage is not None and name in stage_ceilings[stage]:
+                if self._state["stage_counts"][stage][name] + amount > stage_ceilings[stage][name]:
+                    _fail("flight_stage_exhausted", f"prospective stage counter exhausted: {stage}.{name}")
             normalized[name] = amount
 
         reservation_id = f"r{self._state['reservations'] + 1:08d}"
@@ -914,6 +939,7 @@ class FlightAccountingLedger:
             "increments": normalized,
             "scope": scope,
             "cleanup": cleanup,
+            "stage": stage,
         }
         self._commit("reserve", payload)
         return reservation_id
@@ -922,44 +948,68 @@ class FlightAccountingLedger:
         return self.reserve_many(
             {"host_starts": 1, "startup_operations": 1}, scope="host_start")
 
-    def reserve_reset(self, *, tuning: bool = False) -> str:
+    def reserve_reset(self, *, tuning: bool = False,
+                      stage: str | None = None) -> str:
         if type(tuning) is not bool:
             _fail("flight_reset_scope", "tuning reset marker must be boolean")
-        increments = {"resets": 1, "host_calls": 1}
         if tuning:
+            if stage not in (None, "tuning"):
+                _fail("flight_reset_scope", "tuning reset cannot be charged to another stage")
+            stage = "tuning"
+        increments = {"resets": 1, "host_calls": 1}
+        if stage == "tuning":
             increments["tuning_episodes"] = 1
-        return self.reserve_many(increments, scope="host_reset")
+        return self.reserve_many(increments, scope="host_reset", stage=stage)
 
-    def reserve_host_call(self, *, scope: str) -> str:
+    def reserve_host_call(self, *, scope: str, stage: str | None = None) -> str:
         if type(scope) is not str or not scope:
             _fail("flight_host_call_scope", "host call scope is required")
-        return self.reserve_many({"host_calls": 1}, scope=scope)
+        return self.reserve_many({"host_calls": 1}, scope=scope, stage=stage)
 
-    def reserve_step(self, *, maximum_ticks: int = 6, capture_labels: int = 0) -> str:
+    def reserve_step(self, *, maximum_ticks: int = 6, capture_labels: int = 0,
+                     stage: str | None = None) -> str:
         if type(maximum_ticks) is not int or not 1 <= maximum_ticks <= 6:
             _fail("flight_step_reservation", "step capacity must be one through six physical ticks")
         if type(capture_labels) is not int or capture_labels < 0:
             _fail("flight_step_reservation", "capture label reservation must be nonnegative")
+        if capture_labels and stage is None:
+            stage = "capture"
+        if stage is None:
+            stage = self._state["current_stage"]
         increments = {
             "host_calls": 1,
             "physical_ticks": maximum_ticks,
             "decisions": 1,
         }
         if capture_labels:
+            if stage != "capture":
+                _fail("flight_capture_accounting", "capture labels may only be charged to capture")
             increments["capture_labels"] = capture_labels
-        return self.reserve_many(increments, scope="host_step")
+        return self.reserve_many(increments, scope="host_step", stage=stage)
 
-    def reserve_optimizer(self, *, updates: int = 1, presentations: int) -> str:
+    def reserve_optimizer(self, *, updates: int = 1, presentations: int,
+                          seed: int | None = None) -> str:
+        stage = None
+        if seed is not None:
+            if seed not in POLICY_SEEDS:
+                _fail("flight_clone_seed", "optimizer reservation names an undeclared policy seed")
+            stage = f"clone:{seed}"
         return self.reserve_many(
             {"optimizer_updates": updates, "sample_presentations": presentations},
-            scope="optimizer")
+            scope="optimizer", stage=stage)
 
     def reserve_tuning_episode(self) -> str:
-        return self.reserve_many({"tuning_episodes": 1}, scope="tuning_episode")
-
-    def reserve_checkpoint_publication(self) -> str:
         return self.reserve_many(
-            {"checkpoint_publications": 1}, scope="checkpoint_publication")
+            {"tuning_episodes": 1}, scope="tuning_episode", stage="tuning")
+
+    def reserve_checkpoint_publication(self, *, seed: int | None = None) -> str:
+        stage = None
+        if seed is not None:
+            if seed not in POLICY_SEEDS:
+                _fail("flight_clone_seed", "checkpoint reservation names an undeclared policy seed")
+            stage = f"clone:{seed}"
+        return self.reserve_many(
+            {"checkpoint_publications": 1}, scope="checkpoint_publication", stage=stage)
 
     def reserve_cleanup(self, *, host_call: bool = False) -> str:
         increments = {"cleanup_operations": 1}
