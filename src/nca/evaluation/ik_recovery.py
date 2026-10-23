@@ -448,6 +448,10 @@ def register(registry):
 
 
 if __name__ == "__main__":
-    main()
+    # Use the canonical module for typed recovery proofs shared with the
+    # evaluator. runpy's __main__ classes have a different Python identity.
+    from nca.evaluation import ik_recovery as canonical_module
+    canonical_module.ENTRY_STARTED = ENTRY_STARTED
+    canonical_module.main()
 
 # Copyright 2026 techrote. All rights reserved.

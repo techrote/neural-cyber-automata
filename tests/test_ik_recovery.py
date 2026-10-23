@@ -17,6 +17,15 @@ from nca.evaluation import ik_recovery as api
 
 
 class IKRecoveryTests(unittest.TestCase):
+    def test_module_entry_uses_canonical_recovery_types(self):
+        import runpy
+        with patch.object(api, "main") as canonical_main:
+            with patch.object(api, "ENTRY_STARTED", 0):
+                with self.assertWarns(RuntimeWarning):
+                    namespace = runpy.run_module("nca.evaluation.ik_recovery", run_name="__main__")
+                self.assertEqual(api.ENTRY_STARTED, namespace["ENTRY_STARTED"])
+        canonical_main.assert_called_once_with()
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

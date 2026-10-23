@@ -69,3 +69,6 @@ source/checkpoint/ledger hashes and the aggregate verdict. Report failed,
 no-go and inconclusive results honestly; no final-driven retuning is permitted.
 
 © 2026 techrote. All rights reserved.
+
+Current observed outcome: [launcher refusal and required source/accounting rebind](progress/2026-10-23-ik-recovery-refusal.md). No recovery evaluation result exists.
+
