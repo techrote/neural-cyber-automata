@@ -316,6 +316,22 @@ class DurableAccountingTests(unittest.TestCase):
             ledger.reserve_optimizer(updates=1, presentations=1, seed=74011)
         ledger.close()
 
+    def test_stage_sensitive_work_cannot_be_mislabeled(self):
+        ledger = self.create()
+        with self.assertRaisesRegex(ContractError, "optimizer_updates.*capture"):
+            ledger.reserve_many(
+                {"optimizer_updates": 1, "sample_presentations": 1},
+                scope="wrong_stage_optimizer",
+                stage="capture",
+            )
+        with self.assertRaisesRegex(ContractError, "physical_ticks.*clone:74011"):
+            ledger.reserve_many(
+                {"physical_ticks": 6, "decisions": 1},
+                scope="wrong_stage_physical",
+                stage="clone:74011",
+            )
+        ledger.close()
+
     def test_final_stage_is_structurally_disabled(self):
         ledger = self.create()
         with self.assertRaisesRegex(ContractError, "final work is disabled"):
