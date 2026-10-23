@@ -34,7 +34,10 @@ from nca.contracts import ContractError, canonical_json, sha256_json, strict_jso
 from nca.train.flight import build_policy
 from nca.train.flight_accounting import (
     DESIGN_WORK_MAXIMA,
+    DEVELOPMENT_SEEDS,
     POLICY_SEEDS,
+    SCENARIO_FAMILY,
+    SCENARIO_MAX_TICKS,
     FlightAccountingLedger,
     FlightDeclaration,
 )
@@ -56,20 +59,6 @@ MAX_OPTIMIZER_UPDATES_PER_SEED = DESIGN_WORK_MAXIMA["optimizer_updates"] // len(
 MAX_SAMPLE_PRESENTATIONS_PER_SEED = DESIGN_WORK_MAXIMA["sample_presentations"] // len(POLICY_SEEDS)
 MAX_CHECKPOINT_BYTES = 32 * 1024 * 1024
 
-DEVELOPMENT_SEEDS = (101, 103, 107, 109)
-SCENARIO_FAMILY = {
-    "unsupported_hover": "hover",
-    "horizontal_reach": "free_space",
-    "vertical_reach": "free_space",
-    "diagonal_reach": "free_space",
-    "reverse": "reversal",
-    "arrival_braking": "arrival",
-    "wide_corridor": "obstacles",
-    "offset_gates": "obstacles",
-    "corner": "obstacles",
-    "slalom": "obstacles",
-    "wall_recovery": "recovery",
-}
 TRAINING_FAMILIES = (
     "hover", "free_space", "reversal", "arrival", "obstacles", "recovery",
 )
@@ -78,6 +67,8 @@ EXPECTED_TRAINING_CASES = frozenset(
     for scenario_id in SCENARIO_FAMILY
     for seed in DEVELOPMENT_SEEDS
 )
+MAX_CAPTURE_TICKS = sum(SCENARIO_MAX_TICKS.values()) * len(DEVELOPMENT_SEEDS)
+MAX_CAPTURE_DECISIONS = MAX_CAPTURE_TICKS // 6
 
 PREPROCESSING_SPEC = {
     "schema": "nca-4ly-preprocessing/v1",
@@ -111,8 +102,11 @@ BC_SCHEDULE = {
     "weighting": "nominal_equal_family_then_equal_captured_episode_then_equal_admitted_row",
     "required_capture_episodes": len(EXPECTED_TRAINING_CASES),
     "maximum_capture_labels": MAX_CAPTURE_LABELS,
+    "maximum_capture_ticks": MAX_CAPTURE_TICKS,
+    "maximum_capture_decisions": MAX_CAPTURE_DECISIONS,
     "development_seeds": list(DEVELOPMENT_SEEDS),
     "training_scenarios": sorted(SCENARIO_FAMILY),
+    "scenario_max_ticks": dict(SCENARIO_MAX_TICKS),
     "maximum_optimizer_updates_per_seed": MAX_OPTIMIZER_UPDATES_PER_SEED,
     "maximum_sample_presentations_per_seed": MAX_SAMPLE_PRESENTATIONS_PER_SEED,
     "checkpoint_epochs": list(range(BC_EPOCHS + 1)),
