@@ -218,7 +218,8 @@ class FlightRpcTransport:
             return None
         operation = str(command.get("command", ""))
         if operation == "reset":
-            return self._accounting.reserve_reset()
+            return self._accounting.reserve_reset(
+                tuning=command.get("split") == "tuning")
         if operation == "step":
             repeat = command.get("repeat_ticks")
             if type(repeat) is not int:
