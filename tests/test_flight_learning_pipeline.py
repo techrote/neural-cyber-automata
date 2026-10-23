@@ -25,6 +25,7 @@ from nca.train.flight_learning import (
     SHUFFLE_SEED_XOR,
     PREPROCESSING_SPEC,
     SCENARIO_FAMILY,
+    bind_capture_accounting,
     build_capture_dataset,
     build_export_bundle,
     load_checkpoint_bytes,
@@ -126,7 +127,6 @@ def flat_observation(owner):
 
 def action(before, *, status="accepted", move=(0.5, -0.25)):
     return {
-        "source_id": TEACHER["id"],
         "source_sha256": TEACHER["sha256"],
         "observation_id": before["observation_id"],
         "status": status,
@@ -386,8 +386,13 @@ class FlightLearningTests(unittest.TestCase):
             attempt_id=attempt_id,
             current_evidence=ACCOUNTING_EVIDENCE,
         )
+        binding = bind_capture_accounting(self.dataset, ledger)
+        self.assertEqual(binding.capture_dataset_sha256, self.dataset.sha256)
+        self.assertEqual(binding.capture_labels, len(self.dataset.samples))
         result = train_behavior_clone(
-            self.dataset, seed=seed, accounting=ledger)
+            self.dataset, seed=seed, accounting=ledger,
+            capture_binding=binding)
+        self.assertEqual(result.capture_binding_sha256, binding.sha256)
         snapshot = ledger.close("synthetic_learning_fixture")
         self.assertEqual(
             snapshot["charged"]["optimizer_updates"],
@@ -396,6 +401,10 @@ class FlightLearningTests(unittest.TestCase):
         self.assertEqual(
             snapshot["charged"]["sample_presentations"],
             result.sample_presentations,
+        )
+        self.assertEqual(
+            snapshot["stage_counts"]["capture"]["capture_labels"],
+            len(self.dataset.samples),
         )
         stage = snapshot["stage_counts"][f"clone:{seed}"]
         self.assertEqual(stage["optimizer_updates"], result.optimizer_updates)
