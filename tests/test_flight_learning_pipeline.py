@@ -1,8 +1,16 @@
 import copy
+from pathlib import Path
 import random
+import tempfile
 import unittest
 
 from nca.contracts import ContractError, sha256_json
+from nca.train.flight_accounting import (
+    DEPENDENCIES,
+    FlightAccountingLedger,
+    FlightDeclaration,
+    preparation_declaration,
+)
 from nca.train.flight_learning import (
     ACTION_SPEC,
     BC_EPOCHS,
@@ -20,7 +28,6 @@ from nca.train.flight_learning import (
 )
 
 
-DECLARATION = "d" * 64
 SOURCE = {
     "host_revision": "1" * 40,
     "host_build_sha256": "2" * 64,
@@ -29,6 +36,55 @@ SOURCE = {
     "teacher_sha256": "5" * 64,
 }
 TEACHER = {"id": "4ly003-teacher", "sha256": SOURCE["teacher_sha256"]}
+
+
+def accounting_fixture():
+    value = preparation_declaration().to_dict()
+    value["status"] = "prospective"
+    value["identities"] = {
+        "learner_revision": "6" * 40,
+        "learner_source_sha256": "7" * 64,
+        "host_revision": SOURCE["host_revision"],
+        "host_build_sha256": SOURCE["host_build_sha256"],
+        "profile_sha256": SOURCE["profile_sha256"],
+        "controller_sha256": SOURCE["controller_sha256"],
+        "teacher_sha256": SOURCE["teacher_sha256"],
+    }
+    value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
+    value["splits"].update({
+        "training_sha256": sha256_json(["fixture", "training"]),
+        "tuning_sha256": sha256_json(["fixture", "tuning"]),
+        "final_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
+    })
+    value["runtime"].update({
+        "platform": "fixture-linux-x86_64",
+        "python": "fixture-python",
+        "torch": "fixture-torch-cpu",
+    })
+    value["work_ceilings"].update({
+        "host_calls": 100,
+        "startup_operations": 4,
+        "cleanup_operations": 4,
+    })
+    value["resource_ceilings"].update({
+        "maximum_wall_seconds": 60.0,
+        "maximum_resident_bytes": 1024 * 1024,
+        "maximum_storage_bytes": 16 * 1024 * 1024,
+        "maximum_publication_bytes": 4 * 1024 * 1024,
+    })
+    evidence = {}
+    for name in DEPENDENCIES:
+        digest = sha256_json(["fixture-evidence", name])
+        value["dependencies"][name] = {
+            "status": "accepted", "evidence_sha256": digest,
+        }
+        evidence[name] = digest
+    declaration = FlightDeclaration.from_mapping(value)
+    return declaration, evidence
+
+
+ACCOUNTING_DECLARATION, ACCOUNTING_EVIDENCE = accounting_fixture()
+DECLARATION = ACCOUNTING_DECLARATION.sha256
 
 
 def observation(tick, *, suffix=None):
@@ -237,9 +293,42 @@ class FlightLearningTests(unittest.TestCase):
         cls.capture = valid_capture()
         cls.dataset = build_capture_dataset((cls.capture,))
 
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.ledger_index = 0
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def train(self, seed):
+        self.ledger_index += 1
+        attempt_id = f"fixture-{self.ledger_index}"
+        ledger = FlightAccountingLedger.create(
+            Path(self.temp.name) / f"{attempt_id}.jsonl",
+            ACCOUNTING_DECLARATION,
+            attempt_id=attempt_id,
+            current_evidence=ACCOUNTING_EVIDENCE,
+        )
+        result = train_behavior_clone(
+            self.dataset, seed=seed, accounting=ledger)
+        snapshot = ledger.close("synthetic_learning_fixture")
+        self.assertEqual(
+            snapshot["charged"]["optimizer_updates"],
+            result.optimizer_updates,
+        )
+        self.assertEqual(
+            snapshot["charged"]["sample_presentations"],
+            result.sample_presentations,
+        )
+        return result
+
+    def test_clone_refuses_without_source_bound_accounting(self):
+        with self.assertRaisesRegex(ContractError, "accounting"):
+            train_behavior_clone(self.dataset, seed=74011)
+
     def test_bounded_clone_is_deterministic_for_the_declared_seed(self):
-        first = train_behavior_clone(self.dataset, seed=74011)
-        second = train_behavior_clone(self.dataset, seed=74011)
+        first = self.train(74011)
+        second = self.train(74011)
         self.assertEqual(first.completed_epochs, BC_EPOCHS)
         self.assertEqual(first.optimizer_updates, BC_EPOCHS)
         self.assertEqual(first.sample_presentations, BC_EPOCHS)
@@ -249,7 +338,7 @@ class FlightLearningTests(unittest.TestCase):
 
     def test_checkpoint_round_trip_preserves_model_optimizer_rng_and_accounting_lineage(self):
         import torch
-        trained = train_behavior_clone(self.dataset, seed=74013)
+        trained = self.train(74013)
         data, receipt = serialize_checkpoint(
             trained,
             checkpoint_id="seed74013-epoch20",
@@ -283,7 +372,7 @@ class FlightLearningTests(unittest.TestCase):
                     self.assertEqual(value, other)
 
     def test_export_round_trip_is_exact_bounded_and_teacher_free(self):
-        trained = train_behavior_clone(self.dataset, seed=74017)
+        trained = self.train(74017)
         data, receipt = serialize_checkpoint(
             trained,
             checkpoint_id="seed74017-epoch20",
@@ -307,7 +396,7 @@ class FlightLearningTests(unittest.TestCase):
         self.assertEqual(policy.policy_sha256, receipt["policy_sha256"])
 
     def test_export_and_policy_schema_mutations_fail_closed(self):
-        trained = train_behavior_clone(self.dataset, seed=74011)
+        trained = self.train(74011)
         data, receipt = serialize_checkpoint(
             trained,
             checkpoint_id="seed74011-epoch20",
