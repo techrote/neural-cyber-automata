@@ -22,7 +22,7 @@ from nca.contracts import canonical_json, sha256_json, strict_json_loads
 from nca.ik.data import iter_tasks, generate_sample, validate_sample
 from nca.ik.fresh_final import FreshFinalConfig
 from nca.ik.process_limits import memory_limit
-from nca.ik.declaration import runtime_expectation
+from nca.ik.declaration import runtime_expectation, _project
 from nca.runs import immutable_json, immutable_bytes, sha256_file, utc_now
 from nca.train.ik_experiment import _source, _read
 
@@ -71,7 +71,7 @@ def declare(output, isolation):
         raise ValueError("exact independent whole-original geometry isolation receipt required")
     config, _, geometry = geometry_identity()
     root = Path(output).resolve()
-    checkout = Path(__file__).resolve().parents[3]
+    checkout = _project(None)
     if root == checkout or checkout in root.parents:
         raise ValueError("custodian output must remain outside checkout")
     root.mkdir(parents=True, exist_ok=False)

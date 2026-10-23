@@ -20,7 +20,7 @@ import tarfile
 import uuid
 
 from nca.contracts import canonical_json, sha256_json, strict_json_loads
-from nca.ik.declaration import runtime_expectation
+from nca.ik.declaration import runtime_expectation, _project
 from nca.ik.device import configure_device, device_report
 from nca.ik.polar import PolarNormalization, TRANSFORM, fit_training_normalization, build_trainer, build_model
 from nca.ik.data import GeometricSample, iter_tasks, validate_sample, validate_dataset
@@ -44,7 +44,7 @@ QUALIFIED_DEVICE = {"capability": [7, 5], "multiprocessors": 72,
 
 
 def plan():
-    root = Path(__file__).resolve().parents[3]
+    root = _project(None)
     value = dict(validate_plan(_read(root / PLAN_PATH)))
     value.update(schema="nca-ik-polar-plan/v2", id="runner-polar-followup-v2",
                  final_comparators=6, feature_transform=TRANSFORM,
@@ -111,7 +111,7 @@ def prepare(corpus_root, registry, output, fresh_root, archived_run):
         "next_required_action": "two_independent_exact_source_declaration_admissions"}
     declaration["sha256"] = sha256_json(declaration)
     root = Path(output).resolve()
-    checkout = Path(__file__).resolve().parents[3]
+    checkout = _project(None)
     if root == checkout or checkout in root.parents:
         raise ValueError("run output must remain outside checkout")
     root.mkdir(parents=True, exist_ok=False)

@@ -26,6 +26,11 @@ def fixture_ledger(root):
 
 
 class FollowupContractTests(unittest.TestCase):
+    def test_installed_wheel_resolves_plan_from_verified_checkout(self):
+        expected=plan()
+        with patch('nca.train.ik_followup.__file__','/unrelated/site-packages/nca/train/ik_followup.py'):
+            self.assertEqual(plan(),expected)
+
     def test_fixed_budget_and_geometry_without_labels(self):
         schedule = plan()
         self.assertEqual(schedule["training_seeds"], [41011,42013,43019])
