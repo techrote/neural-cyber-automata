@@ -192,6 +192,26 @@ class DurableAccountingTests(unittest.TestCase):
         self.assertTrue(final["failed"])
         self.assertEqual(final["failures"][0]["reason"], "fixture_startup_failed")
 
+    def test_post_receipt_semantic_failure_preserves_confirmed_cost_and_blocks_work(self):
+        ledger = self.create()
+        reservation = ledger.reserve_step(maximum_ticks=6, stage="capture")
+        ledger.complete(reservation, confirmed_physical_ticks=6)
+        ledger.abort("semantic_reply_validation:stale_observation")
+        snapshot = ledger.snapshot()
+        self.assertTrue(snapshot["failed"])
+        self.assertEqual(snapshot["charged"]["physical_ticks"], 6)
+        self.assertEqual(snapshot["confirmed_physical_ticks"], 6)
+        self.assertEqual(
+            snapshot["failures"][-1]["reason"],
+            "semantic_reply_validation:stale_observation",
+        )
+        self.assertIsNone(snapshot["failures"][-1]["reservation_id"])
+        with self.assertRaisesRegex(ContractError, "cleanup only"):
+            ledger.reserve_step(maximum_ticks=6, stage="capture")
+        cleanup = ledger.reserve_cleanup()
+        ledger.complete(cleanup)
+        ledger.close("post_receipt_semantic_failure")
+
     def test_lost_reply_retains_unknown_consumption_and_refuses_replay(self):
         ledger = self.create()
         reservation = ledger.reserve_step(maximum_ticks=6, stage="capture")
