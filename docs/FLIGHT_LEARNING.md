@@ -80,9 +80,10 @@ sample presentations in the source-bound `FlightAccountingLedger`; missing or
 mismatched accounting refuses optimization.
 
 Checkpoint preparation retains the exact compact-model state, Adam state,
-deterministic shuffle RNG, Torch CPU RNG, learner source/revision, policy seed,
-capture/declaration/source identities, schedule identity, preprocessing/action
-identities and parent-checkpoint lineage. The exact export bundle contains the
+deterministic shuffle RNG, the seed-bound Torch CPU initialization RNG,
+learner source/revision, policy seed, capture/declaration/source identities,
+the optimizer accounting attempt ID and hash-chain tip, schedule identity,
+preprocessing/action identities and parent-checkpoint lineage. The exact export bundle contains the
 54-channel host preprocessing contract, two-output action contract and numeric
 CPU float32 weights. Its scored inference object has no teacher/oracle
 reference and consumes only the raw owner identity needed to bind the separate
