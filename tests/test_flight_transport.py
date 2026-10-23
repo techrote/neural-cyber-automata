@@ -53,8 +53,8 @@ class Accounting:
         self.events.append(("reserve", name, reservation, fields))
         return reservation
 
-    def reserve_reset(self):
-        return self._reserve("reset")
+    def reserve_reset(self, **fields):
+        return self._reserve("reset", **fields)
 
     def reserve_step(self, **fields):
         return self._reserve("step", **fields)
@@ -103,6 +103,33 @@ class TransportTests(unittest.TestCase):
         self.assertTrue(reply["closed"])
         self.assertEqual(
             channel.sent[0]["op"], "close"
+        )
+
+    def test_accounted_tuning_reset_reserves_tuning_episode_atomically(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(response=lambda request: success(
+                request,
+                transition={
+                    "ticks_consumed": 0,
+                    "failed": False,
+                    "reason": "reset",
+                },
+            )),
+            accounting=accounting,
+        )
+        transport.request({
+            "sequence": 1,
+            "command": "reset",
+            "split": "tuning",
+        })
+        self.assertEqual(
+            accounting.events[0],
+            ("reserve", "reset", "r1", {"tuning": True}),
+        )
+        self.assertEqual(
+            accounting.events[-1],
+            ("complete", "r1", {"confirmed_physical_ticks": 0}),
         )
 
     def test_accounting_reserves_step_before_send_and_records_partial_ticks(self):
