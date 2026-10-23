@@ -135,6 +135,11 @@ STAGE_CEILINGS = {
         for seed in POLICY_SEEDS
     },
 }
+STAGE_SENSITIVE_COUNTERS = frozenset({
+    "resets", "physical_ticks", "decisions", "capture_labels",
+    "optimizer_updates", "sample_presentations", "tuning_episodes",
+    "checkpoint_publications",
+})
 RESOURCE_CEILINGS = (
     "maximum_wall_seconds",
     "maximum_resident_bytes",
@@ -919,6 +924,13 @@ class FlightAccountingLedger:
         declaration = self.declaration.to_dict()
         ceilings = declaration["work_ceilings"]
         stage_ceilings = declaration["stage_ceilings"]
+        stage_integration = declaration["dependencies"]["stage_accounting_integration"]["status"]
+        if (stage_integration == "accepted" and stage is None
+                and any(name in STAGE_SENSITIVE_COUNTERS for name in increments)):
+            _fail(
+                "flight_stage_required",
+                "accepted stage-accounting integration requires a preregistered stage for this work",
+            )
         normalized: dict[str, int] = {}
         for name, amount in increments.items():
             if name not in WORK_COUNTERS or type(amount) is not int or amount <= 0:
