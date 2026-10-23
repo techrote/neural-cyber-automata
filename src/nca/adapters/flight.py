@@ -386,6 +386,10 @@ class FlightSession:
                 None if after is None else after.get("observed_tick")),
             "ticks_consumed": ticks,
             "terminal": bool(terminal),
+            "owner_source": (
+                None if self.manifest is None else self.manifest.get("source")
+            ),
+            "teacher_source_sha256": self.teacher_source_sha256,
         }
 
     def _reset_owner(
@@ -620,6 +624,11 @@ class FlightTeacherCaptureSession(FlightSession):
             )
         return self._reset_owner(
             scenario=scenario, seed=seed, split=split, producer="teacher"
+        )
+
+    def step(self, outputs: Any, *, observation_id: str) -> dict[str, Any]:
+        raise FlightProtocolError(
+            "teacher capture accepts only owner reference_action() output"
         )
 
     def step_reference(self) -> dict[str, Any]:
