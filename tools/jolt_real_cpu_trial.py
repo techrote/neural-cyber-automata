@@ -16,7 +16,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import resource
 import shutil
 import subprocess
 import sys
@@ -37,7 +36,7 @@ SOURCE_CONFIG = ROOT / "configs/learning/jolt-learn-003-v2.json"
 APPROVAL = ROOT / "docs/operations/jolt-real-trial-owner-approval-20261023.json"
 TEACHER_CASES = 8
 PPO_DECISIONS = 256
-OPEN_COMPARISON_CASES = 1
+TRAINING_REPLAY_CASES = 1
 SEED = 190103
 
 
@@ -111,7 +110,7 @@ def _owner_approval():
             or value.get("sealed_cases_permitted") is not False
             or value.get("teacher_episodes") != TEACHER_CASES
             or value.get("ppo_decisions") != PPO_DECISIONS
-            or value.get("open_cases") != OPEN_COMPARISON_CASES
+            or value.get("training_case_replays") != TRAINING_REPLAY_CASES
             or value.get("seed") != SEED):
         raise ValueError("explicit bounded owner trial commission differs")
     return value
@@ -243,8 +242,11 @@ def run_real(args):
         "teacher_cases_declared": [case["id"] for case in config["cases"]["teacher"][:TEACHER_CASES]],
         "ppo_seed": SEED,
         "ppo_confirmed_decisions_declared": PPO_DECISIONS,
-        "open_cases_declared": [config["cases"]["open"][0]["id"]],
-        "sealed_cases_opened": False,
+        # Replay an existing training case, not any untouched comparison split.
+        "open_cases_declared": [],
+        "training_case_replay_declared": [config["cases"]["teacher"][0]["id"]],
+        "official_open_cases_opened": False, "sealed_cases_opened": False,
+        "evaluation_replays_training_cases_only": True,
         "qualification_scope": "nonqualifying_exploratory_physical_cpu",
         "formal_learn_jolt_003_allocation_consumed": False,
     }
@@ -354,7 +356,9 @@ def run_real(args):
         print("REAL_PPO_TRAINED confirmed_decisions=256", flush=True)
 
         stage = "open"
-        case = config["cases"]["open"][0]
+        # A separately named *training-case replay* test. Never inspect
+        # the frozen open/sealed comparison cases of the official allocation.
+        case = config["cases"]["teacher"][0]
         for kind, policy, base in (("bc", bc, None),
                                    ("residual", residual, frozen_base)):
             _, row, _ = capture(owner, ledger, journal, case,
@@ -364,7 +368,7 @@ def run_real(args):
                 config=config, source_sha256=source_hash,
                 policy=policy, base=base, execution_version=3)
             rows.append(row)
-            print("REAL_OPEN_CASE " + kind + " success=" + str(row["metrics"]["success"]), flush=True)
+            print("REAL_TRAINING_REPLAY " + kind + " success=" + str(row["metrics"]["success"]), flush=True)
         train_complete = True
         status = "completed_unqualified"
     except BaseException as exc:
@@ -451,8 +455,8 @@ def run_real(args):
         "teacher_completed": sum(r["stage"] == "teacher" for r in rows),
         "ppo_decisions_completed": confirmed_ppo_decisions,
         "trained_families": [r["family"] for r in learning],
-        "open_evaluations": sum(r["stage"] == "open" for r in rows),
-        "sealed_opened": False, "formal_allocation_spent": False,
+        "training_case_replay_evaluations": sum(r["stage"] == "open" for r in rows),
+        "official_open_cases_opened": False, "sealed_opened": False, "formal_allocation_spent": False,
         "original_evidence_root": str(output)
     }), flush=True)
     return 0 if status == "completed_unqualified" and train_complete else 2
