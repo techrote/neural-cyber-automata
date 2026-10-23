@@ -220,16 +220,19 @@ class FlightRpcTransport:
             "op": operation,
             **fields,
         }
-        dispatched = False
+        send_started = False
         try:
+            # Once socket transmission is attempted, a write failure cannot
+            # prove that the peer consumed no complete request.
+            send_started = True
             self._channel.send(envelope)
-            dispatched = True
             result = self._channel.receive()
         except BaseException as exc:
             self._close_channel()
-            if dispatched:
+            if send_started:
                 raise UnknownConsumptionError(
-                    operation, sequence, "reply_missing_after_dispatch"
+                    operation, sequence,
+                    "transport_failed_after_send_started",
                 ) from exc
             raise
 
