@@ -216,6 +216,13 @@ class FlightRpcTransport:
             raise ValueError("capture accounting phase must be boolean")
         self._capture_labels_per_step = 1 if enabled else 0
 
+    def abort_after_reply(self, reason: str) -> None:
+        """Record a semantic/integrity failure after a settled host receipt."""
+        if type(reason) is not str or not reason:
+            raise ValueError("post-receipt abort reason is required")
+        if self._accounting is not None:
+            self._accounting.abort(reason)
+
     def _reserve_accounting(self, command: Mapping[str, Any]):
         if self._accounting is None:
             return None
