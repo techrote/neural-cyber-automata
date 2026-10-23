@@ -589,7 +589,7 @@ def validate_final_opening(opening, frozen, *, seed):
 
 
 def measure_cpu_latency(inputs, predictors, *, context, environment, warmup_calls=100,
-                        measured_calls=10000, fixture=False):
+                        measured_calls=10000, fixture=False, archived_predictor=None):
     """Opt-in matched one-thread batch-one complete-decision timing.
 
     Feature construction belongs inside each predictor (model_predictor does
@@ -602,6 +602,12 @@ def measure_cpu_latency(inputs, predictors, *, context, environment, warmup_call
     if (set(predictors) != set(COMPARATORS) or not isinstance(environment, Mapping)
             or not environment):
         _fail("timing", "all matched predictors and declared deployment environment required")
+    names = COMPARATORS
+    if archived_predictor is not None:
+        if not callable(archived_predictor):
+            _fail("timing", "archived predictor must be a callable complete pipeline")
+        predictors = dict(predictors, archived_trained_v1=archived_predictor)
+        names = COMPARATORS + ("archived_trained_v1",)
     if (type(warmup_calls) is not int or type(measured_calls) is not int
             or warmup_calls < 1 or measured_calls < 1
             or (not fixture and (warmup_calls != 100 or measured_calls != 10000))):
@@ -614,8 +620,8 @@ def measure_cpu_latency(inputs, predictors, *, context, environment, warmup_call
         if not all((*row.present, *row.measured, *row.active, *row.task_mask)):
             _fail("timing", "use scheduled complete nominal inputs for the utility comparison")
     chain = chain_from_profile(runner_right_sole_profile())
-    timings = {name: [] for name in COMPARATORS}
-    outcomes = {name: Counter() for name in COMPARATORS}
+    timings = {name: [] for name in names}
+    outcomes = {name: Counter() for name in names}
 
     def decision(predictor, row):
         prediction = predictor(row)
@@ -633,11 +639,11 @@ def measure_cpu_latency(inputs, predictors, *, context, environment, warmup_call
         return "complete"
 
     for index in range(warmup_calls):
-        for name in COMPARATORS:
+        for name in names:
             decision(predictors[name], inputs[index % len(inputs)])
     for index in range(measured_calls):
         # Rotate first comparator to reduce a fixed ordering advantage.
-        order = COMPARATORS[index % len(COMPARATORS):] + COMPARATORS[:index % len(COMPARATORS)]
+        order = names[index % len(names):] + names[:index % len(names)]
         row = inputs[index % len(inputs)]
         for name in order:
             start = time.perf_counter()

@@ -111,6 +111,11 @@ class TrainingCorpus:
     registry_id: str
     _authentication: Any = field(default=None, repr=False, compare=False)
     _recovery_proof: Any = field(default=None, repr=False, compare=False)
+    _followup_source_sha256: Any = field(default=None, repr=False, compare=False)
+
+    @property
+    def followup_only(self):
+        return self._followup_source_sha256 is not None
 
     @property
     def recovery_only(self):
@@ -171,7 +176,8 @@ def _verify_normalization(samples, normalization):
         _fail("normalization differs from the retained training inputs")
 
 
-def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted, _recovery_proof=None):
+def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted, _recovery_proof=None,
+                 _followup_source_sha256=None):
     root, registry = Path(corpus_dir), Path(registry_dir)
     if root.is_symlink() or registry.is_symlink() or not root.is_dir() or not registry.is_dir():
         _fail("real corpus and retained registry directories required")
@@ -247,10 +253,22 @@ def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted, _r
     opened = registry / (manifest["final_suite_identity_sha256"] + ".final-opened.json")
     if opened.exists() or opened.is_symlink():
         from nca.evaluation.ik_final_corpus import FinalRecoveryProof
-        if (not accepted or type(_recovery_proof) is not FinalRecoveryProof
+        if _followup_source_sha256 is not None:
+            # A separately commissioned v2 experiment may reuse original train/
+            # tuning inputs. Preserve and authenticate the original opening;
+            # neither recovery privileges nor an absent marker authorize this.
+            from nca.evaluation.ik_final_corpus import (RECOVERY_OPENING_FILE_SHA256,
+                                                       RECOVERY_BINDING_FILE_SHA256)
+            _sha(_followup_source_sha256)
+            if not accepted or _recovery_proof is not None:
+                _fail("separate accepted polar follow-up view required")
+            _read_bytes(opened, expected_sha256=RECOVERY_OPENING_FILE_SHA256)
+            _read_bytes(registry / (manifest["final_suite_identity_sha256"] + ".compact-reader-v1.json"),
+                        expected_sha256=RECOVERY_BINDING_FILE_SHA256)
+        elif (not accepted or type(_recovery_proof) is not FinalRecoveryProof
                 or not _recovery_proof.authenticates_registry(registry)):
             _fail("training cannot use a corpus whose final suite has already opened")
-    elif _recovery_proof is not None:
+    elif _recovery_proof is not None or _followup_source_sha256 is not None:
         _fail("recovery view requires the existing immutable final opening")
 
     shards = defaultdict(list)
@@ -320,13 +338,25 @@ def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted, _r
                           manifest["sha256"], normalization_hash, manifest["final_suite_identity_sha256"],
                           marker["id"],
                           (_ACCEPTED_TOKEN, partitions["training"], partitions["tuning"],
-                           config, normalization) if accepted else None, _recovery_proof)
+                           config, normalization) if accepted else None, _recovery_proof,
+                          _followup_source_sha256)
 
 
 def read_training_corpus(corpus_dir, registry_dir):
     """Read the one pinned accepted corpus without exposing sealed final rows."""
     return _load_corpus(corpus_dir, registry_dir,
                         manifest_file_sha256=ACCEPTED_MANIFEST_FILE_SHA256, accepted=True)
+
+
+def read_polar_followup_corpus(corpus_dir, registry_dir, *, source_sha256):
+    """Original train/tuning only, scoped to the new polar declaration source.
+
+    Legacy launchers refuse this view. No final payload or pending journal is
+    opened, and the exact historical opening/binding must still exist.
+    """
+    return _load_corpus(corpus_dir, registry_dir,
+        manifest_file_sha256=ACCEPTED_MANIFEST_FILE_SHA256, accepted=True,
+        _followup_source_sha256=_sha(source_sha256))
 
 
 def read_recovery_training_corpus(corpus_dir, registry_dir, *, recovery_proof):

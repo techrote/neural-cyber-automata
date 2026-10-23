@@ -245,4 +245,56 @@ three-seed freeze and final-opening mismatch controls. They do not execute the
 accepted corpus comparison or a GPU workload. The owning PR records exact-source
 observed results and explicit skips.
 
+## Bounded polar follow-up
+
+The [D-027 commission](decisions/2026-10-23-ik-polar-followup.md) authorizes one
+new target-feature experiment under the [fixed design](design/IK_ACCURACY_FOLLOWUP.md).
+Use a new directory and allocation. Preserve the completed v1 run, archive,
+registry, normalizer, opened final and accounting. Original final geometry is
+an exclusion set; its labels and outputs cannot supervise or select this model.
+
+After clean exact-head CI, an independent CPU custodian first declares and
+generates the fixed 2,940-row final-only suite. `$isolation` names the exact
+independent production geometry receipt, whose SHA-256 is pinned by the sealer.
+Do not print or inspect its archive payload during model development.
+
+```powershell
+python -m nca.train.ik_followup_seal declare --root $fresh --isolation $isolation
+python -m nca.train.ik_followup_seal generate --root $fresh
+python -m nca.train.ik_followup_seal inspect --root $fresh
+python -m nca.train.ik_followup prepare --run $polarRun --corpus $corpus --registry $registry --fresh $fresh --archived-run $originalRun
+python -m nca.train.ik_followup inspect --run $polarRun --declaration-sha256 $polarDeclarationFileSha
+```
+
+Preparation remains CPU-only. It verifies original labels and normalization,
+derives the versioned polar training-only normalizer, authenticates the fresh
+seal and original tuning-selected archived candidates, and creates three zero-
+consumption ledgers. UUID-isolate TITAN RTX as described above. The new allocator
+ceiling is 20 GiB; seeds and CPU measurements execute serially. This ceiling
+does not reserve memory. The original 40 epochs, 128 capacity, three seeds,
+losses, schedule, 7,200 seconds per seed and acceptance criteria remain fixed.
+
+Both fresh independent reviews must approve this exact declaration, executable
+source, completed hosted CI and sealed-suite evidence. Publish their provenance
+and actual findings before constructing the source/declaration-bound admission
+record. Existing v1 approvals do not apply.
+
+```powershell
+foreach ($seed in 41011,42013,43019) {
+  python -m nca.train.ik_followup run --phase train --seed $seed --run $polarRun --declaration-sha256 $polarDeclarationFileSha --corpus $corpus --registry $registry --fresh $fresh --archived-run $originalRun --review $polarReview
+  if ($LASTEXITCODE -ne 0) { throw 'Preserve failed allocation and protective phase claim; no automatic retry' }
+}
+python -m nca.train.ik_followup run --phase finish --run $polarRun --declaration-sha256 $polarDeclarationFileSha --corpus $corpus --registry $registry --fresh $fresh --archived-run $originalRun --review $polarReview
+```
+
+The finish phase independently authenticates every tuning report and checkpoint
+lineage. If any selected seed misses the original raw tuning quality gate,
+it records a terminal no-go and leaves fresh final sealed. No extra epochs,
+seed replacement or automatic second experiment follows. If all pass, final
+opens once for all six declared controls, including archived trained v1.
+Raw scores and one-thread batch-one timing use unchanged acceptance tests.
+Every evaluation reservation is checkpointed without optimizer updates before
+terminal closure. Preserve the phase claims, supervisor receipts and ledger
+readback for independent audit. A crash or uncertain outcome retains the
+run-wide protective claim; do not delete it to restart.
 © 2026 techrote. All rights reserved.

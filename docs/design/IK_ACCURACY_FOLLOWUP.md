@@ -1,15 +1,16 @@
 ---
 title: IK accuracy diagnosis and bounded representation follow-up
 kind: research
-summary: Saved-output diagnosis, a proposed target-feature reparameterization and a fresh sealed follow-up; no training authorized.
+summary: Saved-output diagnosis and owner-commissioned bounded polar follow-up with separate admission and unchanged criteria.
 owns: [research.ik_accuracy_followup]
 verified: 2026-10-23
 ---
 
 # IK accuracy diagnosis and proposed follow-up
 
-[TENTATIVE] Proposed experiment; software components implemented, not admitted. The owner requests investigation and a bounded proposal,
-not retraining or relaxed gates. The [completed result](../evidence/2026-10-23-ik-frozen-evaluation-recovery.md)
+[TENTATIVE] Accuracy hypothesis under the D-027 commission; software is
+implemented but execution admission remains pending. The
+[completed result](../evidence/2026-10-23-ik-frozen-evaluation-recovery.md)
 remains accuracy/utility no-go and contribution pass. Its allocation is completed.
 This analysis reads authenticated original shards, saved outputs, 120 tuning
 reports and 5,160 update receipts. It imports no Torch, runs no predictors or
@@ -161,7 +162,7 @@ The original archive, registry and opened receipts are never overwritten.
 | Final calls per seed | 6 x 2,940 = 17,640 |
 | CPU timing calls per seed | 6 x (100 warmup + 10,000 measured) = 60,600 |
 | Combined evaluation calls per seed | 78,240; every refusal/failed attempt charged |
-| GPU allocator / elapsed per seed | 2 GiB / 7,200 seconds including startup, checkpoints and evaluation |
+| GPU allocator / elapsed per seed | 20 GiB / 7,200 seconds including startup, checkpoints and evaluation |
 
 TITAN RTX only, UUID-isolated to `cuda:0`; same Windows/Python/Torch/CUDA/driver
 pins unless separately qualified and reviewed. The feature transform's full
@@ -201,12 +202,27 @@ implemented software components. The v2 checkpoint component has a distinct
 identity and serialized feature-version marker; cross-version restore refuses
 before mutation while the original v1 checkpoint identity remains unchanged.
 
-A complete separately declared launcher, sealed fresh archive/registry, derived
-training-only normalization receipt, finite accounting and two fresh independent
-admissions remain prerequisites for execution. The original opened-corpus
-reader and old launchers retain their refusal gates; no training bypass is
-introduced. No accepted-corpus optimization, label generation, new allocation
-or original evidence mutation is claimed by this preparation. The proposed
-representation is an untested accuracy hypothesis, not a demonstrated repair.
+The separate `nca.train.ik_followup` launcher binds the polar normalizer, new
+finite allocation, original opened-registry receipts and new sealed-suite receipt.
+Legacy launchers refuse its scoped original-training view. Selection is rebuilt
+from all forty authenticated tuning reports/checkpoint event histories in each
+seed ledger, including inside the finish worker; no mutable selection handoff
+can grant final access. Its sole final payload reader rechecks all three gates
+and preserves original training selections separately from fresh geometry.
+
+The CPU custodian `nca.train.ik_followup_seal` declares a separate one-use
+generation allocation, binds the independent full-path isolation receipt,
+retains every teacher reservation and seals all scheduled rows. A hard OS memory
+limit and process timeout enforce generation ceilings. Run-wide atomic phase
+ownership prevents different-seed or evaluation overlap; uncertainty preserves
+the claim and blocks automatic retry. Evaluation reservations close through an
+unchanged trainer/optimizer/sampler checkpoint within the same 45-slot cap.
+
+Actual seal, declaration, exact-head CI and two fresh independent admissions
+remain prerequisites for execution. CPU preflight has authenticated 5,260
+training and 2,020 tuning rows and independently derived the new normalizer from
+the same 5,140 training inputs. No accepted-corpus optimization, new labels or
+original evidence mutation is claimed here. See the
+[follow-up operations](../IK_TRAINING_RUNBOOK.md#bounded-polar-follow-up).
 
 © 2026 techrote. All rights reserved.

@@ -308,7 +308,7 @@ def independent_fk_guard(trainer, batch):
 
 
 def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
-                  pause_after_batches=None, execution=None):
+                  pause_after_batches=None, execution=None, polar_normalization=None):
     """Run an already admitted attempt; callable with tiny CPU fixtures in tests.
 
     The CLI owns process supervision and source/runtime admission. An accepted
@@ -316,6 +316,14 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     """
     if getattr(corpus, "recovery_only", False):
         raise ValueError("recovery-only corpus cannot authorize optimization")
+    if polar_normalization is not None or getattr(corpus, "followup_only", False):
+        from nca.ik.polar import PolarNormalization, fit_training_normalization
+        if (not getattr(corpus, "followup_only", False)
+                or type(polar_normalization) is not PolarNormalization
+                or polar_normalization != fit_training_normalization(corpus)
+                or corpus._followup_source_sha256 != ledger.identity["source_sha256"]
+                or polar_normalization.sha256 != ledger.identity["normalization_sha256"]):
+            raise ValueError("source-bound polar follow-up normalization and corpus required")
     if corpus.accepted and context.device.type != "cuda":
         raise ValueError("accepted corpus training requires CUDA; fixtures remain separate")
     if (type(epochs) is not int or epochs < 1 or type(batch_size) is not int
@@ -333,7 +341,11 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     for epoch, count in enumerate(sampler.batches_per_epoch, start=1):
         cursor += count
         epoch_ends[cursor] = epoch
-    trainer = IKTrainer(context, corpus.normalization, corpus.config)
+    if polar_normalization is None:
+        trainer = IKTrainer(context, corpus.normalization, corpus.config)
+    else:
+        from nca.ik.polar import build_trainer
+        trainer = build_trainer(context, polar_normalization, corpus.config)
     extra = ledger.resume(trainer, sampler)
     if "execution" in extra and extra["execution"] != execution:
         raise ValueError("checkpoint execution amendment differs across continuation")

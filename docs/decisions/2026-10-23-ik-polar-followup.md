@@ -33,4 +33,18 @@ missing launcher or absent sealed-suite evidence cannot be turned into approval.
 Do not reuse v1 declarations or same-frozen-evaluation recovery privileges as
 new-training authority. No new allocation has yet been created or consumed.
 
+## Resource amendment
+
+[ACCEPTED] The subsequent owner instruction raises the new polar experiment's
+GPU allocator ceiling to 20 GiB (21,474,836,480 bytes). This is a ceiling, not
+a reservation or a requirement to fill memory. Original v1 declarations and
+2 GiB historical ceilings remain unchanged. TITAN RTX remains the only target.
+
+Parallel seeds were considered. This bounded comparison uses serial seed
+workers and serial matched CPU timing: prior small-network CUDA computation
+was a minor part of wall time, and concurrent seeds would need an aggregate
+VRAM guard rather than three independent 20 GiB ceilings. No concurrent model
+or CPU benchmark work may contaminate the matched latency measurement.
+Budgets, model, sampling, thresholds and all-seed tuning stop remain unchanged.
+
 © 2026 techrote. All rights reserved.
