@@ -61,14 +61,15 @@ def accounting_fixture():
     }
     value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
     value["splits"].update({
-        "training_sha256": sha256_json(["fixture", "training"]),
+        "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
-        "final_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
+        "final_commitment_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
     })
     value["runtime"].update({
         "platform": "fixture-linux-x86_64",
         "python": "fixture-python",
         "torch": "fixture-torch-cpu",
+        "threads": 1,
     })
     value["work_ceilings"].update({
         "host_calls": 100,
@@ -426,6 +427,10 @@ class FlightLearningTests(unittest.TestCase):
         self.assertEqual(BC_SCHEDULE["shuffle_seed_xor"], SHUFFLE_SEED_XOR)
         self.assertEqual(BC_SCHEDULE["required_capture_episodes"], 44)
         self.assertEqual(BC_SCHEDULE["maximum_capture_labels"], 11400)
+        self.assertEqual(BC_SCHEDULE["maximum_capture_ticks"], 68400)
+        self.assertEqual(BC_SCHEDULE["maximum_capture_decisions"], 11400)
+        self.assertEqual(BC_SCHEDULE["scenario_max_ticks"]["slalom"], 2400)
+        self.assertEqual(BC_SCHEDULE["scenario_max_ticks"]["wall_recovery"], 2100)
         self.assertEqual(BC_SCHEDULE_SHA256, sha256_json(BC_SCHEDULE))
 
     def test_preregistered_family_weights_are_equal(self):
