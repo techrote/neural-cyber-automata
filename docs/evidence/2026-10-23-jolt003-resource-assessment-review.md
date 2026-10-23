@@ -34,7 +34,7 @@ and cannot substitute for either required reviewer.
   with its binary and Rapier provenance; the CPU software capability
   remains Linux x86_64, Python 3.12, Torch 2.8.0+cpu,
   NumPy 2.3.5, one Torch/interop thread, deterministic algorithms.
-  CPU model is advisory under [D-022](decisions/2026-10-23-jolt-cpu-portability.md).
+  CPU model is advisory under [D-022](../decisions/2026-10-23-jolt-cpu-portability.md).
 - No new physics/training workload, baseline, teacher, seeds, case split,
   failure semantics, raw inference-latency acceptance or 39-operation ceiling
   is introduced by the resource/watchdog code.
@@ -58,7 +58,7 @@ and cannot substitute for either required reviewer.
 ## What the 8 GiB guard actually establishes
 
 The outer original observer is already a Linux subreaper. The
-[new source-bound memory-watchdog policy](../src/nca/train/jolt_memory_watchdog_v3.py)
+[new source-bound memory-watchdog policy](../../src/nca/train/jolt_memory_watchdog_v3.py)
 samples observer plus every identity-checked process-tree descendant.
 Sampling is part of the actual bounded-stream wait loop, not a
 post-completion file probe. Sampled RSS at/above 8 GiB, a changed
