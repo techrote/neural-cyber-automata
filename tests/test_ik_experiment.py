@@ -203,12 +203,12 @@ class IKExperimentCPUConformanceTests(unittest.TestCase):
                 "max_checkpoints": 10, "max_attempts": 3,
                 "max_wall_seconds": 120, "max_memory_bytes": 256 * 1024**2}
 
-    def run_fixture(self, root, *, pause=None):
+    def run_fixture(self, root, *, pause=None, execution=None):
         ledger = IKRunLedger.create(root, identity=self.identity(), allocation=self.allocation())
         context = configure_device("cpu", 41011)
         attempt = ledger.begin_attempt()
         result = train_attempt(ledger, attempt, self.corpus, context,
-                               epochs=2, batch_size=32, pause_after_batches=pause)
+                               epochs=2, batch_size=32, pause_after_batches=pause, execution=execution)
         return ledger, result
 
     def test_actual_cpu_loop_accounts_rows_tuning_and_keeps_final_closed(self):
@@ -274,6 +274,23 @@ class IKExperimentCPUConformanceTests(unittest.TestCase):
                               epochs=2, batch_size=32)
             attempt.finish("failed", reason="fixture_CPU_route_refused")
             self.assertEqual(ledger.inspect()["charged"]["optimizer_steps"], 0)
+
+    def test_execution_amendment_persists_and_cannot_change_on_resume(self):
+        proof = {"amendment_sha256": "e" * 64, "source_sha256": "f" * 64}
+        with tempfile.TemporaryDirectory() as directory:
+            ledger, first = self.run_fixture(Path(directory) / "fixture", pause=1, execution=proof)
+            self.assertEqual(first["execution"], proof)
+            before = ledger.inspect()
+            self.assertEqual(before["latest_checkpoint"]["state"]["extra_state"]["execution"], proof)
+            context = configure_device("cpu", 41011)
+            attempt = ledger.begin_attempt()
+            with self.assertRaisesRegex(ValueError, "execution amendment differs"):
+                train_attempt(ledger, attempt, self.corpus, context, epochs=2, batch_size=32,
+                              execution=dict(proof, source_sha256="0" * 64))
+            attempt.finish("failed", reason="fixture_execution_binding_refused")
+            after = ledger.inspect()
+            self.assertEqual(after["charged"], before["charged"])
+            self.assertEqual(after["latest_checkpoint"], before["latest_checkpoint"])
 
     def test_allocation_derives_sampler_work_and_retains_final_timing_cost(self):
         plan = json.loads((ROOT / PLAN_PATH).read_text())

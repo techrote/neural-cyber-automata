@@ -321,7 +321,8 @@ def _continuity(tasks, rows):
     }
 
 
-def _schedule(samples, config, partition, expected_task_ids):
+def _schedule(samples, config, partition, expected_task_ids, authenticated_corpus=None,
+              authenticated_final=None, final_opening=None, frozen_candidates=None):
     if not isinstance(config, DatasetConfig) or partition not in ("tuning", "final"):
         _fail("partition", "only typed tuning/final evaluation configurations are accepted")
     tasks = tuple(iter_tasks(config, partition))
@@ -330,20 +331,50 @@ def _schedule(samples, config, partition, expected_task_ids):
         _fail("schedule", "supplied schedule differs from the complete declared partition")
     if partition == "final" and expected_task_ids is None:
         _fail("schedule", "final scoring requires the frozen complete ordered schedule")
+    samples = tuple(samples)
+    if partition == "final" and authenticated_corpus is not None:
+        if authenticated_final is not None:
+            _fail("authentication", "one authenticated corpus view is required")
+        authenticated_final, authenticated_corpus = authenticated_corpus, None
+    authenticated = authenticated_corpus is not None or authenticated_final is not None
+    if authenticated_corpus is not None:
+        # Import lazily: the reader imports no scoring code or optional runtime.
+        # A caller-supplied Boolean or equal reconstructed rows cannot grant the
+        # platform compatibility already authenticated by the accepted reader.
+        from nca.train.ik_corpus import TrainingCorpus
+        if (partition != "tuning" or type(authenticated_corpus) is not TrainingCorpus
+                or not authenticated_corpus.accepted or config is not authenticated_corpus.config
+                or len(samples) != len(authenticated_corpus.tuning)
+                or any(sample is not retained for sample, retained in
+                       zip(samples, authenticated_corpus.tuning))
+                or tuple(sample.task.id for sample in samples) != ids):
+            _fail("authentication", "exact authenticated tuning view, configuration and ordered retained rows required")
+    if authenticated_final is not None:
+        from nca.evaluation.ik_final_corpus import FinalCorpus
+        if (authenticated_corpus is not None or partition != "final"
+                or type(authenticated_final) is not FinalCorpus or not authenticated_final.accepted
+                or not authenticated_final.authenticates(samples, config, final_opening, frozen_candidates)
+                or tuple(sample.task.id for sample in samples) != ids):
+            _fail("authentication", "exact authenticated opened final view and frozen candidates required")
     supplied = {}
     for sample in samples:
         if (not isinstance(sample, GeometricSample) or sample.task.partition != partition
                 or sample.task.id in supplied):
             _fail("samples", "sample partition/type/uniqueness differs from the schedule")
-        validate_task(sample.task, config)
+        if not authenticated:
+            validate_task(sample.task, config)
         supplied[sample.task.id] = sample
     if set(supplied) - set(ids):
         _fail("samples", "unscheduled samples cannot expand or replace the denominator")
-    return tasks, supplied, ids
+    # Authenticate the generated schedule independently, then score the original
+    # retained inputs, never Windows-regenerated target coordinates. Default
+    # fixture and untrusted paths retain their strict replay validation.
+    return (tuple(sample.task for sample in samples) if authenticated else tasks), supplied, ids
 
 
 def score_raw(samples, predictions, config, *, partition="tuning", expected_task_ids=None,
-              final_opening=None, frozen_candidates=None, seed=None, comparator="trained_raw_reference"):
+              final_opening=None, frozen_candidates=None, seed=None, comparator="trained_raw_reference",
+              authenticated_corpus=None, authenticated_final=None):
     """Score every scheduled row without numerical correction or teacher calls.
 
     Tuning requires no opening. Final scoring additionally requires a candidate
@@ -359,7 +390,8 @@ def score_raw(samples, predictions, config, *, partition="tuning", expected_task
         candidate = validate_final_opening(final_opening, frozen_candidates, seed=seed)
         if candidate["config_sha256"] != config.sha256:
             _fail("opening", "final scoring configuration differs from the frozen candidates")
-    tasks, supplied, ids = _schedule(samples, config, partition, expected_task_ids)
+    tasks, supplied, ids = _schedule(samples, config, partition, expected_task_ids, authenticated_corpus,
+                                     authenticated_final, final_opening, frozen_candidates)
     if set(predictions) - set(ids):
         _fail("prediction", "unscheduled predictions cannot replace missing calls")
     chain = chain_from_profile(runner_right_sole_profile())
@@ -419,7 +451,8 @@ def _accuracy(report):
 
 
 def evaluate_comparison(samples, config, *, trained, untrained, partition="tuning",
-                        expected_task_ids=None, final_opening=None, frozen_candidates=None, seed=None):
+                        expected_task_ids=None, final_opening=None, frozen_candidates=None, seed=None,
+                        authenticated_corpus=None, authenticated_final=None):
     """Run five matched comparators, retaining all rows and actual solver work.
 
     This is deliberately separate from lightweight repeated tuning score_raw.
@@ -435,6 +468,8 @@ def evaluate_comparison(samples, config, *, trained, untrained, partition="tunin
         reports[name] = score_raw(
             samples, predictions, config, partition=partition, expected_task_ids=expected_task_ids,
             final_opening=final_opening, frozen_candidates=frozen_candidates, seed=seed, comparator=name,
+            authenticated_corpus=authenticated_corpus,
+            authenticated_final=authenticated_final,
         )
     trained_report, untrained_report = reports[COMPARATORS[0]], reports[COMPARATORS[1]]
     accuracy = _accuracy(trained_report)

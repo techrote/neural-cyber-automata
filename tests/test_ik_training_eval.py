@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from nca.contracts import ContractError, sha256_json
 from nca.evaluation.ik_training import (
@@ -97,6 +97,82 @@ class IKScoringTests(unittest.TestCase):
         self.assertEqual(report["nominal"]["feasible_success_fraction"], 1.)
         self.assertEqual(report["continuity"]["admitted_branch_switches"], 0)
         self.assertFalse(report["qualified"])
+
+    def authenticated_view_fixture(self, samples=None):
+        """Synthetic reader seam only; no test fixture authenticates a real run."""
+        from nca.train.ik_corpus import TrainingCorpus
+        return TrainingCorpus(self.config, Normalization(1, (0.,) * 14, (1.,) * 14, "a" * 64),
+                              (), self.tuning if samples is None else samples,
+                              "b" * 64, "c" * 64, "d" * 64, "fixture-registry")
+
+    def test_authenticated_tuning_requires_genuine_view_and_exact_retained_objects(self):
+        from nca.train.ik_corpus import TrainingCorpus
+        view = self.authenticated_view_fixture()
+        for impostor in (True, {"accepted": True}, view):
+            with self.assertRaises(ContractError):
+                score_raw(self.tuning, {}, self.config, authenticated_corpus=impostor)
+        # Exercise the post-reader boundary using a synthetic trusted-view seam;
+        # production acceptance remains the reader's private authenticated token.
+        with patch.object(TrainingCorpus, "accepted", new_callable=PropertyMock, return_value=True):
+            for samples, config in ((self.tuning[:-1], self.config),
+                                    (tuple(reversed(self.tuning)), self.config),
+                                    ((replace(self.tuning[0]),) + self.tuning[1:], self.config),
+                                    (self.tuning, replace(self.config))):
+                with self.assertRaises(ContractError):
+                    score_raw(samples, {}, config, authenticated_corpus=view)
+            with self.assertRaises(ContractError):
+                score_raw(self.tuning, {}, self.config, expected_task_ids=(), authenticated_corpus=view)
+
+    def test_authenticated_tuning_scores_retained_values_with_full_denominator(self):
+        from nca.train.ik_corpus import TrainingCorpus
+        import nca.evaluation.ik_training as scoring
+        task = self.tuning[0].task
+        retained_task = replace(task, inputs=replace(task.inputs,
+            target_root=(task.inputs.target_root[0] + 1e-12, task.inputs.target_root[1])))
+        samples = (replace(self.tuning[0], task=retained_task),) + self.tuning[1:]
+        view = self.authenticated_view_fixture(samples)
+        with self.assertRaises(ContractError):
+            score_raw(samples, {}, self.config)
+        with patch.object(TrainingCorpus, "accepted", new_callable=PropertyMock, return_value=True), \
+             patch.object(scoring, "_score", wraps=scoring._score) as score:
+            report = score_raw(samples, {}, self.config, authenticated_corpus=view)
+        self.assertIs(score.call_args_list[0].args[0], retained_task)
+        self.assertEqual(report["scheduled_calls"], len(self.tuning))
+        self.assertEqual(report["received_samples"], len(self.tuning))
+        self.assertFalse(report["complete"])
+        self.assertIsNone(report["selection_metric"])
+
+    def test_authenticated_final_requires_opened_view_and_scores_retained_tasks(self):
+        from nca.evaluation.ik_final_corpus import FinalCorpus
+        import nca.evaluation.ik_training as scoring
+        frozen, opening = self.frozen()
+        task = self.final[0].task
+        retained = replace(task, inputs=replace(task.inputs,
+            target_root=(task.inputs.target_root[0] + 1e-12, task.inputs.target_root[1])))
+        samples = (replace(self.final[0], task=retained),) + self.final[1:]
+        view = FinalCorpus(self.config, samples, opening, frozen, "a" * 64, "b" * 64)
+        keywords = dict(partition="final", expected_task_ids=[s.task.id for s in self.final],
+                        frozen_candidates=frozen, final_opening=opening, seed=SEEDS[0],
+                        authenticated_corpus=view)
+        with self.assertRaises(ContractError):
+            score_raw(samples, {}, self.config, **keywords)
+        # Synthetic trusted-reader seam: production final acceptance can only
+        # arise after three complete histories, freeze and durable opening.
+        with patch.object(FinalCorpus, "accepted", new_callable=PropertyMock, return_value=True), \
+             patch.object(scoring, "_score", wraps=scoring._score) as score:
+            report = score_raw(samples, {}, self.config, **keywords)
+            self.assertIs(score.call_args_list[0].args[0], retained)
+            for bad in (samples[:-1], tuple(replace(s) for s in samples), tuple(reversed(samples))):
+                with self.assertRaises(ContractError):
+                    score_raw(bad, {}, self.config, **keywords)
+            with self.assertRaises(ContractError):
+                score_raw(samples, {}, replace(self.config), **keywords)
+            altered_view = replace(view, frozen=dict(frozen, experiment="other"))
+            with self.assertRaises(ContractError):
+                score_raw(samples, {}, self.config, **dict(keywords, authenticated_corpus=altered_view))
+        self.assertEqual(report["scheduled_calls"], len(self.final))
+        self.assertFalse(report["complete"])
+        self.assertIsNone(report["selection_metric"])
 
     def test_missing_prediction_keeps_denominator_and_nulls_selection(self):
         predictions = self.predictions()

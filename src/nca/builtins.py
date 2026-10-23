@@ -133,6 +133,21 @@ def ik_compact_training_step(**kwargs):
     return IKTrainer(**kwargs)
 
 
+def ik_compact_continuation(**kwargs):
+    from .train.ik_continuation import supervise
+    return supervise(**kwargs)
+
+
+def ik_authenticated_final(**kwargs):
+    from .evaluation.ik_final_corpus import open_final_corpus
+    return open_final_corpus(**kwargs)
+
+
+def ik_compact_final_comparison(**kwargs):
+    from .evaluation.ik_continuation_eval import supervise
+    return supervise(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -166,6 +181,12 @@ def builtin_registry() -> Registry:
                       ("optional-torch", "nominal-geometry", "bounded-reference", "explicit-device", "masked"))
     registry.register("trainer", "runner-compact-ik-step", 1, ik_compact_training_step,
                       ("optional-torch", "training-only", "single-update", "explicit-device", "software-foundation"))
+    registry.register("trainer", "runner-compact-ik-continuation", 1, ik_compact_continuation,
+                      ("amendment-bound", "original-allocation", "titan-only", "supervised"))
+    registry.register("evaluator", "ik-authenticated-final-corpus", 1, ik_authenticated_final,
+                      ("original-byte-authentication", "candidate-bound-opening", "no-pending-journal"))
+    registry.register("evaluator", "ik-compact-final-comparison", 1, ik_compact_final_comparison,
+                      ("three-seed-freeze", "original-allocation", "supervised", "matched-cpu-timing"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
     registry.register("adapter", "recorded-playback", 1, RecordedEnv,
                       ("recorded_fixture", "reset-step", "owned-observation"))

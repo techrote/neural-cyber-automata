@@ -125,6 +125,55 @@ comparator and publish independent readback. The prepared scoring APIs support
 that later stage; this continuation does not claim frozen trained candidates,
 final scoring, learned quality, CPU export or physical qualification.
 
+## Admitted continuation of the original allocation
+
+D-024 authorizes a separate source amendment for the completed one-batch run.
+The original declaration and review stay immutable. The continuation runner
+accepts only a narrow executable source delta, authenticates the same retained
+corpus and normalization, and inventories every original run file. Its new
+amendment records the actual clean source, runtime, TITAN UUID fingerprint,
+consumed charges and unchanged three-seed allocations. Preparation imports no
+Torch and opens no final payload.
+
+With the original environment activated and the single TITAN UUID already in
+`CUDA_VISIBLE_DEVICES`, run these PowerShell commands using explicit paths:
+
+```powershell
+python -m nca.train.ik_continuation prepare --run ORIGINAL_RUN_DIRECTORY --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --output NEW_AMENDMENT_DIRECTORY
+```
+
+Publish the amendment's exact file hash and semantic hash, original declaration
+identity, complete source inventory, checkpoint baseline and remaining budgets.
+CI on that head and two genuine independent continuation admissions precede
+CUDA. The fresh review uses schema `nca-ik-continuation-admission/v1`, fields
+`amendment_sha256`, `source_sha256`, `reviewers`, `checks`, `verdict`, and the
+same five Boolean checks as the original review. Its affirmative verdict is
+`admit_declared_CUDA_continuation`. Do not copy the historical V100 or first
+batch admission. Preserve the fresh review in the amendment directory.
+
+```powershell
+python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 41011 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
+python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 42013 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
+python -m nca.train.ik_continuation train --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --seed 43019 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON
+python -m nca.evaluation.ik_continuation_eval run --run ORIGINAL_RUN_DIRECTORY --amendment AMENDMENT_JSON --amendment-sha256 AMENDMENT_FILE_SHA256 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review CONTINUATION_REVIEW_JSON --archive ORIGINAL_ACCEPTED_ARCHIVE
+```
+
+Each training command resumes the existing ledger and checkpoint; it cannot
+grant new steps, presentations, attempts, time, memory or checkpoint slots.
+Verify each supervisor and complete forty-epoch history before proceeding.
+The final command freezes all three tuning-selected identities before opening
+final shards from the original hash-pinned archive. The pending journal remains
+unread. It uses one supervised worker, retaining the authenticated training
+view across opening, and reserves each seed's full 65,200 final/timing calls
+before inference. Whole-process overhead is conservatively charged to every
+seed. New checkpoints retain original allocation metadata and add actual
+execution/amendment provenance. Unknown work blocks continuation.
+
+Publish all histories, frozen candidates, raw comparison and CPU timing
+receipts, aggregate verdicts, costs and independent readback. A measured no-go
+or inconclusive result must be reported honestly; neither permits retuning on
+the opened final suite. This workflow claims no CPU export or physical result.
+
 ## CPU verification
 
 The existing optional-learning workflow runs the new modules in its pinned CPU

@@ -279,7 +279,8 @@ def _tuning_record(corpus, trainer, step):
     trainer.model.eval()
     predictor = model_predictor(trainer.context, trainer.model)
     predictions = collect_predictions(corpus.tuning, predictor)
-    report = score_raw(corpus.tuning, predictions, corpus.config, partition="tuning")
+    report = score_raw(corpus.tuning, predictions, corpus.config, partition="tuning",
+                       authenticated_corpus=corpus if corpus.accepted else None)
     return {"step": step, "tuning": report}
 
 
@@ -307,7 +308,7 @@ def independent_fk_guard(trainer, batch):
 
 
 def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
-                  pause_after_batches=None):
+                  pause_after_batches=None, execution=None):
     """Run an already admitted attempt; callable with tiny CPU fixtures in tests.
 
     The CLI owns process supervision and source/runtime admission. An accepted
@@ -332,6 +333,8 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
         epoch_ends[cursor] = epoch
     trainer = IKTrainer(context, corpus.normalization, corpus.config)
     extra = ledger.resume(trainer, sampler)
+    if "execution" in extra and extra["execution"] != execution:
+        raise ValueError("checkpoint execution amendment differs across continuation")
     history = list(extra.get("tuning_history", []))
     completed_epochs = extra.get("completed_epochs", 0)
     initial = extra.get("initial_checkpoint")
@@ -347,6 +350,7 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     if initial is None:
         saved_initial = attempt.checkpoint(trainer, sampler.state_dict(), extra_state={
             "tuning_history": history, "completed_epochs": 0, "initial_checkpoint": None,
+            "execution": execution,
             "device_environment_sha256": device_identity})
         initial = {"path": saved_initial["path"], "reference": saved_initial["reference"]}
     batch_limit = pause_after_batches
@@ -407,6 +411,7 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
             ref = attempt.checkpoint(trainer, sampler.state_dict(), extra_state={
                 "tuning_history": history, "completed_epochs": completed_epochs,
                 "initial_checkpoint": initial, "training_timing": cumulative_timing,
+                "execution": execution,
                 "geometry_check": geometry_check, "device_environment_sha256": device_identity})
             # A checkpoint's bytes include metrics, but cannot include their own hash.
             # Later reconstruction pairs the saved last tuning entry with this ref.
@@ -419,12 +424,14 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
         attempt.checkpoint(trainer, sampler.state_dict(), extra_state={
             "tuning_history": history, "completed_epochs": completed_epochs,
             "initial_checkpoint": initial, "training_timing": cumulative_timing,
+                "execution": execution,
                 "geometry_check": geometry_check, "device_environment_sha256": device_identity})
     result = {
         "schema": "nca-ik-training-attempt-result/v1", "seed": seed,
         "training_complete": sampler.exhausted, "completed_epochs": completed_epochs,
         "planned_epochs": epochs, "sampler": sampler.state_dict(),
         "initial_checkpoint": initial, "training_timing": cumulative_timing,
+        "execution": execution,
         "geometry_check": geometry_check,
         "device": str(context.device), "memory": context.memory_stats(),
         "device_report": context.report,
