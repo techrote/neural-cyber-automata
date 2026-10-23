@@ -542,6 +542,18 @@ class FlightLearningTests(unittest.TestCase):
         wrapper = build_export_bundle(restored)
         self.assertEqual(wrapper["bundle"]["preprocessing"], PREPROCESSING_SPEC)
         self.assertEqual(wrapper["bundle"]["action"], ACTION_SPEC)
+        self.assertEqual(
+            wrapper["bundle"]["policy_specification"]["matrix_layout"],
+            "row_major_out_features_by_in_features",
+        )
+        self.assertEqual(
+            [layer["weight"] for layer in wrapper["bundle"]["policy_specification"]["layers"]],
+            ["0.weight", "2.weight", "4.weight"],
+        )
+        self.assertEqual(
+            wrapper["bundle"]["action"]["dispatch_equation"],
+            "move=raw/max(1,hypot(raw_x,raw_y))",
+        )
         self.assertIsNone(wrapper["bundle"]["preprocessing"]["additional_fitted_statistics"])
         policy = load_export_bundle(wrapper)
 
