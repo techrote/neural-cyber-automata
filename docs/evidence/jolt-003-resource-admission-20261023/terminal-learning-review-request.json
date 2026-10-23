@@ -1,18 +1,40 @@
 {
-  "schema": "nca-jolt-003-independent-review-request/v2",
-  "task": "LEARN-JOLT-003 terminal learning and qualification",
-  "role": "terminal_learning_qualification",
-  "requested_independent_review": true,
-  "independently_completed": false,
-  "reviewer": null,
   "accepted": false,
-  "prospective_experiment_admitted": false,
-  "scope": "Independent final-source admission review, not software-only or PR style review",
+  "allocation_consumed": false,
+  "blocking_findings": [
+    {
+      "finding": "No independently authored terminal-learning v2 final-source admission signed against the exact candidate binding exists.",
+      "id": "TERM-REVIEW-01"
+    },
+    {
+      "finding": "Owner accepted soft memory residual risk, but terminal reviewer must independently assess source-bound run semantics, watchdog failure propagation, and qualifications before accepting.",
+      "id": "TERM-REVIEW-02"
+    }
+  ],
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "execution_runner_disk_check_required_bytes": 16895424646,
   "final_record_schema": "nca-learn-jolt-003-source-admission-review/v2",
-  "target_branch": "impl/jolt003-resource-watchdog-review",
-  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
-  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
-  "prospective_binding_sha256": null,
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "independently_completed": false,
+  "original_assessment_sha256": "e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be",
+  "original_memory_report_sha256": "ba84131fa5e7c6133b37703b7c6258834bb62f6cf7c36cc15823ca15c528060e",
+  "owner_residual_memory_risk_acceptance": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6355227817",
+  "physical_experiment_started": false,
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "prospective_binding_validation": "offline_source_bound_reconstruction__independent_clean_source_build_prospective_readback_required_before_signature",
+  "prospective_experiment_admitted": false,
+  "request_instructions": "Produce a separately authored original JSON review with reviewer identity and accepted=true only after resolving *every* listed finding and binding an independently accepted prospective resource declaration. Do not copy/rename this preparation packet as an approval.",
+  "requested_independent_review": true,
+  "required_evidence": [
+    "Immutable original JOLT-RECOVERY-004 teacher prerequisite and unchanged sealed-case freshness",
+    "No invented task terminal or reward on safe retirement, correct v3 GAE bootstrap, mask, history and administrative cutoff",
+    "All three BC seeds, recurrent PPO 256-row updates and frozen case-major paired comparison",
+    "Six originally frozen final checkpoints before opening any sealed result",
+    "All policy/family mean, per-seed, lower95, initial-gain, trim/angle/velocity and raw per-case <=5ms inference quality gates",
+    "Source and configuration unchanged by watchdog and CPU-portability instrumentation",
+    "Exact observed source revision plus final-head GH CI and independent review of this role"
+  ],
   "required_exact_bindings": [
     "source_revision",
     "source_sha256",
@@ -23,36 +45,25 @@
     "cpu_comparison_policy",
     "reviewer"
   ],
-  "required_evidence": [
-    "Immutable original JOLT-RECOVERY-004 teacher prerequisite and unchanged sealed-case freshness",
-    "No invented task terminal or reward on safe retirement, correct v3 GAE bootstrap, mask, history and administrative cutoff",
-    "All three BC seeds, recurrent PPO 256-row updates and frozen case-major paired comparison",
-    "Six originally frozen final checkpoints before opening any sealed result",
-    "All policy/family mean, per-seed, lower95, initial-gain, trim/angle/velocity and raw per-case <=5ms inference quality gates",
-    "Source and configuration unchanged by watchdog and CPU-portability instrumentation",
-    "Exact observed source revision plus final-head GH CI and independent review of this role"
-  ],
-  "request_instructions": "Produce a separately authored original JSON review with reviewer identity and accepted=true only after resolving *every* listed finding and binding an independently accepted prospective resource declaration. Do not copy/rename this preparation packet as an approval.",
-  "blocking_findings": [
-    {
-      "id": "TERM-REVIEW-01",
-      "finding": "No independently authored terminal-learning v2 final-source acceptance or source-bound prospective declaration exists."
-    },
-    {
-      "id": "TERM-REVIEW-02",
-      "finding": "Peak-memory risk and one-attempt stop/cleanup cannot be presumed adequate solely from nonphysical unit tests."
-    }
-  ],
-  "physical_experiment_started": false,
-  "allocation_consumed": false,
-  "source_file_count": 261,
-  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
-  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "resource_candidate": {
+    "accepted_owner_risk_only": true,
+    "canonical_sha256": "6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72",
+    "experiment_admitted": false,
+    "file_sha256": "8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7",
+    "independently_reviewed": false,
+    "path": "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json"
+  },
+  "review_authority": "independent_external_reviewer_required",
+  "reviewer": null,
+  "role": "terminal_learning_qualification",
   "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
-  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "schema": "nca-jolt-003-independent-review-request/v2",
+  "scope": "Independent final-source admission review, not software-only or PR style review",
   "source_bound_memory_ci": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159",
-  "original_memory_report_sha256": "ba84131fa5e7c6133b37703b7c6258834bb62f6cf7c36cc15823ca15c528060e",
-  "original_assessment_sha256": "e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be",
+  "source_file_count": 261,
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
   "source_revision_scope": "exact GitHub-tested watchdog source head; reviewer must independently confirm the final prospective declaration and this scope before signoff",
-  "review_authority": "independent_external_reviewer_required"
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "target_branch": "impl/jolt003-resource-watchdog-review",
+  "task": "LEARN-JOLT-003 terminal learning and qualification"
 }
