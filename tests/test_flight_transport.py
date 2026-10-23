@@ -1,6 +1,22 @@
 import unittest
 
 from nca.adapters.flight import (
+    ACTION_PROFILE,
+    ACTION_VERSION,
+    ACTOR_ID,
+    CONTROLLER_SHA256,
+    COURSE_ID,
+    COURSE_VERSION,
+    DECISION_TICKS,
+    EPISODE_VERSION,
+    FLAT_CHANNELS,
+    FLAT_OBSERVATION_VERSION,
+    HOST_SCHEDULE,
+    LEASE_TICKS,
+    OBSERVATION_VERSION,
+    PHYSICS_HZ,
+    SPLIT_GEOMETRY_VERSION,
+    TRAINER_PROFILE_SHA256,
     FlightProtocolError,
     UnknownConsumptionError,
 )
@@ -75,6 +91,34 @@ class Accounting:
         self.events.append(("unknown", reservation, reason, fields))
 
 
+def hello(**overrides):
+    value = {
+        "protocol": FLIGHT_PROTOCOL,
+        "id": 0,
+        "ok": True,
+        "episode_version": EPISODE_VERSION,
+        "observation_version": OBSERVATION_VERSION,
+        "flat_observation_version": FLAT_OBSERVATION_VERSION,
+        "flat_observation_length": FLAT_CHANNELS,
+        "action_version": ACTION_VERSION,
+        "action_profile": ACTION_PROFILE,
+        "course_id": COURSE_ID,
+        "course_version": COURSE_VERSION,
+        "split_geometry_version": SPLIT_GEOMETRY_VERSION,
+        "host_schedule": HOST_SCHEDULE,
+        "physics_hz": PHYSICS_HZ,
+        "decision_ticks": DECISION_TICKS,
+        "lease_ticks": LEASE_TICKS,
+        "actor_id": ACTOR_ID,
+        "producer": "policy",
+        "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
+        "controller_sha256": CONTROLLER_SHA256,
+        "native_coupling": True,
+    }
+    value.update(overrides)
+    return value
+
+
 def success(request, **fields):
     return {
         "protocol": FLIGHT_PROTOCOL,
@@ -86,6 +130,17 @@ def success(request, **fields):
 
 
 class TransportTests(unittest.TestCase):
+    def test_handshake_binds_split_geometry_v3(self):
+        FlightRpcTransport(Channel(), hello=hello())
+        with self.assertRaisesRegex(
+            FlightProtocolError,
+            "split_geometry_version",
+        ):
+            FlightRpcTransport(
+                Channel(),
+                hello=hello(split_geometry_version=2),
+            )
+
     def test_matching_reply_preserves_sequence_and_consumption(self):
         channel = Channel(
             response=lambda request:
