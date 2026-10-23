@@ -8,11 +8,11 @@ verified: 2026-10-23
 
 # IK compact CUDA runbook
 
-**Current stop:** [actual continuation evidence](evidence/2026-10-23-ik-titan-continuation.md)
-records three completed training schedules and a final archive-layout failure.
-The suite is opened/development-only and failed-supervisor holds block reuse.
-The commands below document the admitted workflow; they do not authorize
-replaying this failed invocation or resetting its markers/remaining budgets.
+**Current result:** [same-candidate recovery](evidence/2026-10-23-ik-frozen-evaluation-recovery.md)
+completed final scoring and CPU timing with accuracy/utility no-go and
+contribution pass. All ledgers are completed within original allocations.
+Historical failure/opening records remain immutable; no training or reset
+occurred. Commands below preserve operations and do not authorize replay.
 
 The later explicit [D-026 recovery commission](decisions/2026-10-23-ik-evaluation-recovery.md)
 permits a separately reviewed [same-candidate recovery workflow](IK_EVALUATION_RECOVERY.md).
@@ -22,7 +22,8 @@ historical costs and requires two fresh admissions; it grants no retraining.
 [PARTIAL] This operational continuation of the [IK training reference](IK_TRAINING.md)
 preserves the accepted-corpus CPU preflight, prospective three-seed CUDA gate,
 and focused software validation. The [measured continuation](evidence/2026-10-23-ik-titan-continuation.md)
-completed all three training schedules; final evaluation failed and remains blocked.
+completed all three training schedules; its initial failed evaluation is preserved.
+The recovery linked above supersedes only the incomplete evaluation status.
 
 ## CPU preparation, then the GPU boundary
 

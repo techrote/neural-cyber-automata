@@ -1,7 +1,7 @@
 ---
 title: Compact IK training and GPU preparation
 kind: reference
-summary: Three verified TITAN training schedules, immutable provenance and failed gated final evaluation.
+summary: Three verified TITAN training schedules and recovered same-candidate final evaluation with accuracy and utility no-go.
 owns: [ik.training]
 verified: 2026-10-23
 ---
@@ -14,12 +14,12 @@ deterministic whole-trajectory sampler, cumulative attempt/checkpoint ledger,
 training orchestration and independent comparison scorer. CPU conformance uses
 small opened fixtures. The [three-seed continuation](evidence/2026-10-23-ik-titan-continuation.md)
 completed all declared training and passed independent checkpoint/update audits.
-Final opening then failed before scoring; the opened suite and failure holds block reuse.
+Final opening first failed before scoring. The [reviewed same-candidate recovery](evidence/2026-10-23-ik-frozen-evaluation-recovery.md) completed final scoring/timing within the same allocation: accuracy and practical utility no-go, contribution pass, no retraining or reset.
 
 The [candidate specification](../configs/ik/experiments/runner-compact-v1.json)
 and [fixed schedule](../configs/ik/experiments/runner-compact-schedule-v1.json)
 are prospective software specifications. They do not by themselves admit a
-measured invocation. The later training and failed evaluation are recorded in current evidence.
+measured invocation. The later training, preserved failures and completed negative evaluation are recorded in current evidence.
 
 The starting revision is `ccd4c16058f76f422e6a5159915a5e22e7bfd87e`.
 Both accepted dependencies are present: the [CUDA runtime qualification](evidence/2026-10-22-ik-cuda-qualification.md)

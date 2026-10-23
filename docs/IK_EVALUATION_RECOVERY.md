@@ -8,9 +8,11 @@ verified: 2026-10-23
 
 # Frozen IK evaluation recovery
 
-[PROSPECTIVE D-026] The owner explicitly authorizes recovery of the same frozen
+[EXECUTED D-026] The owner explicitly authorizes recovery of the same frozen
 candidates after the [recorded archive-layout failure](evidence/2026-10-23-ik-titan-continuation.md).
-Implementation and review alone do not admit execution. No retraining is allowed.
+The [completed recovery](evidence/2026-10-23-ik-frozen-evaluation-recovery.md)
+reports accuracy/utility no-go and contribution pass. The commands below are
+historical operations, not authorization to replay completed ledgers. No retraining is allowed.
 The original opening remains opened/development-only and every original failure,
 overrun, declaration, checkpoint and charge remains unchanged.
 
@@ -70,7 +72,7 @@ no-go and inconclusive results honestly; no final-driven retuning is permitted.
 
 © 2026 techrote. All rights reserved.
 
-Historical observed outcome: [launcher refusal and required source/accounting rebind](progress/2026-10-23-ik-recovery-refusal.md). No recovery evaluation result exists.
+Historical observed outcome: [launcher refusal and required source/accounting rebind](progress/2026-10-23-ik-recovery-refusal.md). The subsequent completed result is linked above.
 
 
 ## Source rebind after the pre-supervisor launcher refusal
