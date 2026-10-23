@@ -22,14 +22,17 @@ class Connection:
 
 
 class Channel:
-    def __init__(self, response=None, error=None):
+    def __init__(self, response=None, error=None, send_error=None):
         self.connection = Connection()
         self.response = response
         self.error = error
+        self.send_error = send_error
         self.sent = []
 
     def send(self, value):
         self.sent.append(dict(value))
+        if self.send_error is not None:
+            raise self.send_error
 
     def receive(self):
         if self.error is not None:
@@ -67,6 +70,25 @@ class TransportTests(unittest.TestCase):
         self.assertTrue(reply["closed"])
         self.assertEqual(
             channel.sent[0]["op"], "close"
+        )
+
+    def test_write_failure_after_send_starts_is_unknown(self):
+        channel = Channel(
+            send_error=ProtocolError("short write")
+        )
+        transport = FlightRpcTransport(channel)
+        with self.assertRaises(
+            UnknownConsumptionError
+        ) as raised:
+            transport.request({
+                "sequence": 1,
+                "command": "reset",
+            })
+        self.assertIn(
+            "send_started", raised.exception.reason
+        )
+        self.assertTrue(
+            channel.connection.closed
         )
 
     def test_dropped_reply_after_dispatch_is_unknown_and_channel_closes(self):
