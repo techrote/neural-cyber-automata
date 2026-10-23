@@ -202,8 +202,9 @@ def _exact_keys(value: Any, expected: set[str], name: str) -> Mapping[str, Any]:
 
 def _validate_declaration(value: Mapping[str, Any]) -> None:
     top = {
-        "schema", "experiment_id", "status", "identities", "interfaces",
-        "scenario", "splits", "runtime", "seeds", "work_ceilings",
+        "schema", "experiment_id", "status", "source_contract",
+        "learner_configuration", "identities", "interfaces", "scenario",
+        "splits", "runtime", "seeds", "work_ceilings", "stage_ceilings",
         "resource_ceilings", "dependencies", "attempt_policy", "final_access",
     }
     _exact_keys(value, top, "declaration")
@@ -217,6 +218,42 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     if value["final_access"] is not False:
         _fail("flight_final_access", "4LY-004 preparation cannot grant final access")
 
+    source = _exact_keys(value["source_contract"], {
+        "repository", "pull_request", "revision", "qualification_status",
+        "trainer_profile_sha256", "controller_sha256",
+    }, "source_contract")
+    expected_source = {
+        "repository": "techrote/cybersand",
+        "pull_request": 229,
+        "revision": HOST_CONTRACT_HEAD,
+        "qualification_status": "unqualified_source_contract",
+        "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
+        "controller_sha256": CONTROLLER_SHA256,
+    }
+    if dict(source) != expected_source:
+        _fail("flight_source_contract", "reviewed #229 source contract changed or was represented as qualified")
+
+    learner = _exact_keys(value["learner_configuration"], {
+        "profile_id", "architecture", "algorithm", "optimizer",
+        "learning_rate", "batch_capacity", "epochs", "recurrence",
+        "ppo", "cuda", "domain_randomization", "parallel_physical_hosts",
+    }, "learner_configuration")
+    if dict(learner) != {
+        "profile_id": "4ly_trainer",
+        "architecture": "54-64-64-2-tanh",
+        "algorithm": "behavior_cloning",
+        "optimizer": "adam",
+        "learning_rate": 0.001,
+        "batch_capacity": 128,
+        "epochs": 20,
+        "recurrence": False,
+        "ppo": False,
+        "cuda": False,
+        "domain_randomization": False,
+        "parallel_physical_hosts": 1,
+    }:
+        _fail("flight_learner_configuration", "frozen Stream E learner configuration changed")
+
     identities = _exact_keys(value["identities"], {
         "learner_revision", "learner_source_sha256", "host_revision",
         "host_build_sha256", "profile_sha256", "controller_sha256", "teacher_sha256",
@@ -226,41 +263,66 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     _revision_or_none(identities["host_revision"], "host_revision")
     for name in ("host_build_sha256", "profile_sha256", "controller_sha256", "teacher_sha256"):
         _sha256_or_none(identities[name], name)
+    if identities["profile_sha256"] is not None and identities["profile_sha256"] != TRAINER_PROFILE_SHA256:
+        _fail("flight_profile_identity", "accepted Trainer profile differs from the preregistered contract")
+    if identities["controller_sha256"] is not None and identities["controller_sha256"] != CONTROLLER_SHA256:
+        _fail("flight_controller_identity", "accepted controller differs from the preregistered contract")
 
     interfaces = _exact_keys(value["interfaces"], {
-        "observation_schema", "flat_schema", "action_schema",
-        "observation_channels", "action_outputs", "decision_ticks",
+        "episode_schema", "observation_schema", "flat_schema", "action_schema",
+        "observation_channels", "action_outputs", "physics_hz", "decision_ticks",
+        "lease_ticks", "profile_id", "actor_id", "course_id", "course_version",
+        "split_geometry_version",
     }, "interfaces")
-    if interfaces != {
+    if dict(interfaces) != {
+        "episode_schema": "4ly-episode/v1",
         "observation_schema": "4ly-observation/v1",
         "flat_schema": "4ly-flat-observation/v1",
         "action_schema": "4ly-action/v1",
         "observation_channels": 54,
         "action_outputs": 2,
+        "physics_hz": 60,
         "decision_ticks": 6,
+        "lease_ticks": 12,
+        "profile_id": "4ly_trainer",
+        "actor_id": 0,
+        "course_id": "4ly-flight-course/v1",
+        "course_version": 1,
+        "split_geometry_version": 3,
     }:
-        _fail("flight_interface_contract", "54-channel/two-output/six-tick contract changed")
+        _fail("flight_interface_contract", "reviewed #229 flight interface/cadence contract changed")
 
-    scenario = _exact_keys(value["scenario"], {"manifest_sha256", "family_count"}, "scenario")
-    _sha256_or_none(scenario["manifest_sha256"], "scenario.manifest_sha256")
-    if scenario["family_count"] != 6:
-        _fail("flight_scenario_contract", "the bounded design requires six frozen families")
+    scenario = _exact_keys(value["scenario"], {
+        "family_count", "scenario_max_ticks", "scenario_family",
+        "development_seeds", "tuning_seeds", "final_cases_per_scenario",
+        "final_comparators",
+    }, "scenario")
+    if (scenario["family_count"] != 6
+            or scenario["scenario_max_ticks"] != SCENARIO_MAX_TICKS
+            or scenario["scenario_family"] != SCENARIO_FAMILY
+            or scenario["development_seeds"] != list(DEVELOPMENT_SEEDS)
+            or scenario["tuning_seeds"] != list(TUNING_SEEDS)
+            or scenario["final_cases_per_scenario"] != FINAL_CASES_PER_SCENARIO
+            or scenario["final_comparators"] != FINAL_COMPARATORS):
+        _fail("flight_scenario_contract", "scenario/deadline/split composition differs from Stream E")
 
     splits = _exact_keys(value["splits"], {
-        "training_sha256", "tuning_sha256", "final_sha256", "opened_final",
+        "development_sha256", "tuning_sha256",
+        "final_commitment_sha256", "opened_final",
     }, "splits")
-    for name in ("training_sha256", "tuning_sha256", "final_sha256"):
+    for name in ("development_sha256", "tuning_sha256", "final_commitment_sha256"):
         _sha256_or_none(splits[name], f"splits.{name}")
     if splits["opened_final"] is not False:
-        _fail("flight_final_access", "final split contents must remain unopened")
+        _fail("flight_final_access", "learner final payload must remain unopened")
 
     runtime = _exact_keys(value["runtime"], {
         "device", "platform", "python", "torch", "threads",
     }, "runtime")
     if runtime["device"] != "cpu":
-        _fail("flight_runtime", "this preparation declares the small CPU learning path only")
-    if type(runtime["threads"]) is not int or runtime["threads"] <= 0:
-        _fail("flight_runtime", "runtime thread count must be a positive integer")
+        _fail("flight_runtime", "the preregistered learner path is CPU only")
+    if runtime["threads"] is not None and (
+            type(runtime["threads"]) is not int or runtime["threads"] <= 0):
+        _fail("flight_runtime", "runtime thread count must be unresolved or a positive integer")
     for name in ("platform", "python", "torch"):
         if runtime[name] is not None and (type(runtime[name]) is not str or not runtime[name]):
             _fail("flight_runtime", f"runtime.{name} must be null or a nonempty identity")
@@ -272,9 +334,16 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     for name in WORK_COUNTERS:
         _positive_int_or_none(ceilings[name], f"work_ceilings.{name}")
     for name, maximum in DESIGN_WORK_MAXIMA.items():
-        if ceilings[name] is not None and ceilings[name] > maximum:
+        if ceilings[name] != maximum:
             _fail("flight_declaration_ceiling",
-                  f"work_ceilings.{name} exceeds the bounded PR #85 design")
+                  f"work_ceilings.{name} must equal the Stream E prospective maximum")
+    for name in ("host_calls", "startup_operations", "cleanup_operations"):
+        if ceilings[name] is not None:
+            _positive_int_or_none(ceilings[name], f"work_ceilings.{name}")
+
+    stages = _exact_keys(value["stage_ceilings"], set(STAGE_CEILINGS), "stage_ceilings")
+    if dict(stages) != STAGE_CEILINGS:
+        _fail("flight_stage_ceiling", "stage ceilings differ from the preregistered capture/tuning/final/seed bounds")
 
     resources = _exact_keys(value["resource_ceilings"], set(RESOURCE_CEILINGS), "resource_ceilings")
     if resources["maximum_wall_seconds"] is not None:
@@ -305,7 +374,6 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     }:
         _fail("flight_attempt_policy", "one consumed attempt with no replay/extension is required")
 
-
 @dataclass(frozen=True)
 class FlightDeclaration:
     """Canonical immutable declaration value plus its content digest."""
@@ -327,12 +395,34 @@ class FlightDeclaration:
 
 
 def preparation_declaration() -> FlightDeclaration:
-    """Return the intentionally incomplete, non-admissible PR #85 template."""
+    """Incomplete source-bound template; deliberately not an execution admission."""
     pending = {name: {"status": "pending", "evidence_sha256": None} for name in DEPENDENCIES}
     return FlightDeclaration.from_mapping({
         "schema": DECLARATION_SCHEMA,
-        "experiment_id": "4ly004-trainer-flight-v1",
+        "experiment_id": "4ly004-trainer-flight-v2",
         "status": "preparation_only",
+        "source_contract": {
+            "repository": "techrote/cybersand",
+            "pull_request": 229,
+            "revision": HOST_CONTRACT_HEAD,
+            "qualification_status": "unqualified_source_contract",
+            "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
+            "controller_sha256": CONTROLLER_SHA256,
+        },
+        "learner_configuration": {
+            "profile_id": "4ly_trainer",
+            "architecture": "54-64-64-2-tanh",
+            "algorithm": "behavior_cloning",
+            "optimizer": "adam",
+            "learning_rate": 0.001,
+            "batch_capacity": 128,
+            "epochs": 20,
+            "recurrence": False,
+            "ppo": False,
+            "cuda": False,
+            "domain_randomization": False,
+            "parallel_physical_hosts": 1,
+        },
         "identities": {
             "learner_revision": None,
             "learner_source_sha256": None,
@@ -343,18 +433,34 @@ def preparation_declaration() -> FlightDeclaration:
             "teacher_sha256": None,
         },
         "interfaces": {
+            "episode_schema": "4ly-episode/v1",
             "observation_schema": "4ly-observation/v1",
             "flat_schema": "4ly-flat-observation/v1",
             "action_schema": "4ly-action/v1",
             "observation_channels": 54,
             "action_outputs": 2,
+            "physics_hz": 60,
             "decision_ticks": 6,
+            "lease_ticks": 12,
+            "profile_id": "4ly_trainer",
+            "actor_id": 0,
+            "course_id": "4ly-flight-course/v1",
+            "course_version": 1,
+            "split_geometry_version": 3,
         },
-        "scenario": {"manifest_sha256": None, "family_count": 6},
+        "scenario": {
+            "family_count": 6,
+            "scenario_max_ticks": dict(SCENARIO_MAX_TICKS),
+            "scenario_family": dict(SCENARIO_FAMILY),
+            "development_seeds": list(DEVELOPMENT_SEEDS),
+            "tuning_seeds": list(TUNING_SEEDS),
+            "final_cases_per_scenario": dict(FINAL_CASES_PER_SCENARIO),
+            "final_comparators": FINAL_COMPARATORS,
+        },
         "splits": {
-            "training_sha256": None,
+            "development_sha256": None,
             "tuning_sha256": None,
-            "final_sha256": None,
+            "final_commitment_sha256": None,
             "opened_final": False,
         },
         "runtime": {
@@ -362,7 +468,7 @@ def preparation_declaration() -> FlightDeclaration:
             "platform": None,
             "python": None,
             "torch": None,
-            "threads": 1,
+            "threads": None,
         },
         "seeds": list(POLICY_SEEDS),
         "work_ceilings": {
@@ -379,6 +485,7 @@ def preparation_declaration() -> FlightDeclaration:
             "startup_operations": None,
             "cleanup_operations": None,
         },
+        "stage_ceilings": deepcopy(STAGE_CEILINGS),
         "resource_ceilings": {
             "maximum_wall_seconds": None,
             "maximum_resident_bytes": None,
@@ -394,7 +501,6 @@ def preparation_declaration() -> FlightDeclaration:
         },
         "final_access": False,
     })
-
 
 def required_measurements() -> tuple[str, ...]:
     return MEASUREMENTS_REQUIRED
