@@ -43,6 +43,10 @@ class Owner:
         self.mutate_reply = None
         self.partial_ticks = None
         self.step_failure = None
+        self.aborts = []
+
+    def abort_after_reply(self, reason):
+        self.aborts.append(reason)
 
     def observation(self):
         return {
@@ -646,6 +650,11 @@ class FlightTests(unittest.TestCase):
             ):
                 session.reset(scenario="arrival_braking", seed=101)
             self.assertTrue(session.failed)
+            self.assertTrue(owner.aborts)
+            self.assertIn(
+                "reset_semantic_validation",
+                owner.aborts[-1],
+            )
 
     def test_duplicate_or_reordered_reply_is_unknown_consumption_and_never_replayed(self):
         for returned in (0, 2):
@@ -660,6 +669,7 @@ class FlightTests(unittest.TestCase):
             ):
                 session.reset(scenario="arrival_braking", seed=101)
             self.assertTrue(session.failed)
+            self.assertEqual(owner.aborts, [])
             self.assertEqual(
                 session.unknown_consumption["state"],
                 "unknown",
