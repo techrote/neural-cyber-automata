@@ -8,9 +8,11 @@ from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
     DESIGN_WORK_MAXIMA,
+    CONTROLLER_SHA256,
     HOST_CONTRACT_HEAD,
     SCENARIO_MAX_TICKS,
     STAGE_CEILINGS,
+    TRAINER_PROFILE_SHA256,
     FlightAccountingLedger,
     FlightDeclaration,
     execution_gate,
@@ -28,11 +30,10 @@ def admitted_fixture():
         "learner_source_sha256": sha256_json(["fixture", "learner"]),
         "host_revision": "b" * 40,
         "host_build_sha256": sha256_json(["fixture", "host-build"]),
-        "profile_sha256": sha256_json(["fixture", "profile"]),
-        "controller_sha256": sha256_json(["fixture", "controller"]),
+        "profile_sha256": TRAINER_PROFILE_SHA256,
+        "controller_sha256": CONTROLLER_SHA256,
         "teacher_sha256": sha256_json(["fixture", "teacher"]),
     }
-    value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
     value["splits"].update({
         "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
