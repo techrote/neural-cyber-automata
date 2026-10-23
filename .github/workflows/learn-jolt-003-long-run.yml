@@ -239,6 +239,7 @@ jobs:
             ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stdout.log
             ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-outer-stderr.log
             ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-observed-exit.json
+            ${{ runner.temp }}/nca-jolt-003-evidence/learn-jolt-003-20261022-a1-memory-watchdog.json
           retention-days: 90
           if-no-files-found: warn
           include-hidden-files: true
