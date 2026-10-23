@@ -63,6 +63,7 @@ func _start() -> void:
 		"action_profile": FlightProfile.ACTION_PROFILE,
 		"course_id": FlightCourse.ID,
 		"course_version": FlightCourse.VERSION,
+		"split_geometry_version": FlightCourse.SPLIT_VERSION,
 		"host_schedule": PhysicalArena.SCHEDULE,
 		"physics_hz": PhysicalArena.PHYSICS_HZ,
 		"decision_ticks": FlightEpisode.DECISION_TICKS,
