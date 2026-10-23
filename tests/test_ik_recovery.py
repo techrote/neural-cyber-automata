@@ -102,8 +102,8 @@ class IKRecoveryTests(unittest.TestCase):
 
     def test_context_cannot_be_forged_by_boolean_or_changed_paths(self):
         a,_=self.valid_review()
-        args=({},a,None,str(self.base),str(self.base/'amendment.json'),'a'*64,
-              str(self.base/'registry'),str(self.base/'failed.json'))
+        args=({},a,None,str(self.base.resolve()),str((self.base/'amendment.json').resolve()),'a'*64,
+              str((self.base/'registry').resolve()),str((self.base/'failed.json').resolve()))
         untrusted=api.RecoveryContext(*args)
         with self.assertRaises(ValueError):untrusted.validate_arguments(self.base,self.base/'amendment.json','a'*64,self.base/'registry')
         trusted=api.RecoveryContext(*args,api._TOKEN)
