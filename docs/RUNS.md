@@ -9,16 +9,21 @@ verified: 2026-10-23
 # Run ledger
 
 The [4LY-004 preparation](FLIGHT_LEARNING.md) performs software-only protocol,
-transport and accounting tests. The source bridge wraps the real #229 episode
-owner contract but its launcher is hard-gated before Godot until an accepted
-host/build is registered; therefore it contributes no physical-host evidence.
-Tests fault-inject malformed/dropped/duplicate/reordered replies, partial
-terminal intervals, lease failure, authority revocation, interrupted accounting
-writes, duplicate attempts, startup failure, unknown consumption, partial
-checkpoint publication, consumed attempts, stale evidence and prospective
-counter exhaustion. No physical episode, teacher capture, trained policy or new
-allocation is recorded; host PR #229 qualification and measured resource
-ceilings remain hard dependencies.
+transport, accounting and learning-pipeline tests. The source bridge wraps the
+real #229 episode owner contract but its launcher is hard-gated before Godot
+until an accepted host/build is registered; therefore it contributes no
+physical-host evidence. Tests fault-inject malformed/dropped/duplicate/reordered
+replies, partial terminal intervals, lease failure, authority revocation,
+interrupted accounting writes, duplicate attempts, startup failure, unknown
+consumption, partial checkpoint publication, consumed attempts, stale evidence
+and prospective counter exhaustion. Tiny synthetic capture records additionally
+exercise deterministic accounting-gated CPU behavior cloning, checkpoint/model/
+optimizer/RNG restoration, exact export reconstruction, schema refusal, action
+bounds and teacher-free scored inference. This synthetic optimizer work is
+software conformance only: no physical episode, experimental teacher capture,
+declared #74 learning experiment, experiment-trained policy, new allocation or
+final payload access is recorded. Host PR #229 qualification and measured
+resource ceilings remain hard dependencies.
 
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
