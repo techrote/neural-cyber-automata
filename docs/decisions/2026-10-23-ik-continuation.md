@@ -1,0 +1,73 @@
+---
+title: IK continuation source amendment
+kind: decisions
+summary: Owner-authorized source amendment preserves original allocation lineage and final gates.
+owns: [decisions.ik_continuation]
+verified: 2026-10-23
+---
+
+# IK continuation source amendment
+
+[ACCEPTED D-025] The owner authorizes completing #54 / PR #78 on the TITAN RTX
+after fresh continuation admissions, within the existing allocations. The
+owner explicitly authorizes amendments needed to repair the CPU scoring and
+final-reader compatibility refusals. This extends D-024's completed single
+batch boundary; it does not grant another allocation, corpus or schedule.
+
+The original declaration, admission, first checkpoint and verified one-batch
+ledger remain immutable. A separate source-bound amendment records every
+baseline file hash, consumed charge, original allocation, current executable
+source and TITAN UUID fingerprint. Original ledger source metadata continues
+to identify the original allocation lineage. Every new checkpoint, result and
+supervisor receipt additionally identifies the actual execution source and
+amendment. No runtime may claim an old execution source for amended code.
+
+Only the registered continuation runner, authenticated scorer/final reader,
+their lazy registry entries and a bounded ledger publication reserve may differ
+in the IK executable source closure. Three unrelated Jolt source files merged
+from main revision `fb57c32c878485df26c3efeb57cd18d7bc0e9b01` have separate exact
+hash pins; this permits no arbitrary upstream or IK changes. The
+model, loss, optimizer, sampler, seeds, forty-epoch schedule, normalization,
+corpus bytes and thresholds stay fixed. CPU checks and CI must pass on the
+committed head before two distinct reviewers admit the actual amendment.
+Reviews are prospective evidence; this decision does not itself admit CUDA.
+
+Authenticated scoring uses the original retained task coordinates and complete
+ordered denominators. The final extension independently checks retained frame
+geometry after original byte authentication. It requires all three completed
+training histories and tuning-only checkpoint selections, writes and reads
+back the durable final opening, and only then reads original final shards.
+It never reads the mixed pending journal or uses final labels as supervision.
+
+The final worker retains the authenticated training view from before opening.
+It charges common process startup/opening/comparison/timing overhead to every
+seed, reserves all 65,200 evaluation calls before any comparator invocation,
+and writes a reconciled checkpoint without changing optimizer steps. The
+amended attempts conservatively charge a sixty-second publication reserve
+from the existing wall allocation. The ledger bounds the optional reserve to
+five through sixty seconds and caps its charge at the original remaining wall
+budget. Actual publication time is checked again; a late result blocks reuse.
+The
+five CPU comparators use one thread, batch one, 100 warmups and 10,000 measured
+calls each. Failures and unknown work block reuse; final-driven retuning or
+an automatic retry is not authorized. Pass, no-go and inconclusive outcomes
+remain distinct from exported-policy or physical-host qualification.
+
+The V100 remains prohibited. Only the single UUID-isolated TITAN RTX may be
+initialized. Hardware or validation failures that cannot be repaired within
+these gates stop the experiment and must be reported.
+
+After all three training schedules completed and passed independent readback,
+CPU inspection found a final-reader size mismatch: real tuning reports exceed
+its 1 MiB default JSON bound. The narrow repair passes the same explicit 16 MiB
+ceiling to byte authentication and JSON parsing only for tuning reports; small
+receipts retain 1 MiB. An evaluation-only child amendment authenticates the
+parent training amendment/admission, all completed run bytes, original remaining
+allocations, old training provenance and tuning-only frozen candidates. It
+permits source differences only in the three evaluation repair modules and
+cannot authorize a training attempt. Actual evaluation provenance is separate
+from historical training provenance. Fresh exact-source CI and two actual
+evaluation admissions precede any final opening. The earlier final-phase
+admissions are suspended; completed training evidence stays immutable.
+
+© 2026 techrote. All rights reserved.

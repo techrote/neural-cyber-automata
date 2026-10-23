@@ -1,0 +1,266 @@
+[
+  {
+    "retained": {
+      "id": "ded89da95f08e0ab67104319d7b5b700844de4420c78f254a2254d2b340ea958",
+      "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+      "state": {
+        "kind": "point",
+        "partition": "training",
+        "bin_index": 7,
+        "ordinal": 2,
+        "step": 0,
+        "stress_class": "",
+        "augmentation": 2
+      },
+      "partition": "training",
+      "family_id": "ik-family-075",
+      "trajectory_id": "2572614930626238aea0ed67bc79314325461621dff7baed39f1bb33d1f82ac9",
+      "inputs": {
+        "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+        "current": [
+          0.353678438497,
+          0.044634682453
+        ],
+        "target_root": [
+          7.595765779766,
+          7.787649916742
+        ],
+        "posture": [
+          0.353678438497,
+          0.044634682453
+        ],
+        "present": [
+          true,
+          true
+        ],
+        "measured": [
+          true,
+          true
+        ],
+        "active": [
+          true,
+          true
+        ],
+        "task_mask": [
+          true,
+          true
+        ],
+        "schema": "runner-ik-permitted-inputs/v1"
+      },
+      "target_configuration": [
+        -0.551341643552,
+        0.157902880751
+      ],
+      "original_point": [
+        3.028817300382,
+        7.21497005474
+      ],
+      "root_pose": [
+        -7.0,
+        3.0,
+        -0.4
+      ],
+      "region_kind": "interpolation",
+      "stage": 0,
+      "invalid_specimen": null,
+      "evidence_kind": "nominal_geometry_not_act004"
+    },
+    "windows_replay": {
+      "id": "ded89da95f08e0ab67104319d7b5b700844de4420c78f254a2254d2b340ea958",
+      "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+      "state": {
+        "kind": "point",
+        "partition": "training",
+        "bin_index": 7,
+        "ordinal": 2,
+        "step": 0,
+        "stress_class": "",
+        "augmentation": 2
+      },
+      "partition": "training",
+      "family_id": "ik-family-075",
+      "trajectory_id": "2572614930626238aea0ed67bc79314325461621dff7baed39f1bb33d1f82ac9",
+      "inputs": {
+        "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+        "current": [
+          0.353678438497,
+          0.044634682453
+        ],
+        "target_root": [
+          7.595765779766,
+          7.787649916741
+        ],
+        "posture": [
+          0.353678438497,
+          0.044634682453
+        ],
+        "present": [
+          true,
+          true
+        ],
+        "measured": [
+          true,
+          true
+        ],
+        "active": [
+          true,
+          true
+        ],
+        "task_mask": [
+          true,
+          true
+        ],
+        "schema": "runner-ik-permitted-inputs/v1"
+      },
+      "target_configuration": [
+        -0.551341643552,
+        0.157902880751
+      ],
+      "original_point": [
+        3.028817300382,
+        7.214970054739
+      ],
+      "root_pose": [
+        -7.0,
+        3.0,
+        -0.4
+      ],
+      "region_kind": "interpolation",
+      "stage": 0,
+      "invalid_specimen": null,
+      "evidence_kind": "nominal_geometry_not_act004"
+    }
+  },
+  {
+    "retained": {
+      "id": "c2ff9251c2980ed2a1a1864e6772745375b3480c6d0eeabdc0db77fd25423d77",
+      "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+      "state": {
+        "kind": "stress",
+        "partition": "training",
+        "bin_index": 0,
+        "ordinal": 0,
+        "step": 0,
+        "stress_class": "inner_limit_boundary",
+        "augmentation": 0
+      },
+      "partition": "training",
+      "family_id": "ik-family-063",
+      "trajectory_id": "d1e041f3bb9255bf665af2034ac17ab11ae8b4be9a445f76f4a0d39c1a70e0a9",
+      "inputs": {
+        "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+        "current": [
+          -0.068844528017,
+          -0.002932548576
+        ],
+        "target_root": [
+          8.464723677289404,
+          6.51536839275158
+        ],
+        "posture": [
+          -0.068844528017,
+          -0.002932548576
+        ],
+        "present": [
+          true,
+          true
+        ],
+        "measured": [
+          true,
+          true
+        ],
+        "active": [
+          true,
+          true
+        ],
+        "task_mask": [
+          true,
+          true
+        ],
+        "schema": "runner-ik-permitted-inputs/v1"
+      },
+      "target_configuration": [
+        -0.72,
+        -0.179847271667
+      ],
+      "original_point": [
+        8.464723677289,
+        6.515368392752
+      ],
+      "root_pose": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "region_kind": "outside_nominal",
+      "stage": 1,
+      "invalid_specimen": null,
+      "evidence_kind": "nominal_geometry_not_act004"
+    },
+    "windows_replay": {
+      "id": "c2ff9251c2980ed2a1a1864e6772745375b3480c6d0eeabdc0db77fd25423d77",
+      "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+      "state": {
+        "kind": "stress",
+        "partition": "training",
+        "bin_index": 0,
+        "ordinal": 0,
+        "step": 0,
+        "stress_class": "inner_limit_boundary",
+        "augmentation": 0
+      },
+      "partition": "training",
+      "family_id": "ik-family-063",
+      "trajectory_id": "d1e041f3bb9255bf665af2034ac17ab11ae8b4be9a445f76f4a0d39c1a70e0a9",
+      "inputs": {
+        "profile_sha256": "6cb15832e240f82f4bcd582d2c26015ef986e44f335da683abaf9746e31503c4",
+        "current": [
+          -0.068844528017,
+          -0.002932548576
+        ],
+        "target_root": [
+          8.464723677289403,
+          6.51536839275158
+        ],
+        "posture": [
+          -0.068844528017,
+          -0.002932548576
+        ],
+        "present": [
+          true,
+          true
+        ],
+        "measured": [
+          true,
+          true
+        ],
+        "active": [
+          true,
+          true
+        ],
+        "task_mask": [
+          true,
+          true
+        ],
+        "schema": "runner-ik-permitted-inputs/v1"
+      },
+      "target_configuration": [
+        -0.72,
+        -0.179847271667
+      ],
+      "original_point": [
+        8.464723677289,
+        6.515368392752
+      ],
+      "root_pose": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "region_kind": "outside_nominal",
+      "stage": 1,
+      "invalid_specimen": null,
+      "evidence_kind": "nominal_geometry_not_act004"
+    }
+  }
+]

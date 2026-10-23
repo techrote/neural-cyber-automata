@@ -13,6 +13,21 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-030 — Investigate endpoint-weight failure and prepare one parallel order experiment; [ACCEPTED SCOPE] 2026-10-23; [no training, no new issued allocation, both finals excluded](design/IK_ENDPOINT4_FOLLOWUP.md). The preceding owner execution instruction consumed both D-029 matched trials at `6a6961f`; their verified results and charges remain immutable. This new scope ends at reviewed preparation, not execution admission.
+### D-029 — Prepare matched IK trials; no training; [ACCEPTED SCOPE] 2026-10-23; [endpoint-loss hypothesis, serial/parallel packets and excluded finals](decisions/2026-10-23-ik-matched-preparation.md).
+### D-028 — Polar regression investigation; [ACCEPTED SCOPE] 2026-10-23; [diagnosis and proposal only; no training, criterion relaxation, final opening or accounting reset](design/IK_POLAR_REGRESSION.md).
+### D-027 — Bounded polar-feature IK follow-up; [ACCEPTED] 2026-10-23; [new conditional TITAN allocation, fresh final and unchanged gates](decisions/2026-10-23-ik-polar-followup.md).
+### D-026 — Reviewed recovery of the same frozen IK evaluation
+[ACCEPTED] 2026-10-23: [preserved markers, accounted costs and no retraining](decisions/2026-10-23-ik-evaluation-recovery.md).
+
+### D-025 — Preserve the original IK allocation through an admitted source amendment
+
+[ACCEPTED] 2026-10-23: [original allocation, fresh admissions and necessary source amendment](decisions/2026-10-23-ik-continuation.md).
+
+### D-024 — Narrow Windows retained-label compatibility and one gated TITAN batch
+
+[ACCEPTED] 2026-10-23 by owner. See the [scope and unchanged admission gates](decisions/2026-10-23-ik-windows-labels.md).
+
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
@@ -25,24 +40,11 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ### D-020 — Remove operational wall-clock limits and rerun CI
 
-[ACCEPTED] 2026-10-22 by owner, after PR #73: remove all time limits, rerun
-CI, then stop until the owner reports its completion. This supersedes D-019's
-operational wall-clock ceilings and time-fit admission requirements. It does
-not launch the conditional physical comparison or authorize merging this change.
+[ACCEPTED] 2026-10-22 by owner, after PR #73: remove all time limits, rerun CI, then stop until the owner reports its completion. This supersedes D-019's operational wall-clock ceilings and time-fit admission requirements. It does not launch the conditional physical comparison or authorize merging this change.
 
-The separately versioned [configuration v2](../configs/learning/jolt-learn-003-v2.json)
-uses explicit null wall, phase-reserve and owner-transport limits. Execution v3
-propagates that policy through capture, startup, requests, audit, publication,
-cleanup and independent observation. Elapsed time remains finite telemetry;
-phase ordering, all 39 counters, storage/memory integrity, source/runtime/review
-admission and qualification thresholds retain their requirements. Simulated
-task ticks, recovery deadlines and inference quality thresholds remain unchanged.
-Historical finite configurations, receipts and published evidence stay immutable.
+The separately versioned [configuration v2](../configs/learning/jolt-learn-003-v2.json) uses explicit null wall, phase-reserve and owner-transport limits. Execution v3 propagates that policy through capture, startup, requests, audit, publication, cleanup and independent observation. Elapsed time remains finite telemetry; phase ordering, all 39 counters, storage/memory integrity, source/runtime/review admission and qualification thresholds retain their requirements. Simulated task ticks, recovery deadlines and inference quality thresholds remain unchanged. Historical finite configurations, receipts and published evidence stay immutable.
 
-Remove the repository's CI job timeout overrides and synthetic diagnostic wall
-guards. [GitHub-hosted runner limits](https://docs.github.com/en/actions/reference/limits)
-still impose a six-hour job maximum. Queue fresh CI for the changed source,
-then stop; do not wait for its result or consume the experimental allocation.
+Remove the repository's CI job timeout overrides and synthetic diagnostic wall guards. [GitHub-hosted runner limits](https://docs.github.com/en/actions/reference/limits) still impose a six-hour job maximum. Queue fresh CI for the changed source, then stop; do not wait for its result or consume the experimental allocation.
 
 ### D-019 — Implement and conditionally execute LEARN-JOLT-003
 
@@ -182,9 +184,7 @@ and budget recorded before execution. No paid model service or newly acquired
 compute is included. The existing Cybersand public API can be used from an
 adapter owned here; Cybersand source changes retain that project's task process.
 
-Progress checkpoints record source identities, tested results, failures and
-remaining gates. A negative experimental result is preserved; it is not replaced
-with an unsupported success claim or an enlarged unrecorded search.
+Progress checkpoints record source identities, tested results, failures and remaining gates. A negative experimental result is preserved; it is not replaced with an unsupported success claim or an enlarged unrecorded search.
 
 ### D-010 — This repository serves Cybersand behaviour training and testing
 

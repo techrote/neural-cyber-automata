@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Documentation map
@@ -31,6 +31,12 @@ verified: 2026-10-22
 | How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How are geometric IK data, guarded splits and final-suite access handled? | [IK datasets](IK_DATASETS.md) and [configuration recipes](../configs/ik/datasets/README.md); [declared corpus and evidence](evidence/2026-10-22-ik-datasets.md) |
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |
+| What was measured for compact learned IK, and what remains gated? | [IK training and GPU preparation](IK_TRAINING.md), [verified three-seed training and failed evaluation](evidence/2026-10-23-ik-titan-continuation.md), [supervised GPU runbook](IK_TRAINING_RUNBOOK.md), [candidate specification](../configs/ik/experiments/runner-compact-v1.json) and [finite schedule](../configs/ik/experiments/runner-compact-schedule-v1.json) |
+| What did frozen TITAN IK evaluation conclude? | [Completed recovery and negative accuracy/utility result](evidence/2026-10-23-ik-frozen-evaluation-recovery.md) |
+| Why did compact IK miss accuracy, and what did the bounded follow-up measure? | [Diagnosis and design](design/IK_ACCURACY_FOLLOWUP.md), [three-seed polar tuning no-go with fresh final sealed](evidence/2026-10-23-ik-polar-followup.md) |
+| Why did polar tuning regress, and what is the smallest next test? | [Saved-error diagnosis and one bounded batch-order proposal](design/IK_POLAR_REGRESSION.md) |
+| Why did endpoint weight 4 still fail, and is the actor implicated? | [Training/tuning diagnosis and preparation-only parallel order test](design/IK_ENDPOINT4_FOLLOWUP.md) |
+| How are matched serial/parallel IK trials prepared without training or final access? | [Fixed endpoint-loss hypothesis](design/IK_ENDPOINT_MATCHED_TRIALS.md), [qualification and admission operations](IK_MATCHED_RUNBOOK.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |

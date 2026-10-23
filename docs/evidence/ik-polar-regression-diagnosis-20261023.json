@@ -1,0 +1,301 @@
+{
+  "analysis_source_revision": "a4d4914214bfc6d50795042a8fa874227ef15bd4",
+  "external_artifacts": {
+    "analyze.py": {
+      "bytes": 11059,
+      "sha256": "832fc411c0acfe35739b3c7596a86cacee73c2be405a7ddaaf971242f1c395da"
+    },
+    "components.json": {
+      "bytes": 34242,
+      "sha256": "3000c461e44363501cd553698027c6eec302bdd352561f3ab663ec5877b438a3"
+    },
+    "components.py": {
+      "bytes": 5075,
+      "sha256": "2ddbe560b1c09013a297dd1fe1fd2761a760c43ac96840043e2eb207751490b6"
+    },
+    "diagnostics.json": {
+      "bytes": 716608,
+      "sha256": "4aefe0d34bc7250588f7a7dac9241f2f8b49f483923744e19ee5d85ea457d33c"
+    },
+    "preservation-readback.json": {
+      "bytes": 574,
+      "sha256": "a4ad229bcec3e2320bf22cc99e48989fa3716c3081072e083cbddc843573f176"
+    },
+    "preserve.py": {
+      "bytes": 2419,
+      "sha256": "43a50c00d81753597db246a138c90449fead8e550c961b009efbb8973666c23c"
+    },
+    "proposal_schedule.py": {
+      "bytes": 3146,
+      "sha256": "18ae2225022b635d86280599f5a558fca4aee85dd82ceaaf7c6db9c79522f79c"
+    },
+    "proposed-schedule.json": {
+      "bytes": 208366,
+      "sha256": "1cbdaec81e29b8123077afb3dcf2ecf0336841e600951f53118a31eae102ea60"
+    }
+  },
+  "feature_geometry": {
+    "nearest_pi_branch_cut_distance": 1.1269982405791765,
+    "nominal_bearing": {
+      "max": 2.0145944130106166,
+      "mean": 1.3370875461676612,
+      "n": 7000,
+      "p50": 1.3147694523872644,
+      "p95": 1.9244227190355319
+    },
+    "nominal_radius_squared": {
+      "max": 41.10635746670608,
+      "mean": 39.341997210641914,
+      "n": 7000,
+      "p50": 39.33302760660819,
+      "p95": 40.98780155538451
+    },
+    "normalized_FP32_emulation_error": [
+      {
+        "max": 1.0531289606315615e-05,
+        "mean": 3.056704272781467e-06,
+        "n": 7000,
+        "p50": 2.6678441235704553e-06,
+        "p95": 7.149504255599807e-06
+      },
+      {
+        "max": 4.1764331268818576e-07,
+        "mean": 1.0359988081883465e-07,
+        "n": 7000,
+        "p50": 9.054614537084732e-08,
+        "p95": 2.4580927915670203e-07
+      }
+    ],
+    "qualification_limit": "Standard-library FP32 emulation is a magnitude diagnostic, not a CUDA parity test."
+  },
+  "limits": [
+    "Error attribution identifies current hip/tangential failure, not a unique cause of hip bias.",
+    "Cubic and joint-substitution diagnostics are not policies, corrections or acceptance scores.",
+    "No within-epoch models exist to establish tail-update causality.",
+    "FP32 emulation is not CUDA parity or a network sensitivity bound.",
+    "No final payload, pending journal, predictor, optimizer, teacher, Torch or NumPy was used."
+  ],
+  "method": "Authenticated original training/tuning shards and saved reports/receipts only. No Torch, NumPy, predictor, optimizer, teacher, final payload or pending journal. Descriptive statistics do not train a deployable policy.",
+  "preservation": {
+    "model_optimizer_teacher_calls": 0,
+    "original_protected_files_unchanged": 11266,
+    "polar_preterminal_files_unchanged": 11225,
+    "polar_terminal_additions_unchanged": 4,
+    "schema": "nca-ik-diagnostic-preservation-readback/v1",
+    "script_sha256": "43a50c00d81753597db246a138c90449fead8e550c961b009efbb8973666c23c",
+    "seal_file_sha256": "b39c2d9a9cd59aa7b0c72b271d5399055647343c159540c342db2f9b8ea93dce",
+    "sealed_final_opened": false,
+    "terminal_file_sha256": "bf16c9ea0bd7c8289455d5cbae1b330b850ed79397c2354c790c82c4e3a51572",
+    "torch_or_numpy_imported": false
+  },
+  "proposal": {
+    "attempts_per_seed": 4,
+    "authority": "None for implementation/training/final opening. New owner commission, versioned source, CI and two prospective admissions required. Existing consumed/stopped allocations cannot be reset.",
+    "change": "Only reorder the existing complete batches; preserve polar model/normalizer, losses, Adam, LR, clipping, original batch contents and tuning selection.",
+    "checkpoints_per_seed": 45,
+    "configurations": 1,
+    "cumulative_wall_seconds_per_seed": 7200,
+    "epochs": 40,
+    "gated_cpu_timing_calls_per_seed": 70700,
+    "gated_final_calls_per_seed": 20580,
+    "gated_final_comparators": 7,
+    "gpu_allocator_bytes_per_seed": 21474836480,
+    "new_final_generation": 0,
+    "optimization_presentations_per_seed": 210400,
+    "optimizer_attempts_per_seed": 1720,
+    "seeds": [
+      41011,
+      42013,
+      43019
+    ],
+    "shuffle_key": [
+      "ik-complete-batch-shuffle/v1",
+      "seed",
+      "epoch_zero_based",
+      "original_batch_index",
+      "ordered_sample_ids"
+    ],
+    "total_diagnostic_and_gated_evaluation_calls_per_seed": 132240,
+    "training_only_diagnostic_calls_per_seed": 40960,
+    "tuning_calls_per_seed": 80800
+  },
+  "retrieval": {
+    "access": "Authorized repository maintainers request named files from the owner; large diagnostic evidence stays outside Git.",
+    "bundle": "ik-polar-regression-diagnosis-20261023"
+  },
+  "schema": "nca-ik-polar-regression-diagnostic-index/v1",
+  "seeds": {
+    "41011": {
+      "cartesian_v1": {
+        "ankle_abs_error_p95_radians": 0.18010467571201053,
+        "ankle_target_slope": 0.1716985932272691,
+        "feasible_success_fraction": 0.1776595744680851,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.03506932637928761,
+        "nominal_p95_error_cells": 0.19275828011526538,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.20903578399893452,
+        "radial_endpoint_error_p95_cells": 0.15086954863097415,
+        "selected_epoch": 18,
+        "tangential_endpoint_error_p95_cells": 0.14253327247433803,
+        "trajectory_endpoint_error_p95_cells": 0.15188807368233861
+      },
+      "diagnostic_joint_substitutions_not_policy_scores": {
+        "exact_ankle_diagnostic": 0.31775059560788116,
+        "exact_hip_diagnostic": 0.024533239335996493,
+        "saved": 0.32221908486259604
+      },
+      "late_polar_gradient_norm_means": {
+        "0": 0.03486030125333106,
+        "1": 0.09266546666622162,
+        "2": 0.053314024449459145,
+        "3": 0.04311394356191158
+      },
+      "polar_hip_cubic_descriptive_r_squared": 0.8381881063675947,
+      "polar_v2": {
+        "ankle_abs_error_p95_radians": 0.01532594310599103,
+        "ankle_target_slope": 1.0123803991366023,
+        "feasible_success_fraction": 0.23617021276595745,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.05055514011684467,
+        "nominal_p95_error_cells": 0.32221908486259615,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.3569219686807461,
+        "radial_endpoint_error_p95_cells": 0.0136364959866188,
+        "selected_epoch": 37,
+        "tangential_endpoint_error_p95_cells": 0.3222190629826204,
+        "trajectory_endpoint_error_p95_cells": 0.2098526580890831
+      },
+      "proposed_schedule_metadata_only": {
+        "last_batch_stage_counts": {
+          "0": 40
+        },
+        "optimization_presentations": 210400,
+        "optimizer_steps": 1720,
+        "schedule_sha256": "df9a46d91a205b0bef1d65df0e6b70375b3db3852ed8cd1c1f1b0d45132c7abb"
+      }
+    },
+    "42013": {
+      "cartesian_v1": {
+        "ankle_abs_error_p95_radians": 0.09796080507564445,
+        "ankle_target_slope": 0.7170376921951421,
+        "feasible_success_fraction": 0.6175531914893617,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.02721167952423964,
+        "nominal_p95_error_cells": 0.16071890224030974,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.18403895733562772,
+        "radial_endpoint_error_p95_cells": 0.07862535619845891,
+        "selected_epoch": 40,
+        "tangential_endpoint_error_p95_cells": 0.14862895928411288,
+        "trajectory_endpoint_error_p95_cells": 0.09364498844667446
+      },
+      "diagnostic_joint_substitutions_not_policy_scores": {
+        "exact_ankle_diagnostic": 0.30022301044636784,
+        "exact_hip_diagnostic": 0.027675040637067178,
+        "saved": 0.3049108583510816
+      },
+      "late_polar_gradient_norm_means": {
+        "0": 0.03511975367745275,
+        "1": 0.09310737103223801,
+        "2": 0.05611328247136303,
+        "3": 0.04662154521793127
+      },
+      "polar_hip_cubic_descriptive_r_squared": 0.9306434076687206,
+      "polar_v2": {
+        "ankle_abs_error_p95_radians": 0.01728867614109182,
+        "ankle_target_slope": 1.0057903720939898,
+        "feasible_success_fraction": 0.23829787234042554,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.04826609773635865,
+        "nominal_p95_error_cells": 0.30491085835108156,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.32710692771277805,
+        "radial_endpoint_error_p95_cells": 0.013957330731010595,
+        "selected_epoch": 28,
+        "tangential_endpoint_error_p95_cells": 0.30483300348178605,
+        "trajectory_endpoint_error_p95_cells": 0.2709888105225934
+      },
+      "proposed_schedule_metadata_only": {
+        "last_batch_stage_counts": {
+          "0": 29,
+          "1": 1,
+          "2": 8,
+          "3": 2
+        },
+        "optimization_presentations": 210400,
+        "optimizer_steps": 1720,
+        "schedule_sha256": "29802ed22c091376241a08f2631c5b4edf57383f90105a8c4e80fd0843031e92"
+      }
+    },
+    "43019": {
+      "cartesian_v1": {
+        "ankle_abs_error_p95_radians": 0.17624928256186945,
+        "ankle_target_slope": 0.1695003917553334,
+        "feasible_success_fraction": 0.09787234042553192,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.04129182990257002,
+        "nominal_p95_error_cells": 0.19100172512254648,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.20364800192082264,
+        "radial_endpoint_error_p95_cells": 0.14586242979151492,
+        "selected_epoch": 15,
+        "tangential_endpoint_error_p95_cells": 0.15722831209474566,
+        "trajectory_endpoint_error_p95_cells": 0.15793512974791815
+      },
+      "diagnostic_joint_substitutions_not_policy_scores": {
+        "exact_ankle_diagnostic": 0.2782628805666294,
+        "exact_hip_diagnostic": 0.028246590366630776,
+        "saved": 0.2820273771880101
+      },
+      "late_polar_gradient_norm_means": {
+        "0": 0.0350609709180015,
+        "1": 0.09092851877212524,
+        "2": 0.05042085921657937,
+        "3": 0.04824775848537684
+      },
+      "polar_hip_cubic_descriptive_r_squared": 0.8712204400022986,
+      "polar_v2": {
+        "ankle_abs_error_p95_radians": 0.017645734043924374,
+        "ankle_target_slope": 1.0212281664152647,
+        "feasible_success_fraction": 0.225,
+        "gradient_clipped_steps": 0,
+        "hip_abs_error_p95_radians": 0.04415872635997101,
+        "nominal_p95_error_cells": 0.2820273771880105,
+        "optimizer_receipts_verified": 1720,
+        "point_endpoint_error_p95_cells": 0.3173675292642282,
+        "radial_endpoint_error_p95_cells": 0.013761108110227318,
+        "selected_epoch": 40,
+        "tangential_endpoint_error_p95_cells": 0.2820044073051989,
+        "trajectory_endpoint_error_p95_cells": 0.17197307643523724
+      },
+      "proposed_schedule_metadata_only": {
+        "last_batch_stage_counts": {
+          "0": 34,
+          "1": 1,
+          "2": 5
+        },
+        "optimization_presentations": 210400,
+        "optimizer_steps": 1720,
+        "schedule_sha256": "bef05ba2d098b7461fd5ed5bba437ab8546fc77b361f0c7cb60174a7868a52be"
+      }
+    }
+  },
+  "sha256": "943df461e55b93ef90344cefdc63bd754be2d22d13a7c5e6d5bcdc27be07adb7",
+  "status": "retrospective_diagnosis_and_proposal_only_not_admitted",
+  "training_sources": {
+    "cartesian_v1": "a9c1c837c17d7f042117db22d036b11b8735c236",
+    "polar_v2": "edfef3fd96b8fbc98bf217322ee35edf2299281d"
+  },
+  "verified": {
+    "accounting_resets": 0,
+    "authenticated_train_tuning_shards": 115,
+    "new_training_or_model_calls": 0,
+    "optimizer_receipts": 10320,
+    "original_training_rows": 5260,
+    "original_tuning_rows": 2020,
+    "same_ordered_training_samples_and_batch_membership_between_versions": true,
+    "saved_tuning_reports": 240,
+    "sealed_final_opened": false
+  }
+}

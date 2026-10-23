@@ -1,0 +1,100 @@
+{
+  "schema": "nca-ik-compact-candidate/v1",
+  "id": "runner-compact-ik-v1",
+  "status": "software_candidate_not_execution_declaration",
+  "measured_run_admitted": false,
+  "issue": 54,
+  "profile": "runner-right-sole@1",
+  "mode": "direct_joint_position",
+  "model": {
+    "registry_kind": "policy",
+    "id": "runner-compact-ik",
+    "version": 1,
+    "input_features": 14,
+    "hidden_sizes": [
+      64,
+      64
+    ],
+    "activation": "tanh",
+    "output_features": 2,
+    "output_bounds_radians": [
+      [
+        -0.72,
+        0.72
+      ],
+      [
+        -0.27,
+        0.27
+      ]
+    ],
+    "precision": "float32"
+  },
+  "features": {
+    "schema": "runner-ik-permitted-inputs/v1",
+    "numeric_normalization": "accepted_train_only_first_six_columns",
+    "mask_encoding": "eight_unstandardized_boolean_channels",
+    "required_masks": "all_present_measured_active_and_task_components_true",
+    "evaluator_inputs": false,
+    "transform": "runner-compact-features/v1"
+  },
+  "dataset": {
+    "config": "configs/ik/datasets/runner_v1.json",
+    "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+    "manifest_sha256": "86bc852ba3e7dd43f0a64b5374829769d803a1461f0aa53165e14fc76b17fc6c",
+    "normalization_file_sha256": "9fafdc038b0232b5d734ba33a27442a2c56d447b1605928b3972b5085adf38c2",
+    "training_inputs_sha256": "00bf161af280724ac0629547c1cf2b797a47cdcd71dd52f15a0fee9bcb67dfeb",
+    "final_suite_identity_sha256": "aa32e10577e40fb3ab29ba2e1f8ebb8c8324356572da5484609e82f4deba40a1",
+    "source_index": "docs/evidence/ik-dataset-20261022/index.json"
+  },
+  "training_seeds": [
+    41011,
+    42013,
+    43019
+  ],
+  "optimizer": {
+    "name": "adam",
+    "learning_rate": 0.001,
+    "max_gradient_norm": 1,
+    "foreach": false,
+    "fused": false,
+    "capturable": "cuda_only"
+  },
+  "loss": {
+    "weights": {
+      "endpoint": 1,
+      "joint": 0.1,
+      "posture": 0.00001,
+      "continuity": 0.0001,
+      "step": 0.01,
+      "bounds": 1
+    },
+    "endpoint_length_cells": 6.550781059358212,
+    "joint_error": "atan2_sin_cos_wrapped_radians_scaled_by_command_half_width",
+    "continuity": "adjacent_same_family_trajectory_and_augmentation_only",
+    "max_pair_target_change_cells": 0.1,
+    "step_hinge_radians": 0.25
+  },
+  "numerical_correction_iterations": 0,
+  "full_reference_fallback_calls": 0,
+  "prospective_evaluation": {
+    "acceptance": "configs/ik/runner_right_sole_acceptance_v1.json",
+    "primary_utility_gate": "cpu_p95_at_most_0.8_of_matched_same_quality_numerical_pipeline",
+    "required_comparators": [
+      "independent_numerical_reference",
+      "independent_analytic_reference",
+      "matched_untrained_initialization",
+      "learned_disabled_current_reference",
+      "trained_raw_reference"
+    ],
+    "selection": "tuning_only_lowest_raw_endpoint_p95_ties_earliest_checkpoint",
+    "final_opening": "after_all_three_candidates_are_frozen"
+  },
+  "remaining_before_measured_run": [
+    "authenticated_corpus_readback_and_normalization_binding",
+    "frozen_curriculum_and_sampling_schedule",
+    "finite_sample_optimizer_tuning_evaluation_memory_wall_allocation",
+    "durable_attempt_ledger_and_same_allocation_checkpoint_resume",
+    "final_source_environment_and_independent_review",
+    "independent_scorer_and_matched_runtime_measurement"
+  ]
+}

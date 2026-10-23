@@ -3,14 +3,20 @@ title: Current state
 kind: state
 summary: CPU contract implementation and explicit evidence limits for the current Cybersand control programme.
 owns: [state.summary]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Current state
 
+[MEASURED NO-GO; NEXT DESIGN ONLY] The admitted matched endpoint-weight-4 trials completed at `6a6961f`: serial and three-worker TITAN runs agree exactly at all paired checkpoints and tuning reports, with recorded prepublication elapsed times 2438.985 / 1245.062 seconds. Every seed fails tuning quality; both final suites remain excluded. [The diagnosis and bounded next parallel order experiment](design/IK_ENDPOINT4_FOLLOWUP.md) preserve every consumed allocation and propose one whole-batch-order change. The current owner instruction authorizes investigation and reviewed preparation only, with no training, no issued allocation and no execution admission. Physical actor faults are not established by this synthetic geometric task.
+
+[MEASURED NO-GO] The separately commissioned [polar IK follow-up](evidence/2026-10-23-ik-polar-followup.md) completed all three forty-epoch TITAN RTX runs with unchanged corpus, losses, schedule and acceptance. Each seed has 1,720 real CUDA updates, 210,400 presentations, 80,800 tuning calls and 41 checkpoints. All tuning-selected candidates fail quality; fresh final stays sealed and unmeasured. The failed finish serialization and its charges/holds remain immutable. A separately admitted CPU-only closure published permanent no-go with unchanged models/counters and append-only overhead; two independent terminal audits verified original evidence preservation and `can_resume=false`. No next training or evaluation is authorized.
+
 Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open: its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite. [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.
 
-[CURRENT] The [Runner IK milestone](IK_LAYER.md) adds a registered nominal profile, strict source/lifetime-bound targets/results and prospective numeric acceptance. The optional [IK runtime](IK_RUNTIME.md) implements explicit CPU/CUDA selection, a bounded Runner smoke workload, complete checkpoints and cumulative attempt accounting. [Software conformance](evidence/2026-10-21-ik-runtime-software.md) exercises CPU optimization/resume and failure controls. The [independent kinematics/reference](IK_KINEMATICS.md) implements binary64 transform FK, differentiable batched Torch FK/Jacobians, bounded numerical IK and an independent analytic comparator; [its evidence](evidence/2026-10-21-ik-kinematics.md) distinguishes numerical checks and measurements. The [IK dataset path](IK_DATASETS.md) implements deterministic tasks, isolated family/trajectory regions, retained teacher labels, train-only normalization and durable final-suite opening. Its [one declared CPU corpus](evidence/2026-10-22-ik-datasets.md) retains all 10,220 tasks, including 360 failed/refused outcomes, with complete coverage and an unopened final scoring registry. The [Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md) completes #51's actual-device gates: 32 finite, placement-checked Adam steps and 1,024 samples per matched CPU/CUDA lane, including same-device checkpoint resume. CUDA is slower on this small fixture; Linux CUDA and independent batched-FK CUDA parity remain unmeasured. Learned IK quality, CPU IK export and physical joint-target qualification remain unimplemented or unmeasured.
+[CURRENT] The [Runner IK milestone](IK_LAYER.md) adds a registered nominal profile, strict source/lifetime-bound targets/results and prospective numeric acceptance. The optional [IK runtime](IK_RUNTIME.md) implements explicit CPU/CUDA selection, a bounded Runner smoke workload, complete checkpoints and cumulative attempt accounting. [Software conformance](evidence/2026-10-21-ik-runtime-software.md) exercises CPU optimization/resume and failure controls. The [independent kinematics/reference](IK_KINEMATICS.md) implements binary64 transform FK, differentiable batched Torch FK/Jacobians, bounded numerical IK and an independent analytic comparator; [its evidence](evidence/2026-10-21-ik-kinematics.md) distinguishes numerical checks and measurements. The [IK dataset path](IK_DATASETS.md) implements deterministic tasks, isolated family/trajectory regions, retained teacher labels, train-only normalization and durable final-suite opening. Its [one declared CPU corpus](evidence/2026-10-22-ik-datasets.md) retains all 10,220 tasks, including 360 failed/refused outcomes, with complete coverage; the later continuation below opened its final scoring registry before a failed payload lookup. The [Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md) completes #51's actual-device gates: 32 finite, placement-checked Adam steps and 1,024 samples per matched CPU/CUDA lane, including same-device checkpoint resume. CUDA is slower on this historical V100 fixture; Linux CUDA and independent batched-FK CUDA parity remain unmeasured. The V100 is now out of service due to a reported cooling fault and must not be used. Current #54 training targets only the TITAN RTX, isolated by UUID; **the old V100 device result cannot qualify the TITAN or supply its performance baseline**. Learned IK quality is measured in the negative result below; CPU IK export and physical joint-target qualification remain unimplemented or unmeasured.
+
+[MEASURED NO-GO] The [compact IK training harness](IK_TRAINING.md) completed forty epochs for seeds 41011, 42013 and 43019 on the isolated TITAN RTX. [Training evidence](evidence/2026-10-23-ik-titan-continuation.md) preserves 1,720 CUDA updates, 210,400 presentations and 80,800 tuning calls per seed and the historical archive-layout failure. The [same-candidate recovery](evidence/2026-10-23-ik-frozen-evaluation-recovery.md) completed all five final comparators and matched CPU timing under the original allocations, after append-only failure/launcher accounting, exact-head CI and two fresh non-author admissions. Both independent terminal audits exactly rescored all 44,100 rows, verified 150,000 saved CPU timing samples and unchanged model/optimizer/buffers. Accuracy and practical utility are no-go; learned contribution passes. All ledgers are completed, with no new unknown-work holds. The original failures/opening remain immutable and the suite remains opened/development-only. No retraining, reset, retuning, promotion, export or physical qualification occurred.
 
 [Export authority #45](https://github.com/techrote/neural-cyber-automata/pull/45) and [native CI #47](https://github.com/techrote/neural-cyber-automata/pull/47) are accepted. The [Jolt arrival reference](evidence/2026-10-20-jolt-arrival-reference.md) has 27/32 descriptive arrivals versus 17/32. Its historical journal stays incomplete. Durable evidence software is accepted in [PR #58](https://github.com/techrote/neural-cyber-automata/pull/58). The [v1 incomplete attempt](evidence/2026-10-20-jolt-recovery-v1.md), [v2 teacher failure](evidence/2026-10-20-jolt-recovery-v2.md) and [v3 failed qualification and final inventory](evidence/2026-10-20-jolt-recovery-v3.md) retain their original outcomes and consumed allocations.
 
@@ -23,9 +29,7 @@ Two leftward cases still fail. In `reference-floor-left-63`, final distance wors
 The T-100 research programme landed in PR #21 at `95d8788686980974d4f849e892c33f531d992fe7`.
 ## Accepted CPU foundation
 
-T-101 merged through [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22)
-at `9e6da91ff520e27bc78d11dd8196844a9fa37ff3`, adding the installable CPU package,
-strict gameplay/observation/action contracts, backward-compatible ACT003 mappings,
+T-101 merged through [PR #22](https://github.com/techrote/neural-cyber-automata/pull/22) at `9e6da91ff520e27bc78d11dd8196844a9fa37ff3`, adding the installable CPU package, strict gameplay/observation/action contracts, backward-compatible ACT003 mappings,
 a versioned extension registry and immutable reproducible run records.
 
 | Area | Evidence |
@@ -270,8 +274,7 @@ checkpoints, normal/delayed/lost/partitioned/reset communication, and untrained 
 private recurrence, one neighbor round and root-only readout; the equal-size no-message candidate shares its features
 and action limits. Original declarations, failures and audit corrections remain in the [evidence index](evidence/2026-10-19-t110.md).
 
-The predeclared result is no-go: graph and no-message each succeeded in one of
-six normal holdout trials, with zero paired success gain; the graph was slightly
+The predeclared result is no-go: graph and no-message each succeeded in one of six normal holdout trials, with zero paired success gain; the graph was slightly
 slower under the capped-completion metric. Each untrained method succeeded in
 three of six. The trained successes did not require a purposeful hop, a retained
 limitation of the frozen quiet-arrival task. Other declared gates passed, but
@@ -279,8 +282,7 @@ these observations provide no reason to promote communication in this screen.
 Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
 227.1865 seconds through final ledger publication. Owner feel remains unjudged.
 
-The independent local reproduction stopped producing records after 112 episodes,
-3,096 confirmed decisions and 18,576 ticks; its completion and termination are
+The independent local reproduction stopped producing records after 112 episodes, 3,096 confirmed decisions and 18,576 ticks; its completion and termination are
 unconfirmed. Its audited archive is saved. A concurrently launched GitHub repeat
 later completed 119 rows / 3,297 decisions and reported the same no-go. These are
 separate executions. Their combined confirmed decisions are at least **6,393**,
@@ -294,7 +296,5 @@ Historical source/records are unchanged. Owner feel and unsupported topology rem
 
 ## Host authority
 
-The ACT-004 host accepted through Cybersand PR #181 is pinned at
-`f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497`; T-102 qualifies its configure/reset,
-observation, submit/cancel, step and snapshot API, with no host changes by T-101.
+The ACT-004 host accepted through Cybersand PR #181 is pinned at `f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497`; T-102 qualifies its configure/reset, observation, submit/cancel, step and snapshot API, with no host changes by T-101.
 Package/recorded tests do not measure gameplay, learned-policy value, owner feel or GPU qualification.

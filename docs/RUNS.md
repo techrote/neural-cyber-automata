@@ -3,7 +3,7 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Run ledger
@@ -11,6 +11,13 @@ verified: 2026-10-22
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
 Historical artifact hashes remain identifiers even where original external bytes are unavailable to a continuation; new reproductions retain separate identities.
+
+The [completed matched endpoint-weight trials and next design](design/IK_ENDPOINT4_FOLLOWUP.md)
+record serial/parallel source `6a6961f`, all three seeds per mode, 1720 updates
+and 210400 presentations per seed, 7195 prepaid seconds per seed, zero final
+calls and exact paired tensor agreement. Recorded prepublication elapsed times
+are 2438.985 / 1245.062 seconds; every seed is tuning no-go. The new order
+proposal has no issued allocation or run. All consumed packets remain stopped.
 
 The [Jolt execution reliability repair](evidence/2026-10-22-jolt-learning-reliability.md)
 adds synthetic software tests and no experimental run row. The consumed
@@ -53,6 +60,10 @@ T-101 and T-104 specify immutable per-run manifests and a generated/merged ledge
 
 | Run ID | Date | Learner and host revisions | Device/environment | Profile/config hash | Seed set and split | Suite | Result and evidence class | Artifact/evidence |
 |---|---|---|---|---|---|---|---|---|
+| `ik-polar-followup-v2` bounded target-feature experiment | 2026-10-23 | Training `edfef3f`; closure `df75fc5a…`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80 | Original corpus; polar normalizer `9ce68b35…`; fixed losses/schedule | 41011, 42013, 43019; original train/tuning; new final sealed | 40 epochs per seed; unchanged all-seed tuning stop gate | Each: 1,720 real CUDA updates, 210,400 presentations, 80,800 tuning calls, 41 checkpoints; independently rescored. All tuning no-go; final unmeasured. Serialization-only finish failure and all charges/holds preserved | [Measured result and terminal-only closure boundary](evidence/2026-10-23-ik-polar-followup.md) |
+| `ik-compact-6a9375cac4a54b46ae6f37f4aed11675` frozen recovery, same allocation | 2026-10-23 | Evaluation `d3dbbe2`; closure `4a774d8e…`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80; scoring/timing CPU one thread | Original Runner/corpus/normalization and same frozen candidates | 41011, 42013, 43019; original opened/development-only final | Five comparators × 2,940 tasks per seed; 100 warmup + 10,000 measured CPU calls per comparator | Completed, independently verified. Accuracy/utility no-go, contribution pass. No training/reset. Evaluation calls 65,200 each; cumulative wall 1454.891 / 1447.875 / 1529.314 s, all original ceilings preserved | [Evidence](evidence/2026-10-23-ik-frozen-evaluation-recovery.md), [immutable index](evidence/ik-frozen-recovery-20261023.json) |
+| `ik-compact-6a9375cac4a54b46ae6f37f4aed11675` continuation, same allocation | 2026-10-23 | Training `a9c1c83`; evaluation `fb392b0`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80 | Original Runner/config/corpus/normalization unchanged | 41011, 42013, 43019; original train/tuning; final opened/development-only | 40 epochs per seed; failed final archive lookup before scoring | Each: 1,720 CUDA updates / 210,400 presentations / 80,800 tuning decisions; independently verified. Final evaluation failed; no scores/timings. Remaining original wall held; reuse blocked, no retry | [Evidence](evidence/2026-10-23-ik-titan-continuation.md), [immutable index](evidence/ik-titan-continuation-20261023.json) |
+| `ik-compact-6a9375cac4a54b46ae6f37f4aed11675` | 2026-10-23 | Learner `b9d1ccd`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80 | Runner right sole; config `d49d682f` | 41011; original train/tuning, final unopened | First supervised CUDA batch | 128 presentations, one verified Adam update, paused; 23.672 s process / 28.031 s charged; other seeds unspent, no quality claim | [Evidence](evidence/2026-10-23-ik-titan-first-batch.md), [immutable index](evidence/ik-titan-first-batch-20261023.json) |
 | t102-monowheel-final-pilot | 2026-10-19 | NCA scoped sources `7ea78b97…`; host `f2e34cf9…`; exact hashes in evidence | CPU, Linux x86_64, Python 3.12.14, Godot 4.7 | `6da0f8ba…`; complete config in manifest | 73; conformance only | 200 decisions / 1,200 ticks | Actual ACT004 host, 326.884 ticks/s; no skill or owner-feel claim | [Manifest](evidence/t102-monowheel-final-pilot.json), [evidence](evidence/2026-10-19-t102.md) |
 | t102-ripper-final-pilot | 2026-10-19 | Same exact scoped source and host as Monowheel | Same measured CPU environment | `be59daec…`; complete config in manifest | 73; conformance only | 200 decisions / 1,200 ticks | Actual ACT004 host, 267.686 ticks/s; no skill or owner-feel claim | [Manifest](evidence/t102-ripper-final-pilot.json), [evidence](evidence/2026-10-19-t102.md) |
 | t102-needlejet-pilot | 2026-10-19 | Earlier adapter hashes preserved in manifest; same host | CPU, Linux x86_64, Python 3.12.14 | Complete profile/config hash in manifest | 73; conformance only | 200 decisions / 1,200 ticks | Historical pre-review pilot, 241.542 ticks/s; three-part rig | [Manifest](evidence/t102-needlejet-pilot.json), [limits](evidence/2026-10-19-t102.md) |

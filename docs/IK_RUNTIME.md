@@ -16,6 +16,11 @@ the independent reference solver in #52, or physical tracking qualification.
 
 The software path and hardware evidence have separate status. The
 [22 October Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md)
+is **historical evidence only**. The V100 has a reported cooling fault and is
+out of service; **do not initialize or use it again**. Current #54 training
+requires only the TITAN RTX, selected by its single GPU UUID, with separate
+prospective TITAN admission and exact-hardware checks in the
+[compact IK runbook](IK_TRAINING_RUNBOOK.md). The old V100 qualification
 exercises real CUDA forward/backward/Adam, placement and same-device resume,
 with a matched CPU measurement. It qualifies that identified FP32 smoke lane;
 Linux CUDA and useful learned IK remain unmeasured. The existing CPU package

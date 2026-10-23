@@ -76,8 +76,14 @@ def _prepare_cublas() -> None:
 def _driver_version() -> str | None:
     # Do not emit the command, stderr, executable path, device UUID or hostname.
     try:
+        # If the operator isolates a CUDA device by UUID, query only that GPU.
+        # An unrelated, broken card must not be involved in the selected report.
+        visible = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+        target = (["-i", visible] if re.fullmatch(
+            r"GPU-[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}", visible
+        ) else [])
         result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+            ["nvidia-smi", *target, "--query-gpu=driver_version", "--format=csv,noheader"],
             capture_output=True, text=True, check=True, timeout=2,
         )
         values = set(result.stdout.strip().splitlines())

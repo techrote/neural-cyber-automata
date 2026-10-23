@@ -1,0 +1,249 @@
+{
+  "corpus": {
+    "archive_sha256": "97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce",
+    "fresh_archive_sha256": "89e118be3cc9f1ed358198cd6448fe813a138281c42e34b2add419b1e1b7bfff",
+    "fresh_final_opened": false,
+    "fresh_final_status": "sealed_unmeasured",
+    "manifest_sha256": "86bc852ba3e7dd43f0a64b5374829769d803a1461f0aa53165e14fc76b17fc6c",
+    "normalization_sha256": "9ce68b359737af8abd65223cd01f766d16c574c5c07d484018d27e75f6257d00",
+    "registry_id": "29aca11b1c074416a753b27a7f64ddcc"
+  },
+  "declaration": {
+    "file_sha256": "f36137d484ec54fb50cbf466cc7421785e2d73136d2f30940e35a02bc064a3c0",
+    "semantic_sha256": "b2f960a50476af407023c9d6eb5e7e88d0a53689af69f9171b5bc5453ed4a5dc"
+  },
+  "evidence_artifacts": {
+    "admission-a.json": {
+      "bytes": 5154,
+      "sha256": "7ecb793638784bd9e31d4b4ad9e27ec662d1259db7272e5dd7d9509caa79f2b0"
+    },
+    "admission-b.json": {
+      "bytes": 2462,
+      "sha256": "623ae87fe0bdc2cdbeb1a794b583515f94e3a4115ec44c999b10a07d6de21f18"
+    },
+    "exact-head-ci.json": {
+      "bytes": 2005,
+      "sha256": "149622c25f9e84d53d12d2209e04afb0c1eddfcd7ccc41ff5c2dc55290b438ec"
+    },
+    "review.json": {
+      "bytes": 476,
+      "sha256": "d68debffeebc1a2af934b4996752f8c7ddedd212dfc84cd50f7df734649c3c29"
+    },
+    "terminal-71310a4/admission-terminal-a.json": {
+      "bytes": 4684,
+      "sha256": "7593b78b2f3152d9badd16b351826273148d2a01381bf0b24cf1df9038824cb5"
+    },
+    "terminal-71310a4/admission-terminal-b.json": {
+      "bytes": 4382,
+      "sha256": "006c65805a1308a2ddb8f3de485c4436a2e3af359356679dc114596e25349944"
+    },
+    "terminal-71310a4/declaration.json": {
+      "bytes": 63278,
+      "sha256": "9b4f486df2d1fd17232e9433291b128b1849d548f1ba1cbeb3c1a401c3c14548"
+    },
+    "terminal-71310a4/exact-head-ci.json": {
+      "bytes": 14200,
+      "sha256": "f8cbb08b93cf29ba36e37c463a63f0260bee219b4bdba6945f7705d15fcc5da5"
+    },
+    "terminal-71310a4/review.json": {
+      "bytes": 789,
+      "sha256": "b03affcad4b6a29c5d4bc60e6aaf19bfcfd1002d52c35ab82b4ca253f4a748ff"
+    },
+    "terminal-71310a4/root-post-terminal-readback.json": {
+      "bytes": 42767,
+      "sha256": "85e72f05661587a3d876f9a36d11c4fb22525222a02ade9798bbcf0a9dfc63c7"
+    },
+    "terminal-71310a4/supervisor.json": {
+      "bytes": 193,
+      "sha256": "7d4dc6c917775222bcbac78498367c1a64ce4dca879d91853d0705319b5b7a2b"
+    },
+    "terminal-71310a4/terminal-audit-a.json": {
+      "bytes": 3690,
+      "sha256": "7d21986917b054bbb126e7a2812914fe62d9b044beb54e00e7a672653789fcb1"
+    },
+    "terminal-71310a4/terminal-audit-b.json": {
+      "bytes": 5031,
+      "sha256": "c000c01b95419c7a731323e8cb3ad459c76ca3dc3da1f8c8bd101abc57cb897d"
+    },
+    "terminal-71310a4/terminal.json": {
+      "bytes": 44898,
+      "sha256": "bf16c9ea0bd7c8289455d5cbae1b330b850ed79397c2354c790c82c4e3a51572"
+    },
+    "terminal-seed-41011-audit-a.json": {
+      "bytes": 4778,
+      "sha256": "23fd7083125c574ae3f946c5d479fb3c933358631b6f8244ee0a3ef02248cab1"
+    },
+    "terminal-seed-42013-audit-b.json": {
+      "bytes": 37391,
+      "sha256": "2c0b8c7c9298ca827c84174a5540c24eda8c5264843e536973ef12c3197aba82"
+    },
+    "terminal-seed-43019-and-failure-audit-a.json": {
+      "bytes": 6798,
+      "sha256": "68d4141f8f60ebcbf919e5232ca700c48bd94f3056e643c4f1de78e331735ecb"
+    }
+  },
+  "initial_admission_reviewers": [
+    "polar-admission-a",
+    "holdout-custodian-b"
+  ],
+  "result": "training_completed_tuning_no_go_fresh_final_sealed",
+  "retrieval": {
+    "access": "Authorized repository maintainers request named artifacts from the owner; large files and sealed payloads remain outside Git.",
+    "bundle": "ik-polar-followup-edfef3f"
+  },
+  "runtime": {
+    "cuda_build": "12.6",
+    "driver": "581.80",
+    "gpu": {
+      "capability": [
+        7,
+        5
+      ],
+      "multiprocessors": 72,
+      "name": "NVIDIA TITAN RTX",
+      "total_memory_bytes": 25769476096
+    },
+    "gpu_memory_ceiling_bytes": 21474836480,
+    "numpy": "2.3.5",
+    "os": "Windows 11 AMD64",
+    "peak_reserved_gpu_bytes_per_seed": 69206016,
+    "python": "3.12.10",
+    "torch": "2.8.0+cu126",
+    "visible_device": "cuda:0 isolated TITAN only"
+  },
+  "schema": "nca-ik-polar-followup-result/v1",
+  "seeds": {
+    "41011": {
+      "attempts": 2,
+      "can_resume": false,
+      "charged": {
+        "checkpoints": 41,
+        "evaluation_calls": 0,
+        "optimizer_steps": 1720,
+        "sample_presentations": 210400,
+        "tuning_calls": 80800
+      },
+      "cumulative_charged_wall_seconds": 1833.609999999986,
+      "historical_last_status": "failed",
+      "latest_checkpoint_sha256": "8640238ae22d1709fda9e1585d863f0e7fc6c313c8e725ebf929ce5c51f55493",
+      "new_terminal_debit_seconds": 963.2029999999795,
+      "nominal": {
+        "feasible_successes": 444,
+        "p95_error_cells": 0.32221908486259615,
+        "scheduled": 1880,
+        "worst_error_cells": 0.5041376116739604
+      },
+      "quality": "no_go",
+      "remaining_wall_seconds": 5366.390000000014,
+      "selected": {
+        "checkpoint_sha256": "05fb43e12e5cafc26fb4b52b42608c2495c5fe4b04acd4b8f7bf871e77d1c504",
+        "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+        "epoch": 37,
+        "selection_metric": 0.32221908486259615,
+        "step": 1591,
+        "tuning_report_sha256": "d92d30745752808b4cfc8e066ef0ca80805e4349ba84d0653db6c7c9541ca399",
+        "tuning_schedule_sha256": "2c2b89abbf2f7b6b803ecc2e3cd70c28b913f5f462444f404d0bad0560c0bde4"
+      }
+    },
+    "42013": {
+      "attempts": 2,
+      "can_resume": false,
+      "charged": {
+        "checkpoints": 41,
+        "evaluation_calls": 0,
+        "optimizer_steps": 1720,
+        "sample_presentations": 210400,
+        "tuning_calls": 80800
+      },
+      "cumulative_charged_wall_seconds": 1889.920999999973,
+      "historical_last_status": "failed",
+      "latest_checkpoint_sha256": "8153c730cb6ee6868d2b9636460943cc13091c333232bc45af530af69388aa87",
+      "new_terminal_debit_seconds": 962.9369999999763,
+      "nominal": {
+        "feasible_successes": 448,
+        "p95_error_cells": 0.30491085835108156,
+        "scheduled": 1880,
+        "worst_error_cells": 0.4030255346626369
+      },
+      "quality": "no_go",
+      "remaining_wall_seconds": 5310.079000000027,
+      "selected": {
+        "checkpoint_sha256": "1d4521f06916f1801952db805dc4d127dcf1e80215c557b4c84a70f99b9e921d",
+        "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+        "epoch": 28,
+        "selection_metric": 0.30491085835108156,
+        "step": 1204,
+        "tuning_report_sha256": "fc6cae956cc92f87563f4734415240e6f7295c3e8710cb87ffcb3805605c054c",
+        "tuning_schedule_sha256": "2c2b89abbf2f7b6b803ecc2e3cd70c28b913f5f462444f404d0bad0560c0bde4"
+      }
+    },
+    "43019": {
+      "attempts": 2,
+      "can_resume": false,
+      "charged": {
+        "checkpoints": 41,
+        "evaluation_calls": 0,
+        "optimizer_steps": 1720,
+        "sample_presentations": 210400,
+        "tuning_calls": 80800
+      },
+      "cumulative_charged_wall_seconds": 2005.7039999999688,
+      "historical_last_status": "failed",
+      "latest_checkpoint_sha256": "208178e67faf3a51f3a56a043499148beaa976701465c44fee1d712c9f57e069",
+      "new_terminal_debit_seconds": 963.3910000000033,
+      "nominal": {
+        "feasible_successes": 423,
+        "p95_error_cells": 0.2820273771880105,
+        "scheduled": 1880,
+        "worst_error_cells": 0.464507116541144
+      },
+      "quality": "no_go",
+      "remaining_wall_seconds": 5194.296000000031,
+      "selected": {
+        "checkpoint_sha256": "208178e67faf3a51f3a56a043499148beaa976701465c44fee1d712c9f57e069",
+        "config_sha256": "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51",
+        "epoch": 40,
+        "selection_metric": 0.2820273771880105,
+        "step": 1720,
+        "tuning_report_sha256": "ba6d888b0d809cb3731d5ceb686a199bbcbfd7baf2f9542e9374d174b2d57a77",
+        "tuning_schedule_sha256": "2c2b89abbf2f7b6b803ecc2e3cd70c28b913f5f462444f404d0bad0560c0bde4"
+      }
+    }
+  },
+  "sha256": "18eb1d8b6aa392f1a351f3b544d3f16ef3a1651923516b54cb5fc1794eca5e9e",
+  "sources": {
+    "cpu_terminal": {
+      "revision": "71310a4121c5731a05669994065cc2ea01bebce5",
+      "source_sha256": "a8a067d4055b00cc0ca9b4d713959e723303c72c3a0ce21d24941898d5c22c7b"
+    },
+    "training": {
+      "revision": "edfef3fd96b8fbc98bf217322ee35edf2299281d",
+      "source_sha256": "df75fc5a14dd3f67eb11ac47437563fa8f8117d9ae0503c64aec1ca52a322435"
+    }
+  },
+  "stop": "Permanent tuning no-go. No resume, training, final opening, evaluation, reset or automatic next experiment.",
+  "terminal": {
+    "added_run_files": [
+      "seed-41011/overheads/charge-0001.json",
+      "seed-42013/overheads/charge-0001.json",
+      "seed-43019/overheads/charge-0001.json",
+      "terminal-no-go.json"
+    ],
+    "file_sha256": "bf16c9ea0bd7c8289455d5cbae1b330b850ed79397c2354c790c82c4e3a51572",
+    "old_failure_holds_retained": true,
+    "original_failed_finish_preserved": true,
+    "semantic_sha256": "657209debc578c0890189dfcab0b779769742a8c0ddcba26fd53d8a37fd51be2",
+    "supervisor": {
+      "returncode": 0,
+      "terminal_file_sha256": "bf16c9ea0bd7c8289455d5cbae1b330b850ed79397c2354c790c82c4e3a51572",
+      "verified_within_paid_cpu_reservation": true,
+      "whole_process_seconds": 67.93699999997625
+    },
+    "unchanged_original_protected_files": 11266,
+    "unchanged_preterminal_files": 11225
+  },
+  "terminal_admission_reviewers": [
+    "polar-terminal-a",
+    "holdout-terminal-b"
+  ]
+}
