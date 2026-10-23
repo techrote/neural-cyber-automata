@@ -47,7 +47,7 @@ source. No replacement admission packet or affirmative review was fabricated.
 No CUDA initialization, training, benchmark, accepted-corpus inference or final
 payload access occurred. Original markers, charges and allocations are untouched.
 
-The focused preparation/supervisor CPU checks pass (17 cases at draft review),
+The focused preparation/supervisor CPU checks pass (18 cases at draft review),
 including runtime-free import, wrong target telemetry/refusals, canonical child
 launch, immutable failure holds, authorization refusal and matched-only debit
 controls. These fixtures establish neither successful real execution nor safe

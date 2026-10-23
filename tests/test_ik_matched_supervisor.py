@@ -16,6 +16,17 @@ from nca.train.ik_matched_prepare import candidate_config, allocation
 
 
 class MatchedSupervisorReviewTests(unittest.TestCase):
+    def test_unadmitted_cli_run_and_private_worker_are_disabled(self):
+        for command in ('run','_worker'):
+            with self.subTest(command=command), \
+                    patch.object(sys,'argv',['matched',command,'--packet','unused']), \
+                    patch.object(supervisor,'supervise') as run, \
+                    patch.object(supervisor,'worker') as worker, \
+                    patch.object(supervisor,'admission') as admission:
+                with self.assertRaisesRegex(ValueError,'execution admission withheld'):
+                    supervisor.main()
+                run.assert_not_called();worker.assert_not_called();admission.assert_not_called()
+
     def test_import_is_runtime_free_in_separate_process(self):
         result = subprocess.run([sys.executable, '-c',
             "import sys; import nca.train.ik_matched_supervisor; "
