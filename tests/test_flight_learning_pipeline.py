@@ -15,8 +15,14 @@ from nca.train.flight_accounting import (
 from nca.train.flight_learning import (
     ACTION_SPEC,
     BC_EPOCHS,
+    BC_SCHEDULE,
     BC_SCHEDULE_SHA256,
     DEVELOPMENT_SEEDS,
+    MAX_CAPTURE_EPISODES,
+    MAX_CAPTURE_LABELS,
+    MAX_OPTIMIZER_UPDATES_PER_SEED,
+    MAX_SAMPLE_PRESENTATIONS_PER_SEED,
+    SHUFFLE_SEED_XOR,
     PREPROCESSING_SPEC,
     SCENARIO_FAMILY,
     build_capture_dataset,
@@ -410,6 +416,18 @@ class FlightLearningTests(unittest.TestCase):
         finally:
             ledger.close("synthetic_incomplete_capture_fixture")
 
+    def test_preregistered_cloning_ceiling_contract(self):
+        self.assertEqual(MAX_CAPTURE_EPISODES, 44)
+        self.assertEqual(MAX_CAPTURE_LABELS, 11400)
+        self.assertEqual(MAX_OPTIMIZER_UPDATES_PER_SEED, 1800)
+        self.assertEqual(MAX_SAMPLE_PRESENTATIONS_PER_SEED, 228000)
+        self.assertEqual(BC_SCHEDULE["checkpoint_epochs"], list(range(21)))
+        self.assertEqual(BC_SCHEDULE["tuning_candidate_epochs"], [5, 10, 15, 20])
+        self.assertEqual(BC_SCHEDULE["shuffle_seed_xor"], SHUFFLE_SEED_XOR)
+        self.assertEqual(BC_SCHEDULE["required_capture_episodes"], 44)
+        self.assertEqual(BC_SCHEDULE["maximum_capture_labels"], 11400)
+        self.assertEqual(BC_SCHEDULE_SHA256, sha256_json(BC_SCHEDULE))
+
     def test_preregistered_family_weights_are_equal(self):
         totals = {}
         for sample, weight in zip(self.dataset.samples, self.dataset.sample_weights):
@@ -437,7 +455,6 @@ class FlightLearningTests(unittest.TestCase):
             first.checkpoints[-1].sample_presentations, first.sample_presentations)
         self.assertEqual(first.epoch_losses, second.epoch_losses)
         self.assertEqual(policy_sha256(first.model), policy_sha256(second.model))
-        self.assertEqual(BC_SCHEDULE_SHA256, BC_SCHEDULE_SHA256)
 
     def test_checkpoint_round_trip_preserves_model_optimizer_rng_and_accounting_lineage(self):
         import torch
