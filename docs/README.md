@@ -33,7 +33,7 @@ verified: 2026-10-23
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |
 | What was measured for compact learned IK, and what remains gated? | [IK training and GPU preparation](IK_TRAINING.md), [verified three-seed training and failed evaluation](evidence/2026-10-23-ik-titan-continuation.md), [supervised GPU runbook](IK_TRAINING_RUNBOOK.md), [candidate specification](../configs/ik/experiments/runner-compact-v1.json) and [finite schedule](../configs/ik/experiments/runner-compact-schedule-v1.json) |
 | What did frozen TITAN IK evaluation conclude? | [Completed recovery and negative accuracy/utility result](evidence/2026-10-23-ik-frozen-evaluation-recovery.md) |
-| Why did compact IK miss accuracy, and what bounded follow-up is proposed? | [Read-only diagnosis and fresh-evaluation proposal](design/IK_ACCURACY_FOLLOWUP.md) |
+| Why did compact IK miss accuracy, and what did the bounded follow-up measure? | [Diagnosis and design](design/IK_ACCURACY_FOLLOWUP.md), [three-seed polar tuning no-go with fresh final sealed](evidence/2026-10-23-ik-polar-followup.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |

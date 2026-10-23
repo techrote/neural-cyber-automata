@@ -218,11 +218,12 @@ ownership prevents different-seed or evaluation overlap; uncertainty preserves
 the claim and blocks automatic retry. Evaluation reservations close through an
 unchanged trainer/optimizer/sampler checkpoint within the same 45-slot cap.
 
-Actual seal, declaration, exact-head CI and two fresh independent admissions
-remain prerequisites for execution. CPU preflight has authenticated 5,260
-training and 2,020 tuning rows and independently derived the new normalizer from
-the same 5,140 training inputs. No accepted-corpus optimization, new labels or
-original evidence mutation is claimed here. See the
+The independently admitted [TITAN execution](../evidence/2026-10-23-ik-polar-followup.md)
+completed all three forty-epoch training runs. Every tuning-selected candidate
+fails the unchanged raw quality gate; fresh final remains sealed and unmeasured.
+CPU preflight authenticated all original training/tuning rows and derived the
+new normalizer from the same 5,140 training inputs. No automatic second change,
+retuning or fresh evaluation is admitted by this negative result. See the
 [follow-up operations](../IK_TRAINING_RUNBOOK.md#bounded-polar-follow-up).
 
 © 2026 techrote. All rights reserved.

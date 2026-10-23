@@ -337,6 +337,10 @@ class IKRunLedger:
                 and finish["record"]["elapsed_seconds"] >= proof["historical_charge_wall_seconds"])
 
     def _validate_overhead_proof(self, proof):
+        if isinstance(proof, dict) and proof.get("schema") == "nca-ik-polar-terminal-debit/v1":
+            from nca.train.ik_followup_terminal import validate_debit
+            validate_debit(self, proof)
+            return
         fields = {"schema", "identity_sha256", "allocation_sha256", "prior_parent_sha256",
             "prior_attempt_count", "checkpoint_sha256", "prior_amendment_file_sha256",
             "prior_amendment_sha256", "prior_source_sha256", "source_sha256", "authority_sha256",
@@ -373,6 +377,17 @@ class IKRunLedger:
 
     def record_recovery_overhead(self, proof):
         """Append a paid launcher refusal without spending a worker attempt slot."""
+        if proof.get("schema") != "nca-ik-recovery-launcher-overhead/v1":
+            raise ValueError("legacy launcher refusal proof required")
+        return self._append_overhead(proof)
+
+    def record_terminal_overhead(self, proof):
+        """Pay CPU-only permanent no-go bookkeeping; grants no worker authority."""
+        if proof.get("schema") != "nca-ik-polar-terminal-debit/v1":
+            raise ValueError("polar terminal-only debit proof required")
+        return self._append_overhead(proof)
+
+    def _append_overhead(self, proof):
         began = time.monotonic()
         self._validate_overhead_proof(proof)
         folder = self.root / "overheads"
@@ -592,7 +607,7 @@ class IKRunLedger:
         remaining = max(0.0, self.allocation["max_wall_seconds"] - wall)
         can_resume = (not active and not unresolved and checkpoint_matches
                       and last_status != "completed" and len(paths) < self.allocation["max_attempts"]
-                      and remaining > 0)
+                      and remaining > 0 and not (self.root.parent / "terminal-no-go.json").exists())
         return {
             "schema": SCHEMA, "identity": _copy(self.identity), "allocation": _copy(self.allocation),
             "attempt_count": len(paths), "attempts": summaries, "charged": charged,
@@ -605,6 +620,8 @@ class IKRunLedger:
         }
 
     def begin_attempt(self, *, started=None):
+        if (self.root.parent / "terminal-no-go.json").exists():
+            raise ValueError("permanent tuning no-go forbids further attempts")
         if self._attempt is not None and not self._attempt.closed:
             raise ValueError("this ledger already owns an active attempt")
         prior = self.inspect()
