@@ -13,6 +13,7 @@ ENTRY_STARTED = time.monotonic()
 import argparse
 import hashlib
 import math
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -22,7 +23,7 @@ import uuid
 from nca.contracts import canonical_json, sha256_json, strict_json_loads
 from nca.ik.declaration import (_project, _verify_committed_sources,
                                 runtime_expectation, source_snapshot)
-from nca.ik.device import configure_device, parse_device
+from nca.ik.device import configure_device, device_report, parse_device
 from nca.ik.profiles import runner_right_sole_profile
 from nca.ik.kinematics import chain_from_profile, cpu_fk
 from nca.runs import immutable_json, utc_now
@@ -76,13 +77,10 @@ def validate_plan(value):
             "cuda_build": "12.6",
             "driver": "581.80",
             "gpu": {
-                "name": "Tesla V100-SXM2-16GB",
-                "capability": [
-                    7,
-                    0
-                ],
-                "multiprocessors": 80,
-                "total_memory_bytes": 17031102464
+                "allowed_names": ["TITAN RTX", "NVIDIA TITAN RTX"],
+                "capability": [7, 5],
+                "multiprocessors": 72,
+                "minimum_total_memory_bytes": 20 * 1024**3,
             }
         },
     }
@@ -90,6 +88,55 @@ def validate_plan(value):
     if canonical_json(value) != canonical_json(expected):
         raise ValueError("the fixed prospective compact IK schedule differs")
     return value
+
+
+
+_TITAN_UUID = r"GPU-[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
+
+
+def _titan_visibility(*, expected_sha256=None, driver="581.80"):
+    """CPU-only identity gate: never create CUDA context on an unselected GPU.
+
+    CUDA_VISIBLE_DEVICES must contain one *TITAN RTX UUID*, not an ordinal, a
+    list, or the V100. Query only that UUID with nvidia-smi. Do not publish it.
+    """
+    visible = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+    if re.fullmatch(_TITAN_UUID, visible) is None:
+        raise ValueError("select only the TITAN RTX UUID in CUDA_VISIBLE_DEVICES; V100 is prohibited")
+    fingerprint = hashlib.sha256(visible.lower().encode("ascii")).hexdigest()
+    if expected_sha256 is not None and fingerprint != expected_sha256:
+        raise ValueError("TITAN RTX selection changed since prospective declaration")
+    try:
+        queried = subprocess.run(
+            ["nvidia-smi", "-i", visible, "--query-gpu=name,uuid,driver_version",
+             "--format=csv,noheader"],
+            capture_output=True, text=True, check=True, timeout=5,
+        )
+        fields = [value.strip() for value in queried.stdout.strip().split(",")]
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ValueError("selected TITAN RTX metadata unavailable; no GPU initialization authorized") from exc
+    if (len(fields) != 3 or fields[0] not in ("TITAN RTX", "NVIDIA TITAN RTX")
+            or fields[1].lower() != visible.lower() or fields[2] != driver):
+        raise ValueError("selected device is not the declared TITAN RTX and driver; V100 is prohibited")
+    return fingerprint
+
+
+def _qualified_titan_gpu_bytes(report, expected):
+    """Admit the selected TITAN's actual Torch capacity, not V100's old bytes."""
+    gpu, target = report.get("gpu"), expected["gpu"]
+    if (report.get("status") != "ready" or report.get("requested_device") != "cuda:0"
+            or any(report.get(key) != expected[key] for key in (
+                "os", "os_release", "architecture", "python", "torch", "numpy",
+                "cuda_build", "driver"))
+            or not isinstance(gpu, dict)
+            or gpu.get("name") not in target["allowed_names"]
+            or gpu.get("capability") != target["capability"]
+            or gpu.get("multiprocessors") != target["multiprocessors"]):
+        raise ValueError("TITAN RTX Windows runtime qualification mismatch; V100 forbidden")
+    total = gpu.get("total_memory_bytes")
+    if type(total) is not int or total < target["minimum_total_memory_bytes"]:
+        raise ValueError("TITAN RTX measured device memory is insufficient or unknown")
+    return total
 
 
 def _source(root):
@@ -139,11 +186,12 @@ def allocation_for(corpus, plan, seed):
 def prepare(corpus_root, registry, output, *, device="cuda:0", source_root=None):
     """Authenticate the exact corpus and freeze all three allocations, CPU-only."""
     kind, _ = parse_device(device)
-    if kind != "cuda":
-        raise ValueError("accepted learned comparison requires an explicitly selected CUDA device")
+    if kind != "cuda" or device != "cuda:0":
+        raise ValueError("accepted comparison requires isolated TITAN RTX at cuda:0")
     project = _project(source_root)
     source = _source(project)
     plan = validate_plan(_read(project / PLAN_PATH))
+    gpu_visibility_sha256 = _titan_visibility(driver=plan["qualified_environment"]["driver"])
     candidate = _read(project / CANDIDATE_PATH)
     corpus = read_training_corpus(corpus_root, registry)
     if not corpus.accepted or (len(corpus.training), len(corpus.tuning)) != (5260, 2020):
@@ -165,6 +213,7 @@ def prepare(corpus_root, registry, output, *, device="cuda:0", source_root=None)
         "id": "ik-compact-" + uuid.uuid4().hex, "created_utc": utc_now(),
         "plan": plan, "candidate_sha256": sha256_json(candidate),
         "source": source, "runtime": runtime, "device": device,
+        "gpu_visibility_sha256": gpu_visibility_sha256,
         "profile_sha256": profile.sha256, "dataset": bound,
         "acceptance_file_sha256": source["files"][ACCEPTANCE_PATH],
         "allocations": {str(seed): allocation_for(corpus, plan, seed) for seed in SEEDS},
@@ -207,7 +256,8 @@ def load_declaration(run, expected_sha256):
         raise ValueError("declaration file SHA-256 differs")
     value = strict_json_loads(data)
     fields = {"schema", "id", "created_utc", "plan", "candidate_sha256", "source",
-              "runtime", "device", "profile_sha256", "dataset", "acceptance_file_sha256",
+              "runtime", "device", "gpu_visibility_sha256",
+              "profile_sha256", "dataset", "acceptance_file_sha256",
               "allocations", "final_opened", "gpu_model_path_qualified", "next_required_action", "sha256"}
     if (not isinstance(value, dict) or set(value) != fields
             or value["schema"] != "nca-ik-compact-declaration/v1"
@@ -216,8 +266,8 @@ def load_declaration(run, expected_sha256):
             or value["gpu_model_path_qualified"] is not False):
         raise ValueError("compact declaration schema/seal differs")
     validate_plan(value["plan"])
-    if parse_device(value["device"])[0] != "cuda":
-        raise ValueError("a CPU result cannot stand for this CUDA comparison")
+    if value["device"] != "cuda:0" or not _digest(value["gpu_visibility_sha256"]):
+        raise ValueError("only the source-bound isolated TITAN RTX at cuda:0 is admitted")
     if set(value["allocations"]) != {str(seed) for seed in SEEDS}:
         raise ValueError("all three seed allocations are required")
     for seed in SEEDS:
@@ -422,6 +472,8 @@ def worker(run, declaration_digest, seed, corpus_root, registry, review_path,
     try:
         if sha256_json(_review(review_path, declaration)) != review_sha256:
             raise ValueError("admission review changed after supervisor publication")
+        _titan_visibility(expected_sha256=declaration["gpu_visibility_sha256"],
+                          driver=declaration["plan"]["qualified_environment"]["driver"])
         if _source(source_root) != declaration["source"]:
             raise ValueError("executed source differs from prospective source")
         if runtime_expectation() != declaration["runtime"]:
@@ -432,13 +484,19 @@ def worker(run, declaration_digest, seed, corpus_root, registry, review_path,
         plan = declaration["plan"]
         if allocation_for(corpus, plan, seed) != declaration["allocations"][str(seed)]:
             raise ValueError("computed finite allocation differs from declaration")
+        source_id = declaration["source"]["source_sha256"]
+        config_id = identity_for(declaration, seed)["config_sha256"]
+        # The UUID-bound metadata check has passed. Initialize the *selected*
+        # TITAN only, then derive the 2 GiB allocator fraction from its actual
+        # Torch-reported capacity, never from a historical V100 measurement.
+        preflight = device_report(declaration["device"], source_sha256=source_id,
+                                  config_sha256=config_id)
+        gpu_total = _qualified_titan_gpu_bytes(preflight, plan["qualified_environment"])
         context = configure_device(declaration["device"], seed,
-                                   memory_fraction=min(1.0, plan["max_memory_bytes"] /
-                                                       plan["qualified_environment"]["gpu"]["total_memory_bytes"]),
-                                   source_sha256=declaration["source"]["source_sha256"],
-                                   config_sha256=identity_for(declaration, seed)["config_sha256"])
-        if any(context.report.get(key) != value for key, value in plan["qualified_environment"].items()):
-            raise ValueError("actual device differs from the qualified prospective environment")
+                                   memory_fraction=min(1.0, plan["max_memory_bytes"] / gpu_total),
+                                   source_sha256=source_id, config_sha256=config_id)
+        if _qualified_titan_gpu_bytes(context.report, plan["qualified_environment"]) != gpu_total:
+            raise ValueError("TITAN RTX identity/capacity changed during device setup")
         # The exact prospective GPU capacity determines the allocator fraction;
         # per-step peak checks also enforce the declared byte ceiling.
         result = train_attempt(ledger, attempt, corpus, context,
@@ -460,6 +518,8 @@ def supervise(run, declaration_digest, seed, corpus_root, registry, review_path,
     run = Path(run)
     declaration = load_declaration(run, declaration_digest)
     review = _review(review_path, declaration)
+    _titan_visibility(expected_sha256=declaration["gpu_visibility_sha256"],
+                      driver=declaration["plan"]["qualified_environment"]["driver"])
     frozen_review = run / "admission-review.json"
     if frozen_review.exists():
         if _read(frozen_review) != review:
