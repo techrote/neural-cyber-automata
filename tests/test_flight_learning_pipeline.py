@@ -1,0 +1,338 @@
+import copy
+import random
+import unittest
+
+from nca.contracts import ContractError, sha256_json
+from nca.train.flight_learning import (
+    ACTION_SPEC,
+    BC_EPOCHS,
+    BC_SCHEDULE_SHA256,
+    PREPROCESSING_SPEC,
+    build_capture_dataset,
+    build_export_bundle,
+    load_checkpoint_bytes,
+    load_export_bundle,
+    policy_input,
+    policy_sha256,
+    serialize_checkpoint,
+    train_behavior_clone,
+    validate_capture_episode,
+)
+
+
+DECLARATION = "d" * 64
+SOURCE = {
+    "host_revision": "1" * 40,
+    "host_build_sha256": "2" * 64,
+    "profile_sha256": "3" * 64,
+    "controller_sha256": "4" * 64,
+    "teacher_sha256": "5" * 64,
+}
+TEACHER = {"id": "4ly003-teacher", "sha256": SOURCE["teacher_sha256"]}
+
+
+def observation(tick, *, suffix=None):
+    suffix = tick if suffix is None else suffix
+    flat = [0.0] * 54
+    flat[0] = tick / 100.0
+    return {
+        "version": "4ly-observation/v1",
+        "action_version": "4ly-action/v1",
+        "run_id": "run-1",
+        "actor_id": "Trainer",
+        "epoch": 1,
+        "observation_id": f"obs-{suffix}",
+        "observed_tick": tick,
+        "control_generation": 0,
+        "flat": flat,
+    }
+
+
+def action(before, *, status="accepted", move=(0.5, -0.25)):
+    return {
+        "source_id": TEACHER["id"],
+        "source_sha256": TEACHER["sha256"],
+        "observation_id": before["observation_id"],
+        "status": status,
+        "requested_action": list(move) if status == "accepted" else None,
+        "admitted_action": list(move) if status == "accepted" else None,
+        "reason": "accepted" if status == "accepted" else status,
+    }
+
+
+def outcome(status, *, terminated=False, truncated=False, failed=False, success=False, reason=None):
+    return {
+        "status": status,
+        "reason": reason or status,
+        "terminated": terminated,
+        "truncated": truncated,
+        "failed": failed,
+        "success": success,
+    }
+
+
+def transition(index, before, after, *, teacher_status="accepted", physical_status="confirmed",
+               terminated=False, truncated=False, failed=False, success=False):
+    terminal_status = "failed" if failed else "completed" if terminated else "inconclusive"
+    return {
+        "index": index,
+        "observation": before,
+        "teacher_action": action(before, status=teacher_status),
+        "physical": {
+            "status": physical_status,
+            "consumed_ticks": 6 if physical_status == "confirmed" else None,
+            "reason": physical_status,
+        },
+        "next_observation": after,
+        "outcome": outcome(
+            terminal_status, terminated=terminated, truncated=truncated,
+            failed=failed, success=success, reason="terminal" if terminated else terminal_status),
+    }
+
+
+def episode(*, episode_id="ep-1", transitions=None, final=None, split="training",
+            initial=None, capture_id="capture-a"):
+    transitions = [] if transitions is None else transitions
+    if initial is None and transitions:
+        initial = transitions[0]["observation"]
+    if final is None:
+        final = outcome("refused", reason="reset_refused") if initial is None else outcome(
+            "completed", terminated=True, success=True, reason="arrival")
+    return {
+        "schema": "nca-4ly-capture-episode/v1",
+        "declaration_sha256": DECLARATION,
+        "capture_id": capture_id,
+        "episode_id": episode_id,
+        "profile": "Trainer",
+        "split": split,
+        "scenario_id": "arrival_braking",
+        "host_seed": 101,
+        "source": copy.deepcopy(SOURCE),
+        "teacher": copy.deepcopy(TEACHER),
+        "initial_observation": initial,
+        "transitions": transitions,
+        "outcome": final,
+    }
+
+
+def valid_capture(episode_id="ep-valid"):
+    before = observation(0)
+    after = observation(6)
+    row = transition(0, before, after, terminated=True, success=True)
+    return validate_capture_episode(
+        episode(
+            episode_id=episode_id,
+            initial=before,
+            transitions=[row],
+            final=outcome("completed", terminated=True, success=True, reason="arrival"),
+        ),
+        declaration_sha256=DECLARATION,
+        expected_source=SOURCE,
+    )
+
+
+class FlightCaptureTests(unittest.TestCase):
+    def test_valid_capture_uses_admitted_action_and_only_54_policy_values(self):
+        captured = valid_capture()
+        self.assertEqual(captured.status, "completed")
+        self.assertEqual(len(captured.samples), 1)
+        self.assertEqual(captured.samples[0].action, (0.5, -0.25))
+        self.assertEqual(len(captured.samples[0].observation), 54)
+        self.assertEqual(captured.to_dict()["source"], SOURCE)
+
+    def test_failed_and_refused_episodes_are_retained_but_bad_transitions_are_not_labels(self):
+        zero, six, twelve = observation(0), observation(6), observation(12)
+        first = transition(0, zero, six)
+        second = transition(1, six, twelve, failed=True)
+        failed = validate_capture_episode(
+            episode(
+                episode_id="ep-failed",
+                initial=zero,
+                transitions=[first, second],
+                final=outcome("failed", failed=True, reason="physical_fault"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        refused = validate_capture_episode(
+            episode(
+                episode_id="ep-refused",
+                initial=None,
+                transitions=[],
+                final=outcome("refused", reason="reset_refused"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        self.assertEqual(failed.status, "failed")
+        self.assertEqual(len(failed.samples), 1)
+        self.assertIn("1:failed_transition", failed.exclusions)
+        self.assertEqual(refused.status, "refused")
+        self.assertEqual(refused.samples, ())
+        self.assertIn("episode_without_authoritative_initial_observation", refused.exclusions)
+        dataset = build_capture_dataset((failed, refused))
+        self.assertEqual(len(dataset.episodes), 2)
+        self.assertEqual(len(dataset.samples), 1)
+
+    def test_unknown_consumption_and_refused_teacher_never_become_supervision(self):
+        before = observation(0)
+        unknown = transition(
+            0, before, None, teacher_status="accepted", physical_status="unknown", failed=True)
+        captured = validate_capture_episode(
+            episode(
+                episode_id="ep-unknown",
+                initial=before,
+                transitions=[unknown],
+                final=outcome("failed", failed=True, reason="lost_reply"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        self.assertEqual(captured.samples, ())
+        self.assertIn("0:unknown_physical_consumption", captured.exclusions)
+
+        after = observation(6)
+        refused = transition(0, before, after, teacher_status="refused", terminated=True)
+        captured = validate_capture_episode(
+            episode(
+                episode_id="ep-teacher-refused",
+                initial=before,
+                transitions=[refused],
+                final=outcome("completed", terminated=True, reason="stopped"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        self.assertEqual(captured.samples, ())
+        self.assertIn("0:teacher_refused", captured.exclusions)
+
+    def test_schema_final_and_identity_mismatch_refuse(self):
+        base = valid_capture().to_dict()
+        for mutation in (
+            lambda value: value.update(split="final"),
+            lambda value: value.update(declaration_sha256="e" * 64),
+            lambda value: value["source"].update(host_revision="f" * 40),
+            lambda value: value["initial_observation"].update(version="legacy"),
+        ):
+            value = copy.deepcopy(base)
+            mutation(value)
+            with self.assertRaises(ContractError):
+                validate_capture_episode(
+                    value, declaration_sha256=DECLARATION, expected_source=SOURCE)
+
+    def test_policy_input_does_not_traverse_evaluator_only_state(self):
+        class Explodes:
+            def __call__(self):
+                raise AssertionError("evaluator/teacher must not be called")
+        view = observation(0)
+        view["evaluator"] = Explodes()
+        view["navigation_teacher"] = Explodes()
+        self.assertEqual(len(policy_input(view)), 54)
+
+
+@unittest.skipUnless(__import__("importlib").util.find_spec("torch") is not None, "optional Torch unavailable")
+class FlightLearningTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.capture = valid_capture()
+        cls.dataset = build_capture_dataset((cls.capture,))
+
+    def test_bounded_clone_is_deterministic_for_the_declared_seed(self):
+        first = train_behavior_clone(self.dataset, seed=74011)
+        second = train_behavior_clone(self.dataset, seed=74011)
+        self.assertEqual(first.completed_epochs, BC_EPOCHS)
+        self.assertEqual(first.optimizer_updates, BC_EPOCHS)
+        self.assertEqual(first.sample_presentations, BC_EPOCHS)
+        self.assertEqual(first.epoch_losses, second.epoch_losses)
+        self.assertEqual(policy_sha256(first.model), policy_sha256(second.model))
+        self.assertEqual(BC_SCHEDULE_SHA256, BC_SCHEDULE_SHA256)
+
+    def test_checkpoint_round_trip_preserves_model_optimizer_rng_and_accounting_lineage(self):
+        import torch
+        trained = train_behavior_clone(self.dataset, seed=74013)
+        data, receipt = serialize_checkpoint(
+            trained,
+            checkpoint_id="seed74013-epoch20",
+            learner_revision="6" * 40,
+            learner_source_sha256="7" * 64,
+        )
+        before_global = torch.get_rng_state().clone()
+        restored = load_checkpoint_bytes(data, receipt)
+        self.assertTrue(torch.equal(before_global, torch.get_rng_state()))
+        self.assertEqual(policy_sha256(restored.model), receipt["policy_sha256"])
+        self.assertEqual(restored.lineage["declaration_sha256"], DECLARATION)
+        self.assertEqual(restored.lineage["capture_dataset_sha256"], self.dataset.sha256)
+        self.assertEqual(restored.lineage["capture_id"], "capture-a")
+        self.assertEqual(restored.lineage["optimizer_updates"], BC_EPOCHS)
+        self.assertEqual(restored.lineage["sample_presentations"], BC_EPOCHS)
+
+        original_probe = random.Random()
+        original_probe.setstate(trained.shuffle_rng.getstate())
+        self.assertEqual(original_probe.random(), restored.shuffle_rng.random())
+
+        original_state = trained.optimizer.state_dict()
+        restored_state = restored.optimizer.state_dict()
+        self.assertEqual(original_state["param_groups"], restored_state["param_groups"])
+        self.assertEqual(set(original_state["state"]), set(restored_state["state"]))
+        for key in original_state["state"]:
+            for name, value in original_state["state"][key].items():
+                other = restored_state["state"][key][name]
+                if isinstance(value, torch.Tensor):
+                    self.assertTrue(torch.equal(value, other))
+                else:
+                    self.assertEqual(value, other)
+
+    def test_export_round_trip_is_exact_bounded_and_teacher_free(self):
+        trained = train_behavior_clone(self.dataset, seed=74017)
+        data, receipt = serialize_checkpoint(
+            trained,
+            checkpoint_id="seed74017-epoch20",
+            learner_revision="8" * 40,
+            learner_source_sha256="9" * 64,
+        )
+        restored = load_checkpoint_bytes(data, receipt)
+        wrapper = build_export_bundle(restored)
+        self.assertEqual(wrapper["bundle"]["preprocessing"], PREPROCESSING_SPEC)
+        self.assertEqual(wrapper["bundle"]["action"], ACTION_SPEC)
+        self.assertIsNone(wrapper["bundle"]["preprocessing"]["additional_fitted_statistics"])
+        policy = load_export_bundle(wrapper)
+
+        calls = []
+        view = observation(0)
+        view["navigation_teacher"] = lambda *_: calls.append("teacher")
+        view["evaluator_only"] = {"success": True, "reward": 999}
+        result = policy.act(view)
+        self.assertEqual(calls, [])
+        self.assertLessEqual(sum(value * value for value in result["move"]), 1.0 + 1e-7)
+        self.assertEqual(policy.policy_sha256, receipt["policy_sha256"])
+
+    def test_export_and_policy_schema_mutations_fail_closed(self):
+        trained = train_behavior_clone(self.dataset, seed=74011)
+        data, receipt = serialize_checkpoint(
+            trained,
+            checkpoint_id="seed74011-epoch20",
+            learner_revision="a" * 40,
+            learner_source_sha256="b" * 64,
+        )
+        wrapper = build_export_bundle(load_checkpoint_bytes(data, receipt))
+        changed = copy.deepcopy(wrapper)
+        changed["bundle"]["preprocessing"]["field_count"] = 53
+        changed["bundle_sha256"] = sha256_json(changed["bundle"])
+        with self.assertRaises(ContractError):
+            load_export_bundle(changed)
+        bad_view = observation(0)
+        bad_view["version"] = "legacy"
+        with self.assertRaises(ContractError):
+            policy_input(bad_view)
+
+    def test_dataset_refuses_mixed_accounting_or_capture_identity(self):
+        second_value = valid_capture("ep-second").to_dict()
+        second_value["capture_id"] = "capture-b"
+        second = validate_capture_episode(
+            second_value, declaration_sha256=DECLARATION, expected_source=SOURCE)
+        with self.assertRaises(ContractError):
+            build_capture_dataset((self.capture, second))
+
+
+if __name__ == "__main__":
+    unittest.main()
