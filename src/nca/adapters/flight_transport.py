@@ -220,8 +220,18 @@ class FlightRpcTransport:
             return None
         operation = str(command.get("command", ""))
         if operation == "reset":
+            split = command.get("split")
+            if split not in ("development", "tuning"):
+                raise FlightProtocolError(
+                    "accounted reset requires development or tuning split"
+                )
+            stage = (
+                "capture"
+                if split == "development" and self._capture_labels_per_step
+                else "tuning" if split == "tuning" else None
+            )
             return self._accounting.reserve_reset(
-                tuning=command.get("split") == "tuning")
+                tuning=split == "tuning", stage=stage)
         if operation == "step":
             repeat = command.get("repeat_ticks")
             if type(repeat) is not int:
