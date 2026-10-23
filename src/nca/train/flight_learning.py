@@ -577,7 +577,7 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
         declaration, capture_id, source_sha, values, samples, weights, sha256_json(identity))
 
 
-def _fresh_policy(seed: int):
+def _fresh_policy_with_rng(seed: int):
     torch = _torch()
     if type(seed) is not int or seed < 0:
         _fail("flight_policy_seed", "policy seed must be a nonnegative integer")
@@ -586,11 +586,16 @@ def _fresh_policy(seed: int):
     try:
         torch.set_rng_state(seeded)
         model = build_policy()
+        lineage_state = torch.get_rng_state().clone()
     finally:
         torch.set_rng_state(saved)
     if any(parameter.device.type != "cpu" for parameter in model.parameters()):
         _fail("flight_policy_device", "compact policy must remain on CPU")
-    return model
+    return model, lineage_state
+
+
+def _fresh_policy(seed: int):
+    return _fresh_policy_with_rng(seed)[0]
 
 
 def policy_specification(model) -> dict[str, Any]:
@@ -629,6 +634,7 @@ class FlightTrainingResult:
     model: Any
     optimizer: Any
     shuffle_rng: random.Random
+    torch_rng_state: Any
     seed: int
     dataset: FlightCaptureDataset
     completed_epochs: int
@@ -668,7 +674,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     if presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED or updates > MAX_OPTIMIZER_UPDATES_PER_SEED:
         _fail("flight_clone_budget", "fixed cloning schedule exceeds its prospective work ceiling")
     torch = _torch()
-    model = _fresh_policy(seed)
+    model, torch_rng_state = _fresh_policy_with_rng(seed)
     optimizer = torch.optim.Adam(model.parameters(), lr=BC_LEARNING_RATE)
     shuffle_rng = random.Random(seed ^ 0x4C59004)
     losses: list[float] = []
@@ -733,7 +739,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
             or accounting_snapshot["poisoned"]):
         _fail("flight_clone_accounting", "optimizer work did not end in a clean durable accounting state")
     return FlightTrainingResult(
-        model, optimizer, shuffle_rng, seed, dataset, BC_EPOCHS,
+        model, optimizer, shuffle_rng, torch_rng_state, seed, dataset, BC_EPOCHS,
         completed_updates, completed_presentations,
         accounting_snapshot["attempt_id"], accounting_snapshot["chain_sha256"],
         tuple(losses))
@@ -830,7 +836,7 @@ def serialize_checkpoint(result: FlightTrainingResult, *, checkpoint_id: str,
         "optimizer": _cpu_copy(result.optimizer.state_dict()),
         "rng": {
             "shuffle": _random_state_json(result.shuffle_rng),
-            "torch_cpu": torch.get_rng_state().clone(),
+            "torch_cpu": result.torch_rng_state.clone(),
             "cuda": "not_initialized_or_used_by_4ly_bc",
         },
     }
@@ -858,6 +864,7 @@ class RestoredFlightCheckpoint:
     model: Any
     optimizer: Any
     shuffle_rng: random.Random
+    torch_rng_state: Any
     lineage: dict[str, Any]
     receipt: dict[str, Any]
 
@@ -931,7 +938,8 @@ def load_checkpoint_bytes(data: bytes, receipt: Mapping[str, Any]) -> RestoredFl
         _fail("flight_checkpoint_rng", "Torch CPU RNG state is invalid")
     torch.Generator(device="cpu").set_state(cpu_rng)
     shuffle = _restore_random_state(rng_payload["shuffle"])
-    return RestoredFlightCheckpoint(model, optimizer, shuffle, lineage, expected)
+    return RestoredFlightCheckpoint(
+        model, optimizer, shuffle, cpu_rng.clone(), lineage, expected)
 
 
 def _weight_export(model) -> dict[str, Any]:
