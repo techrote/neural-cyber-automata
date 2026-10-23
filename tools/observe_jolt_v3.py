@@ -31,6 +31,9 @@ def observe(args, *, started, command=None):
     from nca.train.jolt_executor_v3 import verify_lifecycle
     from nca.train.jolt_storage_v3 import file_identity_v3
     from nca.train.jolt_streams_v3 import wait_bounded_child
+    from nca.train.jolt_memory_watchdog_v3 import (
+        ProcessTreeWatchdogV3, validate_watchdog_policy_v3,
+    )
     import execute_jolt_diagnostic as helper
 
     # Select timing only from the explicit declaration budget. Omitted nulls
@@ -39,21 +42,35 @@ def observe(args, *, started, command=None):
     declaration = strict_json_loads(Path(args.declaration).read_bytes())
     budget = validate_budget_v3(declaration.get("budget") if isinstance(declaration, dict) else None)
     maximum_wall_seconds = budget["maximum_wall_seconds"]
+    resource = declaration.get("resource_admission", {}) if isinstance(declaration, dict) else {}
+    watchdog_required = (isinstance(resource, dict)
+                         and resource.get("schema") == "nca-jolt-003-resource-admission/v2")
+    if watchdog_required:
+        # Any changed/missing policy refuses before child or owned output opens.
+        validate_watchdog_policy_v3(resource.get("memory_watchdog"))
     clock = OriginalClockV3(started, maximum_wall_seconds=maximum_wall_seconds,
                             monotonic=time.monotonic)
     output = Path(args.output)
     names = {channel: output.with_name(output.name + "-outer-" + channel + ".log")
              for channel in ("stdout", "stderr")}
     receipt_path = output.with_name(output.name + "-observed-exit.json")
+    memory_path = output.with_name(output.name + "-memory-watchdog.json")
     lifecycle = output.with_name(output.name + "-lifecycle")
-    if any(os.path.lexists(path) for path in (output, lifecycle, receipt_path, *names.values())):
+    occupied = (output, lifecycle, receipt_path, *names.values())
+    if watchdog_required:
+        occupied += (memory_path,)
+    if any(os.path.lexists(path) for path in occupied):
         raise ValueError("an original output or observation path already exists; retry is forbidden")
     output.parent.mkdir(parents=True, exist_ok=True)
+    if watchdog_required:
+        from nca.train.jolt_admission_v3 import validate_resource_admission
+        validate_resource_admission(declaration, output_parent=output.parent)
     child_command = command or [sys.executable, str(ROOT / "tools/learn_jolt.py"), "run-v3",
         "--config", str(args.config), "--declaration", str(args.declaration),
         "--checkout", str(args.checkout), "--godot", str(args.godot),
         "--output", str(output), "--whole-started", repr(started)]
     process = identity = exit_elapsed = None
+    memory_monitor = memory_identity = None
     cleanup_confirmed = False
     errors = []
 
@@ -67,11 +84,22 @@ def observe(args, *, started, command=None):
         try:
             clock.check("finalization")
             identity = helper.prepare_process_tree()
+            if watchdog_required:
+                memory_monitor = ProcessTreeWatchdogV3(owner_start=identity, helper=helper)
+                memory_monitor.check(force=True)
             process = subprocess.Popen(child_command, stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True)
-            wait_bounded_child(process, stdout, stderr,
-                               deadline=None if maximum_wall_seconds is None else started + maximum_wall_seconds,
-                               monotonic=time.monotonic, maximum_bytes=65536)
+            if memory_monitor is not None:
+                memory_monitor.check(force=True)
+                wait_bounded_child(process, stdout, stderr,
+                    deadline=None if maximum_wall_seconds is None else started + maximum_wall_seconds,
+                    monotonic=time.monotonic, maximum_bytes=65536,
+                    check=memory_monitor.check)
+                memory_monitor.check(force=True)
+            else:
+                wait_bounded_child(process, stdout, stderr,
+                    deadline=None if maximum_wall_seconds is None else started + maximum_wall_seconds,
+                    monotonic=time.monotonic, maximum_bytes=65536)
             exit_elapsed = clock.elapsed()
         except BaseException as exc:
             failed(exc, "original_cli")
@@ -88,6 +116,61 @@ def observe(args, *, started, command=None):
                     exit_elapsed = clock.elapsed()
             except BaseException as exc:
                 failed(exc, "independent_cleanup")
+            # A watchdog may trip immediately after Popen, before the
+            # ordinary stream reader enters its own closing finally. Once
+            # the original process tree has been revoked, preserve any
+            # already-buffered original PIPE prefix (max 64 KiB/channel)
+            # and close BOTH descriptors. Do not invent complete EOF if
+            # cleanup failed or a still-live inheritor owns the pipe.
+            if process is not None:
+                for channel, pipe, stream in (
+                    ("stdout", process.stdout, stdout), ("stderr", process.stderr, stderr)):
+                    if pipe is None or pipe.closed:
+                        continue
+                    try:
+                        os.set_blocking(pipe.fileno(), False)
+                        while True:
+                            try:
+                                block = os.read(pipe.fileno(), 65536)
+                            except BlockingIOError:
+                                break
+                            if not block:
+                                break
+                            allowance = max(0, 65536 - stream.tell())
+                            if allowance:
+                                retained = block[:allowance]
+                                if stream.write(retained) != len(retained):
+                                    raise OSError("short original revoked stream write")
+                            if len(block) > allowance:
+                                from nca.contracts import ContractError
+                                failed(ContractError("jolt_v3_stream_bytes",
+                                    "original revocation stream exceeded bounded prefix"),
+                                    channel + "_revoked_stream")
+                                break
+                    except BaseException as exc:
+                        failed(exc, channel + "_revoked_stream")
+                    finally:
+                        try:
+                            pipe.close()
+                        except BaseException as exc:
+                            failed(exc, channel + "_pipe_close")
+            if watchdog_required:
+                try:
+                    if memory_monitor is None:
+                        raise RuntimeError("original memory watchdog could not start")
+                    if not memory_monitor.tripped:
+                        memory_monitor.check(force=True)
+                except BaseException as exc:
+                    failed(exc, "memory_watchdog_final_sample")
+                if memory_monitor is not None:
+                    try:
+                        publish_json_v2(memory_path, memory_monitor.receipt(
+                            cleanup_confirmed=cleanup_confirmed,
+                            declaration_identity=declaration_identity,
+                        ))
+                        memory_identity = file_identity(memory_path)
+                    except BaseException as exc:
+                        failed(exc, "memory_watchdog_publication")
             for channel, stream in (("stdout", stdout), ("stderr", stderr)):
                 try:
                     stream.flush()
@@ -112,9 +195,15 @@ def observe(args, *, started, command=None):
         "cleanup_confirmed": cleanup_confirmed, "lifecycle_readback": original,
         "wall_seconds_before_receipt_publication": clock.elapsed(), "errors": errors,
         "automatic_retry": False, "automatic_extension": False}
+    if watchdog_required:
+        receipt.update(memory_watchdog=memory_identity,
+                       memory_watchdog_enforced=memory_monitor is not None,
+                       memory_watchdog_triggered=bool(memory_monitor and memory_monitor.tripped))
     publish_json_v2(receipt_path, receipt)
     elapsed = clock.elapsed()
-    completed = bool(not errors and cleanup_confirmed and code == 0 and original
+    memory_ok = (not watchdog_required or (memory_monitor is not None
+                 and memory_identity is not None and not memory_monitor.tripped))
+    completed = bool(memory_ok and not errors and cleanup_confirmed and code == 0 and original
                      and original.get("completed") is True
                      and (maximum_wall_seconds is None or elapsed <= maximum_wall_seconds))
     # Receipt fsync is observed after publication; it cannot attest to itself.

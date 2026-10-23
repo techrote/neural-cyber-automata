@@ -17,6 +17,11 @@ adds synthetic software tests and no experimental run row. The consumed
 LEARN-JOLT-002 allocation and its unknown complete wall time remain unchanged;
 no replacement physical invocation, resumed checkpoint or learned comparison is recorded.
 
+The [D-023 memory watchdog and nonadmitted resource review](evidence/2026-10-23-jolt003-resource-assessment-review.md)
+adds one tested **8 GiB sampled process-tree RSS abort** and a source-bound
+assessment draft. This is preparatory software/evidence work only; no
+physical LEARN-JOLT-003 allocation, learned model or held-out case was run.
+
 The later [LEARN-JOLT-003 memory feasibility prepass](evidence/2026-10-22-jolt003-memory-admission-prepass.md)
 measures synthetic worker retention alongside an idle native-host handshake,
 not a physical experiment or a qualified production peak. Two unsigned

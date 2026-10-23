@@ -14,18 +14,16 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
-### D-024 — Preserve the original IK allocation through an admitted source amendment
+### D-025 — Preserve the original IK allocation through an admitted source amendment
 
-[ACCEPTED] 2026-10-23 by owner for #54 / PR #78: obtain fresh continuation
-admissions, resume the verified TITAN checkpoint and finish the declared three
-seeds and gated evaluation. The owner explicitly permits the necessary source
-amendment after the CPU scoring/final-reader refusal. See the
-[continuation contract and evidence limits](decisions/2026-10-23-ik-continuation.md).
+[ACCEPTED] 2026-10-23: [original allocation, fresh admissions and necessary source amendment](decisions/2026-10-23-ik-continuation.md).
 
-### D-023 — Narrow Windows retained-label compatibility and one gated TITAN batch
+### D-024 — Narrow Windows retained-label compatibility and one gated TITAN batch
 
 [ACCEPTED] 2026-10-23 by owner. See the [scope and unchanged admission gates](decisions/2026-10-23-ik-windows-labels.md).
 
+### D-023 — Risk-managed LEARN-JOLT-003 resource admission
+[ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
 [ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
 

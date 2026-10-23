@@ -127,7 +127,7 @@ final scoring, learned quality, CPU export or physical qualification.
 
 ## Admitted continuation of the original allocation
 
-D-024 authorizes a separate source amendment for the completed one-batch run.
+D-025 authorizes a separate source amendment for the completed one-batch run.
 The original declaration and review stay immutable. The continuation runner
 accepts only a narrow executable source delta, authenticates the same retained
 corpus and normalization, and inventories every original run file. Its new

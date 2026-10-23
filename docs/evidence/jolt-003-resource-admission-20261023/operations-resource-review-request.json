@@ -1,0 +1,71 @@
+{
+  "accepted": false,
+  "allocation_consumed": false,
+  "blocking_findings": [
+    {
+      "finding": "Owner has accountably accepted unmeasured full worker/native/auditor RSS and sampled-only 8GiB OOM risk. An independent operations reviewer must still decide whether that explicitly disclosed residual risk is acceptable, without inventing a measured peak.",
+      "id": "OPS-REVIEW-01"
+    },
+    {
+      "finding": "Candidate prospective binding is reconstructed but has not been independently reproduced by build_prospective on the pinned runner, no distinct source-bound v2 independent approvals exist, and real execution-runner disk has not been checked.",
+      "id": "OPS-REVIEW-02"
+    }
+  ],
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "execution_runner_disk_check_required_bytes": 16895424646,
+  "final_record_schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "independently_completed": false,
+  "original_assessment_sha256": "e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be",
+  "original_memory_report_sha256": "ba84131fa5e7c6133b37703b7c6258834bb62f6cf7c36cc15823ca15c528060e",
+  "owner_residual_memory_risk_acceptance": "https://github.com/techrote/neural-cyber-automata/issues/62#issuecomment-6355227817",
+  "physical_experiment_started": false,
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "prospective_binding_validation": "offline_source_bound_reconstruction__independent_clean_source_build_prospective_readback_required_before_signature",
+  "prospective_experiment_admitted": false,
+  "request_instructions": "Independently weigh operational 8GiB soft watchdog risk versus incomplete physical peak; explicitly reject if insufficient. Sign versioned v2 accepted reviewer bytes only if all non-time gates genuinely pass. Do not claim 0.64GB synthetic RSS or x4 planning factor is a hard full-worker bound.",
+  "requested_independent_review": true,
+  "required_evidence": [
+    "Exact 39 counter/stage ceilings, no retry/resume/reseed, original one-use issue #62 durable allocation claim",
+    "Typed journal 115110 events <=64KiB, reservation log reader/canonical digest, gzip envelope/hash/EOF, raw streams, capped checkpoint and artifact file counts",
+    "Closed-form 15,821,682,822 total artifact bytes and 16,895,424,646 required free-disk bytes including 1GiB reserve; execution-runner disk recheck",
+    "Pinned host f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497, Linux x86_64 CPU Torch/NumPy software contract; CPU hardware informational",
+    "0.64GB synthetic+idle-native sample limitations vs *actual* stepped/native/final-auditor peak and 16GB advertised runner",
+    "8GiB soft original observer/descendant RSS watchdog, PID identity checks, missing telemetry fail-closed, original cleanup/readback, no kernel-hard guarantee",
+    "Synthetic threshold exceed and actual disposable child cleanup regression, retained memory-watchdog receipt original SHA256 and artifact publication on failure",
+    "GitHub-hosted six-hour hard platform job limit and possible missed uploads after infrastructure shutdown",
+    "All source-bound resource checks true, two independent v2 reviewers with zero blockers and exact prospective binding before freeze-v3"
+  ],
+  "required_exact_bindings": [
+    "source_revision",
+    "source_sha256",
+    "config_sha256",
+    "host_identity_sha256",
+    "runtime_contract_sha256",
+    "prospective_binding_sha256",
+    "cpu_comparison_policy",
+    "reviewer"
+  ],
+  "resource_candidate": {
+    "accepted_owner_risk_only": true,
+    "canonical_sha256": "6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72",
+    "experiment_admitted": false,
+    "file_sha256": "8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7",
+    "independently_reviewed": false,
+    "path": "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json"
+  },
+  "review_authority": "independent_external_reviewer_required",
+  "reviewer": null,
+  "role": "operation_serialization_deadline_feasibility",
+  "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "schema": "nca-jolt-003-independent-review-request/v2",
+  "scope": "Independent final-source operational risk acceptance, not an automatically green benchmark",
+  "source_bound_memory_ci": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159",
+  "source_file_count": 261,
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_revision_scope": "exact GitHub-tested watchdog source head; reviewer must independently confirm the final prospective declaration and this scope before signoff",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "target_branch": "impl/jolt003-resource-watchdog-review",
+  "task": "LEARN-JOLT-003 operations, serialization, memory and process-tree admission"
+}

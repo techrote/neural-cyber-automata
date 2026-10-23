@@ -8,10 +8,10 @@ verified: 2026-10-23
 
 # IK continuation source amendment
 
-[ACCEPTED D-024] The owner authorizes completing #54 / PR #78 on the TITAN RTX
+[ACCEPTED D-025] The owner authorizes completing #54 / PR #78 on the TITAN RTX
 after fresh continuation admissions, within the existing allocations. The
 owner explicitly authorizes amendments needed to repair the CPU scoring and
-final-reader compatibility refusals. This extends D-023's completed single
+final-reader compatibility refusals. This extends D-024's completed single
 batch boundary; it does not grant another allocation, corpus or schedule.
 
 The original declaration, admission, first checkpoint and verified one-batch
