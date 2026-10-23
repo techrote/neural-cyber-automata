@@ -425,9 +425,15 @@ class FlightLearningTests(unittest.TestCase):
         first = self.train(74011)
         second = self.train(74011)
         self.assertEqual(first.completed_epochs, BC_EPOCHS)
+        self.assertEqual([item.epoch for item in first.checkpoints], list(range(21)))
+        self.assertEqual(first.checkpoints[0].optimizer_updates, 0)
+        self.assertEqual(first.checkpoints[0].sample_presentations, 0)
         expected_presentations = len(self.dataset.samples) * BC_EPOCHS
         self.assertEqual(first.optimizer_updates, BC_EPOCHS)
         self.assertEqual(first.sample_presentations, expected_presentations)
+        self.assertEqual(first.checkpoints[-1].optimizer_updates, first.optimizer_updates)
+        self.assertEqual(
+            first.checkpoints[-1].sample_presentations, first.sample_presentations)
         self.assertEqual(first.epoch_losses, second.epoch_losses)
         self.assertEqual(policy_sha256(first.model), policy_sha256(second.model))
         self.assertEqual(BC_SCHEDULE_SHA256, BC_SCHEDULE_SHA256)
@@ -435,11 +441,25 @@ class FlightLearningTests(unittest.TestCase):
     def test_checkpoint_round_trip_preserves_model_optimizer_rng_and_accounting_lineage(self):
         import torch
         trained = self.train(74013)
+        initial_data, initial_receipt = serialize_checkpoint(
+            trained,
+            checkpoint_id="seed74013-epoch00",
+            learner_revision="6" * 40,
+            learner_source_sha256="7" * 64,
+            checkpoint_epoch=0,
+        )
+        initial = load_checkpoint_bytes(initial_data, initial_receipt)
+        self.assertEqual(initial.lineage["completed_epochs"], 0)
+        self.assertEqual(initial.lineage["optimizer_updates"], 0)
+        self.assertEqual(initial.lineage["sample_presentations"], 0)
+
         data, receipt = serialize_checkpoint(
             trained,
             checkpoint_id="seed74013-epoch20",
             learner_revision="6" * 40,
             learner_source_sha256="7" * 64,
+            checkpoint_epoch=20,
+            parent_checkpoint_sha256=initial_receipt["sha256"],
         )
         before_global = torch.get_rng_state().clone()
         restored = load_checkpoint_bytes(data, receipt)
@@ -447,6 +467,9 @@ class FlightLearningTests(unittest.TestCase):
         self.assertTrue(torch.equal(trained.torch_rng_state, restored.torch_rng_state))
         self.assertEqual(policy_sha256(restored.model), receipt["policy_sha256"])
         self.assertEqual(restored.lineage["declaration_sha256"], DECLARATION)
+        self.assertEqual(restored.lineage["completed_epochs"], 20)
+        self.assertEqual(
+            restored.lineage["parent_checkpoint_sha256"], initial_receipt["sha256"])
         self.assertEqual(restored.lineage["capture_dataset_sha256"], self.dataset.sha256)
         self.assertEqual(restored.lineage["capture_id"], "capture-a")
         self.assertEqual(restored.lineage["optimizer_updates"], BC_EPOCHS)
