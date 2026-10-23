@@ -357,8 +357,11 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         _fail("flight_capture_declaration", "capture belongs to another accounting declaration")
     capture_id = _identifier(record["capture_id"], "capture_id")
     episode_id = _identifier(record["episode_id"], "episode_id")
-    if record["profile"] != TRAINER_PROFILE or record["split"] != "training":
-        _fail("flight_capture_scope", "only Trainer training capture can enter behavior cloning")
+    if record["profile"] != TRAINER_PROFILE or record["split"] != "development":
+        _fail(
+            "flight_capture_scope",
+            "only Trainer capture from the preregistered host development split can enter behavior cloning",
+        )
     scenario_id = _identifier(record["scenario_id"], "scenario_id")
     if scenario_id not in SCENARIO_FAMILY:
         _fail("flight_capture_scenario", "training capture scenario is outside the preregistered six-family set")
