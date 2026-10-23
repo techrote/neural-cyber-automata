@@ -1,0 +1,221 @@
+"""Software-only failure controls for 4LY-004 accounting preparation."""
+
+from pathlib import Path
+import tempfile
+import unittest
+
+from nca.contracts import ContractError, sha256_json
+from nca.train.flight_accounting import (
+    DEPENDENCIES,
+    FlightAccountingLedger,
+    FlightDeclaration,
+    execution_gate,
+    preparation_declaration,
+    required_measurements,
+)
+
+
+def admitted_fixture():
+    """Complete synthetic identities for ledger mechanics only; never experiment evidence."""
+    value = preparation_declaration().to_dict()
+    value["status"] = "prospective"
+    value["identities"] = {
+        "learner_revision": "a" * 40,
+        "learner_source_sha256": sha256_json(["fixture", "learner"]),
+        "host_revision": "b" * 40,
+        "host_build_sha256": sha256_json(["fixture", "host-build"]),
+        "profile_sha256": sha256_json(["fixture", "profile"]),
+        "controller_sha256": sha256_json(["fixture", "controller"]),
+        "teacher_sha256": sha256_json(["fixture", "teacher"]),
+    }
+    value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
+    value["splits"].update({
+        "training_sha256": sha256_json(["fixture", "training"]),
+        "tuning_sha256": sha256_json(["fixture", "tuning"]),
+        "final_sha256": sha256_json(["fixture", "sealed-final-manifest"]),
+    })
+    value["runtime"].update({
+        "platform": "fixture-linux-x86_64",
+        "python": "fixture-python-3.12",
+        "torch": "fixture-torch-cpu",
+    })
+    value["work_ceilings"].update({
+        "host_calls": 100,
+        "startup_operations": 4,
+        "cleanup_operations": 4,
+    })
+    value["resource_ceilings"].update({
+        "maximum_wall_seconds": 60.0,
+        "maximum_resident_bytes": 1024 * 1024,
+        "maximum_storage_bytes": 16 * 1024 * 1024,
+        "maximum_publication_bytes": 4 * 1024 * 1024,
+    })
+    evidence = {}
+    for name in DEPENDENCIES:
+        digest = sha256_json(["fixture-evidence", name])
+        value["dependencies"][name] = {"status": "accepted", "evidence_sha256": digest}
+        evidence[name] = digest
+    return FlightDeclaration.from_mapping(value), evidence
+
+
+class DeclarationGateTests(unittest.TestCase):
+    def test_preparation_template_is_immutable_and_fail_closed(self):
+        declaration = preparation_declaration()
+        changed = declaration.to_dict()
+        changed["seeds"][0] = 1
+        self.assertEqual(declaration.to_dict()["seeds"], [74011, 74013, 74017])
+
+        gate = execution_gate(declaration, current_evidence={})
+        self.assertFalse(gate["admitted"])
+        self.assertFalse(gate["training_enabled"])
+        self.assertFalse(gate["final_access"])
+        self.assertIn("declaration_not_prospective", gate["reasons"])
+        self.assertIn("resource_ceiling_unmeasured:maximum_wall_seconds", gate["reasons"])
+        self.assertIn("dependency_unfinished:host_4ly003", gate["reasons"])
+        self.assertGreaterEqual(len(required_measurements()), 10)
+
+    def test_stale_evidence_refuses_synthetic_complete_declaration(self):
+        declaration, evidence = admitted_fixture()
+        self.assertTrue(execution_gate(declaration, current_evidence=evidence)["admitted"])
+        evidence["teacher_qualification"] = "0" * 64
+        gate = execution_gate(declaration, current_evidence=evidence)
+        self.assertFalse(gate["admitted"])
+        self.assertIn("evidence_stale_or_missing:teacher_qualification", gate["reasons"])
+
+
+class DurableAccountingTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        self.declaration, self.evidence = admitted_fixture()
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def create(self, name="attempt-a1"):
+        return FlightAccountingLedger.create(
+            self.root / f"{name}.jsonl", self.declaration,
+            attempt_id=name, current_evidence=self.evidence)
+
+    def test_reservation_is_durable_before_confirmation_and_never_refunded(self):
+        ledger = self.create()
+        reservation = ledger.reserve_step(maximum_ticks=6, capture_labels=1)
+        durable = FlightAccountingLedger.read_snapshot(
+            ledger.path, self.declaration, attempt_id="attempt-a1")
+        self.assertEqual(durable["pending_reservations"], [reservation])
+        self.assertEqual(durable["charged"]["physical_ticks"], 6)
+        self.assertEqual(durable["charged"]["capture_labels"], 1)
+        self.assertEqual(durable["confirmed_physical_ticks"], 0)
+
+        ledger.complete(reservation, confirmed_physical_ticks=3)
+        snapshot = ledger.snapshot()
+        self.assertEqual(snapshot["charged"]["physical_ticks"], 6)
+        self.assertEqual(snapshot["confirmed_physical_ticks"], 3)
+        self.assertFalse(snapshot["refunded_work"])
+        ledger.close()
+
+    def test_failed_startup_is_charged_and_blocks_ordinary_work(self):
+        ledger = self.create()
+        reservation = ledger.reserve_host_start()
+        ledger.fail(reservation, "fixture_startup_failed")
+        snapshot = ledger.snapshot()
+        self.assertTrue(snapshot["failed"])
+        self.assertEqual(snapshot["charged"]["host_starts"], 1)
+        self.assertEqual(snapshot["charged"]["startup_operations"], 1)
+        with self.assertRaisesRegex(ContractError, "cleanup only"):
+            ledger.reserve_reset()
+
+        cleanup = ledger.reserve_cleanup()
+        ledger.complete(cleanup)
+        final = ledger.close("failed_startup")
+        self.assertTrue(final["failed"])
+        self.assertEqual(final["failures"][0]["reason"], "fixture_startup_failed")
+
+    def test_lost_reply_retains_unknown_consumption_and_refuses_replay(self):
+        ledger = self.create()
+        reservation = ledger.reserve_step(maximum_ticks=6)
+        ledger.mark_unknown(reservation, "fixture_reply_lost_after_send")
+        snapshot = ledger.snapshot()
+        self.assertTrue(snapshot["unknown_consumption"])
+        self.assertEqual(snapshot["charged"]["physical_ticks"], 6)
+        self.assertEqual(snapshot["confirmed_physical_ticks"], 0)
+        with self.assertRaisesRegex(ContractError, "cleanup only"):
+            ledger.reserve_step()
+        ledger.close("unknown_consumption")
+
+    def test_partial_checkpoint_publication_becomes_unknown_on_resume(self):
+        ledger = self.create()
+        ledger.reserve_checkpoint_publication()
+        ledger._stream.close()  # fixture: process dies after durable reservation
+
+        resumed = FlightAccountingLedger.resume(
+            ledger.path, self.declaration, attempt_id="attempt-a1",
+            current_evidence=self.evidence)
+        snapshot = resumed.snapshot()
+        self.assertTrue(snapshot["unknown_consumption"])
+        self.assertEqual(snapshot["charged"]["checkpoint_publications"], 1)
+        self.assertEqual(snapshot["checkpoints"], {})
+        self.assertEqual(snapshot["pending_reservations"], [])
+        with self.assertRaises(ContractError):
+            resumed.reserve_checkpoint_publication()
+        resumed.close("partial_publication")
+
+    def test_checkpoint_lineage_survives_clean_interruption(self):
+        ledger = self.create()
+        first = ledger.reserve_checkpoint_publication()
+        ledger.publish_checkpoint(
+            first, checkpoint_id="epoch-05",
+            sha256=sha256_json(["fixture", "epoch-05"]), parent_id=None)
+        second = ledger.reserve_checkpoint_publication()
+        ledger.publish_checkpoint(
+            second, checkpoint_id="epoch-10",
+            sha256=sha256_json(["fixture", "epoch-10"]), parent_id="epoch-05")
+        ledger._stream.close()  # fixture: process exits between completed operations
+
+        resumed = FlightAccountingLedger.resume(
+            ledger.path, self.declaration, attempt_id="attempt-a1",
+            current_evidence=self.evidence)
+        self.assertEqual(
+            resumed.snapshot()["checkpoints"]["epoch-10"]["parent_id"], "epoch-05")
+        resumed.close("fixture_resume")
+
+    def test_interrupted_jsonl_write_is_not_repaired_or_replayed(self):
+        ledger = self.create()
+        reservation = ledger.reserve_reset()
+        ledger.complete(reservation)
+        ledger._stream.close()
+        with ledger.path.open("ab") as target:
+            target.write(b'{"schema":"nca-flight-accounting-record/v1"')
+            target.flush()
+        before = ledger.path.read_bytes()
+        with self.assertRaisesRegex(ContractError, "interrupted"):
+            FlightAccountingLedger.resume(
+                ledger.path, self.declaration, attempt_id="attempt-a1",
+                current_evidence=self.evidence)
+        self.assertEqual(ledger.path.read_bytes(), before)
+
+    def test_duplicate_invocation_and_consumed_attempt_are_refused(self):
+        ledger = self.create()
+        with self.assertRaisesRegex(ContractError, "already exists"):
+            self.create()
+        ledger.close()
+        with self.assertRaisesRegex(ContractError, "cannot be resumed"):
+            FlightAccountingLedger.resume(
+                ledger.path, self.declaration, attempt_id="attempt-a1",
+                current_evidence=self.evidence)
+
+    def test_exhausted_counter_refuses_only_new_work_that_needs_it(self):
+        ledger = self.create()
+        start = ledger.reserve_host_start()
+        ledger.complete(start)
+        with self.assertRaisesRegex(ContractError, "counter exhausted: host_starts"):
+            ledger.reserve_host_start()
+
+        reset = ledger.reserve_reset()
+        ledger.complete(reset)
+        self.assertEqual(ledger.snapshot()["charged"]["resets"], 1)
+        ledger.close()
+
+
+if __name__ == "__main__":
+    unittest.main()
