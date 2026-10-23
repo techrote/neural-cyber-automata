@@ -149,6 +149,21 @@ class DurableAccountingTests(unittest.TestCase):
             ledger.reserve_step()
         ledger.close("unknown_consumption")
 
+    def test_failed_partial_step_retains_confirmed_ticks_and_reserved_capacity(self):
+        ledger = self.create()
+        reservation = ledger.reserve_step(maximum_ticks=6)
+        ledger.fail(
+            reservation, "fixture_terminal_integrity_failure",
+            confirmed_physical_ticks=2)
+        snapshot = ledger.snapshot()
+        self.assertTrue(snapshot["failed"])
+        self.assertEqual(snapshot["charged"]["physical_ticks"], 6)
+        self.assertEqual(snapshot["confirmed_physical_ticks"], 2)
+        self.assertEqual(snapshot["failures"][0]["confirmed_physical_ticks"], 2)
+        with self.assertRaisesRegex(ContractError, "cleanup only"):
+            ledger.reserve_reset()
+        ledger.close("partial_failure")
+
     def test_partial_checkpoint_publication_becomes_unknown_on_resume(self):
         ledger = self.create()
         ledger.reserve_checkpoint_publication()
@@ -159,6 +174,7 @@ class DurableAccountingTests(unittest.TestCase):
             current_evidence=self.evidence)
         snapshot = resumed.snapshot()
         self.assertTrue(snapshot["unknown_consumption"])
+        self.assertTrue(snapshot["interrupted"])
         self.assertEqual(snapshot["charged"]["checkpoint_publications"], 1)
         self.assertEqual(snapshot["checkpoints"], {})
         self.assertEqual(snapshot["pending_reservations"], [])
@@ -183,6 +199,13 @@ class DurableAccountingTests(unittest.TestCase):
             current_evidence=self.evidence)
         self.assertEqual(
             resumed.snapshot()["checkpoints"]["epoch-10"]["parent_id"], "epoch-05")
+        self.assertTrue(resumed.snapshot()["interrupted"])
+        with self.assertRaisesRegex(ContractError, "cleanup only"):
+            resumed.reserve_reset()
+        with self.assertRaisesRegex(ContractError, "cannot be resumed again"):
+            FlightAccountingLedger.resume(
+                ledger.path, self.declaration, attempt_id="attempt-a1",
+                current_evidence=self.evidence)
         resumed.close("fixture_resume")
 
     def test_interrupted_jsonl_write_is_not_repaired_or_replayed(self):
