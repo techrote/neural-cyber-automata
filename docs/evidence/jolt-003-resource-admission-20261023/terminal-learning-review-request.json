@@ -1,0 +1,48 @@
+{
+  "schema": "nca-jolt-003-independent-review-request/v2",
+  "task": "LEARN-JOLT-003 terminal learning and qualification",
+  "role": "terminal_learning_qualification",
+  "requested_independent_review": true,
+  "independently_completed": false,
+  "reviewer": null,
+  "accepted": false,
+  "prospective_experiment_admitted": false,
+  "scope": "Independent final-source admission review, not software-only or PR style review",
+  "final_record_schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "target_branch": "impl/jolt003-resource-watchdog-review",
+  "source_revision": null,
+  "source_sha256": null,
+  "prospective_binding_sha256": null,
+  "required_exact_bindings": [
+    "source_revision",
+    "source_sha256",
+    "config_sha256",
+    "host_identity_sha256",
+    "runtime_contract_sha256",
+    "prospective_binding_sha256",
+    "cpu_comparison_policy",
+    "reviewer"
+  ],
+  "required_evidence": [
+    "Immutable original JOLT-RECOVERY-004 teacher prerequisite and unchanged sealed-case freshness",
+    "No invented task terminal or reward on safe retirement, correct v3 GAE bootstrap, mask, history and administrative cutoff",
+    "All three BC seeds, recurrent PPO 256-row updates and frozen case-major paired comparison",
+    "Six originally frozen final checkpoints before opening any sealed result",
+    "All policy/family mean, per-seed, lower95, initial-gain, trim/angle/velocity and raw per-case <=5ms inference quality gates",
+    "Source and configuration unchanged by watchdog and CPU-portability instrumentation",
+    "Exact observed source revision plus final-head GH CI and independent review of this role"
+  ],
+  "request_instructions": "Produce a separately authored original JSON review with reviewer identity and accepted=true only after resolving *every* listed finding and binding an independently accepted prospective resource declaration. Do not copy/rename this preparation packet as an approval.",
+  "blocking_findings": [
+    {
+      "id": "TERM-REVIEW-01",
+      "finding": "No independently authored terminal-learning v2 final-source acceptance or source-bound prospective declaration exists."
+    },
+    {
+      "id": "TERM-REVIEW-02",
+      "finding": "Peak-memory risk and one-attempt stop/cleanup cannot be presumed adequate solely from nonphysical unit tests."
+    }
+  ],
+  "physical_experiment_started": false,
+  "allocation_consumed": false
+}
