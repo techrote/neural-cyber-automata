@@ -88,5 +88,14 @@ class FlightTests(unittest.TestCase):
         self.assertEqual(reply['observation']['observed_tick'],6)
         self.assertTrue(session.terminal)
 
+    def test_short_nonterminal_interval_refused(self):
+        owner=Owner(); session=FlightSession(owner); obs=session.reset(scenario='x',seed=1)
+        def short(reply):
+            reply['transition'].update(consumed_ticks=1,terminated=False,success=False)
+            reply['observation']['observed_tick']=1
+        owner.bad=short
+        with self.assertRaises(ValueError):session.step([0,0],observation_id=obs['observation_id'])
+        self.assertTrue(session.failed)
+
 
 if __name__ == '__main__': unittest.main()

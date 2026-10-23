@@ -110,6 +110,8 @@ class FlightSession:
             ticks = transition['consumed_ticks']
             if type(ticks) is not int or not 1 <= ticks <= 6:
                 raise ValueError('invalid confirmed tick count')
+            if ticks != 6 and not any(transition[k] for k in ('terminated', 'truncated', 'failed')):
+                raise ValueError('short nonterminal decision interval')
             self._observe(reply['observation'])
             if self.observation['observed_tick'] != old_tick + ticks:
                 raise ValueError('physical tick discontinuity')
