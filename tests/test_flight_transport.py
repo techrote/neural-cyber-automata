@@ -180,11 +180,38 @@ class TransportTests(unittest.TestCase):
         })
         self.assertEqual(
             accounting.events[0],
-            ("reserve", "reset", "r1", {"tuning": True}),
+            ("reserve", "reset", "r1", {"tuning": True, "stage": "tuning"}),
         )
         self.assertEqual(
             accounting.events[-1],
             ("complete", "r1", {"confirmed_physical_ticks": 0}),
+        )
+
+    def test_accounted_capture_reset_preserves_capture_stage(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(response=lambda request: success(
+                request,
+                transition={
+                    "ticks_consumed": 0,
+                    "failed": False,
+                    "reason": "reset",
+                },
+            )),
+            accounting=accounting,
+            capture_labels_per_step=1,
+        )
+        transport.request({
+            "sequence": 1,
+            "command": "reset",
+            "split": "development",
+        })
+        self.assertEqual(
+            accounting.events[0],
+            ("reserve", "reset", "r1", {
+                "tuning": False,
+                "stage": "capture",
+            }),
         )
 
     def test_accounting_reserves_step_before_send_and_records_partial_ticks(self):
