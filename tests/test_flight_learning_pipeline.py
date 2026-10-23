@@ -224,8 +224,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[first, second],
                 final=outcome("failed", failed=True, reason="physical_fault"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         refused = validate_declared_capture_episode(
             episode(
@@ -236,8 +235,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[],
                 final=outcome("refused", reason="reset_refused"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         self.assertEqual(failed.status, "failed")
         self.assertEqual(len(failed.samples), 1)
@@ -263,8 +261,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[failed],
                 final=outcome("failed", failed=True, reason="expired_lease"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         self.assertEqual(captured.samples, ())
         self.assertIn("0:failed_transition", captured.exclusions)
@@ -285,8 +282,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[failed],
                 final=outcome("failed", failed=True, reason="physical_fault"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         self.assertEqual(captured.samples, ())
         self.assertIn("0:failed_transition", captured.exclusions)
@@ -302,8 +298,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[unknown],
                 final=outcome("failed", failed=True, reason="lost_reply"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         self.assertEqual(captured.samples, ())
         self.assertIn("0:unknown_physical_consumption", captured.exclusions)
@@ -317,8 +312,7 @@ class FlightCaptureTests(unittest.TestCase):
                 transitions=[refused],
                 final=outcome("completed", terminated=True, reason="stopped"),
             ),
-            declaration_sha256=DECLARATION,
-            expected_source=SOURCE,
+            declaration=ACCOUNTING_DECLARATION,
         )
         self.assertEqual(captured.samples, ())
         self.assertIn("0:teacher_refused", captured.exclusions)
