@@ -296,15 +296,19 @@ def _validate_physical(value: Any, name: str) -> dict[str, Any]:
         _fail("flight_capture_physical", f"{name}.reason is required")
     ticks = physical["consumed_ticks"]
     if physical["status"] == "confirmed":
-        if type(ticks) is not int or not 1 <= ticks <= 6:
+        if type(ticks) is not int or not 0 <= ticks <= 6:
             _fail("flight_capture_physical", f"{name} confirmed tick count is invalid")
     elif ticks is not None:
         _fail("flight_capture_physical", f"{name} unconfirmed work cannot claim consumed ticks")
     return physical
 
 
-def _same_lifetime(before: Mapping[str, Any], after: Mapping[str, Any]) -> bool:
-    return all(before[key] == after[key] for key in ("run_id", "actor_id", "epoch", "control_generation"))
+def _same_lifetime(before: Mapping[str, Any], after: Mapping[str, Any], *,
+                   allow_generation_advance: bool = False) -> bool:
+    if any(before[key] != after[key] for key in ("run_id", "actor_id", "epoch")):
+        return False
+    delta = after["control_generation"] - before["control_generation"]
+    return delta == 0 or (allow_generation_advance and delta == 1)
 
 
 def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: str,
@@ -397,13 +401,23 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
             after_flat = _validate_flat(
                 transition["next_flat_observation"], after,
                 f"capture.transitions[{index}].next_flat_observation")
-            if not _same_lifetime(before, after):
-                _fail("flight_capture_authority", "confirmed transition changed owner lifetime/control identity")
-            if after["observation_id"] == before["observation_id"]:
+            ticks = physical["consumed_ticks"]
+            if not _same_lifetime(
+                    before, after, allow_generation_advance=step_outcome["failed"]):
+                _fail("flight_capture_authority",
+                      "confirmed transition changed owner lifetime/control identity")
+            if ticks == 0:
+                if not step_outcome["failed"] or not terminal:
+                    _fail("flight_capture_ticks",
+                          "zero-tick confirmed work is allowed only for an authoritative owner failure")
+                if sha256_json(after) != sha256_json(before):
+                    _fail("flight_capture_ticks",
+                          "zero-tick owner failure cannot invent a changed task observation")
+            elif after["observation_id"] == before["observation_id"]:
                 _fail("flight_capture_stale", "confirmed transition reused the source observation")
-            if after["observed_tick"] != before["observed_tick"] + physical["consumed_ticks"]:
+            if after["observed_tick"] != before["observed_tick"] + ticks:
                 _fail("flight_capture_ticks", "confirmed transition tick count differs from owner observations")
-            if physical["consumed_ticks"] != 6 and not terminal:
+            if ticks != 6 and not terminal:
                 _fail("flight_capture_ticks", "short confirmed work is allowed only on a terminal interval")
             current = after
             current_flat = after_flat
