@@ -178,6 +178,7 @@ class TransportTests(unittest.TestCase):
             "sequence": 1,
             "command": "reset",
             "split": "tuning",
+            "producer": "policy",
         })
         self.assertEqual(
             accounting.events[0],
@@ -286,6 +287,7 @@ class TransportTests(unittest.TestCase):
             "sequence": 1,
             "command": "reset",
             "split": "development",
+            "producer": "policy",
         })
         self.assertEqual(
             accounting.events[0],
