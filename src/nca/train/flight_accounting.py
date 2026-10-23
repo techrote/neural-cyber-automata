@@ -518,12 +518,10 @@ def execution_gate(declaration: FlightDeclaration, *, current_evidence: Mapping[
     for name, identity in value["identities"].items():
         if identity is None:
             reasons.append(f"identity_unresolved:{name}")
-    if value["scenario"]["manifest_sha256"] is None:
-        reasons.append("scenario_manifest_unresolved")
-    for name in ("training_sha256", "tuning_sha256", "final_sha256"):
+    for name in ("development_sha256", "tuning_sha256", "final_commitment_sha256"):
         if value["splits"][name] is None:
             reasons.append(f"split_unresolved:{name}")
-    for name in ("platform", "python", "torch"):
+    for name in ("platform", "python", "torch", "threads"):
         if value["runtime"][name] is None:
             reasons.append(f"runtime_unresolved:{name}")
     for name, ceiling in value["work_ceilings"].items():
