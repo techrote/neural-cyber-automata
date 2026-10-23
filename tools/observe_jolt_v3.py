@@ -138,7 +138,9 @@ def observe(args, *, started, command=None):
                                 break
                             allowance = max(0, 65536 - stream.tell())
                             if allowance:
-                                stream.write(block[:allowance])
+                                retained = block[:allowance]
+                                if stream.write(retained) != len(retained):
+                                    raise OSError("short original revoked stream write")
                             if len(block) > allowance:
                                 from nca.contracts import ContractError
                                 failed(ContractError("jolt_v3_stream_bytes",
