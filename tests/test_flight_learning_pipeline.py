@@ -159,7 +159,8 @@ def transition(index, before, after, *, teacher_status="accepted", physical_stat
 
 
 def episode(*, episode_id="ep-1", transitions=None, final=None, split="training",
-            initial=None, capture_id="capture-a"):
+            initial=None, capture_id="capture-a", scenario_id="arrival_braking",
+            host_seed=101):
     transitions = [] if transitions is None else transitions
     if initial is None and transitions:
         initial = transitions[0]["observation"]
@@ -173,8 +174,8 @@ def episode(*, episode_id="ep-1", transitions=None, final=None, split="training"
         "episode_id": episode_id,
         "profile": "4ly_trainer",
         "split": split,
-        "scenario_id": "arrival_braking",
-        "host_seed": 101,
+        "scenario_id": scenario_id,
+        "host_seed": host_seed,
         "source": copy.deepcopy(SOURCE),
         "teacher": copy.deepcopy(TEACHER),
         "initial_observation": initial,
@@ -184,13 +185,15 @@ def episode(*, episode_id="ep-1", transitions=None, final=None, split="training"
     }
 
 
-def valid_capture(episode_id="ep-valid"):
+def valid_capture(episode_id="ep-valid", *, scenario_id="arrival_braking", host_seed=101):
     before = observation(0)
     after = observation(6)
     row = transition(0, before, after, terminated=True, success=True)
     return validate_capture_episode(
         episode(
             episode_id=episode_id,
+            scenario_id=scenario_id,
+            host_seed=host_seed,
             initial=before,
             transitions=[row],
             final=outcome("completed", terminated=True, success=True, reason="arrival"),
@@ -226,6 +229,8 @@ class FlightCaptureTests(unittest.TestCase):
         refused = validate_capture_episode(
             episode(
                 episode_id="ep-refused",
+                scenario_id="arrival_braking",
+                host_seed=103,
                 initial=None,
                 transitions=[],
                 final=outcome("refused", reason="reset_refused"),
@@ -342,8 +347,20 @@ class FlightCaptureTests(unittest.TestCase):
 class FlightLearningTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.capture = valid_capture()
-        cls.dataset = build_capture_dataset((cls.capture,))
+        fixture_cases = (
+            ("hover", "unsupported_hover"),
+            ("free", "horizontal_reach"),
+            ("reverse", "reverse"),
+            ("arrival", "arrival_braking"),
+            ("obstacles", "wide_corridor"),
+            ("recovery", "wall_recovery"),
+        )
+        cls.captures = tuple(
+            valid_capture(f"ep-{name}", scenario_id=scenario_id, host_seed=101)
+            for name, scenario_id in fixture_cases
+        )
+        cls.capture = cls.captures[3]
+        cls.dataset = build_capture_dataset(cls.captures)
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -378,12 +395,25 @@ class FlightLearningTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "accounting"):
             train_behavior_clone(self.dataset, seed=74011)
 
+    def test_preregistered_family_weights_are_equal(self):
+        totals = {}
+        for sample, weight in zip(self.dataset.samples, self.dataset.sample_weights):
+            totals[sample.family] = totals.get(sample.family, 0.0) + weight
+        self.assertEqual(
+            set(totals),
+            {"hover", "free_space", "reversal", "arrival", "obstacles", "recovery"},
+        )
+        self.assertAlmostEqual(sum(self.dataset.sample_weights), 1.0, places=12)
+        for value in totals.values():
+            self.assertAlmostEqual(value, 1.0 / 6.0, places=12)
+
     def test_bounded_clone_is_deterministic_for_the_declared_seed(self):
         first = self.train(74011)
         second = self.train(74011)
         self.assertEqual(first.completed_epochs, BC_EPOCHS)
+        expected_presentations = len(self.dataset.samples) * BC_EPOCHS
         self.assertEqual(first.optimizer_updates, BC_EPOCHS)
-        self.assertEqual(first.sample_presentations, BC_EPOCHS)
+        self.assertEqual(first.sample_presentations, expected_presentations)
         self.assertEqual(first.epoch_losses, second.epoch_losses)
         self.assertEqual(policy_sha256(first.model), policy_sha256(second.model))
         self.assertEqual(BC_SCHEDULE_SHA256, BC_SCHEDULE_SHA256)
@@ -405,7 +435,10 @@ class FlightLearningTests(unittest.TestCase):
         self.assertEqual(restored.lineage["capture_dataset_sha256"], self.dataset.sha256)
         self.assertEqual(restored.lineage["capture_id"], "capture-a")
         self.assertEqual(restored.lineage["optimizer_updates"], BC_EPOCHS)
-        self.assertEqual(restored.lineage["sample_presentations"], BC_EPOCHS)
+        self.assertEqual(
+            restored.lineage["sample_presentations"],
+            len(self.dataset.samples) * BC_EPOCHS,
+        )
 
         original_probe = random.Random()
         original_probe.setstate(trained.shuffle_rng.getstate())
