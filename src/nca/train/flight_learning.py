@@ -307,11 +307,11 @@ def _validate_outcome(value: Any, name: str) -> dict[str, Any]:
 
 def _validate_teacher_action(value: Any, teacher: Mapping[str, str], before: Mapping[str, Any], name: str):
     action = dict(_exact_mapping(value, {
-        "source_id", "source_sha256", "observation_id", "status",
+        "source_sha256", "observation_id", "status",
         "requested_action", "admitted_action", "reason",
     }, name))
-    if action["source_id"] != teacher["id"] or action["source_sha256"] != teacher["sha256"]:
-        _fail("flight_capture_teacher", f"{name} teacher identity differs")
+    if action["source_sha256"] != teacher["sha256"]:
+        _fail("flight_capture_teacher", f"{name} teacher source identity differs")
     if action["observation_id"] != before["observation_id"]:
         _fail("flight_capture_teacher", f"{name} action belongs to another observation")
     if action["status"] not in ("accepted", "refused", "unknown"):
@@ -627,6 +627,40 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
         declaration, capture_id, source_sha, values, samples, weights, sha256_json(identity))
 
 
+def bind_capture_accounting(
+    dataset: FlightCaptureDataset, accounting: FlightAccountingLedger
+) -> dict[str, Any]:
+    """Charge only eligible immutable labels, after validation and before cloning.
+
+    Teacher-step transport reserves physical capture work with zero labels.
+    This local reservation binds the exact dataset digest to the capture-label
+    counter only after eligibility is known; invalid/refused/uncertain rows are
+    never charged as ordinary supervised labels.
+    """
+    if not isinstance(dataset, FlightCaptureDataset):
+        _fail("flight_capture_accounting", "validated capture dataset required")
+    if not isinstance(accounting, FlightAccountingLedger):
+        _fail("flight_capture_accounting", "durable accounting ledger required")
+    if accounting.declaration.sha256 != dataset.declaration_sha256:
+        _fail("flight_capture_accounting", "capture and accounting declarations differ")
+    snapshot = accounting.snapshot()
+    capture_counts = snapshot.get("stage_counts", {}).get("capture")
+    if not isinstance(capture_counts, Mapping):
+        _fail("flight_capture_accounting", "capture stage accounting is unavailable")
+    if capture_counts.get("capture_labels", 0) != 0:
+        _fail("flight_capture_accounting", "capture labels were already charged for this attempt")
+    reservation = accounting.reserve_many(
+        {"capture_labels": len(dataset.samples)},
+        scope=f"capture_labels:{dataset.sha256}",
+        stage="capture",
+    )
+    accounting.complete(reservation)
+    bound = accounting.snapshot()
+    if bound["stage_counts"]["capture"]["capture_labels"] != len(dataset.samples):
+        _fail("flight_capture_accounting", "durable capture-label count differs from dataset")
+    return bound
+
+
 def _fresh_policy_with_rng(seed: int):
     torch = _torch()
     if type(seed) is not int or seed < 0:
@@ -736,6 +770,12 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     if accounting.declaration.sha256 != dataset.declaration_sha256:
         _fail("flight_clone_accounting", "capture and optimizer ledger declarations differ")
     samples = dataset.samples
+    capture_counts = accounting.snapshot().get("stage_counts", {}).get("capture", {})
+    if capture_counts.get("capture_labels") != len(samples):
+        _fail(
+            "flight_clone_accounting",
+            "eligible capture labels are not durably bound to this accounting attempt",
+        )
     captured_cases = frozenset(
         (episode.scenario_id, episode.host_seed) for episode in dataset.episodes)
     if captured_cases != EXPECTED_TRAINING_CASES:
