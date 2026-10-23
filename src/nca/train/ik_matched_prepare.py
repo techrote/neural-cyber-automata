@@ -39,6 +39,7 @@ def candidate_config():
         "curriculum": "stage_order_then_seeded_whole_group_shuffle_each_epoch",
         "selection": "tuning_lowest_raw_p95_ties_earliest",
         "cpu_threads_per_worker": 1,
+        "host_committed_memory_limit_per_process": 8*GIB,
         "trials": {"serial": {"max_workers": 1}, "parallel": {"max_workers": 3}},
         "gpu_allocator_bytes_per_worker": 5 * GIB,
         "gpu_aggregate_budget_bytes": 20 * GIB,

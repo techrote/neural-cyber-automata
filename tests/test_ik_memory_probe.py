@@ -6,7 +6,7 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock,patch
 import contextlib
 import io
 import runpy
@@ -14,6 +14,7 @@ import runpy
 from nca.runs import immutable_json,sha256_file
 from nca.contracts import sha256_json,canonical_json
 from nca.train import ik_memory_probe as probe
+ORIGINAL_RETIRE=probe.retire_predecessor
 
 
 class ProbeReviewTests(unittest.TestCase):
@@ -25,6 +26,11 @@ class ProbeReviewTests(unittest.TestCase):
                        'nca.train.ik_gpu_ownership.verify',
                        'nca.ik.process_limits.memory_limit'):
             mocked=patch(target);mocked.start();self.addCleanup(mocked.stop)
+        mocked=patch.object(probe,'host_headroom',return_value=dict(
+            available_physical_bytes=39*probe.GIB,available_commit_bytes=68*probe.GIB))
+        mocked.start();self.addCleanup(mocked.stop)
+        mocked=patch.object(probe,'retire_predecessor')
+        mocked.start();self.addCleanup(mocked.stop)
 
     def test_import_does_not_load_tensor_runtime(self):
         result=subprocess.run([sys.executable,'-c',
@@ -43,12 +49,26 @@ class ProbeReviewTests(unittest.TestCase):
         self.assertLess(limits['active_seconds'],limits['wall_seconds'])
 
     def test_module_cli_prepares_once_without_cuda(self):
+        import ctypes
         with tempfile.TemporaryDirectory() as directory:
-            root=Path(directory)/'prepared'
-            with patch.object(sys,'argv',['probe','prepare','--root',str(root)]), \
+            root=Path(directory)/'prepared';previous=Path(directory)/'old'
+            def status(pointer):
+                pointer._obj.available_physical=39*probe.GIB
+                pointer._obj.available_commit=68*probe.GIB
+                return 1
+            def prior_read(path,**kwargs):
+                if Path(path).name=='result.json':
+                    return dict(outcome='failed',cleanup_errors=[],artifacts={})
+                return {'sha256':'c'*64}
+            with patch.object(sys,'argv',['probe','prepare','--root',str(root),
+                                        '--previous-probe',str(previous)]), \
                     patch('nca.train.ik_matched_prepare.prepared_source',return_value={
                         'revision':'a'*40,'source_sha256':'b'*64}), \
                     patch('nca.train.ik_experiment._titan_visibility'), \
+                    patch('nca.train.ik_experiment._read',side_effect=prior_read), \
+                    patch('nca.runs.sha256_file',return_value=probe.limits()['prior_failed_result_sha256']), \
+                    patch.object(ctypes,'windll',SimpleNamespace(kernel32=SimpleNamespace(
+                        GlobalMemoryStatusEx=status)),create=True), \
                     contextlib.redirect_stdout(io.StringIO()) as output:
                 runpy.run_path(probe.__file__,run_name='__main__')
             self.assertTrue((root/'declaration.json').is_file())
@@ -73,7 +93,9 @@ class ProbeReviewTests(unittest.TestCase):
             immutable_json(root/'claim.json',dict(declaration_sha256=declaration['sha256'],
                 started=0.,review_sha256=['c'*64,'d'*64]))
             resources=dict(peak_resident_bytes=128*1024**2,cpu_user_seconds=1.,
-                           cpu_system_seconds=1.,read_bytes=0,write_bytes=0)
+                           cpu_system_seconds=1.,read_bytes=0,write_bytes=0,
+                           private_commit_bytes=256*1024**2,pagefile_bytes=256*1024**2,
+                           peak_pagefile_bytes=256*1024**2)
             for index in range(3):
                 pid=6100+index
                 immutable_json(root/f'worker-{index}-claim.json',dict(index=index,
@@ -106,6 +128,30 @@ class ProbeReviewTests(unittest.TestCase):
             receipt.write_bytes(receipt.read_bytes()+b' ')
             with self.assertRaisesRegex(ValueError,'evidence changed'):
                 probe.qualification_record(root,source)
+
+    def test_retirement_cannot_delete_a_replaced_active_owner(self):
+        import ctypes
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);old=root/'old';old.mkdir();new=root/'new';new.mkdir()
+            immutable_json(new/'claim.json',dict(review_sha256=['d'*64,'e'*64]))
+            active=root/'active.json'
+            immutable_json(active,dict(kind='allocation_probe',declaration_sha256='a'*64))
+            immutable_json(old/'result.json',{'retained':'fixture'})
+            for index in range(3):immutable_json(old/f'worker-{index}-ready.json',{'pid':6100+index})
+            replacement=canonical_json(dict(kind='unrelated',declaration_sha256='c'*64)).encode()+b'\n'
+            def publish(path,value):
+                result=immutable_json(path,value)
+                if path.name=='ownership-retirement.json':active.write_bytes(replacement)
+                return result
+            kernel=SimpleNamespace(OpenProcess=Mock(return_value=0),CloseHandle=Mock())
+            with patch.object(probe,'validate_predecessor',return_value={'sha256':'a'*64}), \
+                    patch('nca.train.ik_gpu_ownership.path',return_value=active), \
+                    patch.object(ctypes,'WinDLL',return_value=kernel), \
+                    patch.object(ctypes,'get_last_error',return_value=87), \
+                    patch.object(probe,'immutable_json',side_effect=publish):
+                with self.assertRaises(ValueError):
+                    ORIGINAL_RETIRE(new,dict(previous_probe=str(old),sha256='b'*64))
+            self.assertEqual(active.read_bytes(),replacement)
 
     def test_preexisting_parent_claim_blocks_every_child_launch(self):
         with tempfile.TemporaryDirectory() as directory:

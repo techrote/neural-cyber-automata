@@ -123,7 +123,8 @@ def process_metrics():
         raise ValueError('missing process resource telemetry')
     times=os.times()
     return dict(cpu_user_seconds=times.user,cpu_system_seconds=times.system,
-                peak_resident_bytes=memory.peak_working_set,read_bytes=io.read_bytes,write_bytes=io.write_bytes)
+                peak_resident_bytes=memory.peak_working_set,private_commit_bytes=memory.private,
+                pagefile_bytes=memory.pagefile,peak_pagefile_bytes=memory.peak_pagefile,read_bytes=io.read_bytes,write_bytes=io.write_bytes)
 
 
 def supervise(packet, mode, corpus, registry, reviews, authorization):
@@ -150,7 +151,7 @@ def supervise(packet, mode, corpus, registry, reviews, authorization):
     try:
         acquire(ownership)
         from nca.ik.process_limits import memory_limit
-        memory_limit(2048,kill_children_on_exit=True)
+        memory_limit(8192,kill_children_on_exit=True)
         validate_lifecycle(root,mode)
         with telemetry.open('x',encoding='utf-8') as monitor:
             while pending or active:

@@ -8,6 +8,20 @@ verified: 2026-10-23
 
 # D-029 — Matched IK trial preparation only
 
+[ACCEPTED QUALIFICATION AMENDMENT] After the first admitted allocation probe
+failed at 768 MiB per worker, the owner commissions diagnosis, a separately
+reviewed qualification amendment, two fresh probe admissions, qualification,
+rebound packets and two fresh trial admissions; training remains withheld.
+The proposed cause is host committed-memory pressure under the former 2 GiB
+Windows Job cap, not proven VRAM exhaustion. The new one-attempt probe changes
+only host policy to 8 GiB per process and adds private/pagefile/peak commitment
+telemetry. GPU limits, work, deadlines and all training gates stay unchanged.
+Launch requires at least 32 GiB available RAM and 36 GiB available commitment.
+The exact failed result and all its artifacts remain immutable. Only after two
+new probe admissions, confirmed old-worker termination and exact-byte archival
+may its settled active ownership hold be retired for the new declaration.
+Failure of the amended probe stops again, without an automatic retry.
+
 [ACCEPTED AMENDMENT] The later owner instruction commissions completion of
 accounting, lifecycle, tensor comparison and resource qualification, rebound
 declarations, exact-head CI and two fresh admissions while continuing to

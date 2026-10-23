@@ -14,18 +14,85 @@ from nca.train.ik_experiment import _read,_titan_visibility
 from nca.train.ik_matched_supervisor import board_sample,stop_tree,process_metrics
 
 
+def validate_predecessor(previous):
+    previous=Path(previous)
+    if sha256_file(previous/'result.json')!=limits()['prior_failed_result_sha256']:
+        raise ValueError('exact retained failed qualification required')
+    result=_read(previous/'result.json')
+    if result['outcome']!='failed' or result['cleanup_errors']:
+        raise ValueError('settled failed predecessor required')
+    for name,expected in result['artifacts'].items():
+        if sha256_file(previous/name)!=expected: raise ValueError('predecessor evidence changed')
+    return _read(previous/'declaration.json')
+
+
+def retire_predecessor(root,value):
+    previous=Path(value['previous_probe']);old=validate_predecessor(previous)
+    import ctypes
+    from ctypes import wintypes
+    kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+    kernel.OpenProcess.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
+    kernel.OpenProcess.restype=wintypes.HANDLE
+    kernel.CloseHandle.argtypes=[wintypes.HANDLE]
+    termination=[]
+    for index in range(3):
+        pid=_read(previous/f'worker-{index}-ready.json')['pid']
+        ctypes.set_last_error(0);handle=kernel.OpenProcess(0x1000,False,pid)
+        if handle:
+            kernel.CloseHandle(handle);raise ValueError('predecessor PID still exists')
+        if ctypes.get_last_error()!=87: raise ValueError('predecessor termination unverified')
+        termination.append(dict(pid=pid,open_process_error=87))
+    from nca.train.ik_gpu_ownership import path
+    expected=dict(kind='allocation_probe',declaration_sha256=old['sha256'])
+    if _read(path())!=expected: raise ValueError('unexpected retained TITAN owner')
+    from nca.runs import immutable_bytes
+    old_bytes=path().read_bytes()
+    copy=Path(root)/'retired-predecessor-ownership.json'
+    immutable_bytes(copy,old_bytes)
+    receipt=dict(previous_result_sha256=sha256_file(previous/'result.json'),old_ownership_file_sha256=sha256_file(copy),
+        successor_declaration_sha256=value['sha256'],termination_proofs=termination,
+        admission_file_sha256=_read(Path(root)/'claim.json')['review_sha256'],all_predecessor_pids_absent=True)
+    immutable_json(Path(root)/'ownership-retirement.json',receipt)
+    if (copy.read_bytes()!=old_bytes or _read(Path(root)/'ownership-retirement.json')!=receipt
+            or path().read_bytes()!=old_bytes): raise ValueError('ownership retirement readback changed')
+    path().unlink()
+
+
+def validate_resources(resources):
+    for key in ('peak_resident_bytes','private_commit_bytes','pagefile_bytes','peak_pagefile_bytes'):
+        n=resources.get(key)
+        if type(n)!=int or not 0<=n<=8*GIB: raise ValueError('host memory cap or missing commit telemetry')
+    if max(resources['private_commit_bytes'],resources['pagefile_bytes'])>resources['peak_pagefile_bytes']:
+        raise ValueError('inconsistent process commit peak')
+
+
 def limits():
     return dict(workers=3,chunk_bytes=256*1024**2,chunks=20,allocator_bytes_per_worker=5*GIB,
                 board_bytes=20*GIB,wall_seconds=300,active_seconds=240,hold_seconds=30,
-                host_peak_bytes_per_process=2*GIB,maximum_temperature_celsius=80,
-                one_attempt=True,no_training=True,no_data=True,touch_zero=True,warmup_bytes=1024**2)
+                host_peak_bytes_per_process=8*GIB,minimum_available_commit_bytes=36*GIB,
+                minimum_available_physical_bytes=32*GIB,maximum_temperature_celsius=80,
+                one_attempt=True,no_training=True,no_data=True,touch_zero=True,warmup_bytes=1024**2,
+                amendment='host_commit_v2',prior_failed_result_sha256='77220c2773c6f9e36a4288639c7cb5c384a0355c07f21c476e60722d05827e35')
 
 
-def prepare(root):
+def host_headroom():
+    import ctypes
+    class Status(ctypes.Structure):
+        _fields_=[('length',ctypes.c_ulong),('load',ctypes.c_ulong)]+[(k,ctypes.c_ulonglong) for k in
+            ('total_physical','available_physical','total_commit','available_commit','total_virtual','available_virtual','available_extended')]
+    value=Status();value.length=ctypes.sizeof(value)
+    if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(value)): raise ValueError('host headroom unavailable')
+    if value.available_physical<32*GIB or value.available_commit<36*GIB:
+        raise ValueError('declared host aggregate headroom insufficient')
+    return dict(available_physical_bytes=value.available_physical,available_commit_bytes=value.available_commit)
+
+
+def prepare(root,previous):
     source=prepared_source();_titan_visibility(expected_sha256=TITAN_FINGERPRINT)
     from nca.ik.declaration import runtime_expectation
     value=dict(schema='nca-ik-memory-probe/v1',source=source,limits=limits(),
-               runtime=runtime_expectation(),gpu_visibility_sha256=TITAN_FINGERPRINT)
+               runtime=runtime_expectation(),gpu_visibility_sha256=TITAN_FINGERPRINT,previous_probe=str(Path(previous).resolve()),host_headroom=host_headroom())
+    validate_predecessor(previous)
     value['sha256']=sha256_json(value)
     Path(root).mkdir(parents=True,exist_ok=False)
     immutable_json(Path(root)/'declaration.json',value)
@@ -65,7 +132,7 @@ def worker(root,index,reviews):
     owner_verify(dict(kind='allocation_probe',declaration_sha256=declaration['sha256']))
     if claim['declaration_sha256']!=declaration['sha256']: raise ValueError('probe ownership differs')
     from nca.ik.process_limits import memory_limit
-    memory_limit(2048)
+    memory_limit(8192)
     from nca.ik.declaration import runtime_expectation
     if declaration['runtime']!=runtime_expectation(): raise ValueError('runtime changed')
     from nca.ik.device import configure_device,device_report
@@ -88,7 +155,7 @@ def worker(root,index,reviews):
         buffers.append(context.torch.zeros(256*1024**2,device='cuda:0',dtype=context.torch.uint8))
         context.torch.cuda.synchronize()
         resources=process_metrics()
-        if resources['peak_resident_bytes']>2*GIB: raise ValueError('host memory cap')
+        validate_resources(resources)
         immutable_json(root/f'worker-{index}-{step}.json',dict(pid=os.getpid(),monotonic=time.monotonic(),memory=context.memory_stats(),resources=resources))
     while not (root/'release.json').exists():
         if time.monotonic()-claim['started']>240: raise TimeoutError('probe deadline')
@@ -114,9 +181,11 @@ def run(root,reviews):
     outcome='failed';errors=[];baseline=None;released=None
     owned=False
     try:
+        immutable_json(root/'host-headroom-at-launch.json',host_headroom())
+        retire_predecessor(root,value)
         acquire(ownership);owned=True
         from nca.ik.process_limits import memory_limit
-        memory_limit(2048,kill_children_on_exit=True)
+        memory_limit(8192,kill_children_on_exit=True)
         with (root/'telemetry.jsonl').open('x',encoding='utf-8') as stream:
             sample(stream)
             for index in range(3):
@@ -170,10 +239,10 @@ def run(root,reviews):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command',choices=('prepare','run','_worker'))
-    parser.add_argument('--root',required=True);parser.add_argument('--review',action='append',default=[])
+    parser.add_argument('--root',required=True);parser.add_argument('--previous-probe');parser.add_argument('--review',action='append',default=[])
     parser.add_argument('--index',type=int,choices=(0,1,2))
     args=parser.parse_args()
-    if args.command=='prepare': print(canonical_json(prepare(args.root)))
+    if args.command=='prepare': print(canonical_json(prepare(args.root,args.previous_probe)))
     elif args.command=='run': run(args.root,args.review)
     else: worker(args.root,args.index,args.review)
 
@@ -200,9 +269,10 @@ def qualification_record(root,source):
         if not set(required).issubset(result['artifacts']): raise ValueError('complete worker evidence required')
         for step in range(1,21):
             item=_read(root/f'worker-{index}-{step}.json')
+            validate_resources(item['resources'])
             if (item['memory']['allocated_bytes']!=step*256*1024**2
                     or item['memory']['peak_reserved_bytes']>5*GIB
-                    or item['resources']['peak_resident_bytes']>2*GIB):
+                    or item['resources']['peak_resident_bytes']>8*GIB):
                 raise ValueError('declared touched allocations/host memory not established')
     if not {'telemetry.jsonl','declaration.json','claim.json','release.json'}.issubset(result['artifacts']):
         raise ValueError('complete probe telemetry and ownership required')

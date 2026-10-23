@@ -22,7 +22,7 @@ using the [runbook](IK_TRAINING_RUNBOOK.md); public evidence uses its fingerprin
 First freeze clean source and pass exact-head CI. CPU-only probe preparation:
 
 ```powershell
-python -m nca.train.ik_memory_probe prepare --root NEW_PROBE_DIRECTORY
+python -m nca.train.ik_memory_probe prepare --root NEW_PROBE_DIRECTORY --previous-probe RETAINED_FAILED_PROBE
 ```
 
 Two independent probe-specific records must bind that declaration, source and
@@ -31,7 +31,7 @@ REVIEW_B` perform the one allocation-only probe. It creates exactly three
 contexts, warms up one MiB, then retains twenty approved 256 MiB zero-filled
 buffers per worker, holding all three for thirty seconds. No corpus, model,
 optimizer, gradients, predictions or training are involved. Limits: 5 GiB
-allocator per worker, 20 GiB total board use, 2 GiB hard committed host memory
+allocator per worker, 20 GiB total board use, 8 GiB hard committed host memory
 per process, 80 C, active work at most 240 seconds and total paid ceiling 300
 seconds. Missing/stale telemetry, insufficient projected headroom, a child
 failure or any overrun fails qualification and retains the ownership claim.
