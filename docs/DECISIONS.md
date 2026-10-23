@@ -14,7 +14,7 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
-### D-022 — Narrow Windows retained-label compatibility and one gated TITAN batch
+### D-023 — Narrow Windows retained-label compatibility and one gated TITAN batch
 
 [ACCEPTED] 2026-10-23 by owner. See the [scope and unchanged admission gates](decisions/2026-10-23-ik-windows-labels.md).
 
