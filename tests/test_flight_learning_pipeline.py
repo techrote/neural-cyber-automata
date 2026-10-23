@@ -158,7 +158,7 @@ def transition(index, before, after, *, teacher_status="accepted", physical_stat
     }
 
 
-def episode(*, episode_id="ep-1", transitions=None, final=None, split="training",
+def episode(*, episode_id="ep-1", transitions=None, final=None, split="development",
             initial=None, capture_id="capture-a", scenario_id="arrival_braking",
             host_seed=101):
     transitions = [] if transitions is None else transitions
