@@ -397,6 +397,10 @@ class FlightLearningTests(unittest.TestCase):
             snapshot["charged"]["sample_presentations"],
             result.sample_presentations,
         )
+        stage = snapshot["stage_counts"][f"clone:{seed}"]
+        self.assertEqual(stage["optimizer_updates"], result.optimizer_updates)
+        self.assertEqual(
+            stage["sample_presentations"], result.sample_presentations)
         return result
 
     def test_clone_refuses_without_source_bound_accounting(self):
