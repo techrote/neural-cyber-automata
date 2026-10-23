@@ -235,6 +235,7 @@ Windows CPU-only software checks from repository root:
 
 ```powershell
 python -m unittest discover -s tests -p test_flight_preparation.py
+python -m unittest discover -s tests -p test_flight_transport.py
 python -m unittest discover -s tests -p test_flight_accounting.py
 python -m unittest discover -s tests -p test_flight_learning_pipeline.py
 python tools/check_docs.py --strict
