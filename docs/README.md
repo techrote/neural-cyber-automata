@@ -8,6 +8,8 @@ verified: 2026-10-23
 
 # Documentation map
 
+IK54: [development sweep and strict qualification preparation](design/IK_DEV_SWEEP.md).
+
 | Question | Owning page |
 |---|---|
 | What exists now? | [STATE.md](STATE.md) |

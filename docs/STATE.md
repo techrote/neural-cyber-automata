@@ -5,8 +5,8 @@ summary: CPU contract implementation and explicit evidence limits for the curren
 owns: [state.summary]
 verified: 2026-10-23
 ---
-
 # Current state
+[PREPARATION ONLY] D-032: [IK54 development sweep and strict packet](design/IK_DEV_SWEEP.md); no result, Part B execution or final access.
 
 [MEASURED NO-GO; NEXT DESIGN ONLY] The admitted matched endpoint-weight-4 trials completed at `6a6961f`: serial and three-worker TITAN runs agree exactly at all paired checkpoints and tuning reports, with recorded prepublication elapsed times 2438.985 / 1245.062 seconds. Every seed fails tuning quality; both final suites remain excluded. [The diagnosis and bounded next parallel order experiment](design/IK_ENDPOINT4_FOLLOWUP.md) preserve every consumed allocation and propose one whole-batch-order change. The current owner instruction authorizes investigation and reviewed preparation only, with no training, no issued allocation and no execution admission. Physical actor faults are not established by this synthetic geometric task.
 

@@ -8,6 +8,10 @@ verified: 2026-10-23
 
 # Run ledger
 
+[PREPARATION ONLY] 2026-10-23: [IK54 development sweep](design/IK_DEV_SWEEP.md),
+D-032, new external outputs and versioned v3 head. Prospective grid has 45 runs
+and up to 135 attempts; no development result or qualification claim yet.
+
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
 Historical artifact hashes remain identifiers even where original external bytes are unavailable to a continuation; new reproductions retain separate identities.
