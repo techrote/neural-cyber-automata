@@ -242,6 +242,8 @@ class DurableAccountingTests(unittest.TestCase):
         snapshot = resumed.snapshot()
         self.assertEqual(
             snapshot["checkpoints"]["epoch-10"]["parent_id"], "epoch-05")
+        self.assertEqual(
+            snapshot["checkpoints"]["epoch-10"]["stage"], "clone:74011")
         self.assertTrue(snapshot["interrupted"])
         self.assertEqual(
             snapshot["charged"]["checkpoint_publications"],
@@ -253,6 +255,21 @@ class DurableAccountingTests(unittest.TestCase):
         resumed.complete(reset)
         self.assertEqual(resumed.snapshot()["charged"]["resets"], 1)
         resumed.close("fixture_clean_resume")
+
+    def test_checkpoint_parent_cannot_cross_policy_seed(self):
+        ledger = self.create()
+        first = ledger.reserve_checkpoint_publication(seed=74011)
+        ledger.publish_checkpoint(
+            first, checkpoint_id="seed74011-epoch05",
+            sha256=sha256_json(["fixture", 74011, 5]), parent_id=None)
+        second = ledger.reserve_checkpoint_publication(seed=74013)
+        with self.assertRaisesRegex(ContractError, "another policy seed"):
+            ledger.publish_checkpoint(
+                second, checkpoint_id="seed74013-epoch10",
+                sha256=sha256_json(["fixture", 74013, 10]),
+                parent_id="seed74011-epoch05")
+        ledger.mark_unknown(second, "invalid_cross_seed_publication_attempt")
+        ledger.close("fixture_cross_seed_rejected")
 
     def test_interrupted_jsonl_write_is_not_repaired_or_replayed(self):
         ledger = self.create()
