@@ -25,7 +25,21 @@ The starting revision is `ccd4c16058f76f422e6a5159915a5e22e7bfd87e`.
 Both accepted dependencies are present: the [CUDA runtime qualification](evidence/2026-10-22-ik-cuda-qualification.md)
 and [complete geometric corpus](evidence/2026-10-22-ik-datasets.md).
 That earlier CUDA result exercises the runtime smoke fixture; it does not
-measure this model, differentiable-FK loss or optimizer path.
+measure this model, differentiable-FK loss or optimizer path. It used a V100
+which is now **out of service because of a reported cooling fault**. For #54,
+only the **TITAN RTX** may be selected. V100 qualification is historical
+evidence, not transferable device admission.
+
+The fixed prospective candidate now requires an isolated TITAN RTX at
+`cuda:0` via a **single GPU UUID** in `CUDA_VISIBLE_DEVICES`; a physical GPU
+ordinal, device list or V100 identity refuses before any CUDA initialization.
+Preparation queries only the selected card's metadata, authenticates the
+existing immutable train/tuning corpus, and binds a SHA-256 fingerprint of that
+private UUID into its declaration. The CUDA worker then checks that the TITAN
+reports capability 7.5, 72 SMs and at least 20 GiB, and derives the fixed
+2 GiB allocator cap from the actual device capacity. No TITAN GPU result is
+claimed until its own source/declaration-bound admission and measured work.
+No Linux or historical V100 performance comparison is required.
 
 ## Model and input boundary
 
