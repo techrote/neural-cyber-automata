@@ -111,17 +111,18 @@ successful work must be `confirmed`. This preserves the accounting rule that
 uncertain work is charged and stops the attempt rather than being silently
 reissued.
 
-The durable accounting stream remains authoritative and is deliberately not
-embedded in the transport. Before future execution, the driver must reserve
-`reserve_reset()` before reset and `reserve_step(maximum_ticks=6, ...)`
-before each decision. A confirmed reply completes the reservation with the
-owner's exact `ticks_consumed`; `UnknownConsumptionError` maps to
-`mark_unknown(...)`. Only after that durable outcome may a capture stream
-admit a normal supervised row. `4ly-flight-exchange/v1` provides the join
-keys without modifying the existing ACT004 capture record schema. Cancellation,
-takeover and close host-call accounting must be finalized only after the
-accepted bridge topology is measured; the declaration's `host_calls`,
-startup and cleanup ceilings therefore remain null and execution stays blocked.
+The durable accounting ledger remains authoritative and separate from the wire
+protocol. When a ledger is attached, the transport itself calls
+`reserve_reset()` before reset, `reserve_step(maximum_ticks=6, ...)` before
+each decision, `reserve_host_call(...)` before cancellation/takeover, and
+`reserve_cleanup(host_call=true)` before an orderly host close. A confirmed
+reply completes the reservation with the owner's exact `ticks_consumed`;
+`UnknownConsumptionError` maps to `mark_unknown(...)`. No accounting field is
+added to `nca-4ly-flight/1`. Only after that durable outcome may a capture
+stream admit a normal supervised row. `4ly-flight-exchange/v1` provides the
+join keys without modifying the existing ACT004 capture record schema. Exact
+host-call/capture-phase/startup/cleanup topology and ceilings still require the
+accepted bridge measurements; the declaration therefore remains fail-closed.
 
 Actual-host launch is additionally hard-gated in
 `flight_transport.ACCEPTED_HOST`. It is intentionally `None` now.
