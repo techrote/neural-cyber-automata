@@ -87,7 +87,7 @@ MEASUREMENTS_REQUIRED = (
     "whole-process startup and cleanup duration on the chosen execution path",
     "process-tree peak resident memory for host, bridge, learner and evidence writer",
     "capture/journal/checkpoint/publication byte growth and durable storage throughput",
-    "final host-call topology and finite startup/cleanup operation counts",
+    "final host-call topology, capture-label phase transitions and finite startup/cleanup operation counts",
     "validated wall/RSS/storage enforcement bound to the chosen execution path",
     "independent source-bound execution review bound to the complete declaration",
 )
