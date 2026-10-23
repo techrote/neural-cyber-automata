@@ -430,6 +430,7 @@ class FlightLearningTests(unittest.TestCase):
         before_global = torch.get_rng_state().clone()
         restored = load_checkpoint_bytes(data, receipt)
         self.assertTrue(torch.equal(before_global, torch.get_rng_state()))
+        self.assertTrue(torch.equal(trained.torch_rng_state, restored.torch_rng_state))
         self.assertEqual(policy_sha256(restored.model), receipt["policy_sha256"])
         self.assertEqual(restored.lineage["declaration_sha256"], DECLARATION)
         self.assertEqual(restored.lineage["capture_dataset_sha256"], self.dataset.sha256)
