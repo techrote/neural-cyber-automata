@@ -635,6 +635,19 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
         state["interrupted"] = True
         return
 
+    if kind == "attempt_failure":
+        if set(payload) != {"reason"} or type(payload["reason"]) is not str or not payload["reason"]:
+            _fail("flight_ledger_shape", "attempt failure has an invalid shape")
+        if state["pending"]:
+            _fail("flight_ledger_pending", "post-receipt failure cannot bypass a pending reservation")
+        state["failed"] = True
+        state["failures"].append({
+            "reservation_id": None,
+            "reason": payload["reason"],
+            "confirmed_physical_ticks": 0,
+        })
+        return
+
     if kind == "reserve":
         if set(payload) != {"reservation_id", "increments", "scope", "cleanup", "stage"}:
             _fail("flight_ledger_shape", "reservation has an invalid shape")
@@ -1067,6 +1080,17 @@ class FlightAccountingLedger:
             "confirmed_physical_ticks": confirmed_physical_ticks,
         }
         self._commit("unknown", payload)
+
+    def abort(self, reason: str) -> None:
+        """Persist a sticky post-receipt integrity/semantic failure.
+
+        Use this only after any associated reservation has already been settled.
+        It preserves the confirmed work and adds the later validation failure
+        rather than rewriting the original host/optimizer outcome.
+        """
+        if type(reason) is not str or not reason:
+            _fail("flight_attempt_failure", "nonempty failure reason required")
+        self._commit("attempt_failure", {"reason": reason})
 
     def publish_checkpoint(self, reservation_id: str, *, checkpoint_id: str,
                            sha256: str, parent_id: str | None) -> None:
