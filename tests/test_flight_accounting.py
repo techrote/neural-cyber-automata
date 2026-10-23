@@ -7,6 +7,7 @@ import unittest
 from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
+    DESIGN_WORK_MAXIMA,
     FlightAccountingLedger,
     FlightDeclaration,
     execution_gate,
@@ -64,6 +65,11 @@ class DeclarationGateTests(unittest.TestCase):
         changed = declaration.to_dict()
         changed["seeds"][0] = 1
         self.assertEqual(declaration.to_dict()["seeds"], [74011, 74013, 74017])
+        self.assertEqual(
+            {name: declaration.to_dict()["work_ceilings"][name]
+             for name in DESIGN_WORK_MAXIMA},
+            DESIGN_WORK_MAXIMA,
+        )
 
         gate = execution_gate(declaration, current_evidence={})
         self.assertFalse(gate["admitted"])
