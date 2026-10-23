@@ -383,6 +383,15 @@ class FlightTests(unittest.TestCase):
         self.assertEqual(
             session.teacher_source_sha256, "a" * 64
         )
+        with self.assertRaisesRegex(
+            FlightProtocolError,
+            "owner reference_action",
+        ):
+            session.step(
+                [0.0, 0.0],
+                observation_id=observation["observation_id"],
+            )
+        self.assertEqual(len(owner.requests), 1)
         reply = session.step_reference()
         self.assertEqual(
             reply["teacher_action"]["observation_id"],
