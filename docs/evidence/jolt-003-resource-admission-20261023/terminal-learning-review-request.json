@@ -10,8 +10,8 @@
   "scope": "Independent final-source admission review, not software-only or PR style review",
   "final_record_schema": "nca-learn-jolt-003-source-admission-review/v2",
   "target_branch": "impl/jolt003-resource-watchdog-review",
-  "source_revision": "638d59b49d5a70e7c439baffa88691a6f8b20600",
-  "source_sha256": "580608deade828f1668f357115ef7f3bc51ea850ce8551bf510c2db698bd2687",
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
   "prospective_binding_sha256": null,
   "required_exact_bindings": [
     "source_revision",
@@ -50,9 +50,9 @@
   "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
   "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
   "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
-  "source_bound_memory_ci": "https://github.com/techrote/neural-cyber-automata/actions/runs/39880610724",
-  "original_memory_report_sha256": "0493fde76db95db2fca68aa9c8fd6727bc34ec6d1bc10024f14ddd378e86627d",
-  "original_assessment_sha256": "6d897a3280887a28b8c2725593e232f828dff6465cd8c4d2d3f5d2274074fd0d",
-  "source_revision_scope": "exact tested code SHA; later documentation-only commits retain source closure, but cannot manufacture prospective reviewer signatures",
+  "source_bound_memory_ci": "https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159",
+  "original_memory_report_sha256": "ba84131fa5e7c6133b37703b7c6258834bb62f6cf7c36cc15823ca15c528060e",
+  "original_assessment_sha256": "e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be",
+  "source_revision_scope": "exact GitHub-tested watchdog source head; reviewer must independently confirm the final prospective declaration and this scope before signoff",
   "review_authority": "independent_external_reviewer_required"
 }

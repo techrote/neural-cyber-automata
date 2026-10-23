@@ -20,13 +20,13 @@ and cannot substitute for either required reviewer.
 - The current reviewed implementation lives in
   [PR #81](https://github.com/techrote/neural-cyber-automata/pull/81).
   The first tested watchdog/reviewer-request executable revision is
-  `638d59b49d5a70e7c439baffa88691a6f8b20600`, with exact
+  `40d4339a31433572b5433bb344291b3e9303d317`, with exact
   261-file source inventory SHA-256
-  `580608deade828f1668f357115ef7f3bc51ea850ce8551bf510c2db698bd2687`.
+  `d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44`.
   This source identity was independently verified by
-  [nonexperimental CI #39880610724](https://github.com/techrote/neural-cyber-automata/actions/runs/39880610724);
+  [nonexperimental CI #39881617159](https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159);
   the resource assessment original SHA-256 is
-  `6d897a3280887a28b8c2725593e232f828dff6465cd8c4d2d3f5d2274074fd0d`.
+  `e9ef58f9591c76ea5c2b4e62f9f83e9d9a789fb2034f22dfbcf48920e58fa2be`.
   Later docs-only commits do not alter the source closure, but exact
   executable revision must still be reviewed and frozen intentionally.
   The approved preceding source baseline was
@@ -104,10 +104,10 @@ The immutable CI artifact
 \`accepted=false\`, \`prospective_experiment_admitted=false\`,
 \`peak_resident_memory=false\` and an empty independent-review list.
 Its *negative* result is checked by the same source-bound CI job.
-The [observed draft from run #39880610724](https://github.com/techrote/neural-cyber-automata/actions/runs/39880610724)
-recorded 641,118,208 sampled RSS bytes, a nonbinding fourfold allowance
-of 2,564,472,832 bytes, an 8,589,934,592-byte soft threshold,
-89,737,969,664 bytes sampled disk free and
+The [observed draft from run #39881617159](https://github.com/techrote/neural-cyber-automata/actions/runs/39881617159)
+recorded 641,122,304 sampled RSS bytes, a nonbinding fourfold allowance
+of 2,564,489,216 bytes, an 8,589,934,592-byte soft threshold,
+89,738,125,312 bytes sampled disk free and
 16,895,424,646 bytes required. Five static resource gates passed;
 the diagnostic-runner available-disk sample passed; both historical
 time-fit gates were explicitly null. The **peak resident memory gate
