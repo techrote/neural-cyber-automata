@@ -243,6 +243,45 @@ class FlightCaptureTests(unittest.TestCase):
         self.assertEqual(len(dataset.episodes), 2)
         self.assertEqual(len(dataset.samples), 1)
 
+    def test_confirmed_zero_tick_failure_is_retained_without_supervision(self):
+        before = observation(0)
+        failed = transition(0, before, copy.deepcopy(before), failed=True)
+        failed["physical"]["consumed_ticks"] = 0
+        captured = validate_capture_episode(
+            episode(
+                episode_id="ep-zero-tick-failed",
+                initial=before,
+                transitions=[failed],
+                final=outcome("failed", failed=True, reason="expired_lease"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        self.assertEqual(captured.samples, ())
+        self.assertIn("0:failed_transition", captured.exclusions)
+        self.assertEqual(
+            captured.to_dict()["transitions"][0]["physical"]["consumed_ticks"], 0)
+
+    def test_consumed_physical_failure_may_revoke_generation_once(self):
+        before = observation(0)
+        after = observation(6)
+        after["control_generation"] = 1
+        after["observation_id"] = "obs-6-revoked"
+        failed = transition(0, before, after, failed=True)
+        failed["next_flat_observation"] = flat_observation(after)
+        captured = validate_capture_episode(
+            episode(
+                episode_id="ep-consumed-failed-revoked",
+                initial=before,
+                transitions=[failed],
+                final=outcome("failed", failed=True, reason="physical_fault"),
+            ),
+            declaration_sha256=DECLARATION,
+            expected_source=SOURCE,
+        )
+        self.assertEqual(captured.samples, ())
+        self.assertIn("0:failed_transition", captured.exclusions)
+
     def test_unknown_consumption_and_refused_teacher_never_become_supervision(self):
         before = observation(0)
         unknown = transition(
