@@ -146,8 +146,9 @@ class ProbeReviewTests(unittest.TestCase):
             kernel=SimpleNamespace(OpenProcess=Mock(return_value=0),CloseHandle=Mock())
             with patch.object(probe,'validate_predecessor',return_value={'sha256':'a'*64}), \
                     patch('nca.train.ik_gpu_ownership.path',return_value=active), \
-                    patch.object(ctypes,'WinDLL',return_value=kernel), \
-                    patch.object(ctypes,'get_last_error',return_value=87), \
+                    patch.object(ctypes,'WinDLL',return_value=kernel,create=True), \
+                    patch.object(ctypes,'get_last_error',return_value=87,create=True), \
+                    patch.object(ctypes,'set_last_error',create=True), \
                     patch.object(probe,'immutable_json',side_effect=publish):
                 with self.assertRaises(ValueError):
                     ORIGINAL_RETIRE(new,dict(previous_probe=str(old),sha256='b'*64))
