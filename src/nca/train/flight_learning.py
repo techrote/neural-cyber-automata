@@ -69,6 +69,11 @@ SCENARIO_FAMILY = {
 TRAINING_FAMILIES = (
     "hover", "free_space", "reversal", "arrival", "obstacles", "recovery",
 )
+EXPECTED_TRAINING_CASES = frozenset(
+    (scenario_id, seed)
+    for scenario_id in SCENARIO_FAMILY
+    for seed in DEVELOPMENT_SEEDS
+)
 
 PREPROCESSING_SPEC = {
     "schema": "nca-4ly-preprocessing/v1",
@@ -97,7 +102,10 @@ BC_SCHEDULE = {
     "batch_size": BC_BATCH_SIZE,
     "learning_rate": BC_LEARNING_RATE,
     "loss": "mean_squared_normalized_desired_velocity",
-    "weighting": "equal_family_then_equal_episode_then_equal_admitted_row",
+    "weighting": "nominal_equal_family_then_equal_captured_episode_then_equal_admitted_row",
+    "required_capture_episodes": len(EXPECTED_TRAINING_CASES),
+    "development_seeds": list(DEVELOPMENT_SEEDS),
+    "training_scenarios": sorted(SCENARIO_FAMILY),
     "maximum_optimizer_updates_per_seed": MAX_OPTIMIZER_UPDATES_PER_SEED,
     "maximum_sample_presentations_per_seed": MAX_SAMPLE_PRESENTATIONS_PER_SEED,
     "checkpoint_epochs": list(range(BC_EPOCHS + 1)),
@@ -551,18 +559,18 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
         _fail("flight_capture_dataset", "no admitted supervised labels remain after validation")
     if len(samples) > MAX_CAPTURE_LABELS:
         _fail("flight_capture_budget", "capture exceeds the 11,400-label preregistered maximum")
-    active_by_family = {
-        family: tuple(
-            item for item in values
-            if item.scenario_family == family and item.samples)
+    captured_by_family = {
+        family: tuple(item for item in values if item.scenario_family == family)
         for family in TRAINING_FAMILIES
     }
     sample_weights: list[float] = []
     for item in values:
         if not item.samples:
             continue
-        family_episodes = active_by_family[item.scenario_family]
-        episode_weight = 1.0 / (len(TRAINING_FAMILIES) * len(family_episodes))
+        family_episode_count = len(captured_by_family[item.scenario_family])
+        if family_episode_count == 0:
+            _fail("flight_capture_weights", "sample family has no retained capture episode")
+        episode_weight = 1.0 / (len(TRAINING_FAMILIES) * family_episode_count)
         sample_weights.extend([episode_weight / len(item.samples)] * len(item.samples))
     weights = tuple(sample_weights)
     identity = {
@@ -667,11 +675,18 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     if accounting.declaration.sha256 != dataset.declaration_sha256:
         _fail("flight_clone_accounting", "capture and optimizer ledger declarations differ")
     samples = dataset.samples
+    captured_cases = frozenset(
+        (episode.scenario_id, episode.host_seed) for episode in dataset.episodes)
+    if captured_cases != EXPECTED_TRAINING_CASES:
+        _fail("flight_clone_capture", "cloning requires the complete frozen 44-case capture set")
     if {sample.family for sample in samples} != set(TRAINING_FAMILIES):
-        _fail("flight_clone_families", "cloning requires admitted labels from all six preregistered training families")
-    if len(dataset.sample_weights) != len(samples) or not math.isclose(
-            sum(dataset.sample_weights), 1.0, rel_tol=0.0, abs_tol=1e-12):
-        _fail("flight_clone_weights", "family/episode/sample weights are incomplete")
+        _fail("flight_clone_families", "cloning requires at least one admitted label from every training family")
+    weight_sum = sum(dataset.sample_weights)
+    if (len(dataset.sample_weights) != len(samples)
+            or any(type(weight) is not float or not math.isfinite(weight) or weight <= 0.0
+                   for weight in dataset.sample_weights)
+            or weight_sum > 1.0 + 1e-12):
+        _fail("flight_clone_weights", "family/episode/sample weights are invalid")
     presentations = len(samples) * BC_EPOCHS
     updates = math.ceil(len(samples) / BC_BATCH_SIZE) * BC_EPOCHS
     if presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED or updates > MAX_OPTIMIZER_UPDATES_PER_SEED:
