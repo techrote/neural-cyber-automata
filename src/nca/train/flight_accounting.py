@@ -714,13 +714,21 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
             _sha256_or_none(payload["sha256"], "checkpoint.sha256")
             if payload["sha256"] is None:
                 _fail("flight_checkpoint_digest", "published checkpoint needs an immutable digest")
+            checkpoint_stage = reservation["stage"]
+            if checkpoint_stage is not None and not str(checkpoint_stage).startswith("clone:"):
+                _fail("flight_checkpoint_lineage", "checkpoint publication is not bound to a clone-seed stage")
             parent = payload["parent_id"]
             if parent is not None and parent not in state["checkpoints"]:
                 _fail("flight_checkpoint_lineage", "checkpoint parent is absent")
+            if (parent is not None
+                    and state["checkpoints"][parent]["stage"] != checkpoint_stage):
+                _fail("flight_checkpoint_lineage", "checkpoint parent belongs to another policy seed")
             if checkpoint_id in state["checkpoints"]:
                 _fail("flight_checkpoint_lineage", "checkpoint identity was published twice")
             state["checkpoints"][checkpoint_id] = {
-                "sha256": payload["sha256"], "parent_id": parent,
+                "sha256": payload["sha256"],
+                "parent_id": parent,
+                "stage": checkpoint_stage,
             }
         del state["pending"][reservation_id]
         return
