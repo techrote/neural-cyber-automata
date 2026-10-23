@@ -670,6 +670,18 @@ def policy_sha256(model) -> str:
 
 
 @dataclass
+class FlightCheckpointState:
+    epoch: int
+    model_state: dict[str, Any]
+    optimizer_state: dict[str, Any]
+    shuffle_rng: random.Random
+    torch_rng_state: Any
+    optimizer_updates: int
+    sample_presentations: int
+    accounting_chain_sha256: str
+
+
+@dataclass
 class FlightTrainingResult:
     model: Any
     optimizer: Any
@@ -682,6 +694,7 @@ class FlightTrainingResult:
     sample_presentations: int
     accounting_attempt_id: str
     accounting_chain_sha256: str
+    checkpoints: tuple[FlightCheckpointState, ...]
     epoch_losses: tuple[float, ...]
 
 
@@ -727,6 +740,30 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     losses: list[float] = []
     completed_updates = 0
     completed_presentations = 0
+    checkpoints: list[FlightCheckpointState] = []
+
+    def snapshot_checkpoint(epoch: int) -> None:
+        state = accounting.snapshot()
+        if (state["pending_reservations"] or state["failed"]
+                or state["unknown_consumption"] or state["poisoned"]):
+            _fail("flight_clone_accounting", "checkpoint boundary is not durably clean")
+        rng_copy = random.Random()
+        rng_copy.setstate(shuffle_rng.getstate())
+        checkpoints.append(FlightCheckpointState(
+            epoch=epoch,
+            model_state={
+                name: value.detach().cpu().clone()
+                for name, value in model.state_dict().items()
+            },
+            optimizer_state=deepcopy(optimizer.state_dict()),
+            shuffle_rng=rng_copy,
+            torch_rng_state=torch_rng_state.clone(),
+            optimizer_updates=completed_updates,
+            sample_presentations=completed_presentations,
+            accounting_chain_sha256=state["chain_sha256"],
+        ))
+
+    snapshot_checkpoint(0)
     model.train()
     batch_count = math.ceil(len(samples) / BC_BATCH_SIZE)
     for _epoch in range(BC_EPOCHS):
@@ -778,6 +815,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
                 _fail("flight_clone_budget", "cloning work exceeded its fixed ceiling")
             weighted_epoch_loss += float(weighted_batch_loss.detach())
         losses.append(weighted_epoch_loss)
+        snapshot_checkpoint(_epoch + 1)
     model.eval()
     accounting_snapshot = accounting.snapshot()
     if (accounting_snapshot["pending_reservations"]
@@ -789,7 +827,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
         model, optimizer, shuffle_rng, torch_rng_state, seed, dataset, BC_EPOCHS,
         completed_updates, completed_presentations,
         accounting_snapshot["attempt_id"], accounting_snapshot["chain_sha256"],
-        tuple(losses))
+        tuple(checkpoints), tuple(losses))
 
 
 def _cpu_copy(value: Any) -> Any:
@@ -834,14 +872,26 @@ def _restore_random_state(value: Any) -> random.Random:
     return rng
 
 
+def _checkpoint_state(result: FlightTrainingResult, epoch: int | None) -> FlightCheckpointState:
+    selected = result.completed_epochs if epoch is None else epoch
+    if type(selected) is not int or not 0 <= selected <= result.completed_epochs:
+        _fail("flight_checkpoint_epoch", "checkpoint epoch is outside the completed cloning lineage")
+    matches = [item for item in result.checkpoints if item.epoch == selected]
+    if len(matches) != 1:
+        _fail("flight_checkpoint_epoch", "checkpoint boundary is missing or duplicated")
+    return matches[0]
+
+
 def checkpoint_lineage(result: FlightTrainingResult, *, checkpoint_id: str,
                        learner_revision: str, learner_source_sha256: str,
-                       parent_checkpoint_sha256: str | None = None) -> dict[str, Any]:
+                       parent_checkpoint_sha256: str | None = None,
+                       checkpoint_epoch: int | None = None) -> dict[str, Any]:
     _identifier(checkpoint_id, "checkpoint_id")
     _revision(learner_revision, "learner_revision")
     _digest(learner_source_sha256, "learner_source_sha256")
     if parent_checkpoint_sha256 is not None:
         _digest(parent_checkpoint_sha256, "parent_checkpoint_sha256")
+    state = _checkpoint_state(result, checkpoint_epoch)
     return {
         "schema": "nca-4ly-bc-lineage/v1",
         "checkpoint_id": checkpoint_id,
@@ -854,11 +904,11 @@ def checkpoint_lineage(result: FlightTrainingResult, *, checkpoint_id: str,
         "bc_schedule_sha256": BC_SCHEDULE_SHA256,
         "preprocessing_sha256": PREPROCESSING_SHA256,
         "action_sha256": ACTION_SHA256,
-        "completed_epochs": result.completed_epochs,
-        "optimizer_updates": result.optimizer_updates,
-        "sample_presentations": result.sample_presentations,
+        "completed_epochs": state.epoch,
+        "optimizer_updates": state.optimizer_updates,
+        "sample_presentations": state.sample_presentations,
         "accounting_attempt_id": result.accounting_attempt_id,
-        "accounting_chain_sha256": result.accounting_chain_sha256,
+        "accounting_chain_sha256": state.accounting_chain_sha256,
         "learner_revision": learner_revision,
         "learner_source_sha256": learner_source_sha256,
     }
@@ -866,24 +916,30 @@ def checkpoint_lineage(result: FlightTrainingResult, *, checkpoint_id: str,
 
 def serialize_checkpoint(result: FlightTrainingResult, *, checkpoint_id: str,
                          learner_revision: str, learner_source_sha256: str,
-                         parent_checkpoint_sha256: str | None = None) -> tuple[bytes, dict[str, Any]]:
+                         parent_checkpoint_sha256: str | None = None,
+                         checkpoint_epoch: int | None = None) -> tuple[bytes, dict[str, Any]]:
     torch = _torch()
+    state = _checkpoint_state(result, checkpoint_epoch)
     lineage = checkpoint_lineage(
         result, checkpoint_id=checkpoint_id, learner_revision=learner_revision,
         learner_source_sha256=learner_source_sha256,
-        parent_checkpoint_sha256=parent_checkpoint_sha256)
-    model_hash = policy_sha256(result.model)
+        parent_checkpoint_sha256=parent_checkpoint_sha256,
+        checkpoint_epoch=state.epoch)
+    checkpoint_model = _fresh_policy(0)
+    checkpoint_model.load_state_dict(state.model_state, strict=True)
+    checkpoint_model.eval()
+    model_hash = policy_sha256(checkpoint_model)
     payload = {
         "schema": CHECKPOINT_SCHEMA,
         "lineage": lineage,
         "lineage_sha256": sha256_json(lineage),
-        "policy_specification": policy_specification(result.model),
+        "policy_specification": policy_specification(checkpoint_model),
         "policy_sha256": model_hash,
-        "model": _cpu_copy(result.model.state_dict()),
-        "optimizer": _cpu_copy(result.optimizer.state_dict()),
+        "model": _cpu_copy(state.model_state),
+        "optimizer": _cpu_copy(state.optimizer_state),
         "rng": {
-            "shuffle": _random_state_json(result.shuffle_rng),
-            "torch_cpu": result.torch_rng_state.clone(),
+            "shuffle": _random_state_json(state.shuffle_rng),
+            "torch_cpu": state.torch_rng_state.clone(),
             "cuda": "not_initialized_or_used_by_4ly_bc",
         },
     }
