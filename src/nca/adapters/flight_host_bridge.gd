@@ -209,6 +209,9 @@ func _step(request_id: int, request: Dictionary) -> void:
 	if not _matches_authority(request, current):
 		_error(request_id, "stale_or_foreign_authority", "none")
 		return
+	if episode.source != &"policy":
+		_error(request_id, "policy_owner_required", "none")
+		return
 	if not _integer(request.repeat_ticks, FlightEpisode.DECISION_TICKS, FlightEpisode.DECISION_TICKS) \
 		or int(current.observed_tick) % FlightEpisode.DECISION_TICKS != 0:
 		_error(request_id, "decision_cadence", "none")
