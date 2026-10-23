@@ -665,19 +665,25 @@ class FlightTeacherCaptureSession(FlightSession):
                 raise FlightProtocolError(
                     "teacher action belongs to another observation"
                 )
-            if receipt["status"] != "accepted":
+            if receipt["status"] not in ("accepted", "refused"):
                 raise FlightProtocolError(
-                    "owner reference action was not admitted"
+                    "teacher action receipt has an invalid status"
                 )
             if not isinstance(receipt["reason"], str) or not receipt["reason"]:
                 raise FlightProtocolError(
                     "teacher action receipt requires a reason"
                 )
             requested = velocity_action(receipt["requested_action"])["move"]
-            admitted = velocity_action(receipt["admitted_action"])["move"]
-            if requested != admitted:
+            admitted = None
+            if receipt["status"] == "accepted":
+                admitted = velocity_action(receipt["admitted_action"])["move"]
+                if requested != admitted:
+                    raise FlightProtocolError(
+                        "teacher requested/admitted action mismatch"
+                    )
+            elif receipt["admitted_action"] is not None:
                 raise FlightProtocolError(
-                    "teacher requested/admitted action mismatch"
+                    "refused teacher action cannot claim admission"
                 )
             reply = deepcopy(reply)
             reply["teacher_action"]["requested_action"] = requested
@@ -689,6 +695,16 @@ class FlightTeacherCaptureSession(FlightSession):
                 )
             transition = self._transition(reply)
             ticks = transition["ticks_consumed"]
+            if receipt["status"] == "refused" and (
+                ticks != 0 or not transition["failed"]
+            ):
+                raise FlightProtocolError(
+                    "refused teacher action must be a zero-tick owner failure"
+                )
+            if receipt["status"] == "accepted" and ticks == 0:
+                raise FlightProtocolError(
+                    "accepted teacher action consumed no physical tick"
+                )
             old_tick = before["observed_tick"]
             if transition["physical_ticks_total"] != old_tick + ticks:
                 raise FlightProtocolError("physical tick total discontinuity")
