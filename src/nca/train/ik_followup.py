@@ -325,6 +325,9 @@ def finish_experiment(run, declaration, corpus, fresh_root, archived_run, ledger
         old_predictor = model_predictor(cpu, old_model)
         old_report = score_raw(samples, collect_predictions(samples, old_predictor), config, partition="final",
             expected_task_ids=[s.task.id for s in samples], final_opening=opening, frozen_candidates=frozen, seed=seed)
+        old_report = dict(old_report, comparator="archived_trained_v1",
+            frozen_checkpoint_sha256=archived["sha256"], diagnostic_only=True,
+            suite_opening_sha256=opening["sha256"])
         nominal = tuple(s.task.inputs for s in samples if s.task.state.kind != "stress")
         timing = measure_cpu_latency(nominal, predictors, context=cpu, environment=cpu.report,
                                     archived_predictor=old_predictor)
@@ -352,6 +355,14 @@ def worker(args):
     if sha256_file(path) != args.declaration_sha256:
         raise ValueError("allocation declaration bytes changed after launch")
     declaration = _read(path)
+    claim = _read(Path(args.run) / "active-phase.json")
+    serial = _read(Path(args.run) / "serial-phase-active.json")
+    if (claim.get("id") != args.phase_claim
+            or claim.get("declaration_sha256") != declaration["sha256"]
+            or claim.get("phase") != args.phase or claim.get("seed") != args.seed
+            or serial.get("declaration_file_sha256") != args.declaration_sha256
+            or serial.get("phase") != args.phase or serial.get("seed") != args.seed):
+        raise ValueError("worker requires the exact live run-wide supervisor ownership")
     seeds = SEEDS if args.phase == "finish" else (args.seed,)
     ledgers, attempts = {}, {}
     try:
@@ -453,6 +464,7 @@ def _supervise_owned(args):
         "--corpus", args.corpus, "--registry", args.registry, "--fresh", args.fresh,
         "--archived-run", args.archived_run, "--review", str(review_path),
         "--review-sha256", sha256_json(review), "--started", repr(started)]
+    command.extend(["--phase-claim", claim_id])
     log = Path(args.run) / f"{args.phase}-{args.seed}-attempt-{before[args.seed]['attempt_count']+1:04d}-worker.log"
     with log.open("xb") as stream:
         process = subprocess.Popen(command, stdout=stream, stderr=stream)
@@ -509,6 +521,7 @@ def main():
     parser.add_argument("--seed", choices=SEEDS, type=int, default=41011)
     parser.add_argument("--started", type=float)
     parser.add_argument("--review-sha256")
+    parser.add_argument("--phase-claim")
     args = parser.parse_args()
     if args.command == "prepare":
         result = prepare(args.corpus, args.registry, args.run, args.fresh, args.archived_run)

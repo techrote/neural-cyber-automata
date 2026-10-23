@@ -1,6 +1,7 @@
 """CPU-only negative controls for the bounded polar experiment boundaries."""
 from dataclasses import replace
 import importlib.util
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -37,10 +38,23 @@ class FollowupContractTests(unittest.TestCase):
         self.assertEqual((schedule["epochs"],schedule["batch_size"]), (40,128))
         self.assertEqual(schedule["max_wall_seconds_per_seed"],7200)
         self.assertEqual(schedule["final_comparators"],6)
-        config,tasks,identity = geometry_identity()
+        from nca.ik.fresh_final import FreshFinalConfig
+        from nca.ik.data import iter_tasks
+        from nca.contracts import sha256_json
+        config=FreshFinalConfig()
+        tasks=tuple(iter_tasks(config,'final'))
         self.assertEqual(len(tasks),2940)
-        self.assertEqual(identity["ordered_geometry_sha256"],
-            "57f7008cbaf6d776ad36e2aeec97019a68a8929e697a2734ea3fde2d7abe64c2")
+        expected="57f7008cbaf6d776ad36e2aeec97019a68a8929e697a2734ea3fde2d7abe64c2"
+        actual=sha256_json([t.to_dict() for t in tasks])
+        self.assertEqual(sha256_json([t.id for t in tasks]),
+            'aab6fb764202204f397b5a73a0b0f6aa25e7ec5ca4fc841e4dba5891f0984b72')
+        # Production retains the exact reviewed Windows binary64 geometry.
+        # Generic CPU CI does not require Linux/Windows trigonometric parity.
+        if os.name=='nt' or actual==expected:
+            self.assertEqual(geometry_identity()[2]['ordered_geometry_sha256'],expected)
+        else:
+            with self.assertRaisesRegex(ValueError,'reviewed geometry differs'):
+                geometry_identity()
         self.assertTrue(all(t.partition == "final" for t in tasks))
         self.assertEqual(config.budget.max_teacher_iterations,188160)
         self.assertGreater(process_peak_bytes(),0)
@@ -77,6 +91,24 @@ class FollowupContractTests(unittest.TestCase):
                     load(directory,"a"*64)
                 source.assert_not_called()
                 gpu.assert_not_called()
+
+    def test_private_worker_refuses_wrong_phase_ownership_before_allocation_or_cuda(self):
+        import json
+        from nca.runs import sha256_file
+        from nca.train.ik_followup import worker
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            (root/'declaration.json').write_text(json.dumps({'sha256':'a'*64}),encoding='utf-8')
+            (root/'active-phase.json').write_text(json.dumps({'id':'other'}),encoding='utf-8')
+            (root/'serial-phase-active.json').write_text('{}',encoding='utf-8')
+            args=SimpleNamespace(run=directory,declaration_sha256=sha256_file(root/'declaration.json'),
+                phase_claim='expected',phase='train',seed=41011)
+            with patch('nca.train.ik_followup.ledger_at') as ledger, \
+                    patch('nca.train.ik_followup.cuda_context') as cuda:
+                with self.assertRaisesRegex(ValueError,'live run-wide supervisor ownership'):
+                    worker(args)
+                ledger.assert_not_called()
+                cuda.assert_not_called()
 
     def test_no_selection_from_partial_training(self):
         partial=SimpleNamespace(inspect=lambda:{"active":False,"unresolved_work":False,"latest_checkpoint":None})
