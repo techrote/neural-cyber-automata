@@ -258,6 +258,48 @@ class FlightCaptureTests(unittest.TestCase):
         # mass instead of silently transferring weight to the successful row.
         self.assertAlmostEqual(dataset.sample_weights[0], 1.0 / 12.0, places=12)
 
+    def test_capture_label_binding_charges_only_eligible_rows(self):
+        zero, six, twelve = observation(0), observation(6), observation(12)
+        failed = validate_declared_capture_episode(
+            episode(
+                episode_id="ep-bind-failed",
+                initial=zero,
+                transitions=[
+                    transition(0, zero, six),
+                    transition(1, six, twelve, failed=True),
+                ],
+                final=outcome("failed", failed=True, reason="physical_fault"),
+            ),
+            declaration=ACCOUNTING_DECLARATION,
+        )
+        refused = validate_declared_capture_episode(
+            episode(
+                episode_id="ep-bind-refused",
+                scenario_id="arrival_braking",
+                host_seed=103,
+                initial=None,
+                transitions=[],
+                final=outcome("refused", reason="reset_refused"),
+            ),
+            declaration=ACCOUNTING_DECLARATION,
+        )
+        dataset = build_capture_dataset((failed, refused))
+        with tempfile.TemporaryDirectory() as temporary:
+            ledger = FlightAccountingLedger.create(
+                Path(temporary) / "capture-binding.jsonl",
+                ACCOUNTING_DECLARATION,
+                attempt_id="capture-binding-fixture",
+                current_evidence=ACCOUNTING_EVIDENCE,
+            )
+            binding = bind_capture_accounting(dataset, ledger)
+            self.assertEqual(binding.capture_labels, 1)
+            self.assertEqual(binding.capture_dataset_sha256, dataset.sha256)
+            self.assertEqual(
+                ledger.snapshot()["stage_counts"]["capture"]["capture_labels"], 1)
+            with self.assertRaisesRegex(ContractError, "already charged"):
+                bind_capture_accounting(dataset, ledger)
+            ledger.close("synthetic_capture_binding_fixture")
+
     def test_confirmed_zero_tick_failure_is_retained_without_supervision(self):
         before = observation(0)
         failed = transition(0, before, copy.deepcopy(before), failed=True)
@@ -416,6 +458,20 @@ class FlightLearningTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "accounting"):
             train_behavior_clone(self.dataset, seed=74011)
 
+    def test_clone_refuses_unbound_complete_capture(self):
+        ledger = FlightAccountingLedger.create(
+            Path(self.temp.name) / "unbound.jsonl",
+            ACCOUNTING_DECLARATION,
+            attempt_id="unbound-fixture",
+            current_evidence=ACCOUNTING_EVIDENCE,
+        )
+        try:
+            with self.assertRaisesRegex(ContractError, "binding"):
+                train_behavior_clone(
+                    self.dataset, seed=74011, accounting=ledger)
+        finally:
+            ledger.close("synthetic_unbound_capture_fixture")
+
     def test_clone_refuses_an_incomplete_preregistered_capture_set(self):
         partial = build_capture_dataset(self.captures[:-1])
         ledger = FlightAccountingLedger.create(
@@ -507,6 +563,14 @@ class FlightLearningTests(unittest.TestCase):
         self.assertEqual(
             restored.lineage["parent_checkpoint_sha256"], initial_receipt["sha256"])
         self.assertEqual(restored.lineage["capture_dataset_sha256"], self.dataset.sha256)
+        self.assertEqual(
+            restored.lineage["capture_binding_sha256"],
+            trained.capture_binding_sha256,
+        )
+        self.assertEqual(
+            initial.lineage["accounting_chain_sha256"],
+            trained.checkpoints[0].accounting_chain_sha256,
+        )
         self.assertEqual(restored.lineage["capture_id"], "capture-a")
         self.assertEqual(restored.lineage["optimizer_updates"], BC_EPOCHS)
         self.assertEqual(
