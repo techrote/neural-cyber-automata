@@ -743,8 +743,13 @@ class FlightAccountingLedger:
         return self.reserve_many(
             {"host_starts": 1, "startup_operations": 1}, scope="host_start")
 
-    def reserve_reset(self) -> str:
-        return self.reserve_many({"resets": 1, "host_calls": 1}, scope="host_reset")
+    def reserve_reset(self, *, tuning: bool = False) -> str:
+        if type(tuning) is not bool:
+            _fail("flight_reset_scope", "tuning reset marker must be boolean")
+        increments = {"resets": 1, "host_calls": 1}
+        if tuning:
+            increments["tuning_episodes"] = 1
+        return self.reserve_many(increments, scope="host_reset")
 
     def reserve_host_call(self, *, scope: str) -> str:
         if type(scope) is not str or not scope:
