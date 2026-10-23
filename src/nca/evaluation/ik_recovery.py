@@ -181,13 +181,16 @@ def _archive_metadata(archive, corpus):
 
 def _proof_document(run, registry, a):
     suite = a["dataset"]["final_suite_identity_sha256"]
-    return {"schema": "nca-ik-final-recovery-proof/v1", "run": str(Path(run).resolve()),
+    result = {"schema": "nca-ik-final-recovery-proof/v1", "run": str(Path(run).resolve()),
         "registry": str(Path(registry).resolve()),
         "opening_file_sha256": a["protected_registry_files"][suite+".final-opened.json"]["sha256"],
         "prior_binding_file_sha256": a["protected_registry_files"][suite+".compact-reader-v1.json"]["sha256"],
         "frozen_candidates": a["frozen_candidates"], "recovery_amendment_sha256": a["sha256"],
         "source_sha256": a["source"]["source_sha256"],
         "historical_receipts": a["historical_receipts"], "ledger_recoveries": a["ledger_recoveries"]}
+    if "rebind" in a:
+        result["historical_source_sha256"] = a["rebind"]["parent_source_sha256"]
+    return result
 
 
 def _ledger(run, declaration, seed, proof):
@@ -325,12 +328,14 @@ class RecoveryContext:
                 "--failed-amendment-sha256", FAILED_AMENDMENT_FILE_SHA256]
 
 
-def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pending=False):
+def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pending=False, _historical=False):
+    if _historical and digest != REBIND_PARENT_FILE_SHA256:
+        raise ValueError("only the exact refused parent can receive historical loading")
     if _sha(path) != digest:
         raise ValueError("exact immutable recovery amendment file hash required")
     a = _read(path)
     _check_seal(a)
-    if (set(a) != _FIELDS or a.get("schema") != SCHEMA or a.get("scope") != SCOPE
+    if (set(a) != _FIELDS | ({"rebind"} if "rebind" in a else set()) or a.get("schema") != SCHEMA or a.get("scope") != SCOPE
             or a.get("evaluation_only") is not True or a.get("final_opened") is not True
             or a.get("no_new_allocations") is not True):
         raise ValueError("strict evaluation-only recovery amendment required")
@@ -342,7 +347,7 @@ def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pendi
             or any(a[k] != failed[k] for k in ("plan", "dataset", "allocations", "runtime", "gpu_visibility_sha256"))
             or a["original_declaration_sha256"] != d["sha256"]):
         raise ValueError("recovery altered failed provenance, candidates or original budget")
-    if (_source(None) != a["source"] or runtime_expectation() != a["runtime"]
+    if ((not _historical and _source(None) != a["source"]) or runtime_expectation() != a["runtime"]
             or _source_delta(failed["source"], a["source"]) != a["changed_source_files"]):
         raise ValueError("recovery source or runtime differs")
     _baseline_unchanged(run, a["prior_run_files"])
@@ -357,7 +362,7 @@ def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pendi
     intent = a["recovery_intent"]
     if (_read(Path(path).parent/"recovery-intent.json") != intent
             or intent.get("schema") != "nca-ik-frozen-recovery-intent/v1"
-            or intent.get("source") != a["source"]
+            or intent.get("source", {}).get("source_sha256") != a.get("rebind", {}).get("parent_source_sha256", a["source"]["source_sha256"])
             or intent.get("failed_amendment_file_sha256") != failed_digest
             or intent.get("historical_receipts") != historical or historical != a["historical_receipts"]
             or intent.get("historical_elapsed_seconds") != elapsed
@@ -366,7 +371,7 @@ def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pendi
         raise ValueError("historical accounting authority intent changed")
     for seed in SEEDS:
         p = a["ledger_recoveries"][str(seed)]
-        if (p["authority_sha256"] != intent["sha256"] or p["source_sha256"] != a["source"]["source_sha256"]
+        if (p["authority_sha256"] != intent["sha256"] or p["source_sha256"] != intent["source"]["source_sha256"]
                 or p["historical_elapsed_seconds"] != elapsed
                 or p["historical_charge_wall_seconds"] != charge):
             raise ValueError("historical accounting authority differs")
@@ -374,11 +379,153 @@ def load(run, path, digest, failed_path, failed_digest, registry, *, allow_pendi
         if not ledger.allows_recovered_failure(Path(run)/f"seed-{seed}"/
                                                f"supervisor-overrun-{p['failed_attempt']:04d}.json"):
             raise ValueError("historical failed phase lacks durable charged recovery")
+    if "rebind" in a:
+        if _read(Path(path).parent/"rebind-intent.json") != a["rebind"]["intent"]:
+            raise ValueError("durable rebind intent differs")
+        _validate_rebind(run, registry, a, failed_path, failed_digest)
     _evaluation_outcome_guard(path, allow_pending_evaluation=allow_pending)
     from nca.evaluation.ik_final_corpus import validate_recovery_proof
     proof = validate_recovery_proof(_proof_document(run, registry, a))
     return RecoveryContext(d, a, proof, str(Path(run).resolve()), str(Path(path).resolve()), digest,
         str(Path(registry).resolve()), str(Path(failed_path).resolve()), _TOKEN)
+
+
+
+REBIND_PARENT_FILE_SHA256 = "a1bb48cdf6bed34f5aa973dcad0fe1a315462d7f3276a18b3ed75d720276bece"
+REBIND_PARENT_SOURCE_SHA256 = "81d2588a0aef03b4d4a73479ed6c4656c8e57605f03b4dfeca4c41b136345f70"
+REFUSAL_OBSERVATION_SHA256 = "a07a912338c720cd69f987699426a89d2b2f663438dbd1bffe5b8096a3755256"
+
+
+def _refusal(path):
+    path = Path(path).resolve()
+    if _sha(path) != REFUSAL_OBSERVATION_SHA256:
+        raise ValueError("exact independently audited refused launcher observation required")
+    r = _read(path)
+    if (r["amendment_file_sha256"] != REBIND_PARENT_FILE_SHA256
+            or r["worker_started"] is not False or r["returncode"] != 1
+            or r["conservative_launcher_debit_seconds"] != 10
+            or r["observed_tool_command_wall_seconds"] > 10):
+        raise ValueError("only the pre-worker launcher refusal may be rebound")
+    files = {str(path): {"bytes": path.stat().st_size, "sha256": _sha(path)}}
+    for name, expected in r["files"].items():
+        f = path.parent/name
+        if f.stat().st_size != expected["bytes"] or _sha(f) != expected["sha256"]:
+            raise ValueError("refusal supporting evidence changed")
+        files[str(f)] = expected
+    return files
+
+
+def _validate_rebind(run, registry, a, failed_path, failed_digest):
+    r = a["rebind"]
+    if (set(r) != {"parent_amendment", "parent_file_sha256", "parent_sha256",
+            "parent_source_sha256", "refusal_observation", "intent", "overhead_proofs"}
+            or r["parent_file_sha256"] != REBIND_PARENT_FILE_SHA256
+            or r["parent_source_sha256"] != REBIND_PARENT_SOURCE_SHA256):
+        raise ValueError("exact refused recovery parent required")
+    parent = load(run, r["parent_amendment"], r["parent_file_sha256"], failed_path,
+                  failed_digest, registry, _historical=True).amendment
+    if "rebind" in parent or parent["sha256"] != r["parent_sha256"]:
+        raise ValueError("rebind cannot recursively replace accounting authority")
+    unchanged = _FIELDS - {"created_utc", "source", "changed_source_files", "baseline_files", "baseline_ledgers", "sha256"}
+    if any(a[k] != parent[k] for k in unchanged):
+        raise ValueError("rebind changed original paid history or experiment")
+    files = _refusal(r["refusal_observation"])
+    intent = r["intent"]
+    _check_seal(intent)
+    if (intent.get("schema") != "nca-ik-recovery-rebind-intent/v1"
+            or intent.get("source") != a["source"]
+            or intent.get("parent_file_sha256") != r["parent_file_sha256"]
+            or intent.get("refusal_files") != files or intent.get("debit_seconds") != 10):
+        raise ValueError("exact rebind authority and refusal charge required")
+    if set(r["overhead_proofs"]) != {str(s) for s in SEEDS}:
+        raise ValueError("all original allocations must pay refused launcher work")
+    for seed in SEEDS:
+        p = r["overhead_proofs"][str(seed)]
+        _check_seal(p)
+        old = parent["baseline_ledgers"][str(seed)]
+        if (p.get("source_sha256") != a["source"]["source_sha256"]
+                or p.get("prior_source_sha256") != r["parent_source_sha256"]
+                or p.get("prior_amendment_file_sha256") != r["parent_file_sha256"]
+                or p.get("prior_amendment_sha256") != parent["sha256"]
+                or p.get("authority_sha256") != intent["sha256"]
+                or p.get("prior_parent_sha256") != old["parent_sha256"]
+                or p.get("historical_charge_wall_seconds") != 10
+                or p.get("refusal_files") != files):
+            raise ValueError("overhead proof changed the refused source or charge")
+        overhead = Path(run)/f"seed-{seed}"/"overheads"/"charge-0001.json"
+        if _read(overhead).get("record", {}).get("proof") != p:
+            raise ValueError("durable launcher charge differs from declared overhead proof")
+        # Immutable baseline inventory binds the durable paid overhead receipts.
+        state = a["baseline_ledgers"][str(seed)]
+        if (state["attempt_count"] != old["attempt_count"] or state["charged"] != old["charged"]
+                or state["latest_checkpoint"] != old["latest_checkpoint"]
+                or state["charged_wall_seconds"] < old["charged_wall_seconds"] + 10):
+            raise ValueError("rebind reset accounting, checkpoint or refused launcher debit")
+
+
+def rebind(run, parent_path, parent_digest, failed_path, failed_digest, corpus, registry,
+           refusal_observation, output):
+    """Rebind one refused launcher, retaining original paid authority and candidates."""
+    run, output = Path(run).resolve(), Path(output).resolve()
+    project = _project(None)
+    if (output.exists() or output == run or run in output.parents
+            or output == project or project in output.parents):
+        raise ValueError("new external rebind directory required")
+    if parent_digest != REBIND_PARENT_FILE_SHA256:
+        raise ValueError("exact refused parent amendment required")
+    context = load(run, parent_path, parent_digest, failed_path, failed_digest, registry, _historical=True)
+    parent, d = context.amendment, context.declaration
+    if "rebind" in parent or parent["source"]["source_sha256"] != REBIND_PARENT_SOURCE_SHA256:
+        raise ValueError("one explicit refused parent only")
+    source = _source(None)
+    if source == parent["source"]:
+        raise ValueError("rebind requires the committed launcher repair")
+    delta = _source_delta(parent["failed_amendment"]["source"], source)
+    _titan_visibility(expected_sha256=parent["gpu_visibility_sha256"],
+                      driver=d["plan"]["qualified_environment"]["driver"])
+    files = _refusal(refusal_observation)
+    from nca.evaluation.ik_final_corpus import read_recovery_training_corpus
+    from nca.evaluation.ik_continuation_eval import freeze_training
+    training = read_recovery_training_corpus(corpus, registry, recovery_proof=context.proof)
+    frozen, _ = freeze_training(run, d, training, recovery_proof=context.proof)
+    if frozen != parent["frozen_candidates"] or corpus_identity(training) != parent["dataset"]:
+        raise ValueError("rebind cannot change corpus or frozen candidates")
+    ledgers = {s: _ledger(run, d, s, parent["ledger_recoveries"][str(s)]) for s in SEEDS}
+    if any(ledgers[s].inspect() != parent["baseline_ledgers"][str(s)] for s in SEEDS):
+        raise ValueError("actual paid parent boundary changed")
+    intent = _sealed({"schema": "nca-ik-recovery-rebind-intent/v1", "created_utc": utc_now(),
+        "source": source, "parent_file_sha256": parent_digest, "refusal_files": files,
+        "debit_seconds": 10})
+    proofs = {}
+    for seed in SEEDS:
+        ledger, old = ledgers[seed], parent["baseline_ledgers"][str(seed)]
+        proofs[str(seed)] = _sealed({"schema": "nca-ik-recovery-launcher-overhead/v1",
+            "identity_sha256": sha256_json(ledger.identity), "allocation_sha256": ledger.header["sha256"],
+            "prior_parent_sha256": old["parent_sha256"], "prior_attempt_count": old["attempt_count"],
+            "checkpoint_sha256": old["latest_checkpoint"]["reference"]["sha256"],
+            "prior_amendment_file_sha256": parent_digest, "prior_amendment_sha256": parent["sha256"],
+            "prior_source_sha256": parent["source"]["source_sha256"],
+            "source_sha256": source["source_sha256"], "authority_sha256": intent["sha256"],
+            "historical_charge_wall_seconds": 10, "refusal_files": files})
+    if _source(None) != source:
+        raise ValueError("source changed during rebind preflight")
+    output.mkdir(parents=True, exist_ok=False)
+    immutable_json(output/"rebind-intent.json", intent)
+    for seed in SEEDS:
+        ledgers[seed].record_recovery_overhead(proofs[str(seed)])
+    body = {k:v for k,v in parent.items() if k != "sha256"}
+    body.update(created_utc=utc_now(), source=source, changed_source_files=delta,
+        baseline_files=_inventory(run), baseline_ledgers={str(s):ledgers[s].inspect() for s in SEEDS},
+        rebind={"parent_amendment": str(Path(parent_path).resolve()), "parent_file_sha256": parent_digest,
+            "parent_sha256": parent["sha256"], "parent_source_sha256": parent["source"]["source_sha256"],
+            "refusal_observation": str(Path(refusal_observation).resolve()), "intent": intent,
+            "overhead_proofs": proofs})
+    a = _sealed(body)
+    _validate_rebind(run, registry, a, failed_path, failed_digest)
+    digest = immutable_json(output/"amendment.json", a)
+    load(run, output/"amendment.json", digest, failed_path, failed_digest, registry)
+    return {"amendment": a, "amendment_file_sha256": digest, "cuda_initialized": False,
+            "refused_launcher_charged_seconds_per_seed": 10, "new_allocations": False}
 
 
 def review(path, amendment):
@@ -423,6 +570,9 @@ def main(argv=None):
     prep = sub.add_parser("prepare")
     for name in ("run", "failed-amendment", "failed-amendment-sha256", "corpus", "registry", "archive", "output"):
         prep.add_argument("--"+name, required=True)
+    rebound = sub.add_parser("rebind")
+    for flag in ("run", "parent-amendment", "parent-amendment-sha256", "failed-amendment", "failed-amendment-sha256", "corpus", "registry", "refusal-observation", "output"):
+        rebound.add_argument("--"+flag, required=True)
     for name in ("run", "_worker"):
         command = sub.add_parser(name)
         for flag in ("run", "amendment", "amendment-sha256", "failed-amendment", "failed-amendment-sha256", "corpus", "registry", "archive", "review"):
@@ -434,6 +584,10 @@ def main(argv=None):
     if a.command == "prepare":
         result = prepare(a.run, a.failed_amendment, a.failed_amendment_sha256,
                          a.corpus, a.registry, a.archive, a.output)
+    elif a.command == "rebind":
+        result = rebind(a.run, a.parent_amendment, a.parent_amendment_sha256,
+            a.failed_amendment, a.failed_amendment_sha256, a.corpus, a.registry,
+            a.refusal_observation, a.output)
     else:
         common = (a.run, a.amendment, a.amendment_sha256, a.failed_amendment,
                   a.failed_amendment_sha256, a.corpus, a.registry, a.archive, a.review)

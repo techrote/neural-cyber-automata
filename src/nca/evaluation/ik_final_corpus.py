@@ -113,6 +113,10 @@ def validate_recovery_proof(document):
     fields = {"schema", "run", "registry", "opening_file_sha256", "prior_binding_file_sha256",
               "frozen_candidates", "recovery_amendment_sha256", "source_sha256",
               "historical_receipts", "ledger_recoveries"}
+    if isinstance(document, dict) and "historical_source_sha256" in document:
+        fields.add("historical_source_sha256")
+        if document["historical_source_sha256"] != "81d2588a0aef03b4d4a73479ed6c4656c8e57605f03b4dfeca4c41b136345f70":
+            _fail("exact original paid recovery source required")
     if (not isinstance(document, dict) or set(document) != fields
             or document["schema"] != "nca-ik-final-recovery-proof/v1"
             or document["opening_file_sha256"] != RECOVERY_OPENING_FILE_SHA256
@@ -143,7 +147,7 @@ def validate_recovery_proof(document):
         validate_final_opening(opening, frozen, seed=seed)
         ledger_proof = document["ledger_recoveries"][str(seed)]
         if (ledger_proof.get("seed") != seed
-                or ledger_proof.get("source_sha256") != document["source_sha256"]
+                or ledger_proof.get("source_sha256") != document.get("historical_source_sha256", document["source_sha256"])
                 or ledger_proof.get("frozen_candidates_sha256") != frozen["sha256"]
                 or ledger_proof.get("opening_sha256") != opening["sha256"]):
             _fail("ledger recovery must bind this same source, opening and frozen seed")

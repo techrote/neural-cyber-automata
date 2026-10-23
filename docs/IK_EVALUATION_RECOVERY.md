@@ -70,5 +70,29 @@ no-go and inconclusive results honestly; no final-driven retuning is permitted.
 
 © 2026 techrote. All rights reserved.
 
-Current observed outcome: [launcher refusal and required source/accounting rebind](progress/2026-10-23-ik-recovery-refusal.md). No recovery evaluation result exists.
+Historical observed outcome: [launcher refusal and required source/accounting rebind](progress/2026-10-23-ik-recovery-refusal.md). No recovery evaluation result exists.
 
+
+## Source rebind after the pre-supervisor launcher refusal
+
+The owner commissions a fresh declaration rebind for the same experiment.
+This uses `python -m nca.evaluation.ik_recovery rebind` with the original run,
+refused parent amendment and file hash, failed evaluation amendment and hash,
+original corpus and registry, pinned refusal observation and a new external
+output directory. It does not rerun `prepare` or overwrite either declaration.
+
+Read-only preflight authenticates the exact refused parent, paid historical
+records, original candidates and unchanged ledgers before any debit. The new
+immutable declaration retains the old paid authority and separately names the
+new clean execution source. An append-only overhead envelope pays ten seconds
+for the measured 5.962-second launcher refusal, measured recording work and a
+sixty-second publication reserve per seed. Attempts and all operation counters
+remain unchanged. Later attempt starts include this debit in their prior wall
+and parent chain; dropping it invalidates continuation.
+
+Rehearse the full rebind/load on faithful copies first. After exact-head CI,
+prepare the real rebind once, publish its file and semantic hashes, and obtain
+two fresh independent declarations of admission. Use the rebound amendment in
+the same `run` command above. Historical admissions cannot authorize new source.
+No automatic retry, training, new allocation, candidate selection or reset is
+permitted. Preserve every refusal and account its overhead before further work.

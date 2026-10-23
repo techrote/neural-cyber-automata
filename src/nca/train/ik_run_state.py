@@ -336,6 +336,72 @@ class IKRunLedger:
                 and finish["record"]["reason"] == "explicit_historical_failed_final_phase_recovery_accounting"
                 and finish["record"]["elapsed_seconds"] >= proof["historical_charge_wall_seconds"])
 
+    def _validate_overhead_proof(self, proof):
+        fields = {"schema", "identity_sha256", "allocation_sha256", "prior_parent_sha256",
+            "prior_attempt_count", "checkpoint_sha256", "prior_amendment_file_sha256",
+            "prior_amendment_sha256", "prior_source_sha256", "source_sha256", "authority_sha256",
+            "historical_charge_wall_seconds", "refusal_files", "sha256"}
+        if (not isinstance(proof, dict) or set(proof) != fields
+                or proof["schema"] != "nca-ik-recovery-launcher-overhead/v1"
+                or proof["sha256"] != sha256_json({k:v for k,v in proof.items() if k != "sha256"})
+                or proof["identity_sha256"] != sha256_json(self.identity)
+                or proof["allocation_sha256"] != self.header["sha256"]
+                or type(proof["prior_attempt_count"]) is not int or proof["prior_attempt_count"] < 1):
+            raise ValueError("allocation-bound launcher overhead proof required")
+        for key in fields - {"schema", "prior_attempt_count", "historical_charge_wall_seconds", "refusal_files"}:
+            if type(proof[key]) is not str or re.fullmatch(r"[a-f0-9]{64}", proof[key]) is None:
+                raise ValueError("launcher overhead provenance SHA-256 required")
+        value = proof["historical_charge_wall_seconds"]
+        if type(value) not in (float, int) or not math.isfinite(value) or value < 10:
+            raise ValueError("refused launcher requires at least ten seconds debit")
+        files = proof["refusal_files"]
+        if not isinstance(files, dict) or len(files) != 5:
+            raise ValueError("exact refused launcher stdout and stderr required")
+        if {Path(name).name for name in files} != {"run.stdout.json", "run.stderr.txt", "refused-launcher-observation.json",
+                "terminal-refusal-a.json", "terminal-refusal-b.json"}:
+            raise ValueError("exact refused launcher output names required")
+        for name, expected in files.items():
+            path = Path(name)
+            if (not path.is_absolute() or path.is_symlink() or not path.is_file()
+                    or not isinstance(expected, dict) or set(expected) != {"bytes", "sha256"}
+                    or path.stat().st_size != expected["bytes"] or sha256_file(path) != expected["sha256"]):
+                raise ValueError("refused launcher evidence changed")
+        stdout = next(Path(name) for name in files if Path(name).name == "run.stdout.json")
+        stderr = next(Path(name) for name in files if Path(name).name == "run.stderr.txt")
+        if stdout.stat().st_size != 0 or "typed authenticated recovery execution context required" not in stderr.read_text(encoding="utf-8"):
+            raise ValueError("exact pre-supervisor typed-context refusal required")
+
+    def record_recovery_overhead(self, proof):
+        """Append a paid launcher refusal without spending a worker attempt slot."""
+        began = time.monotonic()
+        self._validate_overhead_proof(proof)
+        folder = self.root / "overheads"
+        if folder.exists():
+            for path in sorted(folder.glob("charge-*.json")):
+                existing = _record(path)
+                if existing["record"]["proof"] == proof:
+                    return self.inspect()
+        prior = self.inspect()
+        if (prior["active"] or prior["unresolved_work"] or not prior["can_resume"]
+                or prior["parent_sha256"] != proof["prior_parent_sha256"]
+                or prior["attempt_count"] != proof["prior_attempt_count"]
+                or prior["latest_checkpoint"] is None
+                or prior["latest_checkpoint"]["reference"]["sha256"] != proof["checkpoint_sha256"]
+                or prior["remaining_wall_seconds"] <= proof["historical_charge_wall_seconds"] + 60):
+            raise ValueError("launcher overhead requires exact unchanged paid boundary")
+        folder.mkdir(exist_ok=True)
+        index = len(list(folder.glob("charge-*.json"))) + 1
+        recording = time.monotonic() - began
+        record = {"proof": proof, "recording_seconds": recording,
+            "publication_reserve_seconds": 60.,
+            "elapsed_seconds": proof["historical_charge_wall_seconds"] + recording + 60.}
+        _publish(folder / f"charge-{index:04d}.json", record)
+        result = self.inspect()
+        if time.monotonic() - began > recording + 60.:
+            immutable_json(folder / f"overrun-{index:04d}.json", {"resume_forbidden": True})
+            raise ValueError("launcher overhead publication exceeded paid reserve")
+        return result
+
     def inspect(self):
         """Verify all attempts, reservations and checkpoint bytes without Torch."""
         if _record(self.root / "allocation.json") != self.header:
@@ -349,7 +415,39 @@ class IKRunLedger:
         paths = sorted(folder.iterdir()) if folder.exists() else []
         if [p.name for p in paths] != [f"attempt-{i:04d}" for i in range(1, len(paths) + 1)]:
             raise ValueError("training attempt sequence differs")
+        overhead_folder = self.root / "overheads"
+        overhead_paths = sorted(overhead_folder.iterdir()) if overhead_folder.exists() else []
+        if ([p.name for p in overhead_paths] != [f"charge-{i:04d}.json" for i in range(1, len(overhead_paths)+1)]
+                or overhead_folder.is_symlink()):
+            raise ValueError("launcher overhead sequence or overrun blocks continuation")
+        overheads = [_record(p) for p in overhead_paths]
+        overhead_index = 0
+
+        def apply_overheads(boundary, wall, parent):
+            nonlocal overhead_index
+            while overhead_index < len(overheads):
+                envelope = overheads[overhead_index]
+                rec = envelope["record"]
+                if set(rec) != {"proof", "recording_seconds", "publication_reserve_seconds", "elapsed_seconds"}:
+                    raise ValueError("launcher overhead accounting fields differ")
+                proof = rec["proof"]
+                self._validate_overhead_proof(proof)
+                if proof["prior_attempt_count"] > boundary:
+                    break
+                if (proof["prior_attempt_count"] != boundary or proof["prior_parent_sha256"] != parent
+                        or latest is None or proof["checkpoint_sha256"] != latest["reference"]["sha256"]
+                        or type(rec["recording_seconds"]) not in (float,int)
+                        or not math.isfinite(rec["recording_seconds"]) or rec["recording_seconds"] < 0
+                        or rec["publication_reserve_seconds"] != 60.
+                        or rec["elapsed_seconds"] != proof["historical_charge_wall_seconds"] + rec["recording_seconds"] + 60.):
+                    raise ValueError("launcher overhead lineage or debit differs")
+                wall += rec["elapsed_seconds"]
+                parent = envelope["sha256"]
+                overhead_index += 1
+            return wall, parent
+
         for number, attempt in enumerate(paths, 1):
+            wall, parent = apply_overheads(number-1, wall, parent)
             if attempt.is_symlink() or not attempt.is_dir():
                 raise ValueError("training attempt must be a directory")
             if not (attempt / "start.json").exists():
@@ -480,6 +578,9 @@ class IKRunLedger:
                     raise ValueError("a later attempt follows an unsealed terminal")
             elif _read(seal_path) != {"finish_sha256": finish["sha256"]}:
                 raise ValueError("training attempt seal differs")
+        wall, parent = apply_overheads(len(paths), wall, parent)
+        if overhead_index != len(overheads):
+            raise ValueError("launcher overhead anchor has no paid boundary")
         if latest is not None:
             checkpoint_matches = (
                 latest["state"]["charged"] == charged
