@@ -1,6 +1,7 @@
 """CPU-only conformance for cumulative IK accounting and exact state resume."""
 
 from copy import deepcopy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -14,6 +15,7 @@ import unittest
 from unittest.mock import patch
 
 from nca.train.ik_run_state import IKRunLedger
+from nca.contracts import canonical_json, sha256_json
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -358,6 +360,84 @@ class IKTrainingResumeCPUConformanceTests(unittest.TestCase):
         target.write_bytes(contents)
         with self.assertRaisesRegex(ValueError, "checkpoint"):
             self.ledger.inspect()
+
+    def recovery_fixture(self, *, wall=1000.):
+        path = self.path.parent / "recovery-run"
+        ledger = IKRunLedger.create(path, identity=identity(), allocation=allocation(max_wall_seconds=wall))
+        first = ledger.begin_attempt()
+        cp = first.checkpoint(self.trainer, self.sampler.state_dict())
+        prior = first.finish("paused", reason="complete checkpoint fixture")
+        index = prior["attempt_count"] + 1
+        failure = {"phase": "evaluate-all", "attempt": index, "seed": 41011, "returncode": 1,
+            "verified_within_charged_wall": False, "unknown_work_blocks_resume": True,
+            "charged_wall_seconds": 0., "whole_process_seconds": 121.734}
+        files = {}
+        for name, value in ((f"supervisor-result-{index:04d}.json", failure),
+                            (f"supervisor-overrun-{index:04d}.json", {"resume_forbidden": True})):
+            raw = (canonical_json(value)+"\n").encode()
+            (path / name).write_bytes(raw)
+            files[name] = {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+        body = {"schema": "nca-ik-ledger-recovery/v1", "identity_sha256": sha256_json(identity()),
+            "allocation_sha256": ledger.header["sha256"], "seed": 41011,
+            "prior_parent_sha256": prior["parent_sha256"], "prior_attempt_count": prior["attempt_count"],
+            "checkpoint_sha256": cp["reference"]["sha256"], "failed_attempt": index, "failure_files": files,
+            "source_sha256": "5"*64, "authority_sha256": "6"*64,
+            "frozen_candidates_sha256": "7"*64, "opening_sha256": "8"*64,
+            "historical_elapsed_seconds": 130.984, "historical_charge_wall_seconds": 131.}
+        proof = dict(body, sha256=sha256_json(body))
+        return path, ledger, prior, proof
+
+    def test_explicit_recovery_debits_history_preserves_failed_bytes_and_consumes_attempt(self):
+        path, ledger, prior, proof = self.recovery_fixture()
+        with self.assertRaises(ValueError):
+            ledger.begin_attempt()
+        opted = IKRunLedger.open(path, expected_identity=identity(), recovery_proof=proof)
+        with self.assertRaises(ValueError):
+            opted.begin_attempt()  # A Boolean/proof alone does not pay for failed work.
+        state = opted.record_recovery(proof)
+        self.assertEqual(state["attempt_count"], prior["attempt_count"] + 1)
+        self.assertEqual(state["last_status"], "failed")
+        self.assertEqual(state["charged"], prior["charged"])
+        self.assertEqual(state["latest_checkpoint"], prior["latest_checkpoint"])
+        self.assertGreaterEqual(state["charged_wall_seconds"] - prior["charged_wall_seconds"], 131.)
+        self.assertLessEqual(state["charged_wall_seconds"], state["allocation"]["max_wall_seconds"])
+        self.assertEqual(opted.record_recovery(proof)["charged_wall_seconds"], state["charged_wall_seconds"])
+        for name, expected in proof["failure_files"].items():
+            self.assertEqual(hashlib.sha256((path/name).read_bytes()).hexdigest(), expected["sha256"])
+            self.assertTrue(opted.allows_recovered_failure(path/name))
+        self.assertFalse(opted.allows_recovered_failure(path/"supervisor-result-0004.json"))
+        with self.assertRaises(ValueError):
+            IKRunLedger.open(path, expected_identity=identity()).begin_attempt()
+        actual = opted.begin_attempt()
+        self.assertEqual(actual.number, proof["failed_attempt"] + 1)
+        actual.finish("failed", reason="fixture stops without evaluation or optimization")
+
+    def test_recovery_refuses_undercharge_other_failure_and_changed_old_bytes(self):
+        path, ledger, prior, proof = self.recovery_fixture()
+        for field, value in (("historical_charge_wall_seconds", 130.), ("checkpoint_sha256", "0"*64)):
+            bad = deepcopy(proof)
+            bad[field] = value
+            bad["sha256"] = sha256_json({k:v for k,v in bad.items() if k != "sha256"})
+            with self.assertRaises(ValueError):
+                ledger.record_recovery(bad)
+        (path / "supervisor-overrun-0004.json").write_text('{"resume_forbidden":true}')
+        with self.assertRaises(ValueError):
+            ledger.record_recovery(proof)
+        self.assertFalse((path / "attempts/attempt-0002").exists())
+        terminal = path / "supervisor-result-0002.json"
+        terminal.write_bytes(terminal.read_bytes()+b" ")
+        with self.assertRaises(ValueError):
+            IKRunLedger.open(path, expected_identity=identity(), recovery_proof=proof)
+
+    def test_recovery_debit_can_exhaust_but_never_expand_original_wall_allowance(self):
+        path, ledger, prior, proof = self.recovery_fixture(wall=150.)
+        state = ledger.record_recovery(proof)
+        self.assertEqual(state["allocation"]["max_wall_seconds"], 150.)
+        self.assertEqual(state["charged_wall_seconds"], 150.)
+        self.assertEqual(state["last_status"], "capped")
+        self.assertFalse(state["can_resume"])
+        with self.assertRaises(ValueError):
+            ledger.begin_attempt()
 
 
 if __name__ == "__main__":

@@ -28,6 +28,11 @@ OPTIONAL = importlib.util.find_spec("torch") is not None and importlib.util.find
 
 
 class IKExperimentContractTests(unittest.TestCase):
+    def test_recovery_view_cannot_authorize_training_or_touch_runtime(self):
+        with self.assertRaisesRegex(ValueError, "recovery-only corpus"):
+            train_attempt(None, None, SimpleNamespace(recovery_only=True), None,
+                          epochs=40, batch_size=128)
+
     def test_plan_is_exact_and_finite_without_admission(self):
         plan = json.loads((ROOT / PLAN_PATH).read_text())
         self.assertEqual(validate_plan(plan), plan)

@@ -314,6 +314,8 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     The CLI owns process supervision and source/runtime admission. An accepted
     corpus is refused on CPU. No final reader or final opening runs here.
     """
+    if getattr(corpus, "recovery_only", False):
+        raise ValueError("recovery-only corpus cannot authorize optimization")
     if corpus.accepted and context.device.type != "cuda":
         raise ValueError("accepted corpus training requires CUDA; fixtures remain separate")
     if (type(epochs) is not int or epochs < 1 or type(batch_size) is not int

@@ -148,6 +148,11 @@ def ik_compact_final_comparison(**kwargs):
     return supervise(**kwargs)
 
 
+def ik_frozen_recovery(**kwargs):
+    from .evaluation.ik_recovery import supervise
+    return supervise(**kwargs)
+
+
 def builtin_registry() -> Registry:
     # These modules use the standard library and do not launch a runtime on
     # import. Construction of the host remains an explicit caller action.
@@ -187,6 +192,8 @@ def builtin_registry() -> Registry:
                       ("original-byte-authentication", "candidate-bound-opening", "no-pending-journal"))
     registry.register("evaluator", "ik-compact-final-comparison", 1, ik_compact_final_comparison,
                       ("three-seed-freeze", "original-allocation", "supervised", "matched-cpu-timing"))
+    registry.register("evaluator", "ik-frozen-recovery", 1, ik_frozen_recovery,
+                      ("same-frozen-candidates", "append-only-costs", "no-training", "titan-only"))
     registry.register("adapter", "recorded", 1, RecordedAdapter, ("recorded_fixture",))
     registry.register("adapter", "recorded-playback", 1, RecordedEnv,
                       ("recorded_fixture", "reset-step", "owned-observation"))

@@ -14,17 +14,18 @@ from dataclasses import dataclass, field, replace
 import hashlib
 import io
 import math
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import tarfile
 
-from nca.contracts import ContractError, sha256_json, strict_json_loads, digest
+from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads, digest
 from nca.ik.data import (GeometricSample, RuntimeInputs, iter_tasks,
                          independent_two_link_point, _segment_distance)
 from nca.ik.kinematics import chain_from_profile
 from nca.ik.profiles import runner_right_sole_profile
 from nca.runs import immutable_json, utc_now
 from nca.train.ik_corpus import (TrainingCorpus, ACCEPTED_MANIFEST_FILE_SHA256,
-    ACCEPTED_MANIFEST_SHA256, ACCEPTED_REGISTRY_ID, _REGISTRY_FILES, _read_bytes)
+    ACCEPTED_MANIFEST_SHA256, ACCEPTED_REGISTRY_ID, _REGISTRY_FILES, _read_bytes,
+    read_recovery_training_corpus)
 from nca.train.ik_run_state import IKRunLedger
 from nca.evaluation.ik_training import (SEEDS, select_tuning_checkpoint,
                                         freeze_candidates, validate_final_opening)
@@ -34,6 +35,19 @@ CONTRACT = "nca-ik-authenticated-final-reader/v1"
 MAX_TUNING_REPORT_BYTES = 16 * 1024 * 1024
 ACCEPTED_ARCHIVE_SHA256 = "97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce"
 ACCEPTED_ARCHIVE_BYTES = 7340716
+ACCEPTED_ARCHIVE_ROOT = "runner-ik-corpus-v1-20261022"
+RECOVERY_OPENING_FILE_SHA256 = "89194b0b8466c56fbfa1d0f64020833a7168663a5da69caa7f210856a173c66c"
+RECOVERY_BINDING_FILE_SHA256 = "0cf151369b4188a941b33a357991bdec31666320c2fa005c7b5fedae913acce1"
+RECOVERY_FROZEN_SHA256 = "e9e1ea0e1bb4831b4323a78fef14a9a1012c97c12a61eae8833f5933c0161b85"
+RECOVERY_DECLARATION_SHA256 = "37183126562dae4d3d917b46bca2197a8e58ad41bf0365eb8ecc7558ef600ca3"
+RECOVERY_HISTORICAL_RECEIPTS = {
+    "seed-41011/supervisor-result-0003.json": "bcc001699229c6bd139f64cd9b6b9498ed90923c0550f4e073a345db67c4e0b3",
+    "seed-42013/supervisor-result-0002.json": "88fea26e1fbe99523946526ae0778aefdb37a504a002a0695f560ccb802cc4a2",
+    "seed-43019/supervisor-result-0002.json": "569ee6b75b8969a3aa39e8775874c55fcdb67df659ccd335c1c476a693d7e0ee",
+    **{f"seed-{seed}/supervisor-overrun-{3 if seed == 41011 else 2:04d}.json":
+       "1192c573a6be4ca4b13f7d356a159def1f750fc7cfff69c6068335858d850e47" for seed in SEEDS},
+}
+_RECOVERY_TOKEN = object()
 
 
 def _fail(detail):
@@ -49,39 +63,159 @@ def _seal(value):
     return dict(value, sha256=sha256_json(value))
 
 
-def _verified_training(run, declaration, corpus, frozen):
+@dataclass(frozen=True)
+class FinalRecoveryProof:
+    """In-process capability for this one already-opened, frozen experiment."""
+    document: dict
+    _authentication: object = field(default=None, repr=False, compare=False)
+
+    @property
+    def accepted(self):
+        return self._authentication == (_RECOVERY_TOKEN, sha256_json(self.document))
+
+    @property
+    def ledger_recoveries(self):
+        return self.document["ledger_recoveries"]
+
+    def authenticates_registry(self, registry, frozen=None):
+        if not self.accepted or Path(registry).resolve() != Path(self.document["registry"]).resolve():
+            return False
+        if frozen is not None and frozen != self.document["frozen_candidates"]:
+            return False
+        suite = self.document["frozen_candidates"]["final_suite_identity_sha256"]
+        for suffix, field in ((".final-opened.json", "opening_file_sha256"),
+                              (".compact-reader-v1.json", "prior_binding_file_sha256")):
+            _read_bytes(Path(registry) / (suite + suffix), expected_sha256=self.document[field])
+        return True
+
+    def allows_historical_receipt(self, path):
+        if not self.accepted:
+            return False
+        try:
+            relative = Path(path).resolve().relative_to(Path(self.document["run"]).resolve()).as_posix()
+        except ValueError:
+            return False
+        expected = self.document["historical_receipts"].get(relative)
+        if expected is None:
+            return False
+        _read_bytes(path, expected_sha256=expected)
+        return True
+
+
+def validate_recovery_proof(document):
+    """Authenticate fixed historical evidence; caller separately gates admission.
+
+    This never reads final payloads or grants a generic after-opening reader.
+    New source/amendment identities are reviewed by the registered recovery
+    supervisor; the original opening, binding, freeze and six failure files
+    have explicit immutable pins here.
+    """
+    fields = {"schema", "run", "registry", "opening_file_sha256", "prior_binding_file_sha256",
+              "frozen_candidates", "recovery_amendment_sha256", "source_sha256",
+              "historical_receipts", "ledger_recoveries"}
+    if (not isinstance(document, dict) or set(document) != fields
+            or document["schema"] != "nca-ik-final-recovery-proof/v1"
+            or document["opening_file_sha256"] != RECOVERY_OPENING_FILE_SHA256
+            or document["prior_binding_file_sha256"] != RECOVERY_BINDING_FILE_SHA256
+            or document["historical_receipts"] != RECOVERY_HISTORICAL_RECEIPTS
+            or not isinstance(document["ledger_recoveries"], dict)
+            or set(document["ledger_recoveries"]) != {str(seed) for seed in SEEDS}
+            or not isinstance(document["frozen_candidates"], dict)
+            or any(type(document[key]) is not str or not Path(document[key]).is_absolute()
+                   for key in ("run", "registry"))
+            or any(not isinstance(value, dict) for value in document["ledger_recoveries"].values())):
+        _fail("exact historical final recovery proof required")
+    for key in ("recovery_amendment_sha256", "source_sha256"):
+        digest(document[key], key)
+    frozen = document["frozen_candidates"]
+    if (frozen.get("sha256") != RECOVERY_FROZEN_SHA256
+            or frozen.get("sha256") != sha256_json({k: v for k, v in frozen.items() if k != "sha256"})):
+        _fail("original frozen candidates cannot change during recovery")
+    registry = Path(document["registry"])
+    suite = frozen["final_suite_identity_sha256"]
+    opening = _json(registry / (suite + ".final-opened.json"), sha256=document["opening_file_sha256"])
+    binding = _json(registry / (suite + ".compact-reader-v1.json"), sha256=document["prior_binding_file_sha256"])
+    if (binding.get("sha256") != sha256_json({k: v for k, v in binding.items() if k != "sha256"})
+            or binding.get("frozen_candidates_sha256") != frozen["sha256"]
+            or binding.get("declaration_sha256") != RECOVERY_DECLARATION_SHA256):
+        _fail("original final binding differs")
+    for seed in SEEDS:
+        validate_final_opening(opening, frozen, seed=seed)
+        ledger_proof = document["ledger_recoveries"][str(seed)]
+        if (ledger_proof.get("seed") != seed
+                or ledger_proof.get("source_sha256") != document["source_sha256"]
+                or ledger_proof.get("frozen_candidates_sha256") != frozen["sha256"]
+                or ledger_proof.get("opening_sha256") != opening["sha256"]):
+            _fail("ledger recovery must bind this same source, opening and frozen seed")
+    for relative, expected in document["historical_receipts"].items():
+        _read_bytes(Path(document["run"]) / relative, expected_sha256=expected)
+    copied = strict_json_loads(canonical_json(document))
+    return FinalRecoveryProof(copied, (_RECOVERY_TOKEN, sha256_json(copied)))
+
+
+def _verified_training(run, declaration, corpus, frozen, recovery_proof=None, *, _preflight_only=False):
     """Check all epoch reports/checkpoint lineage before final payload access."""
     from nca.train.ik_experiment import identity_for
     selected = {}
     tuning_ids = [sample.task.id for sample in corpus.tuning]
     tuning_schedule_sha256 = sha256_json(tuning_ids)
+    recovering = recovery_proof is not None
+    if _preflight_only and not recovering:
+        _fail("unpaid preflight requires the exact typed recovery proof")
+    if recovering and (type(recovery_proof) is not FinalRecoveryProof or not recovery_proof.accepted
+                       or Path(run).resolve() != Path(recovery_proof.document["run"]).resolve()
+                       or frozen != recovery_proof.document["frozen_candidates"]):
+        _fail("exact same-run frozen recovery proof required")
     for seed in SEEDS:
         root = Path(run) / f"seed-{seed}"
         # A supervisor may discover late publication after writing an otherwise
         # verified terminal receipt. That durable overrun must block the final
         # opening itself, before a later begin_attempt would reject it.
-        if any(root.glob("supervisor-overrun-*.json")):
+        if not recovering and any(root.glob("supervisor-overrun-*.json")):
             _fail("whole-process training overrun blocks final opening")
+        ledger_arguments = {} if not recovering else {
+            "recovery_proof": recovery_proof.ledger_recoveries[str(seed)]}
         ledger = IKRunLedger.open(root, expected_identity=identity_for(declaration, seed),
-                                  expected_allocation=declaration["allocations"][str(seed)])
+                                  expected_allocation=declaration["allocations"][str(seed)],
+                                  **ledger_arguments)
         state = ledger.inspect()
+        historical = [root / Path(relative).name for relative in
+                      (recovery_proof.document["historical_receipts"] if recovering else ())
+                      if relative.startswith(f"seed-{seed}/")]
+        if _preflight_only:
+            baseline = recovery_proof.ledger_recoveries[str(seed)]
+            if (state["attempt_count"] != baseline["prior_attempt_count"]
+                    or state["parent_sha256"] != baseline["prior_parent_sha256"]
+                    or state["latest_checkpoint"] is None
+                    or state["latest_checkpoint"]["reference"]["sha256"] != baseline["checkpoint_sha256"]
+                    or state["last_status"] != "paused"):
+                _fail("unpaid recovery preflight requires the exact untouched training boundary")
+        recovered = recovering and all(recovery_proof.allows_historical_receipt(path)
+            and (_preflight_only or ledger.allows_recovered_failure(path)) for path in historical)
+        for path in root.glob("supervisor-overrun-*.json"):
+            if not recovered or not recovery_proof.allows_historical_receipt(path):
+                _fail("whole-process training overrun blocks final opening")
         starts = sorted(root.glob("supervisor-start-*.json"))
         if not starts:
             _fail("verified whole-process supervisor receipts required")
+        terminals = set(root.glob("supervisor-result-*.json"))
         for start in starts:
             terminal = start.with_name(start.name.replace("start", "result", 1))
             if not terminal.is_file():
                 _fail("missing whole-process terminal receipt")
+            terminals.add(terminal)
+        for terminal in sorted(terminals):
             receipt = _json(terminal)
             if (receipt.get("returncode") != 0
                     or receipt.get("verified_within_charged_wall") is not True
                     or receipt.get("unknown_work_blocks_resume") is not False
                     or receipt.get("whole_process_seconds", math.inf)
                     > receipt.get("charged_wall_seconds", -1)):
-                _fail("uncertain whole-process training outcome")
+                if not recovered or not recovery_proof.allows_historical_receipt(terminal):
+                    _fail("uncertain whole-process training outcome")
         latest = state["latest_checkpoint"]
         if (state["active"] or state["unresolved_work"] or latest is None
-                or state["last_status"] != "paused"):
+                or state["last_status"] not in ({"paused", "failed"} if recovered else {"paused"})):
             _fail("every seed requires a verified complete paused training boundary")
         checkpoint_state = latest["state"]
         extra = checkpoint_state["extra_state"]
@@ -135,6 +269,23 @@ def _verified_training(run, declaration, corpus, frozen):
         registry_id=corpus.registry_id)
     if expected != frozen:
         _fail("candidate freeze differs from all three actual tuning selections")
+
+
+def verify_recovery_training_preflight(run, declaration, corpus, frozen, recovery_proof):
+    """Read-only validation before any historical accounting mutation.
+
+    This proves the exact original paused boundaries and all 120 reports and
+    selections. It returns no final data and cannot grant a payload read; the
+    final reader always performs the separate paid accounting checks again.
+    """
+    if (type(recovery_proof) is not FinalRecoveryProof or not recovery_proof.accepted
+            or not corpus.recovery_only or corpus._recovery_proof is not recovery_proof):
+        _fail("same authenticated recovery-only corpus and proof required")
+    _verified_training(run, declaration, corpus, frozen, recovery_proof,
+                       _preflight_only=True)
+    return {"complete_training_histories": 3, "tuning_reports_verified": 120,
+            "frozen_candidates_sha256": frozen["sha256"],
+            "historical_accounting_mutated": False, "final_payloads_read": False}
 
 
 def _task_geometry(task, expected):
@@ -255,6 +406,40 @@ class FinalCorpus:
                 and (frozen is None or frozen == self.frozen))
 
 
+def _archive_headers(archive, manifest):
+    """Validate every header and exact selected paths without payload reads."""
+    members = archive.getmembers()
+    names = [member.name for member in members]
+    if len(set(names)) != len(names):
+        _fail("duplicate archive member names")
+    for member in members:
+        path = PurePosixPath(member.name)
+        if (member.type not in (tarfile.REGTYPE, tarfile.AREGTYPE)
+                or "\\" in member.name or path.is_absolute() or ".." in path.parts
+                or path.as_posix() != member.name
+                or not member.name.startswith(ACCEPTED_ARCHIVE_ROOT + "/")):
+            _fail("original archive regular rooted member required")
+    indexed = {member.name: member for member in members}
+    for item in manifest["shards"] + manifest.get("artifacts", []):
+        name = ACCEPTED_ARCHIVE_ROOT + "/corpus/" + item["path"]
+        member = indexed.get(name)
+        if member is None or member.size != item["bytes"]:
+            _fail("original archive manifest member metadata differs")
+    return indexed
+
+
+def inspect_final_archive_headers(archive, corpus_root):
+    """Metadata-only preflight; never select or parse a final/pending payload."""
+    manifest = _json(Path(corpus_root) / "manifest.json", sha256=ACCEPTED_MANIFEST_FILE_SHA256)
+    raw = _read_bytes(archive, expected_sha256=ACCEPTED_ARCHIVE_SHA256, size=ACCEPTED_ARCHIVE_BYTES)
+    with tarfile.open(fileobj=io.BytesIO(raw), mode="r:gz") as stream:
+        indexed = _archive_headers(stream, manifest)
+    return {"archive_sha256": ACCEPTED_ARCHIVE_SHA256, "archive_bytes": len(raw),
+            "archive_root": ACCEPTED_ARCHIVE_ROOT, "headers_verified": len(indexed),
+            "final_members": sum(item["partition"] == "final" for item in manifest["shards"]),
+            "payloads_selected": 0}
+
+
 def _read_rows(root, manifest, config, archive_bytes=None):
     """Only callable after a verified durable opening in the production path."""
     if archive_bytes is not None:
@@ -262,11 +447,9 @@ def _read_rows(root, manifest, config, archive_bytes=None):
         # No extractall, mixed pending journal, teacher journal or filesystem
         # extraction is involved; only exact original final members are read.
         with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as archive:
-            members = archive.getmembers()
-            if len({member.name for member in members}) != len(members):
-                _fail("duplicate archive member names")
+            members = _archive_headers(archive, manifest)
             def read_final(item):
-                member = archive.getmember("corpus/" + item["path"])
+                member = members[ACCEPTED_ARCHIVE_ROOT + "/corpus/" + item["path"]]
                 if not member.isfile() or member.size != item["bytes"]:
                     _fail("original final archive member metadata differs")
                 stream = archive.extractfile(member)
@@ -315,7 +498,7 @@ def _parse_rows(manifest, config, read_final):
 
 def open_final_corpus(corpus_root, registry, run, declaration_file_sha256, frozen_candidates,
                       *, training_corpus, amendment_sha256, source_sha256, source_root=None,
-                      archive=None):
+                      archive=None, recovery_proof=None):
     """Open original final once, after complete freeze; read no pending journal.
 
     The calling continuation supervisor validates its immutable amendment and
@@ -342,19 +525,55 @@ def open_final_corpus(corpus_root, registry, run, declaration_file_sha256, froze
         _read_bytes(registry / name, expected_sha256=expected, size=size)
     if training_corpus.registry_id != ACCEPTED_REGISTRY_ID:
         _fail("original registry required")
+    if recovery_proof is not None:
+        if (type(recovery_proof) is not FinalRecoveryProof
+                or not recovery_proof.authenticates_registry(registry, frozen_candidates)
+                or training_corpus._recovery_proof is not recovery_proof
+                or recovery_proof.document["recovery_amendment_sha256"] != amendment_sha256
+                or recovery_proof.document["source_sha256"] != source_sha256):
+            _fail("same authenticated opened experiment and exact recovery source required")
+    elif training_corpus.recovery_only:
+        _fail("recovery-only view requires its typed recovery proof")
     # Hash opaque compressed bytes without decoding any final payload before
     # the gates. Retain the authenticated bytes to prevent path replacement
     # between this check and the post-opening selected-member read.
     archive_bytes = None if archive is None else _read_bytes(
         archive, expected_sha256=ACCEPTED_ARCHIVE_SHA256, size=ACCEPTED_ARCHIVE_BYTES)
-    _verified_training(run, declaration, training_corpus, frozen_candidates)
+    if archive_bytes is not None:
+        with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as stream:
+            _archive_headers(stream, manifest)
+    if recovery_proof is None:
+        _verified_training(run, declaration, training_corpus, frozen_candidates)
+    else:
+        _verified_training(run, declaration, training_corpus, frozen_candidates,
+                           recovery_proof=recovery_proof)
     candidate_hashes = [entry["checkpoint_sha256"] for entry in frozen_candidates["candidates"]]
     opening_path = registry / (training_corpus.final_suite_identity_sha256 + ".final-opened.json")
     binding_path = registry / (training_corpus.final_suite_identity_sha256 + ".compact-reader-v1.json")
     binding = _seal({"schema": CONTRACT, "declaration_sha256": declaration["sha256"],
                      "frozen_candidates_sha256": frozen_candidates["sha256"],
                      "amendment_sha256": amendment_sha256, "source_sha256": source_sha256})
-    if opening_path.exists():
+    recovery_binding_path = None
+    recovery_binding = None
+    if recovery_proof is not None:
+        # The original opening and binding are historical evidence, never
+        # overwritten or relabelled as a successful fresh opening.
+        opening = _json(opening_path, sha256=recovery_proof.document["opening_file_sha256"])
+        binding = _json(binding_path, sha256=recovery_proof.document["prior_binding_file_sha256"])
+        recovery_binding_path = registry / (training_corpus.final_suite_identity_sha256
+                                            + ".compact-recovery-reader-v1.json")
+        recovery_binding = _seal({"schema": "nca-ik-authenticated-final-recovery-reader/v1",
+            "declaration_sha256": declaration["sha256"],
+            "frozen_candidates_sha256": frozen_candidates["sha256"],
+            "original_opening_file_sha256": recovery_proof.document["opening_file_sha256"],
+            "original_binding_file_sha256": recovery_proof.document["prior_binding_file_sha256"],
+            "amendment_sha256": amendment_sha256, "source_sha256": source_sha256})
+        if recovery_binding_path.exists():
+            if _json(recovery_binding_path) != recovery_binding:
+                _fail("existing recovery binding differs")
+        else:
+            immutable_json(recovery_binding_path, recovery_binding)
+    elif opening_path.exists():
         if not binding_path.exists() or _json(binding_path) != binding:
             _fail("existing final opening lacks identical continuation binding")
         opening = _json(opening_path)
@@ -377,6 +596,8 @@ def open_final_corpus(corpus_root, registry, run, declaration_file_sha256, froze
     # Verify both durable receipts by readback before any final payload read.
     if _json(opening_path) != opening or _json(binding_path) != binding:
         _fail("durable opening readback mismatch")
+    if recovery_binding_path is not None and _json(recovery_binding_path) != recovery_binding:
+        _fail("durable recovery binding readback mismatch")
     rows = _read_rows(root, manifest, training_corpus.config, archive_bytes)
     _split_guards(training_corpus.training + training_corpus.tuning + rows, training_corpus.config)
     authentication = (_TOKEN, rows, training_corpus.config,

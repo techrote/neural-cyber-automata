@@ -32,17 +32,20 @@ from nca.evaluation.ik_training import (select_tuning_checkpoint, freeze_candida
 from nca.evaluation.ik_final_corpus import open_final_corpus, _verified_training
 
 
-def _ledger(run, declaration, seed):
+def _ledger(run, declaration, seed, recovery_proof=None):
     return IKRunLedger.open(Path(run) / f"seed-{seed}",
         expected_identity=identity_for(declaration, seed),
-        expected_allocation=declaration["allocations"][str(seed)])
+        expected_allocation=declaration["allocations"][str(seed)],
+        **({"recovery_proof": recovery_proof.ledger_recoveries[str(seed)]}
+           if recovery_proof is not None else {}))
 
 
-def freeze_training(run, declaration, corpus):
+def freeze_training(run, declaration, corpus, *, recovery_proof=None):
     """Reconstruct every tuning-only selection from authenticated ledger events."""
     choices, paths = {}, {}
     for seed in SEEDS:
-        ledger = _ledger(run, declaration, seed)
+        ledger = (_ledger(run, declaration, seed, recovery_proof) if recovery_proof is not None
+                  else _ledger(run, declaration, seed))
         state = ledger.inspect()
         latest = state["latest_checkpoint"]
         if latest is None or state["active"] or state["unresolved_work"]:
@@ -78,16 +81,30 @@ def freeze_training(run, declaration, corpus):
         dataset_manifest_sha256=corpus.manifest_sha256,
         final_suite_identity_sha256=corpus.final_suite_identity_sha256,
         registry_id=corpus.registry_id)
-    _verified_training(run, declaration, corpus, frozen)
+    if recovery_proof is None:
+        _verified_training(run, declaration, corpus, frozen)
+    else:
+        _verified_training(run, declaration, corpus, frozen, recovery_proof=recovery_proof)
     return frozen, paths
 
 
 def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_path,
-           archive, *, started, review_sha256):
+           archive, *, started, review_sha256, recovery_context=None):
     from nca.train.ik_continuation import load_amendment, _review
-    declaration, amendment = load_amendment(run, amendment_path, amendment_digest,
-                                           allow_pending_evaluation=True)
-    if sha256_json(_review(review_path, amendment)) != review_sha256:
+    proof = None
+    if recovery_context is None:
+        declaration, amendment = load_amendment(run, amendment_path, amendment_digest,
+                                               allow_pending_evaluation=True)
+        review = _review(review_path, amendment)
+    else:
+        from nca.evaluation.ik_recovery import RecoveryContext
+        if type(recovery_context) is not RecoveryContext:
+            raise ValueError("typed authenticated recovery execution context required")
+        recovery_context.validate_arguments(run, amendment_path, amendment_digest, registry)
+        declaration, amendment, proof = (recovery_context.declaration,
+            recovery_context.amendment, recovery_context.proof)
+        review = recovery_context.review(review_path)
+    if sha256_json(review) != review_sha256:
         raise ValueError("continuation admission changed after supervision")
     execution = {"amendment_sha256": amendment["sha256"],
                  "source_sha256": amendment["source"]["source_sha256"],
@@ -95,15 +112,21 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
     training_execution = amendment.get("training_execution", execution)
     _titan_visibility(expected_sha256=declaration["gpu_visibility_sha256"],
         driver=declaration["plan"]["qualified_environment"]["driver"])
-    corpus = read_training_corpus(corpus_root, registry)
+    if proof is None:
+        corpus = read_training_corpus(corpus_root, registry)
+    else:
+        from nca.evaluation.ik_final_corpus import read_recovery_training_corpus
+        corpus = read_recovery_training_corpus(corpus_root, registry, recovery_proof=proof)
     if corpus_identity(corpus) != declaration["dataset"]:
         raise ValueError("original corpus identity changed")
-    frozen, paths = freeze_training(run, declaration, corpus)
+    frozen, paths = (freeze_training(run, declaration, corpus) if proof is None else
+                    freeze_training(run, declaration, corpus, recovery_proof=proof))
     if amendment.get("evaluation_only") is True:
         if frozen != amendment["frozen_candidates"]:
             raise ValueError("completed training freeze differs from evaluation-only amendment")
         for seed in SEEDS:
-            state = _ledger(run, declaration, seed).inspect()
+            state = (_ledger(run, declaration, seed) if proof is None else
+                     _ledger(run, declaration, seed, proof)).inspect()
             if state["latest_checkpoint"]["state"]["extra_state"].get("execution") != training_execution:
                 raise ValueError("training provenance differs before final opening")
     out = Path(amendment_path).parent
@@ -114,11 +137,13 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
     final = open_final_corpus(corpus_root, registry, run,
         hashlib.sha256((Path(run)/"declaration.json").read_bytes()).hexdigest(), frozen,
         training_corpus=corpus, amendment_sha256=amendment["sha256"],
-        source_sha256=execution["source_sha256"], archive=archive)
+        source_sha256=execution["source_sha256"], archive=archive,
+        **({"recovery_proof": proof} if proof is not None else {}))
     ledgers, attempts, saved, trainers, samplers = {}, {}, {}, {}, {}
     try:
         for seed in SEEDS:
-            ledger = _ledger(run, declaration, seed)
+            ledger = (_ledger(run, declaration, seed) if proof is None else
+                      _ledger(run, declaration, seed, proof))
             info = ledger.inspect()
             index = info["attempt_count"] + 1
             immutable_json(ledger.root / f"supervisor-start-{index:04d}.json", {
@@ -203,11 +228,21 @@ def worker(run, amendment_path, amendment_digest, corpus_root, registry, review_
 
 
 def supervise(run, amendment_path, amendment_digest, corpus_root, registry, review_path,
-              archive, *, started=None):
+              archive, *, started=None, recovery_context=None):
     from nca.train.ik_continuation import load_amendment, _review
     started = time.monotonic() if started is None else started
-    declaration, amendment = load_amendment(run, amendment_path, amendment_digest)
-    review = _review(review_path, amendment)
+    proof = None
+    if recovery_context is None:
+        declaration, amendment = load_amendment(run, amendment_path, amendment_digest)
+        review = _review(review_path, amendment)
+    else:
+        from nca.evaluation.ik_recovery import RecoveryContext
+        if type(recovery_context) is not RecoveryContext:
+            raise ValueError("typed authenticated recovery execution context required")
+        recovery_context.validate_arguments(run, amendment_path, amendment_digest, registry)
+        declaration, amendment, proof = (recovery_context.declaration,
+            recovery_context.amendment, recovery_context.proof)
+        review = recovery_context.review(review_path)
     review_digest = sha256_json(review)
     out = Path(amendment_path).parent
     frozen_review = out / "admission-review.json"
@@ -216,7 +251,8 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
             raise ValueError("immutable continuation admission changed")
     else:
         immutable_json(frozen_review, review)
-    before = {s: _ledger(run, declaration, s).inspect() for s in SEEDS}
+    before = {s: (_ledger(run, declaration, s) if proof is None else
+                  _ledger(run, declaration, s, proof)).inspect() for s in SEEDS}
     if any(not x["can_resume"] or x["charged"]["evaluation_calls"] != 0 for x in before.values()):
         raise ValueError("all three fresh, resumable final evaluation allocations required")
     remaining = min(x["remaining_wall_seconds"] for x in before.values())
@@ -224,10 +260,13 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
         "schema": "nca-ik-continuation-final-supervisor/v1", "amendment_sha256": amendment["sha256"],
         "admission_review_sha256": review_digest, "remaining_wall_seconds": remaining,
         "created_utc": utc_now()})
-    command = [sys.executable, "-m", "nca.evaluation.ik_continuation_eval", "_worker",
+    command = [sys.executable, "-m", ("nca.evaluation.ik_continuation_eval" if proof is None
+        else "nca.evaluation.ik_recovery"), "_worker",
         "--run", str(run), "--amendment", str(amendment_path), "--amendment-sha256", amendment_digest,
         "--corpus", str(corpus_root), "--registry", str(registry), "--review", str(frozen_review),
         "--archive", str(archive), "--started", repr(started), "--review-sha256", review_digest]
+    if recovery_context is not None:
+        command.extend(recovery_context.worker_arguments())
     with (out / "evaluation-worker.log").open("xb") as log:
         process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)
         timed_out = False
@@ -240,7 +279,8 @@ def supervise(run, amendment_path, amendment_digest, corpus_root, registry, revi
     elapsed = time.monotonic()-started
     results = {}
     for seed in SEEDS:
-        after = _ledger(run, declaration, seed).inspect()
+        after = (_ledger(run, declaration, seed) if proof is None else
+                 _ledger(run, declaration, seed, proof)).inspect()
         charge = after["charged_wall_seconds"]-before[seed]["charged_wall_seconds"]
         verified = (process.returncode == 0 and not timed_out and not after["active"]
             and not after["unresolved_work"] and after["last_status"] == "completed"

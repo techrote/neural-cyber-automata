@@ -14,6 +14,10 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 
+### D-026 — Reviewed recovery of the same frozen IK evaluation
+
+[ACCEPTED] 2026-10-23: [preserved markers, accounted costs and no retraining](decisions/2026-10-23-ik-evaluation-recovery.md).
+
 ### D-025 — Preserve the original IK allocation through an admitted source amendment
 
 [ACCEPTED] 2026-10-23: [original allocation, fresh admissions and necessary source amendment](decisions/2026-10-23-ik-continuation.md).

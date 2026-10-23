@@ -174,12 +174,16 @@ def _inventory(attempt):
 class IKRunLedger:
     """One immutable per-seed allocation; failed work never becomes free work."""
 
-    def __init__(self, root, header):
+    def __init__(self, root, header, recovery_proof=None):
         self.root = Path(root)
         self.header = header
         self.identity = header["record"]["identity"]
         self.allocation = header["record"]["allocation"]
         self._attempt = None
+        self._recovery = None
+        if recovery_proof is not None:
+            self._validate_recovery_proof(recovery_proof)
+            self._recovery = _copy(recovery_proof)
 
     @classmethod
     def create(cls, root, *, identity, allocation):
@@ -191,7 +195,7 @@ class IKRunLedger:
         return cls(destination, header)
 
     @classmethod
-    def open(cls, root, *, expected_identity, expected_allocation=None):
+    def open(cls, root, *, expected_identity, expected_allocation=None, recovery_proof=None):
         header = _record(Path(root) / "allocation.json")
         record = header["record"]
         if (set(record) != {"schema", "identity", "allocation"}
@@ -201,7 +205,136 @@ class IKRunLedger:
         _allocation(record["allocation"])
         if expected_allocation is not None and record["allocation"] != _allocation(expected_allocation):
             raise ValueError("training allocation differs from the prospective limits")
-        return cls(root, header)
+        return cls(root, header, recovery_proof=recovery_proof)
+
+    def _validate_recovery_proof(self, proof):
+        fields = {"schema", "identity_sha256", "allocation_sha256", "seed", "prior_parent_sha256",
+            "prior_attempt_count", "checkpoint_sha256", "failed_attempt", "failure_files",
+            "source_sha256", "authority_sha256", "frozen_candidates_sha256", "opening_sha256",
+            "historical_elapsed_seconds", "historical_charge_wall_seconds", "sha256"}
+        if (not isinstance(proof, dict) or set(proof) != fields
+                or proof["schema"] != "nca-ik-ledger-recovery/v1"
+                or proof["sha256"] != sha256_json({k:v for k,v in proof.items() if k != "sha256"})
+                or proof["identity_sha256"] != sha256_json(self.identity)
+                or proof["allocation_sha256"] != self.header["sha256"]
+                or proof["seed"] != self.identity["seed"]
+                or type(proof["prior_attempt_count"]) is not int
+                or type(proof["failed_attempt"]) is not int
+                or proof["failed_attempt"] != proof["prior_attempt_count"] + 1
+                or not 1 <= proof["failed_attempt"] < self.allocation["max_attempts"]):
+            raise ValueError("exact allocation-bound recovery proof required")
+        for key in ("checkpoint_sha256", "source_sha256", "authority_sha256",
+                    "frozen_candidates_sha256", "opening_sha256"):
+            if type(proof[key]) is not str or re.fullmatch(r"[a-f0-9]{64}", proof[key]) is None:
+                raise ValueError("recovery provenance SHA-256 required")
+        historical, charge = proof["historical_elapsed_seconds"], proof["historical_charge_wall_seconds"]
+        if (type(historical) not in (int, float) or type(charge) not in (int, float)
+                or not math.isfinite(historical) or not math.isfinite(charge)
+                or historical < 0 or charge < max(131., math.ceil(historical))):
+            raise ValueError("historical failed phase requires at least its explicit 131-second debit")
+        index = proof["failed_attempt"]
+        terminal_name, overrun_name = f"supervisor-result-{index:04d}.json", f"supervisor-overrun-{index:04d}.json"
+        if not isinstance(proof["failure_files"], dict) or set(proof["failure_files"]) != {terminal_name, overrun_name}:
+            raise ValueError("only the exact unledgered final failure and overrun may be reconciled")
+        for name, expected in proof["failure_files"].items():
+            path = self.root / name
+            if (not isinstance(expected, dict) or set(expected) != {"bytes", "sha256"}
+                    or path.is_symlink() or not path.is_file()
+                    or path.stat().st_size != expected["bytes"] or sha256_file(path) != expected["sha256"]):
+                raise ValueError("retained failed supervisor evidence changed")
+        terminal = _read(self.root / terminal_name)
+        if (terminal.get("phase") != "evaluate-all" or terminal.get("attempt") != index
+                or terminal.get("seed") != self.identity["seed"] or terminal.get("returncode") == 0
+                or terminal.get("verified_within_charged_wall") is not False
+                or terminal.get("unknown_work_blocks_resume") is not True
+                or terminal.get("charged_wall_seconds") != 0
+                or type(terminal.get("whole_process_seconds")) not in (float, int)
+                or not math.isfinite(terminal["whole_process_seconds"])
+                or terminal["whole_process_seconds"] < 0 or terminal["whole_process_seconds"] > historical
+                or _read(self.root / overrun_name).get("resume_forbidden") is not True):
+            raise ValueError("recovery is limited to the recorded pre-attempt failed final phase")
+
+    def record_recovery(self, proof):
+        """Append an accounting-only failed attempt; never rewrite prior evidence.
+
+        The historical debit is explicit, not a fabricated new elapsed timer.
+        New recording work and its bounded publication reserve are charged too.
+        The caller validates owner-authorized recovery provenance and obtains
+        fresh execution admissions separately before any device/final work.
+        """
+        began = time.monotonic()
+        self._validate_recovery_proof(proof)
+        index = proof["failed_attempt"]
+        folder = self.root / "attempts" / f"attempt-{index:04d}"
+        if folder.exists():
+            self._recovery = _copy(proof)
+            state = self.inspect()
+            if not self.allows_recovered_failure(self.root / next(iter(proof["failure_files"]))):
+                raise ValueError("existing recovery accounting is not identical and sealed")
+            return state
+        prior = self.inspect()
+        cp = prior["latest_checkpoint"]
+        if (prior["active"] or prior["unresolved_work"] or not prior["can_resume"] or cp is None
+                or prior["attempt_count"] != proof["prior_attempt_count"]
+                or prior["parent_sha256"] != proof["prior_parent_sha256"]
+                or cp["reference"]["sha256"] != proof["checkpoint_sha256"]
+                or prior["remaining_wall_seconds"] <= proof["historical_charge_wall_seconds"]):
+            raise ValueError("recovery must retain the exact reconciled original checkpoint and remaining allocation")
+        for path in self.root.glob("supervisor-overrun-*.json"):
+            if path.name not in proof["failure_files"]:
+                raise ValueError("unlisted supervisor overrun cannot acquire recovery")
+        for path in self.root.glob("supervisor-result-*.json"):
+            if _read(path).get("verified_within_charged_wall") is not True and path.name not in proof["failure_files"]:
+                raise ValueError("unlisted failed supervisor cannot acquire recovery")
+        if (self.root / f"supervisor-start-{index:04d}.json").exists():
+            raise ValueError("this recovery is only for a failure before any original ledger attempt")
+        folder.mkdir(parents=True, exist_ok=False)
+        start = _publish(folder / "start.json", {
+            "schema": SCHEMA, "attempt": index, "allocation_sha256": self.header["sha256"],
+            "parent_sha256": prior["parent_sha256"], "prior_charged": prior["charged"],
+            "prior_wall_seconds": prior["charged_wall_seconds"], "prior_checkpoint": cp,
+            "created_utc": utc_now()})
+        recording = time.monotonic() - began
+        historical = proof["historical_charge_wall_seconds"]
+        reserve = min(60., max(0., prior["remaining_wall_seconds"] - historical - recording))
+        accounting = {"proof": proof, "recording_seconds": recording, "publication_reserve_seconds": reserve}
+        _publish(folder / "recovery.json", accounting)
+        elapsed = historical + recording + reserve
+        finish = _publish(folder / "finish.json", {
+            "attempt": index, "start_sha256": start["sha256"], "last_event_sha256": start["sha256"],
+            "event_count": 0, "status": "failed" if elapsed < prior["remaining_wall_seconds"] else "capped",
+            "reason": "explicit_historical_failed_final_phase_recovery_accounting",
+            "elapsed_seconds": elapsed, "charged": prior["charged"],
+            "completed_optimizer_steps": prior["completed_optimizer_steps"],
+            "optimizer_presentations": prior["optimizer_presentations"], "consumed_batches": prior["consumed_batches"],
+            "checkpoint": cp, "pending_reservation": None, "inventory": _inventory(folder)})
+        self._recovery = _copy(proof)
+        self.inspect()
+        immutable_json(folder / "sealed.json", {"finish_sha256": finish["sha256"]})
+        result = self.inspect()
+        if time.monotonic() - began > recording + reserve:
+            immutable_json(folder / "finalization-overrun.json", {"reason": "recovery_recording_reserve_exceeded"})
+            raise ValueError("recovery accounting publication exceeded its charged reserve")
+        return result
+
+    def allows_recovered_failure(self, path):
+        """Only exact pinned files backed by sealed, paid accounting are exempt."""
+        if self._recovery is None:
+            return False
+        path = Path(path)
+        proof = self._recovery
+        if path.parent.resolve() != self.root.resolve() or path.name not in proof["failure_files"]:
+            return False
+        self._validate_recovery_proof(proof)
+        folder = self.root / "attempts" / f"attempt-{proof['failed_attempt']:04d}"
+        if not (folder / "recovery.json").is_file() or not (folder / "sealed.json").is_file():
+            return False
+        accounting = _record(folder / "recovery.json")["record"]
+        finish = _record(folder / "finish.json")
+        return (accounting["proof"] == proof
+                and _read(folder / "sealed.json") == {"finish_sha256": finish["sha256"]}
+                and finish["record"]["reason"] == "explicit_historical_failed_final_phase_recovery_accounting"
+                and finish["record"]["elapsed_seconds"] >= proof["historical_charge_wall_seconds"])
 
     def inspect(self):
         """Verify all attempts, reservations and checkpoint bytes without Torch."""
@@ -299,6 +432,26 @@ class IKRunLedger:
             elapsed = record["elapsed_seconds"]
             if type(elapsed) not in (float, int) or not math.isfinite(elapsed) or elapsed < 0:
                 raise ValueError("training elapsed time is invalid")
+            recovery_path = attempt / "recovery.json"
+            if recovery_path.exists():
+                accounting = _record(recovery_path)["record"]
+                if set(accounting) != {"proof", "recording_seconds", "publication_reserve_seconds"}:
+                    raise ValueError("recovery accounting fields differ")
+                proof = accounting["proof"]
+                self._validate_recovery_proof(proof)
+                if (proof["failed_attempt"] != number or proof["prior_attempt_count"] != number-1
+                        or proof["prior_parent_sha256"] != start["record"]["parent_sha256"]
+                        or latest is None or proof["checkpoint_sha256"] != latest["reference"]["sha256"]
+                        or events or record["status"] not in {"failed", "capped"}
+                        or record["reason"] != "explicit_historical_failed_final_phase_recovery_accounting"
+                        or type(accounting["recording_seconds"]) not in (float,int)
+                        or not math.isfinite(accounting["recording_seconds"]) or accounting["recording_seconds"] < 0
+                        or type(accounting["publication_reserve_seconds"]) not in (float,int)
+                        or not math.isfinite(accounting["publication_reserve_seconds"])
+                        or not 0 <= accounting["publication_reserve_seconds"] <= 60.
+                        or elapsed != proof["historical_charge_wall_seconds"] + accounting["recording_seconds"]
+                                      + accounting["publication_reserve_seconds"]):
+                    raise ValueError("recovery accounting changed historical work, checkpoint or charged time")
             if (record["attempt"] != number or record["start_sha256"] != start["sha256"]
                     or record["last_event_sha256"] != previous or record["event_count"] != len(events)
                     or record["charged"] != charged
@@ -357,10 +510,12 @@ class IKRunLedger:
         # The measured supervisor writes outside attempts/ so it can retain
         # startup and shutdown uncertainty. Known failures also block callers
         # using this lower-level API; only the current pending start is allowed.
-        if any(self.root.glob("supervisor-overrun-*.json")):
-            raise ValueError("whole-process overrun blocks further attempts")
+        for path in self.root.glob("supervisor-overrun-*.json"):
+            if not self.allows_recovered_failure(path):
+                raise ValueError("whole-process overrun blocks further attempts")
         for terminal in self.root.glob("supervisor-result-*.json"):
-            if _read(terminal).get("verified_within_charged_wall") is not True:
+            if (_read(terminal).get("verified_within_charged_wall") is not True
+                    and not self.allows_recovered_failure(terminal)):
                 raise ValueError("uncertain supervisor result blocks further attempts")
         for start_path in self.root.glob("supervisor-start-*.json"):
             match = re.fullmatch(r"supervisor-start-([0-9]{4})\.json", start_path.name)
@@ -368,7 +523,8 @@ class IKRunLedger:
                 raise ValueError("malformed supervisor attempt identity")
             if int(match.group(1)) <= prior["attempt_count"]:
                 terminal = start_path.with_name(start_path.name.replace("start", "result", 1))
-                if not terminal.is_file() or _read(terminal).get("verified_within_charged_wall") is not True:
+                if (not terminal.is_file() or (_read(terminal).get("verified_within_charged_wall") is not True
+                        and not self.allows_recovered_failure(terminal))):
                     raise ValueError("missing verified supervisor outcome blocks continuation")
         if not prior["can_resume"]:
             raise ValueError("allocation is complete, exhausted or has unreconciled work")

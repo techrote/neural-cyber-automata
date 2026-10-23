@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import tarfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from nca.contracts import ContractError, canonical_json, sha256_json
 from nca.ik.data import DatasetConfig, generate_sample, iter_tasks
@@ -67,11 +67,11 @@ class IKFinalCorpusTests(unittest.TestCase):
         with tarfile.open(target, "w:gz") as archive:
             for item in self.shards:
                 raw = (self.corpus / item["path"]).read_bytes()
-                member = tarfile.TarInfo("corpus/" + item["path"])
+                member = tarfile.TarInfo(api.ACCEPTED_ARCHIVE_ROOT + "/corpus/" + item["path"])
                 member.size = len(raw)
                 archive.addfile(member, io.BytesIO(raw))
             raw = b"this mixed journal must never be selected or parsed"
-            member = tarfile.TarInfo("corpus/pending.jsonl")
+            member = tarfile.TarInfo(api.ACCEPTED_ARCHIVE_ROOT + "/corpus/pending.jsonl")
             member.size = len(raw)
             archive.addfile(member, io.BytesIO(raw))
         return target
@@ -84,7 +84,7 @@ class IKFinalCorpusTests(unittest.TestCase):
         selected = []
         def guard(archive, member, *args, **kwargs):
             self.assertTrue(marker.is_file())
-            self.assertTrue(member.name.startswith("corpus/final-"))
+            self.assertTrue(member.name.startswith(api.ACCEPTED_ARCHIVE_ROOT + "/corpus/final-"))
             selected.append(member.name)
             return original(archive, member, *args, **kwargs)
         with patch.object(api, "ACCEPTED_ARCHIVE_SHA256", hashlib.sha256(target.read_bytes()).hexdigest()), \
@@ -92,7 +92,7 @@ class IKFinalCorpusTests(unittest.TestCase):
              patch.object(tarfile.TarFile, "extractfile", guard):
             view = self.call(target)
         self.assertTrue(view.accepted)
-        self.assertEqual(selected, ["corpus/" + item["path"] for item in self.shards])
+        self.assertEqual(selected, [api.ACCEPTED_ARCHIVE_ROOT + "/corpus/" + item["path"] for item in self.shards])
         self.assertEqual(view.samples, self.rows["final"])
 
     def test_archive_hash_and_incomplete_training_refuse_before_archive_decoding(self):
@@ -105,10 +105,101 @@ class IKFinalCorpusTests(unittest.TestCase):
         with patch.object(api, "ACCEPTED_ARCHIVE_SHA256", hashlib.sha256(target.read_bytes()).hexdigest()), \
              patch.object(api, "ACCEPTED_ARCHIVE_BYTES", target.stat().st_size), \
              patch.object(api, "_verified_training", side_effect=ContractError("fixture", "incomplete")), \
-             patch.object(tarfile, "open", side_effect=AssertionError("archive decoded before gate")):
+             patch.object(tarfile.TarFile, "extractfile", side_effect=AssertionError("payload selected before gate")):
             with self.assertRaises(ContractError):
                 self.call(target)
         self.assertEqual(list(self.registry.iterdir()), [])
+
+    def test_headers_require_exact_original_root_regular_members_and_safe_paths(self):
+        target = self.fixture_archive()
+        with tarfile.open(target, "r:gz") as archive, \
+             patch.object(tarfile.TarFile, "extractfile", side_effect=AssertionError("payload selected")):
+            self.assertEqual(len(api._archive_headers(archive, self.manifest)), len(self.shards) + 1)
+        for name, kind in (("corpus/" + self.shards[0]["path"], tarfile.REGTYPE),
+                           (api.ACCEPTED_ARCHIVE_ROOT + "/../bad", tarfile.REGTYPE),
+                           (api.ACCEPTED_ARCHIVE_ROOT + "/bad", tarfile.SYMTYPE)):
+            member = tarfile.TarInfo(name)
+            member.type = kind
+            with patch.object(tarfile.TarFile, "getmembers", return_value=[member]):
+                with tarfile.open(target, "r:gz") as archive:
+                    with self.assertRaises(ContractError):
+                        api._archive_headers(archive, self.manifest)
+        with tarfile.open(target, "r:gz") as archive:
+            members = archive.getmembers()
+            with patch.object(archive, "getmembers", return_value=members + members[:1]):
+                with self.assertRaisesRegex(ContractError, "duplicate"):
+                    api._archive_headers(archive, self.manifest)
+
+    def recovery_fixture(self):
+        """A synthetic historical opening; never grants production recovery."""
+        self.fixture_gates()
+        original = self.call()
+        suite = self.training.final_suite_identity_sha256
+        opening_path = self.registry / (suite + ".final-opened.json")
+        binding_path = self.registry / (suite + ".compact-reader-v1.json")
+        opening_hash = hashlib.sha256(opening_path.read_bytes()).hexdigest()
+        binding_hash = hashlib.sha256(binding_path.read_bytes()).hexdigest()
+        for target, value in (("RECOVERY_OPENING_FILE_SHA256", opening_hash),
+                              ("RECOVERY_BINDING_FILE_SHA256", binding_hash),
+                              ("RECOVERY_FROZEN_SHA256", self.frozen["sha256"]),
+                              ("RECOVERY_DECLARATION_SHA256", "e" * 64),
+                              ("RECOVERY_HISTORICAL_RECEIPTS", {})):
+            gate = patch.object(api, target, value)
+            gate.start(); self.addCleanup(gate.stop)
+        document = {"schema": "nca-ik-final-recovery-proof/v1", "run": str(self.root / "run"),
+            "registry": str(self.registry), "opening_file_sha256": opening_hash,
+            "prior_binding_file_sha256": binding_hash, "frozen_candidates": self.frozen,
+            "recovery_amendment_sha256": "f" * 64, "source_sha256": "d" * 64,
+            "historical_receipts": {}, "ledger_recoveries": {str(seed): {
+                "seed": seed, "source_sha256": "d" * 64,
+                "frozen_candidates_sha256": self.frozen["sha256"],
+                "opening_sha256": original.opening["sha256"]} for seed in (41011, 42013, 43019)}}
+        proof = api.validate_recovery_proof(document)
+        return proof, opening_path, binding_path
+
+    def test_recovery_preserves_original_opening_and_binding_and_requires_exact_proof(self):
+        proof, opening_path, binding_path = self.recovery_fixture()
+        original_bytes = opening_path.read_bytes(), binding_path.read_bytes()
+        training = replace(self.training, _recovery_proof=proof)
+        self.assertTrue(training.recovery_only)
+        kwargs = dict(training_corpus=training, amendment_sha256="f" * 64,
+                      source_sha256="d" * 64, recovery_proof=proof)
+        view = api.open_final_corpus(self.corpus, self.registry, self.root / "run", "a" * 64,
+                                    self.frozen, **kwargs)
+        self.assertTrue(view.accepted)
+        self.assertEqual((opening_path.read_bytes(), binding_path.read_bytes()), original_bytes)
+        self.assertTrue((self.registry / (self.training.final_suite_identity_sha256
+                                         + ".compact-recovery-reader-v1.json")).is_file())
+        for replacement in (None, True, replace(proof, _authentication=None)):
+            with self.assertRaises(ContractError):
+                api.open_final_corpus(self.corpus, self.registry, self.root / "run", "a" * 64,
+                    self.frozen, **dict(kwargs, recovery_proof=replacement))
+        with self.assertRaises(ContractError):
+            api.open_final_corpus(self.corpus, self.registry, self.root / "run", "a" * 64,
+                self.frozen, **dict(kwargs, amendment_sha256="0" * 64))
+        opening_path.write_bytes(b"{}")
+        with self.assertRaises(ContractError):
+            proof.authenticates_registry(self.registry)
+
+    def test_recovery_training_reader_requires_typed_bound_proof_and_stays_read_only(self):
+        import nca.train.ik_corpus as corpus_api
+        proof, opening, binding = self.recovery_fixture()
+        original_bytes = opening.read_bytes(), binding.read_bytes()
+        with patch.object(corpus_api, "_load_corpus", return_value=self.training) as loader:
+            for bad in (True, {}, replace(proof, _authentication=None)):
+                with self.assertRaises(ContractError):
+                    corpus_api.read_recovery_training_corpus(self.corpus, self.registry, recovery_proof=bad)
+            loader.assert_not_called()
+            corpus_api.read_recovery_training_corpus(self.corpus, self.registry, recovery_proof=proof)
+            self.assertIs(loader.call_args.kwargs["_recovery_proof"], proof)
+            self.assertTrue(loader.call_args.kwargs["accepted"])
+        self.assertEqual((opening.read_bytes(), binding.read_bytes()), original_bytes)
+        changed = dict(proof.document, source_sha256="0" * 64)
+        with self.assertRaises(ContractError):
+            api.validate_recovery_proof(changed)
+        changed = dict(proof.document, frozen_candidates=dict(self.frozen, sha256="0" * 64))
+        with self.assertRaises(ContractError):
+            api.validate_recovery_proof(changed)
 
     def fixture_gates(self):
         """Only tests replace production trust anchors with opened fixture ones."""
@@ -303,12 +394,42 @@ class IKFinalCorpusTests(unittest.TestCase):
         with patch("nca.train.ik_experiment.identity_for", side_effect=lambda d, s: s), \
                 patch.object(api.IKRunLedger, "open") as opened:
             opened.side_effect = lambda *a, **k: type("FixtureLedger", (), {
-                "inspect": lambda _: states[k["expected_identity"]]})()
+                "inspect": lambda _: states[k["expected_identity"]],
+                "allows_recovered_failure": lambda *_: False})()
             api._verified_training(self.root, declaration, self.training, frozen)
             bad = dict(frozen, candidates=list(frozen["candidates"]))
             bad["candidates"][0] = dict(bad["candidates"][0], checkpoint_sha256="9"*64)
             with self.assertRaises(ContractError):
                 api._verified_training(self.root, declaration, self.training, bad)
+            ledger_proofs, historical = {}, {}
+            for seed in (41011, 42013, 43019):
+                state = states[seed]
+                state["attempt_count"] = 1
+                state["parent_sha256"] = sha256_json([seed, "parent"])
+                cp = sha256_json([seed, 40])
+                state["latest_checkpoint"]["reference"] = {"sha256": cp}
+                ledger_proofs[str(seed)] = {"prior_attempt_count": 1,
+                    "prior_parent_sha256": state["parent_sha256"], "checkpoint_sha256": cp}
+                for name, data in (("supervisor-result-0002.json", {"returncode": 1,
+                        "verified_within_charged_wall": False, "unknown_work_blocks_resume": True}),
+                        ("supervisor-overrun-0002.json", {"resume_forbidden": True})):
+                    path = self.root / f"seed-{seed}" / name
+                    path.write_text(canonical_json(data))
+                    historical[path.relative_to(self.root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+            proof = api.FinalRecoveryProof({"run": str(self.root), "frozen_candidates": frozen,
+                "historical_receipts": historical, "ledger_recoveries": ledger_proofs})
+            training = replace(self.training, _recovery_proof=proof)
+            with patch.object(api.FinalRecoveryProof, "accepted", new_callable=PropertyMock, return_value=True):
+                result = api.verify_recovery_training_preflight(self.root, declaration, training, frozen, proof)
+                self.assertFalse(result["historical_accounting_mutated"])
+                self.assertFalse(result["final_payloads_read"])
+                # Unpaid metadata validation cannot authorize a final read.
+                with self.assertRaisesRegex(ContractError, "overrun blocks"):
+                    api._verified_training(self.root, declaration, training, frozen, proof)
+                states[41011]["parent_sha256"] = "0" * 64
+                with self.assertRaisesRegex(ContractError, "untouched training boundary"):
+                    api.verify_recovery_training_preflight(self.root, declaration, training, frozen, proof)
+                states[41011]["parent_sha256"] = ledger_proofs["41011"]["prior_parent_sha256"]
             states[43019]["latest_checkpoint"]["state"]["extra_state"]["completed_epochs"] = 39
             with self.assertRaises(ContractError):
                 api._verified_training(self.root, declaration, self.training, frozen)

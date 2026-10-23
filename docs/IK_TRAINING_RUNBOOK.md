@@ -14,6 +14,11 @@ The suite is opened/development-only and failed-supervisor holds block reuse.
 The commands below document the admitted workflow; they do not authorize
 replaying this failed invocation or resetting its markers/remaining budgets.
 
+The later explicit [D-026 recovery commission](decisions/2026-10-23-ik-evaluation-recovery.md)
+permits a separately reviewed [same-candidate recovery workflow](IK_EVALUATION_RECOVERY.md).
+It preserves the failure/opening records and original allocations, accounts
+historical costs and requires two fresh admissions; it grants no retraining.
+
 [PARTIAL] This operational continuation of the [IK training reference](IK_TRAINING.md)
 preserves the accepted-corpus CPU preflight, prospective three-seed CUDA gate,
 and focused software validation. The [measured continuation](evidence/2026-10-23-ik-titan-continuation.md)
