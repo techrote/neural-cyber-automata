@@ -786,7 +786,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
         for start in range(0, len(order), BC_BATCH_SIZE):
             chosen = order[start:start + BC_BATCH_SIZE]
             reservation = accounting.reserve_optimizer(
-                updates=1, presentations=len(chosen))
+                updates=1, presentations=len(chosen), seed=seed)
             settled = False
             try:
                 features = torch.tensor(
