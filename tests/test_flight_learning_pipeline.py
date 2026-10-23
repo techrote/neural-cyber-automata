@@ -15,7 +15,9 @@ from nca.train.flight_learning import (
     ACTION_SPEC,
     BC_EPOCHS,
     BC_SCHEDULE_SHA256,
+    DEVELOPMENT_SEEDS,
     PREPROCESSING_SPEC,
+    SCENARIO_FAMILY,
     build_capture_dataset,
     build_export_bundle,
     load_checkpoint_bytes,
@@ -247,6 +249,9 @@ class FlightCaptureTests(unittest.TestCase):
         dataset = build_capture_dataset((failed, refused))
         self.assertEqual(len(dataset.episodes), 2)
         self.assertEqual(len(dataset.samples), 1)
+        # The refused episode retains its nominal half of this family's episode
+        # mass instead of silently transferring weight to the successful row.
+        self.assertAlmostEqual(dataset.sample_weights[0], 1.0 / 12.0, places=12)
 
     def test_confirmed_zero_tick_failure_is_retained_without_supervision(self):
         before = observation(0)
@@ -348,20 +353,21 @@ class FlightCaptureTests(unittest.TestCase):
 class FlightLearningTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        fixture_cases = (
-            ("hover", "unsupported_hover"),
-            ("free", "horizontal_reach"),
-            ("reverse", "reverse"),
-            ("arrival", "arrival_braking"),
-            ("obstacles", "wide_corridor"),
-            ("recovery", "wall_recovery"),
-        )
         cls.captures = tuple(
-            valid_capture(f"ep-{name}", scenario_id=scenario_id, host_seed=101)
-            for name, scenario_id in fixture_cases
+            valid_capture(
+                f"ep-{scenario_id}-{host_seed}",
+                scenario_id=scenario_id,
+                host_seed=host_seed,
+            )
+            for scenario_id in sorted(SCENARIO_FAMILY)
+            for host_seed in DEVELOPMENT_SEEDS
         )
-        cls.capture = cls.captures[3]
+        cls.capture = next(
+            item for item in cls.captures
+            if item.scenario_id == "arrival_braking" and item.host_seed == 101
+        )
         cls.dataset = build_capture_dataset(cls.captures)
+        assert len(cls.captures) == 44
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -395,6 +401,20 @@ class FlightLearningTests(unittest.TestCase):
     def test_clone_refuses_without_source_bound_accounting(self):
         with self.assertRaisesRegex(ContractError, "accounting"):
             train_behavior_clone(self.dataset, seed=74011)
+
+    def test_clone_refuses_an_incomplete_preregistered_capture_set(self):
+        partial = build_capture_dataset(self.captures[:-1])
+        ledger = FlightAccountingLedger.create(
+            Path(self.temp.name) / "partial.jsonl",
+            ACCOUNTING_DECLARATION,
+            attempt_id="partial-fixture",
+            current_evidence=ACCOUNTING_EVIDENCE,
+        )
+        try:
+            with self.assertRaisesRegex(ContractError, "44-case"):
+                train_behavior_clone(partial, seed=74011, accounting=ledger)
+        finally:
+            ledger.close("synthetic_incomplete_capture_fixture")
 
     def test_preregistered_family_weights_are_equal(self):
         totals = {}
