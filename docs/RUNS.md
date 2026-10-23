@@ -3,7 +3,7 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Run ledger
@@ -53,6 +53,7 @@ T-101 and T-104 specify immutable per-run manifests and a generated/merged ledge
 
 | Run ID | Date | Learner and host revisions | Device/environment | Profile/config hash | Seed set and split | Suite | Result and evidence class | Artifact/evidence |
 |---|---|---|---|---|---|---|---|---|
+| `ik-compact-6a9375cac4a54b46ae6f37f4aed11675` continuation, same allocation | 2026-10-23 | Training `a9c1c83`; evaluation `fb392b0`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80 | Original Runner/config/corpus/normalization unchanged | 41011, 42013, 43019; original train/tuning; final opened/development-only | 40 epochs per seed; failed final archive lookup before scoring | Each: 1,720 CUDA updates / 210,400 presentations / 80,800 tuning decisions; independently verified. Final evaluation failed; no scores/timings. Remaining original wall held; reuse blocked, no retry | [Evidence](evidence/2026-10-23-ik-titan-continuation.md), [immutable index](evidence/ik-titan-continuation-20261023.json) |
 | `ik-compact-6a9375cac4a54b46ae6f37f4aed11675` | 2026-10-23 | Learner `b9d1ccd`; no physical host | Windows 11 / isolated TITAN RTX / Torch 2.8.0+cu126 / driver 581.80 | Runner right sole; config `d49d682f` | 41011; original train/tuning, final unopened | First supervised CUDA batch | 128 presentations, one verified Adam update, paused; 23.672 s process / 28.031 s charged; other seeds unspent, no quality claim | [Evidence](evidence/2026-10-23-ik-titan-first-batch.md), [immutable index](evidence/ik-titan-first-batch-20261023.json) |
 | t102-monowheel-final-pilot | 2026-10-19 | NCA scoped sources `7ea78b97…`; host `f2e34cf9…`; exact hashes in evidence | CPU, Linux x86_64, Python 3.12.14, Godot 4.7 | `6da0f8ba…`; complete config in manifest | 73; conformance only | 200 decisions / 1,200 ticks | Actual ACT004 host, 326.884 ticks/s; no skill or owner-feel claim | [Manifest](evidence/t102-monowheel-final-pilot.json), [evidence](evidence/2026-10-19-t102.md) |
 | t102-ripper-final-pilot | 2026-10-19 | Same exact scoped source and host as Monowheel | Same measured CPU environment | `be59daec…`; complete config in manifest | 73; conformance only | 200 decisions / 1,200 ticks | Actual ACT004 host, 267.686 ticks/s; no skill or owner-feel claim | [Manifest](evidence/t102-ripper-final-pilot.json), [evidence](evidence/2026-10-19-t102.md) |

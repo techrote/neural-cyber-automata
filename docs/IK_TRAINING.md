@@ -1,9 +1,9 @@
 ---
 title: Compact IK training and GPU preparation
 kind: reference
-summary: Authenticated data, deterministic sampling, cumulative training state and independent comparison prepared through the CUDA execution boundary.
+summary: Three verified TITAN training schedules, immutable provenance and failed gated final evaluation.
 owns: [ik.training]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Compact IK training and GPU preparation
@@ -12,14 +12,14 @@ verified: 2026-10-22
 now has the compact model, authenticated train/tuning corpus reader,
 deterministic whole-trajectory sampler, cumulative attempt/checkpoint ledger,
 training orchestration and independent comparison scorer. CPU conformance uses
-small opened fixtures. One [admitted TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md)
-now records 128 presentations and one verified CUDA forward/backward/Adam update.
-The final registry remains unopened; complete training and quality are unmeasured.
+small opened fixtures. The [three-seed continuation](evidence/2026-10-23-ik-titan-continuation.md)
+completed all declared training and passed independent checkpoint/update audits.
+Final opening then failed before scoring; the opened suite and failure holds block reuse.
 
 The [candidate specification](../configs/ik/experiments/runner-compact-v1.json)
 and [fixed schedule](../configs/ik/experiments/runner-compact-schedule-v1.json)
 are prospective software specifications. They do not by themselves admit a
-measured invocation. The owner continuation stopped after that one verified batch.
+measured invocation. The later training and failed evaluation are recorded in current evidence.
 
 The starting revision is `ccd4c16058f76f422e6a5159915a5e22e7bfd87e`.
 Both accepted dependencies are present: the [CUDA runtime qualification](evidence/2026-10-22-ik-cuda-qualification.md)
@@ -193,7 +193,7 @@ recomputation of the original 14 normalization means/scales from 5,140
 training-only inputs. Clean-source preparation, all six CI jobs and two independent TITAN-specific
 prospective admissions passed before the single recorded CUDA batch.
 The original corpus, generator, teacher, normalization, seed/schedule and
-allocation identities remain unchanged; the final suite remains unopened.
+allocation identities remain unchanged; later final-opening failure is recorded in current evidence.
 
 The original archive and retained copy read back as 7,340,716 bytes, SHA-256
 `97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce`.

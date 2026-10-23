@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # Documentation map
@@ -31,7 +31,7 @@ verified: 2026-10-22
 | How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How are geometric IK data, guarded splits and final-suite access handled? | [IK datasets](IK_DATASETS.md) and [configuration recipes](../configs/ik/datasets/README.md); [declared corpus and evidence](evidence/2026-10-22-ik-datasets.md) |
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |
-| What is implemented for compact learned IK, and what remains before the experiment? | [IK training and GPU preparation](IK_TRAINING.md), [verified first TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md), [supervised GPU runbook](IK_TRAINING_RUNBOOK.md), [candidate specification](../configs/ik/experiments/runner-compact-v1.json) and [finite schedule](../configs/ik/experiments/runner-compact-schedule-v1.json) |
+| What was measured for compact learned IK, and what remains gated? | [IK training and GPU preparation](IK_TRAINING.md), [verified three-seed training and failed evaluation](evidence/2026-10-23-ik-titan-continuation.md), [supervised GPU runbook](IK_TRAINING_RUNBOOK.md), [candidate specification](../configs/ik/experiments/runner-compact-v1.json) and [finite schedule](../configs/ik/experiments/runner-compact-schedule-v1.json) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |

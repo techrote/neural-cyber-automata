@@ -8,6 +8,12 @@ verified: 2026-10-22
 
 # IK compact CUDA runbook
 
+**Current stop:** [actual continuation evidence](evidence/2026-10-23-ik-titan-continuation.md)
+records three completed training schedules and a final archive-layout failure.
+The suite is opened/development-only and failed-supervisor holds block reuse.
+The commands below document the admitted workflow; they do not authorize
+replaying this failed invocation or resetting its markers/remaining budgets.
+
 [PARTIAL] This operational continuation of the [IK training reference](IK_TRAINING.md)
 preserves the accepted-corpus CPU preflight, prospective three-seed CUDA gate,
 and focused software validation. One [TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md)
