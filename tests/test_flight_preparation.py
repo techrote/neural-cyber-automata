@@ -224,37 +224,57 @@ class Owner:
                     )
             if command["repeat_ticks"] != DECISION_TICKS:
                 raise AssertionError("fixture cadence drift")
-            ticks = (
-                DECISION_TICKS
-                if self.partial_ticks is None
-                else self.partial_ticks
-            )
             requested = [0.25, -0.5]
-            self.tick += ticks
-            terminal = ticks < DECISION_TICKS
-            reply = {
-                "sequence": command["sequence"],
-                "consumption": "confirmed",
-                "transition": self.transition(
-                    ticks=ticks,
-                    terminated=terminal,
-                    success=terminal,
-                    reason=(
-                        "low_speed_arrival_dwell"
-                        if terminal
-                        else "running"
+            if self.step_failure == "teacher_refused":
+                reply = {
+                    "sequence": command["sequence"],
+                    "consumption": "confirmed",
+                    "transition": self.transition(
+                        ticks=0,
+                        failed=True,
+                        reason="action_admission: expired_observation",
                     ),
-                ),
-                "flat_observation": self.flat(),
-                "teacher_action": {
-                    "source_sha256": "a" * 64,
-                    "observation_id": current["observation_id"],
-                    "status": "accepted",
-                    "requested_action": requested,
-                    "admitted_action": requested,
-                    "reason": "owner_reference_action_admitted",
-                },
-            }
+                    "flat_observation": self.flat(),
+                    "teacher_action": {
+                        "source_sha256": "a" * 64,
+                        "observation_id": current["observation_id"],
+                        "status": "refused",
+                        "requested_action": requested,
+                        "admitted_action": None,
+                        "reason": "action_admission: expired_observation",
+                    },
+                }
+            else:
+                ticks = (
+                    DECISION_TICKS
+                    if self.partial_ticks is None
+                    else self.partial_ticks
+                )
+                self.tick += ticks
+                terminal = ticks < DECISION_TICKS
+                reply = {
+                    "sequence": command["sequence"],
+                    "consumption": "confirmed",
+                    "transition": self.transition(
+                        ticks=ticks,
+                        terminated=terminal,
+                        success=terminal,
+                        reason=(
+                            "low_speed_arrival_dwell"
+                            if terminal
+                            else "running"
+                        ),
+                    ),
+                    "flat_observation": self.flat(),
+                    "teacher_action": {
+                        "source_sha256": "a" * 64,
+                        "observation_id": current["observation_id"],
+                        "status": "accepted",
+                        "requested_action": requested,
+                        "admitted_action": requested,
+                        "reason": "owner_reference_action_admitted",
+                    },
+                }
         elif operation in ("cancel", "takeover"):
             current = self.observation()
             for request_key, observation_key in (
@@ -383,6 +403,30 @@ class FlightTests(unittest.TestCase):
         self.assertFalse(
             hasattr(FlightSession(Owner()), "step_reference")
         )
+
+    def test_teacher_refusal_is_retained_as_zero_tick_failed_interval(self):
+        owner = Owner()
+        session = FlightTeacherCaptureSession(owner)
+        observation = session.reset(
+            scenario="arrival_braking", seed=101
+        )
+        owner.step_failure = "teacher_refused"
+        reply = session.step_reference()
+        self.assertEqual(
+            reply["teacher_action"]["status"], "refused"
+        )
+        self.assertIsNone(
+            reply["teacher_action"]["admitted_action"]
+        )
+        self.assertTrue(reply["transition"]["failed"])
+        self.assertEqual(
+            reply["transition"]["ticks_consumed"], 0
+        )
+        self.assertEqual(
+            session.observation["observation_id"],
+            observation["observation_id"],
+        )
+        self.assertTrue(session.terminal)
 
     def test_teacher_capture_rejects_tuning_final_and_foreign_teacher_receipt(self):
         for split in ("tuning", "final", "sealed"):
