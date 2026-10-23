@@ -746,6 +746,11 @@ class FlightAccountingLedger:
     def reserve_reset(self) -> str:
         return self.reserve_many({"resets": 1, "host_calls": 1}, scope="host_reset")
 
+    def reserve_host_call(self, *, scope: str) -> str:
+        if type(scope) is not str or not scope:
+            _fail("flight_host_call_scope", "host call scope is required")
+        return self.reserve_many({"host_calls": 1}, scope=scope)
+
     def reserve_step(self, *, maximum_ticks: int = 6, capture_labels: int = 0) -> str:
         if type(maximum_ticks) is not int or not 1 <= maximum_ticks <= 6:
             _fail("flight_step_reservation", "step capacity must be one through six physical ticks")
