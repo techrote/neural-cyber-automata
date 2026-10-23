@@ -35,7 +35,7 @@ def tuning_stop_gate(reports):
                 or len({row.get("task_id") for row in report["rows"]}) != 2020
                 or report.get("nominal", {}).get("scheduled") != 1880):
             raise ValueError("complete fixed original tuning schedule required")
-        verdicts[seed] = _accuracy(report)
+        verdicts[str(seed)] = _accuracy(report)
     return {"schema": "nca-ik-polar-tuning-stop/v1", "per_seed": verdicts,
             "final_opening_allowed": all(v == "pass" for v in verdicts.values()),
             "reason": "all_seed_raw_quality_gate"}
