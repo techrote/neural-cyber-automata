@@ -3,6 +3,7 @@
 This is a gate component, not an experiment launcher or execution admission.
 The caller must authenticate reports/checkpoints against its declared ledger.
 """
+import math
 from nca.evaluation.ik_training import _accuracy
 from nca.train.ik_experiment import SEEDS
 
@@ -12,6 +13,18 @@ def tuning_stop_gate(reports):
         raise ValueError("all three original seed reports required before final opening")
     verdicts = {}
     for seed, report in reports.items():
+        if not isinstance(report, dict) or report.get("complete") is not True:
+            raise ValueError("complete authenticated tuning report required")
+        nominal = report.get("nominal")
+        if not isinstance(nominal, dict):
+            raise ValueError("finite tuning quality statistics required")
+        for key in ("p95_error_cells", "worst_error_cells", "feasible_success_fraction"):
+            value = nominal.get(key)
+            if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
+                raise ValueError("finite nonnegative tuning quality statistics required")
+        if (nominal["feasible_success_fraction"] > 1
+                or nominal["p95_error_cells"] > nominal["worst_error_cells"]):
+            raise ValueError("consistent tuning quality statistics required")
         if (report.get("schema") != "nca-ik-direct-score/v1"
                 or report.get("partition") != "tuning"
                 or report.get("comparator") != "trained_raw_reference"
