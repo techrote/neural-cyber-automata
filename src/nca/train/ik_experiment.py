@@ -308,7 +308,8 @@ def independent_fk_guard(trainer, batch):
 
 
 def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
-                  pause_after_batches=None, execution=None, polar_normalization=None):
+                  pause_after_batches=None, execution=None, polar_normalization=None,
+                  matched_candidate=False):
     """Run an already admitted attempt; callable with tiny CPU fixtures in tests.
 
     The CLI owns process supervision and source/runtime admission. An accepted
@@ -341,7 +342,14 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     for epoch, count in enumerate(sampler.batches_per_epoch, start=1):
         cursor += count
         epoch_ends[cursor] = epoch
-    if polar_normalization is None:
+    if matched_candidate:
+        from nca.train.ik_matched_prepare import candidate_config, build_candidate_trainer
+        if (polar_normalization is None or execution is None
+                or execution.get("candidate_sha256") != sha256_json(candidate_config())
+                or ledger.identity["config_sha256"] != sha256_json(candidate_config())):
+            raise ValueError("matched candidate requires exact declared configuration")
+        trainer = build_candidate_trainer(context, polar_normalization, corpus.config)
+    elif polar_normalization is None:
         trainer = IKTrainer(context, corpus.normalization, corpus.config)
     else:
         from nca.ik.polar import build_trainer
@@ -459,7 +467,8 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
     }
     attempt.finish("paused", reason="training_complete_final_unopened" if sampler.exhausted
                    else "exact_training_boundary_paused",
-                   publication_reserve_seconds=60. if execution is not None else 5.)
+                   publication_reserve_seconds=60. if execution is not None else 5.,
+                   matched_coordination_charge=matched_candidate)
     return result
 
 

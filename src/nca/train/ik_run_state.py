@@ -791,7 +791,8 @@ class IKAttempt:
         self.complete(reservation, receipt)
         return _copy(receipt)
 
-    def finish(self, status, *, reason, publication_reserve_seconds=5.0):
+    def finish(self, status, *, reason, publication_reserve_seconds=5.0,
+               matched_coordination_charge=False):
         if self.closed or status not in _STATUSES or type(reason) is not str or not reason:
             raise ValueError("valid unsealed training outcome and reason required")
         if status in {"paused", "completed"} and self.pending is not None:
@@ -807,6 +808,15 @@ class IKAttempt:
         # Charge publication/readback before performing it. Missing or late
         # finalization never grants a cheaper continuation.
         elapsed = observed + min(publication_reserve_seconds, remaining)
+        if matched_coordination_charge:
+            from nca.train.ik_matched_prepare import candidate_config
+            if (self.ledger.identity['config_sha256'] != sha256_json(candidate_config())
+                    or self.ledger.allocation['max_wall_seconds'] != 7200
+                    or self.prior['charged_wall_seconds'] != 0):
+                raise ValueError('matched coordination charge requires fresh fixed allocation')
+            # Explicit conservative group coordination debit, never measured
+            # worker time. No refund or retry follows an early worker finish.
+            elapsed = max(elapsed,7195.)
         if self.prior["charged_wall_seconds"] + elapsed >= self.ledger.allocation["max_wall_seconds"]:
             status, reason = "capped", "whole_process_wall_allocation_exhausted"
         finish = _publish(self.folder / "finish.json", {
