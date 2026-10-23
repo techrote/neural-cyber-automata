@@ -12,6 +12,13 @@ The ledger records bounded actual-host pilots, trained-policy screens and retain
 
 Historical artifact hashes remain identifiers even where original external bytes are unavailable to a continuation; new reproductions retain separate identities.
 
+The [completed matched endpoint-weight trials and next design](design/IK_ENDPOINT4_FOLLOWUP.md)
+record serial/parallel source `6a6961f`, all three seeds per mode, 1720 updates
+and 210400 presentations per seed, 7195 prepaid seconds per seed, zero final
+calls and exact paired tensor agreement. Recorded prepublication elapsed times
+are 2438.985 / 1245.062 seconds; every seed is tuning no-go. The new order
+proposal has no issued allocation or run. All consumed packets remain stopped.
+
 The [Jolt execution reliability repair](evidence/2026-10-22-jolt-learning-reliability.md)
 adds synthetic software tests and no experimental run row. The consumed
 LEARN-JOLT-002 allocation and its unknown complete wall time remain unchanged;

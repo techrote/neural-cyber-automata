@@ -13,6 +13,7 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-030 — Investigate endpoint-weight failure and prepare one parallel order experiment; [ACCEPTED SCOPE] 2026-10-23; [no training, no new issued allocation, both finals excluded](design/IK_ENDPOINT4_FOLLOWUP.md). The preceding owner execution instruction consumed both D-029 matched trials at `6a6961f`; their verified results and charges remain immutable. This new scope ends at reviewed preparation, not execution admission.
 ### D-029 — Prepare matched IK trials; no training; [ACCEPTED SCOPE] 2026-10-23; [endpoint-loss hypothesis, serial/parallel packets and excluded finals](decisions/2026-10-23-ik-matched-preparation.md).
 ### D-028 — Polar regression investigation; [ACCEPTED SCOPE] 2026-10-23; [diagnosis and proposal only; no training, criterion relaxation, final opening or accounting reset](design/IK_POLAR_REGRESSION.md).
 ### D-027 — Bounded polar-feature IK follow-up; [ACCEPTED] 2026-10-23; [new conditional TITAN allocation, fresh final and unchanged gates](decisions/2026-10-23-ik-polar-followup.md).
