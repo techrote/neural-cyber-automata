@@ -291,6 +291,29 @@ class FlightCaptureDataset:
     sha256: str
 
 
+@dataclass(frozen=True)
+class FlightCaptureAccountingBinding:
+    schema: str
+    declaration_sha256: str
+    capture_dataset_sha256: str
+    capture_id: str
+    accounting_attempt_id: str
+    capture_labels: int
+    accounting_chain_sha256: str
+
+    @property
+    def sha256(self) -> str:
+        return sha256_json({
+            "schema": self.schema,
+            "declaration_sha256": self.declaration_sha256,
+            "capture_dataset_sha256": self.capture_dataset_sha256,
+            "capture_id": self.capture_id,
+            "accounting_attempt_id": self.accounting_attempt_id,
+            "capture_labels": self.capture_labels,
+            "accounting_chain_sha256": self.accounting_chain_sha256,
+        })
+
+
 def _validate_outcome(value: Any, name: str) -> dict[str, Any]:
     outcome = dict(_exact_mapping(value, _OUTCOME_KEYS, name))
     if outcome["status"] not in ("completed", "failed", "refused", "canceled", "inconclusive"):
@@ -629,7 +652,7 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
 
 def bind_capture_accounting(
     dataset: FlightCaptureDataset, accounting: FlightAccountingLedger
-) -> dict[str, Any]:
+) -> FlightCaptureAccountingBinding:
     """Charge only eligible immutable labels, after validation and before cloning.
 
     Teacher-step transport reserves physical capture work with zero labels.
@@ -658,7 +681,15 @@ def bind_capture_accounting(
     bound = accounting.snapshot()
     if bound["stage_counts"]["capture"]["capture_labels"] != len(dataset.samples):
         _fail("flight_capture_accounting", "durable capture-label count differs from dataset")
-    return bound
+    return FlightCaptureAccountingBinding(
+        schema="nca-4ly-capture-accounting-binding/v1",
+        declaration_sha256=dataset.declaration_sha256,
+        capture_dataset_sha256=dataset.sha256,
+        capture_id=dataset.capture_id,
+        accounting_attempt_id=bound["attempt_id"],
+        capture_labels=len(dataset.samples),
+        accounting_chain_sha256=bound["chain_sha256"],
+    )
 
 
 def _fresh_policy_with_rng(seed: int):
@@ -752,7 +783,8 @@ class FlightTrainingResult:
 
 
 def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
-                         accounting: FlightAccountingLedger | None = None) -> FlightTrainingResult:
+                         accounting: FlightAccountingLedger | None = None,
+                         capture_binding: FlightCaptureAccountingBinding | None = None) -> FlightTrainingResult:
     """Run the fixed CPU BC schedule only behind the durable accounting gate.
 
     This function is not an execution admission.  A caller must supply the
@@ -770,12 +802,6 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     if accounting.declaration.sha256 != dataset.declaration_sha256:
         _fail("flight_clone_accounting", "capture and optimizer ledger declarations differ")
     samples = dataset.samples
-    capture_counts = accounting.snapshot().get("stage_counts", {}).get("capture", {})
-    if capture_counts.get("capture_labels") != len(samples):
-        _fail(
-            "flight_clone_accounting",
-            "eligible capture labels are not durably bound to this accounting attempt",
-        )
     captured_cases = frozenset(
         (episode.scenario_id, episode.host_seed) for episode in dataset.episodes)
     if captured_cases != EXPECTED_TRAINING_CASES:
@@ -788,6 +814,20 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
                    for weight in dataset.sample_weights)
             or weight_sum > 1.0 + 1e-12):
         _fail("flight_clone_weights", "family/episode/sample weights are invalid")
+    if not isinstance(capture_binding, FlightCaptureAccountingBinding):
+        _fail("flight_clone_accounting", "immutable capture-accounting binding is required")
+    snapshot = accounting.snapshot()
+    if (
+        capture_binding.schema != "nca-4ly-capture-accounting-binding/v1"
+        or capture_binding.declaration_sha256 != dataset.declaration_sha256
+        or capture_binding.capture_dataset_sha256 != dataset.sha256
+        or capture_binding.capture_id != dataset.capture_id
+        or capture_binding.accounting_attempt_id != snapshot["attempt_id"]
+        or capture_binding.capture_labels != len(samples)
+        or capture_binding.accounting_chain_sha256 == "0" * 64
+        or snapshot.get("stage_counts", {}).get("capture", {}).get("capture_labels") != len(samples)
+    ):
+        _fail("flight_clone_accounting", "capture/accounting binding differs from this immutable dataset")
     presentations = len(samples) * BC_EPOCHS
     updates = math.ceil(len(samples) / BC_BATCH_SIZE) * BC_EPOCHS
     if presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED or updates > MAX_OPTIMIZER_UPDATES_PER_SEED:
