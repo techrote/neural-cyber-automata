@@ -3,7 +3,7 @@ title: IK compact CUDA runbook
 kind: guide
 summary: Exact authenticated corpus preflight, independent admission, supervised seed training and CPU conformance commands.
 owns: [ik.training.operations]
-verified: 2026-10-22
+verified: 2026-10-23
 ---
 
 # IK compact CUDA runbook
@@ -16,8 +16,8 @@ replaying this failed invocation or resetting its markers/remaining budgets.
 
 [PARTIAL] This operational continuation of the [IK training reference](IK_TRAINING.md)
 preserves the accepted-corpus CPU preflight, prospective three-seed CUDA gate,
-and focused software validation. One [TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md)
-has executed and paused; no complete training or sealed-final scoring occurred.
+and focused software validation. The [measured continuation](evidence/2026-10-23-ik-titan-continuation.md)
+completed all three training schedules; final evaluation failed and remains blocked.
 
 ## CPU preparation, then the GPU boundary
 
