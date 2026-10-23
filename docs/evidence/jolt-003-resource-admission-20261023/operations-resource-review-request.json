@@ -1,0 +1,50 @@
+{
+  "schema": "nca-jolt-003-independent-review-request/v2",
+  "task": "LEARN-JOLT-003 operations, serialization, memory and process-tree admission",
+  "role": "operation_serialization_deadline_feasibility",
+  "requested_independent_review": true,
+  "independently_completed": false,
+  "reviewer": null,
+  "accepted": false,
+  "prospective_experiment_admitted": false,
+  "scope": "Independent final-source operational risk acceptance, not an automatically green benchmark",
+  "final_record_schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "target_branch": "impl/jolt003-resource-watchdog-review",
+  "source_revision": null,
+  "source_sha256": null,
+  "prospective_binding_sha256": null,
+  "required_exact_bindings": [
+    "source_revision",
+    "source_sha256",
+    "config_sha256",
+    "host_identity_sha256",
+    "runtime_contract_sha256",
+    "prospective_binding_sha256",
+    "cpu_comparison_policy",
+    "reviewer"
+  ],
+  "required_evidence": [
+    "Exact 39 counter/stage ceilings, no retry/resume/reseed, original one-use issue #62 durable allocation claim",
+    "Typed journal 115110 events <=64KiB, reservation log reader/canonical digest, gzip envelope/hash/EOF, raw streams, capped checkpoint and artifact file counts",
+    "Closed-form 15,821,682,822 total artifact bytes and 16,895,424,646 required free-disk bytes including 1GiB reserve; execution-runner disk recheck",
+    "Pinned host f2e34cf9b6fbaa5d9dedf9aa2cbc721a87472497, Linux x86_64 CPU Torch/NumPy software contract; CPU hardware informational",
+    "0.64GB synthetic+idle-native sample limitations vs *actual* stepped/native/final-auditor peak and 16GB advertised runner",
+    "8GiB soft original observer/descendant RSS watchdog, PID identity checks, missing telemetry fail-closed, original cleanup/readback, no kernel-hard guarantee",
+    "Synthetic threshold exceed and actual disposable child cleanup regression, retained memory-watchdog receipt original SHA256 and artifact publication on failure",
+    "GitHub-hosted six-hour hard platform job limit and possible missed uploads after infrastructure shutdown",
+    "All source-bound resource checks true, two independent v2 reviewers with zero blockers and exact prospective binding before freeze-v3"
+  ],
+  "request_instructions": "Independently weigh operational 8GiB soft watchdog risk versus incomplete physical peak; explicitly reject if insufficient. Sign versioned v2 accepted reviewer bytes only if all non-time gates genuinely pass. Do not claim 0.64GB synthetic RSS or x4 planning factor is a hard full-worker bound.",
+  "blocking_findings": [
+    {
+      "id": "OPS-REVIEW-01",
+      "finding": "Complete stepped-native/worker/auditor peak and kernel-hard memory bound are not measured; watchdog is a sampling-based mitigation only."
+    },
+    {
+      "id": "OPS-REVIEW-02",
+      "finding": "No independent final-source resource risk signoff, real execution-runner disk check or passing prospective declaration binding exists."
+    }
+  ],
+  "physical_experiment_started": false,
+  "allocation_consumed": false
+}
