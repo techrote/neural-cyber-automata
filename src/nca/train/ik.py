@@ -142,16 +142,17 @@ class IKTrainer:
     """
 
     def __init__(self, context: DeviceContext, normalization: Normalization,
-                 dataset_config: DatasetConfig, *, weights: LossWeights | None = None):
+                 dataset_config: DatasetConfig, *, weights: LossWeights | None = None,
+                 feature_transform="runner-compact-features/v1"):
         if not isinstance(context, DeviceContext) or not isinstance(dataset_config, DatasetConfig):
             raise ContractError("ik_training_context", "typed device and dataset configuration required")
         if weights is not None and not isinstance(weights, LossWeights):
             raise ContractError("ik_loss_weights", "typed loss weights required")
         self.context = context
         self.config_sha256 = dataset_config.sha256
-        self.normalization_sha256 = normalization.sha256 if isinstance(normalization, Normalization) else None
+        self.normalization_sha256 = getattr(normalization, "sha256", None)
         self.weights = weights or LossWeights()
-        self.model = build_model(context, normalization)
+        self.model = build_model(context, normalization, feature_transform=feature_transform)
         self.fk = TorchFK(chain_from_profile(runner_right_sole_profile()), context)
         self.optimizer = context.torch.optim.Adam(
             self.model.parameters(), lr=LEARNING_RATE, foreach=False, fused=False,
@@ -258,7 +259,8 @@ class IKTrainer:
             self.committed_steps += 1
             return {
                 "schema": "nca-ik-training-step/v1", "device": str(ctx.device),
-                "model": MODEL_ID + "@1", "trainer": TRAINER_ID + "@1",
+                "model": MODEL_ID + "@" + str(self.model.model_version),
+                "trainer": TRAINER_ID + "@" + str(self.model.model_version),
                 "dataset_config_sha256": self.config_sha256,
                 "normalization_sha256": self.normalization_sha256,
                 "loss_weights_sha256": self.weights.sha256,

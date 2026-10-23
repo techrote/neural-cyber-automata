@@ -40,7 +40,7 @@ class IKPrediction:
     invalid_code: Any
 
 
-def build_model(context: DeviceContext, normalization: Normalization):
+def build_model(context: DeviceContext, normalization: Normalization, *, feature_transform=FEATURE_TRANSFORM):
     """Construct the fixed 14 -> 64 -> 64 -> 2 FP32 model explicitly.
 
     The first six numeric channels use the immutable training-only fit. The
@@ -51,9 +51,13 @@ def build_model(context: DeviceContext, normalization: Normalization):
     """
     if not isinstance(context, DeviceContext):
         raise ContractError("ik_model_device", "explicit IK DeviceContext required")
-    if not isinstance(normalization, Normalization):
+    from .polar import PolarNormalization, TRANSFORM, FEATURES
+    polar = feature_transform == TRANSFORM
+    if feature_transform not in (FEATURE_TRANSFORM, TRANSFORM):
+        raise ContractError("ik_model_transform", "registered feature transform required")
+    if not isinstance(normalization, PolarNormalization if polar else Normalization):
         raise ContractError("ik_model_normalization", "typed training normalization required")
-    if normalization.feature_names != FEATURE_NAMES:
+    if normalization.feature_names != (FEATURES if polar else FEATURE_NAMES):
         raise ContractError("ik_model_normalization", "exact permitted feature order required")
     torch = context.torch
     profile = runner_right_sole_profile()
@@ -74,8 +78,8 @@ def build_model(context: DeviceContext, normalization: Normalization):
     class RunnerIKMLP(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.model_id, self.model_version = MODEL_ID, MODEL_VERSION
-            self.feature_transform = FEATURE_TRANSFORM
+            self.model_id, self.model_version = MODEL_ID, 2 if polar else MODEL_VERSION
+            self.feature_transform = feature_transform
             self.profile_sha256 = profile.sha256
             self.normalization_sha256 = normalization.sha256
             self.register_buffer("normalization_mean", mean)
@@ -119,6 +123,10 @@ def build_model(context: DeviceContext, normalization: Normalization):
             # losses after the fact is insufficient to keep gradients finite.
             numeric = torch.where(eligible[:, None], raw_features[:, :6],
                                   torch.zeros_like(raw_features[:, :6]))
+            if polar:
+                u, v = numeric[:, 2] - 3.6, numeric[:, 3] - 2.8
+                numeric = torch.cat((numeric[:, :2], (u*u+v*v)[:, None],
+                                     torch.atan2(v, u)[:, None], numeric[:, 4:6]), dim=1)
             normalized = (numeric - self.normalization_mean) / self.normalization_scale
             normalization_finite = torch.isfinite(normalized).all(dim=1)
             code = code | ((~normalization_finite).to(torch.int64) * NONFINITE_INPUT)
@@ -139,4 +147,19 @@ def build_model(context: DeviceContext, normalization: Normalization):
             return IKPrediction(torch.where(valid[:, None], reference, torch.zeros_like(reference)),
                                 valid, code)
 
-    return RunnerIKMLP().to(context.device, dtype=torch.float32)
+    # Preserve the historical v1 qualified class name and state dictionary.
+    # A different input interpretation must never share its checkpoint identity.
+    class RunnerIKPolarMLP(RunnerIKMLP):
+        def __init__(self):
+            super().__init__()
+            self.register_buffer("feature_transform_version", torch.tensor(2, dtype=torch.int64))
+
+        def load_state_dict(self, state_dict, strict=True, assign=False):
+            marker = state_dict.get("feature_transform_version")
+            if (not isinstance(marker, torch.Tensor) or marker.dtype != torch.int64
+                    or marker.shape != torch.Size([]) or marker.item() != 2):
+                raise ContractError("ik_model_checkpoint", "polar-v2 checkpoint feature version required")
+            return super().load_state_dict(state_dict, strict=strict, assign=assign)
+
+    model_type = RunnerIKPolarMLP if polar else RunnerIKMLP
+    return model_type().to(context.device, dtype=torch.float32)

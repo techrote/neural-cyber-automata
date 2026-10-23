@@ -145,10 +145,19 @@ def _families(seed):
 
 def _partition_families(config, partition):
     split = _families(config.split_seed)
-    return getattr(split, "evaluation" if partition == "final" else partition)
+    families = getattr(split, "evaluation" if partition == "final" else partition)
+    from .fresh_final import FreshFinalConfig
+    if type(config) is FreshFinalConfig:
+        if partition != "final":
+            raise ContractError("ik_fresh_partition", "fresh recipe is final-only")
+        return tuple(config.family_namespace + ":" + f for f in families)
+    return families
 
 
 def _bounds_for(config, partition, bin_index):
+    from .fresh_final import FreshFinalConfig
+    if type(config) is FreshFinalConfig:
+        return config.bounds(partition, bin_index)
     if partition not in PARTITIONS or not 0 <= bin_index < 80:
         raise ContractError("ik_dataset_region", "unknown partition or bin")
     if partition != "final" and bin_index in config.withheld_bins:
@@ -161,9 +170,11 @@ def _bounds_for(config, partition, bin_index):
 
 def build_split_plan(config: DatasetConfig):
     """Freeze all families and FK-image regions before any variant is generated."""
-    families = {p: list(_partition_families(config, p)) for p in PARTITIONS}
+    from .fresh_final import FreshFinalConfig
+    partitions = ("final",) if type(config) is FreshFinalConfig else PARTITIONS
+    families = {p: list(_partition_families(config, p)) for p in partitions}
     regions = []
-    for p in PARTITIONS:
+    for p in partitions:
         for b in range(80):
             if p != "final" and b in config.withheld_bins:
                 continue
@@ -390,6 +401,11 @@ def replay_task(config: DatasetConfig, state: TaskState | dict):
 def iter_tasks(config: DatasetConfig, partition: str | None = None):
     if partition is not None and partition not in PARTITIONS:
         raise ContractError("ik_dataset_partition", "unknown partition")
+    from .fresh_final import FreshFinalConfig
+    if type(config) is FreshFinalConfig:
+        if partition not in (None, "final"):
+            raise ContractError("ik_fresh_partition", "fresh recipe is final-only")
+        partition = "final"
     for stage in range(4):
         for p in PARTITIONS if partition is None else (partition,):
             allowed = _allowed_bins(config, p)

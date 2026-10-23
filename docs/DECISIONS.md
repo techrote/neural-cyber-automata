@@ -13,7 +13,7 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
-
+### D-027 — Bounded polar-feature IK follow-up; [ACCEPTED] 2026-10-23; [new conditional TITAN allocation, fresh final and unchanged gates](decisions/2026-10-23-ik-polar-followup.md).
 ### D-026 — Reviewed recovery of the same frozen IK evaluation
 
 [ACCEPTED] 2026-10-23: [preserved markers, accounted costs and no retraining](decisions/2026-10-23-ik-evaluation-recovery.md).

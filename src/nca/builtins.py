@@ -133,6 +133,16 @@ def ik_compact_training_step(**kwargs):
     return IKTrainer(**kwargs)
 
 
+def ik_polar_model(**kwargs):
+    from .ik.polar import build_model
+    return build_model(**kwargs)
+
+
+def ik_polar_training_step(**kwargs):
+    from .ik.polar import build_trainer
+    return build_trainer(**kwargs)
+
+
 def ik_compact_continuation(**kwargs):
     from .train.ik_continuation import supervise
     return supervise(**kwargs)
@@ -184,6 +194,10 @@ def builtin_registry() -> Registry:
                       ("nominal-geometry", "independent-comparator", "multiple-branches"))
     registry.register("policy", "runner-compact-ik", 1, ik_compact_model,
                       ("optional-torch", "nominal-geometry", "bounded-reference", "explicit-device", "masked"))
+    registry.register("policy", "runner-compact-ik", 2, ik_polar_model,
+                      ("optional-torch", "polar-target", "bounded-reference", "explicit-device", "masked"))
+    registry.register("trainer", "runner-compact-ik-step", 2, ik_polar_training_step,
+                      ("optional-torch", "polar-target", "raw-cartesian-loss", "single-update"))
     registry.register("trainer", "runner-compact-ik-step", 1, ik_compact_training_step,
                       ("optional-torch", "training-only", "single-update", "explicit-device", "software-foundation"))
     registry.register("trainer", "runner-compact-ik-continuation", 1, ik_compact_continuation,
