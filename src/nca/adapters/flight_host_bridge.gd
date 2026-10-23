@@ -8,6 +8,7 @@ const FlightProfile = preload("res://scripts/physical_flight_profile.gd")
 const FlightController = preload("res://scripts/physical_flight_controller.gd")
 const FlightCourse = preload("res://scripts/physical_flight_course.gd")
 const FlightObservation = preload("res://scripts/physical_flight_observation_adapter.gd")
+const PhysicalSession = preload("res://scripts/physical_actor_session.gd")
 const PhysicalArena = preload("res://scripts/physical_actor_arena.gd")
 
 const PROTOCOL: String = "nca-4ly-flight/1"
@@ -70,6 +71,7 @@ func _start() -> void:
 		"lease_ticks": FlightEpisode.LEASE_TICKS,
 		"actor_id": ACTOR_ID,
 		"producer": "policy",
+		"teacher_capture": "owner_reference_action_development_only",
 		"trainer_profile_sha256": FlightProfile.profile_hash(profile),
 		"controller_sha256": FlightController.controller_hash(),
 		"native_coupling": true,
@@ -128,6 +130,8 @@ func _handle(request: Dictionary) -> void:
 		"reset": ["protocol", "id", "op", "profile", "producer", "scenario", "seed", "split"],
 		"step": ["protocol", "id", "op", "run_id", "actor_id", "epoch", "control_generation",
 			"observation_id", "physical_tick", "action", "repeat_ticks"],
+		"teacher_step": ["protocol", "id", "op", "run_id", "actor_id", "epoch", "control_generation",
+			"observation_id", "physical_tick", "repeat_ticks"],
 		"cancel": ["protocol", "id", "op", "run_id", "actor_id", "epoch", "control_generation",
 			"observation_id", "physical_tick", "producer"],
 		"takeover": ["protocol", "id", "op", "run_id", "actor_id", "epoch", "control_generation",
@@ -151,6 +155,8 @@ func _handle(request: Dictionary) -> void:
 			_reset(request_id, request)
 		"step":
 			_step(request_id, request)
+		"teacher_step":
+			_teacher_step(request_id, request)
 		"cancel":
 			_revoke(request_id, request, false)
 		"takeover":
@@ -164,13 +170,16 @@ func _handle(request: Dictionary) -> void:
 
 
 func _reset(request_id: int, request: Dictionary) -> void:
-	if request.profile != str(TRAINER) or request.producer != "policy":
-		_error(request_id, "trainer_policy_scope_required", "none")
+	if request.profile != str(TRAINER) or request.producer not in ["policy", "teacher"]:
+		_error(request_id, "trainer_source_scope_required", "none")
 		return
 	if not request.scenario is String or str(request.scenario).is_empty() \
 		or not _integer(request.seed, 0, 2147483647) \
 		or request.split not in ["development", "tuning"]:
 		_error(request_id, "reset_schema_or_excluded_split", "none")
+		return
+	if request.producer == "teacher" and request.split != "development":
+		_error(request_id, "teacher_capture_development_only", "none")
 		return
 	# Resolve only public development/tuning metadata before touching the owner.
 	# Final is excluded above, so this never opens the sealed suite.
@@ -178,7 +187,9 @@ func _reset(request_id: int, request: Dictionary) -> void:
 		str(request.scenario), int(request.seed), str(request.split)).is_empty():
 		_error(request_id, "unknown_flight_scenario", "none")
 		return
-	if not episode.reset(TRAINER, str(request.scenario), int(request.seed), str(request.split), &"policy"):
+	if not episode.reset(
+		TRAINER, str(request.scenario), int(request.seed), str(request.split),
+		StringName(str(request.producer))):
 		# reset() can fail after arena.configure() (for example during a later
 		# owner/observation step). Once called, we cannot prove the replacement
 		# owner consumed nothing, so automatic replay is forbidden.
@@ -210,6 +221,68 @@ func _step(request_id: int, request: Dictionary) -> void:
 	# The owner reports exact physical consumption, including partial terminal
 	# intervals and zero-tick authoritative failures.
 	_reply_transition(request_id, transition, false)
+
+
+func _teacher_step(request_id: int, request: Dictionary) -> void:
+	var current: Dictionary = episode.observe()
+	if current.is_empty():
+		_error(request_id, "episode_not_live", "none")
+		return
+	if not _matches_authority(request, current):
+		_error(request_id, "stale_or_foreign_authority", "none")
+		return
+	if episode.source != &"teacher":
+		_error(request_id, "teacher_owner_required", "none")
+		return
+	if not _integer(request.repeat_ticks, FlightEpisode.DECISION_TICKS, FlightEpisode.DECISION_TICKS) \
+		or int(current.observed_tick) % FlightEpisode.DECISION_TICKS != 0:
+		_error(request_id, "decision_cadence", "none")
+		return
+
+	# The teacher action is computed by the real #229 episode owner from the
+	# same copied policy observation. No Python or bridge-side navigation logic
+	# exists here.
+	var requested: Dictionary = episode.reference_action()
+	var admitted: Dictionary = PhysicalSession.normalized_flight_action(requested)
+	if requested.is_empty() or admitted.is_empty():
+		_error(request_id, "owner_reference_action_invalid", "unknown")
+		_close_owner()
+		exit_after_flush = 2
+		return
+	var transition: Dictionary = episode.tick(
+		admitted, str(request.observation_id), int(request.repeat_ticks))
+	var manifest: Dictionary = episode.manifest()
+	var teacher_sha: Variant = manifest.get("teacher_source_sha256")
+	if not teacher_sha is String or str(teacher_sha).length() != 64:
+		_error(request_id, "teacher_source_identity_missing", "unknown")
+		_close_owner()
+		exit_after_flush = 2
+		return
+	var accepted: bool = int(transition.get("ticks_consumed", 0)) > 0
+	if not accepted:
+		# A zero-tick owner refusal is retained as a failed capture interval, but
+		# it is never relabelled as an admitted supervised action.
+		_reply_transition(request_id, transition, false, {
+			"teacher_action": {
+				"source_sha256": str(teacher_sha),
+				"observation_id": str(current.observation_id),
+				"status": "refused",
+				"requested_action": PhysicalArena.json_value(requested.move),
+				"admitted_action": null,
+				"reason": str(transition.get("reason", "owner_action_refused")),
+			}
+		})
+		return
+	_reply_transition(request_id, transition, false, {
+		"teacher_action": {
+			"source_sha256": str(teacher_sha),
+			"observation_id": str(current.observation_id),
+			"status": "accepted",
+			"requested_action": PhysicalArena.json_value(requested.move),
+			"admitted_action": PhysicalArena.json_value(admitted.move),
+			"reason": "owner_reference_action_admitted",
+		}
+	})
 
 
 func _revoke(request_id: int, request: Dictionary, takeover: bool) -> void:
@@ -263,7 +336,8 @@ func _matches_authority(request: Dictionary, current: Dictionary) -> bool:
 		and request.get("physical_tick") == current.get("observed_tick")
 
 
-func _reply_transition(request_id: int, transition: Dictionary, include_manifest: bool) -> void:
+func _reply_transition(request_id: int, transition: Dictionary, include_manifest: bool,
+		extra: Dictionary = {}) -> void:
 	var observation: Dictionary = transition.get("observation", {})
 	var flat: Dictionary = episode.flat_observation()
 	if not flat.is_empty() and not observation.is_empty():
@@ -273,6 +347,13 @@ func _reply_transition(request_id: int, transition: Dictionary, include_manifest
 		"transition": transition.duplicate(true),
 		"flat_observation": flat.duplicate(true),
 	}
+	for key: Variant in extra:
+		if body.has(key):
+			_error(request_id, "duplicate_reply_field", "unknown")
+			_close_owner()
+			exit_after_flush = 2
+			return
+		body[key] = extra[key]
 	if include_manifest:
 		body["manifest"] = episode.manifest()
 	_reply(request_id, body, "confirmed")
