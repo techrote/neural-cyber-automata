@@ -15,6 +15,7 @@ from nca.adapters.flight import (
     LEASE_TICKS,
     OBSERVATION_VERSION,
     PHYSICS_HZ,
+    SCENARIO_MAX_TICKS,
     SPLIT_GEOMETRY_VERSION,
     TRAINER_PROFILE,
     TRAINER_PROFILE_SHA256,
@@ -86,6 +87,8 @@ class Owner:
             "controller_sha256": CONTROLLER_SHA256,
             "native_coupling": True,
             "host_count": 1,
+            "sealed_suite_sha256": None,
+            "max_ticks": SCENARIO_MAX_TICKS[command["scenario"]],
         }
 
     def transition(
@@ -241,7 +244,7 @@ class FlightTests(unittest.TestCase):
         owner = Owner() if owner is None else owner
         session = FlightSession(owner)
         observation = session.reset(
-            scenario="arrival_braking", seed=7
+            scenario="arrival_braking", seed=101
         )
         return owner, session, observation
 
@@ -256,6 +259,34 @@ class FlightTests(unittest.TestCase):
         self.assertEqual(len(session.flat_observation), 54)
         self.assertEqual(
             session.last_exchange["physical_tick_after"], 0
+        )
+
+    def test_preregistered_cases_and_source_deadlines_are_enforced_before_transport(self):
+        invalid = (
+            ("training", "neutral_control", 101),
+            ("training", "arrival_braking", 1),
+            ("tuning", "unsupported_hover", 211),
+            ("tuning", "arrival_braking", 101),
+        )
+        for split, scenario, seed in invalid:
+            owner = Owner()
+            session = FlightSession(owner)
+            with self.assertRaises(ValueError):
+                session.reset(
+                    scenario=scenario, seed=seed, split=split
+                )
+            self.assertEqual(owner.requests, [])
+
+        owner = Owner()
+        session = FlightSession(owner)
+        session.reset(
+            scenario="slalom", seed=109, split="training"
+        )
+        self.assertEqual(
+            session.manifest["max_ticks"], 2400
+        )
+        self.assertEqual(
+            owner.requests[0]["split"], "development"
         )
 
     def test_final_reset_and_invalid_actions_never_reach_owner(self):
@@ -394,7 +425,7 @@ class FlightTests(unittest.TestCase):
         owner, session, before = self.reset()
         after = session.reset(
             scenario="horizontal_reach",
-            seed=8,
+            seed=211,
             split="tuning",
         )
         self.assertNotEqual(
@@ -428,6 +459,8 @@ class FlightTests(unittest.TestCase):
                     source_observation_id="foreign"),
             lambda reply:
                 reply["manifest"].update(decision_ticks=5),
+            lambda reply:
+                reply["manifest"].update(max_ticks=960),
         ]
         for change in changes:
             owner = Owner()
@@ -436,7 +469,7 @@ class FlightTests(unittest.TestCase):
             with self.assertRaises(
                 (FlightProtocolError, ValueError)
             ):
-                session.reset(scenario="x", seed=1)
+                session.reset(scenario="arrival_braking", seed=101)
             self.assertTrue(session.failed)
 
     def test_duplicate_or_reordered_reply_is_unknown_consumption_and_never_replayed(self):
@@ -450,14 +483,14 @@ class FlightTests(unittest.TestCase):
             with self.assertRaises(
                 UnknownConsumptionError
             ):
-                session.reset(scenario="x", seed=1)
+                session.reset(scenario="arrival_braking", seed=101)
             self.assertTrue(session.failed)
             self.assertEqual(
                 session.unknown_consumption["state"],
                 "unknown",
             )
             with self.assertRaises(FlightProtocolError):
-                session.reset(scenario="x", seed=1)
+                session.reset(scenario="arrival_braking", seed=101)
             self.assertEqual(len(owner.requests), 1)
 
     def test_lost_step_reply_retains_unknown_consumption_and_refuses_replay(self):
