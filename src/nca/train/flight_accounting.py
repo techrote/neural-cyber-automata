@@ -361,6 +361,8 @@ def execution_gate(declaration: FlightDeclaration, *, current_evidence: Mapping[
             reasons.append("attempt_failed")
         if ledger_snapshot.get("unknown_consumption"):
             reasons.append("unknown_consumption")
+        if ledger_snapshot.get("interrupted"):
+            reasons.append("attempt_interrupted")
         if ledger_snapshot.get("poisoned"):
             reasons.append("ledger_integrity_uncertain")
         if ledger_snapshot.get("pending_reservations"):
@@ -413,6 +415,7 @@ def _empty_state(declaration: FlightDeclaration, attempt_id: str) -> dict[str, A
         "checkpoints": {},
         "failed": False,
         "unknown_consumption": False,
+        "interrupted": False,
         "closed": False,
         "poisoned": False,
         "reservations": 0,
@@ -431,6 +434,14 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
 
     if state["closed"]:
         _fail("flight_ledger_chain", "records exist after attempt_close")
+
+    if kind == "interruption":
+        if set(payload) != {"reason"} or type(payload["reason"]) is not str or not payload["reason"]:
+            _fail("flight_ledger_shape", "interruption has an invalid shape")
+        if state["interrupted"]:
+            _fail("flight_attempt_interrupted", "attempt interruption was already recorded")
+        state["interrupted"] = True
+        return
 
     if kind == "reserve":
         if set(payload) != {"reservation_id", "increments", "scope", "cleanup"}:
@@ -465,15 +476,31 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
                 _fail("flight_ledger_ticks", "confirmed ticks exceed the reserved physical capacity")
             state["confirmed_physical_ticks"] += ticks
         elif kind == "failure":
-            if set(payload) != {"reservation_id", "reason"} or type(payload["reason"]) is not str or not payload["reason"]:
+            if (set(payload) != {"reservation_id", "reason", "confirmed_physical_ticks"}
+                    or type(payload["reason"]) is not str or not payload["reason"]):
                 _fail("flight_ledger_shape", "failure has an invalid shape")
+            ticks = payload["confirmed_physical_ticks"]
+            if type(ticks) is not int or ticks < 0 or ticks > reservation["increments"].get("physical_ticks", 0):
+                _fail("flight_ledger_ticks", "failed work confirms ticks outside its reservation")
+            state["confirmed_physical_ticks"] += ticks
             state["failed"] = True
-            state["failures"].append({"reservation_id": reservation_id, "reason": payload["reason"]})
+            state["failures"].append({
+                "reservation_id": reservation_id, "reason": payload["reason"],
+                "confirmed_physical_ticks": ticks,
+            })
         elif kind == "unknown":
-            if set(payload) != {"reservation_id", "reason"} or type(payload["reason"]) is not str or not payload["reason"]:
+            if (set(payload) != {"reservation_id", "reason", "confirmed_physical_ticks"}
+                    or type(payload["reason"]) is not str or not payload["reason"]):
                 _fail("flight_ledger_shape", "unknown outcome has an invalid shape")
+            ticks = payload["confirmed_physical_ticks"]
+            if type(ticks) is not int or ticks < 0 or ticks > reservation["increments"].get("physical_ticks", 0):
+                _fail("flight_ledger_ticks", "ambiguous work confirms ticks outside its reservation")
+            state["confirmed_physical_ticks"] += ticks
             state["unknown_consumption"] = True
-            state["failures"].append({"reservation_id": reservation_id, "reason": payload["reason"]})
+            state["failures"].append({
+                "reservation_id": reservation_id, "reason": payload["reason"],
+                "confirmed_physical_ticks": ticks,
+            })
         else:
             if set(payload) != {"reservation_id", "checkpoint_id", "sha256", "parent_id"}:
                 _fail("flight_ledger_shape", "checkpoint publication has an invalid shape")
@@ -563,6 +590,7 @@ def _snapshot(state: Mapping[str, Any], declaration: FlightDeclaration) -> dict[
         "checkpoints": deepcopy(state["checkpoints"]),
         "failed": state["failed"],
         "unknown_consumption": state["unknown_consumption"],
+        "interrupted": state["interrupted"],
         "closed": state["closed"],
         "poisoned": state["poisoned"],
         "reservations": state["reservations"],
@@ -621,10 +649,14 @@ class FlightAccountingLedger:
         state = _replay(path, declaration, attempt_id)
         if state["closed"]:
             _fail("flight_attempt_consumed", "closed attempt cannot be resumed or replayed")
+        if state["interrupted"]:
+            _fail("flight_attempt_interrupted", "an interrupted attempt cannot be resumed again")
         stream = path.open("ab")
         ledger = cls(path, declaration, attempt_id, stream, state, current_evidence)
         for reservation_id in list(state["pending"]):
-            ledger.mark_unknown(reservation_id, "interrupted_after_reservation_before_durable_outcome")
+            ledger.mark_unknown(
+                reservation_id, "interrupted_after_reservation_before_durable_outcome")
+        ledger._commit("interruption", {"reason": "process_restarted_for_readback_or_cleanup"})
         return ledger
 
     @classmethod
@@ -676,8 +708,10 @@ class FlightAccountingLedger:
             _fail("flight_ledger_reservation", "reservation scope/cleanup marker is invalid")
         if not isinstance(increments, Mapping) or not increments:
             _fail("flight_ledger_reservation", "nonempty increments are required")
-        if (self._state["failed"] or self._state["unknown_consumption"]) and not cleanup:
-            _fail("flight_execution_refused", "failed or unknown attempt permits cleanup only")
+        if (self._state["failed"] or self._state["unknown_consumption"]
+                or self._state["interrupted"]) and not cleanup:
+            _fail("flight_execution_refused",
+                  "failed, unknown or interrupted attempt permits cleanup only")
         if cleanup and not set(increments) <= {"cleanup_operations", "host_calls"}:
             _fail("flight_cleanup_scope", "cleanup can reserve only cleanup operations and host calls")
         if not cleanup:
@@ -751,12 +785,22 @@ class FlightAccountingLedger:
         }
         self._commit("complete", payload)
 
-    def fail(self, reservation_id: str, reason: str) -> None:
-        payload = {"reservation_id": reservation_id, "reason": reason}
+    def fail(self, reservation_id: str, reason: str, *,
+             confirmed_physical_ticks: int = 0) -> None:
+        payload = {
+            "reservation_id": reservation_id,
+            "reason": reason,
+            "confirmed_physical_ticks": confirmed_physical_ticks,
+        }
         self._commit("failure", payload)
 
-    def mark_unknown(self, reservation_id: str, reason: str) -> None:
-        payload = {"reservation_id": reservation_id, "reason": reason}
+    def mark_unknown(self, reservation_id: str, reason: str, *,
+                     confirmed_physical_ticks: int = 0) -> None:
+        payload = {
+            "reservation_id": reservation_id,
+            "reason": reason,
+            "confirmed_physical_ticks": confirmed_physical_ticks,
+        }
         self._commit("unknown", payload)
 
     def publish_checkpoint(self, reservation_id: str, *, checkpoint_id: str,
