@@ -51,6 +51,7 @@ MAX_CAPTURE_LABELS = DESIGN_WORK_MAXIMA["capture_labels"]
 BC_EPOCHS = 20
 BC_BATCH_SIZE = 128
 BC_LEARNING_RATE = 0.001
+SHUFFLE_SEED_XOR = 0x04C59004
 MAX_OPTIMIZER_UPDATES_PER_SEED = DESIGN_WORK_MAXIMA["optimizer_updates"] // len(POLICY_SEEDS)
 MAX_SAMPLE_PRESENTATIONS_PER_SEED = DESIGN_WORK_MAXIMA["sample_presentations"] // len(POLICY_SEEDS)
 MAX_CHECKPOINT_BYTES = 32 * 1024 * 1024
@@ -105,13 +106,17 @@ BC_SCHEDULE = {
     "batch_size": BC_BATCH_SIZE,
     "learning_rate": BC_LEARNING_RATE,
     "loss": "mean_squared_normalized_desired_velocity",
+    "shuffle": "python_random_mt19937_seed_xor",
+    "shuffle_seed_xor": SHUFFLE_SEED_XOR,
     "weighting": "nominal_equal_family_then_equal_captured_episode_then_equal_admitted_row",
     "required_capture_episodes": len(EXPECTED_TRAINING_CASES),
+    "maximum_capture_labels": MAX_CAPTURE_LABELS,
     "development_seeds": list(DEVELOPMENT_SEEDS),
     "training_scenarios": sorted(SCENARIO_FAMILY),
     "maximum_optimizer_updates_per_seed": MAX_OPTIMIZER_UPDATES_PER_SEED,
     "maximum_sample_presentations_per_seed": MAX_SAMPLE_PRESENTATIONS_PER_SEED,
     "checkpoint_epochs": list(range(BC_EPOCHS + 1)),
+    "tuning_candidate_epochs": [5, 10, 15, 20],
     "device": "cpu",
     "cuda_allowed": False,
 }
@@ -744,7 +749,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     torch = _torch()
     model, torch_rng_state = _fresh_policy_with_rng(seed)
     optimizer = torch.optim.Adam(model.parameters(), lr=BC_LEARNING_RATE)
-    shuffle_rng = random.Random(seed ^ 0x4C59004)
+    shuffle_rng = random.Random(seed ^ SHUFFLE_SEED_XOR)
     losses: list[float] = []
     completed_updates = 0
     completed_presentations = 0
