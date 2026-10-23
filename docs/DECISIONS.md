@@ -13,7 +13,8 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
-
+### D-023 — Risk-managed LEARN-JOLT-003 resource admission
+[ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
 [ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
 
