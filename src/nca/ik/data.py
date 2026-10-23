@@ -10,7 +10,10 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field, replace
 from functools import lru_cache
+import hashlib
 import math
+from pathlib import Path
+import platform
 from typing import Literal
 
 from nca.contracts import ContractError, Record, canonical_json, digest, identifier, sha256_json, strict_json_loads
@@ -541,30 +544,39 @@ def _malformed_label(specimen):
     raise ContractError("ik_dataset_specimen", "malformed specimen unexpectedly admitted")
 
 
-def _authenticated_analytic_point_roundoff(checked, retained):
-    """Allow one binary64 step in analytic FK *points* only, after byte authentication.
+_WINDOWS_REPLAY_SHA256 = "ba42f53d140543713e68653f22540cd1cd4ed552252d7b41ce967c0c3f04a39c"
 
-    The original v1 archive was generated with Linux libm. A Windows math
-    library can return the adjacent binary64 value for the same trigonometric
-    calculation. This special case is only for the pinned, byte-authenticated
-    archive reader; fixture and normal label replay remain exact.
+
+@lru_cache(maxsize=1)
+def _windows_replay_inventory():
+    """Hash-only compatibility metadata; never contains replacement labels."""
+    raw = Path(__file__).with_name("accepted_windows_replay_v1.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != _WINDOWS_REPLAY_SHA256:
+        raise ContractError("ik_dataset_compatibility", "Windows replay inventory bytes changed")
+    return strict_json_loads(raw, max_bytes=262144)["entries"]
+
+
+def _authenticated_windows_label_replay(sample_id, checked, retained):
+    """Accept only enumerated exact original/Windows label digest pairs.
+
+    Original manifest, registry and shard bytes must already be authenticated.
+    No numeric tolerance is granted. Teacher records, branch/status decisions,
+    proof metadata, configuration counts and supervision masks remain exact.
+    Task replay, splits and normalization retain their independent strict gates.
     """
+    if platform.system() != "Windows" or platform.python_version() != "3.12.10":
+        return False
     current, original = checked.analytic, retained.analytic
-    if (current.status != "solved" or current.status != original.status
-            or not current.points or len(current.points) != len(original.points)):
+    if (len(current.configurations) != len(original.configurations)
+            or len(current.points) != len(original.points)
+            or replace(checked, analytic=replace(current,
+                       configurations=original.configurations, points=original.points),
+                       independent_endpoint=retained.independent_endpoint,
+                       endpoint_error_cells=retained.endpoint_error_cells) != retained):
         return False
-    # Require exact identity of the teacher, configurations, branch, status,
-    # masks, independently checked endpoint/error and every other field.
-    if replace(checked, analytic=replace(current, points=original.points)) != retained:
-        return False
-    for computed, saved in zip(current.points, original.points):
-        if len(computed) != 2 or len(saved) != 2:
-            return False
-        if any(not (math.isfinite(a) and math.isfinite(b)
-                    and (a == b or math.nextafter(a, b) == b))
-               for a, b in zip(computed, saved)):
-            return False
-    return True
+    entry = _windows_replay_inventory().get(sample_id)
+    return (entry is not None and sha256_json(retained.to_dict()) == entry["retained_sha256"]
+            and sha256_json(checked.to_dict()) == entry["windows_replay_sha256"])
 
 
 def validate_sample(sample: GeometricSample, config: DatasetConfig, *, _accepted_archive=False):
@@ -604,7 +616,7 @@ def validate_sample(sample: GeometricSample, config: DatasetConfig, *, _accepted
                               lower=(-.72,-.27),upper=(.72,.27),present=inputs.present,
                               measured=inputs.measured,task_mask=inputs.task_mask)
     if checked != label and not (_accepted_archive
-                                 and _authenticated_analytic_point_roundoff(checked, label)):
+                                 and _authenticated_windows_label_replay(task.id, checked, label)):
         raise ContractError("ik_dataset_label", "label differs from independent retained-result checks")
     if teacher.status == "solved" and not label.pose_loss:
         raise ContractError("ik_dataset_label", "solved label failed independent branch/endpoint/limit checks")

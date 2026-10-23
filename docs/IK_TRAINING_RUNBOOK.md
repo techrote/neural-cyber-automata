@@ -51,6 +51,14 @@ Preparation uses CPU corpus validation without importing Torch or initializing
 CUDA. It checks the original corpus, retained labels, training-only normalization,
 and the source/runtime/visibility binding before producing a declaration:
 
+The Windows label compatibility inventory permits only exact, enumerated
+original/replay label digest pairs after original-byte authentication; see the
+[training reference](IK_TRAINING.md#authenticated-corpus-and-deterministic-sampling).
+The current CPU readback also exposes an independent **task replay refusal** at
+`training-00005.jsonl`, row 43. This remains a blocking validation problem, not
+an admitted corpus or normalization result. Preserve exact task/schedule checks;
+do not create an admission record or run CUDA while preparation refuses.
+
 ```sh
 python -m nca.train.ik_experiment prepare --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --output NEW_RUN_DIRECTORY --device cuda:0
 python -m nca.train.ik_experiment inspect --run NEW_RUN_DIRECTORY --declaration-sha256 DECLARATION_FILE_SHA256

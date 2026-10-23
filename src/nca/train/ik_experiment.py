@@ -358,7 +358,8 @@ def train_attempt(ledger, attempt, corpus, context, *, epochs, batch_size,
         if attempt.remaining_wall_seconds <= STOP_RESERVE_SECONDS:
             break
         rows = sampler.next_batch()
-        prepared = prepare_training_batch(rows, corpus.config, context)
+        prepared = prepare_training_batch(rows, corpus.config, context,
+                                         authenticated_corpus=corpus if corpus.accepted else None)
         trainable = bool((prepared.pose_mask | prepared.endpoint_mask).any())
         token = attempt.reserve("optimizer" if trainable else "presentation_only",
                                 samples=len(rows), call_id=f"batch-{sampler.cursor:08d}")

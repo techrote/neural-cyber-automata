@@ -15,7 +15,8 @@ from unittest.mock import patch
 
 from nca.contracts import ContractError, canonical_json, sha256_json
 from nca.ik.data import (DatasetConfig, build_split_plan, fit_normalization,
-                         generate_sample, iter_tasks, validate_sample)
+                         generate_sample, iter_tasks, validate_sample, TeacherLabel,
+                         _authenticated_windows_label_replay, _windows_replay_inventory)
 from nca.ik.profiles import runner_right_sole_profile
 from nca.ik.reference import SolverConfig
 from nca.train.ik_corpus import (
@@ -200,7 +201,11 @@ class IKCorpusTests(unittest.TestCase):
             validate_sample(modified, self.config)
         # Only the pinned accepted archive reader may request this compatibility
         # branch after manifest, shard and original-registry verification.
-        validate_sample(modified, self.config, _accepted_archive=True)
+        # A Boolean no longer grants a general one-ULP exception. Only an
+        # enumerated original/Windows digest pair from the original corpus can
+        # cross this boundary, after the reader authenticates its bytes.
+        with self.assertRaises(ContractError):
+            validate_sample(modified, self.config, _accepted_archive=True)
         further = ((original.points[0][0],
                     math.nextafter(math.nextafter(saved, math.inf), math.inf)),) + original.points[1:]
         with self.assertRaises(ContractError):
@@ -211,6 +216,37 @@ class IKCorpusTests(unittest.TestCase):
             modified.label, pose_loss=not modified.label.pose_loss))
         with self.assertRaises(ContractError):
             validate_sample(changed_mask, self.config, _accepted_archive=True)
+
+    def test_windows_replay_accepts_only_exact_original_pairs_and_semantics(self):
+        cases = json.loads((ROOT / "tests/fixtures/ik_windows_replay_labels.json").read_text())
+        with patch("nca.ik.data.platform.system", return_value="Windows"), \
+                patch("nca.ik.data.platform.python_version", return_value="3.12.10"):
+            for case in cases:
+                retained = TeacherLabel.from_dict(case["retained"])
+                replay = TeacherLabel.from_dict(case["windows_replay"])
+                self.assertTrue(_authenticated_windows_label_replay(case["id"], replay, retained))
+                # Any extra ULP, wrong residual, sample identity or semantic
+                # decision is outside the exact inventory, even after auth.
+                changed = replace(replay, endpoint_error_cells=math.nextafter(
+                    replay.endpoint_error_cells, math.inf))
+                self.assertFalse(_authenticated_windows_label_replay(case["id"], changed, retained))
+                self.assertFalse(_authenticated_windows_label_replay("0" * 64, replay, retained))
+                for key in ("pose_loss", "endpoint_loss", "verified"):
+                    self.assertFalse(_authenticated_windows_label_replay(case["id"],
+                                     replace(replay, **{key: not getattr(replay, key)}), retained))
+                changed = replace(retained, teacher=replace(retained.teacher, iterations=0))
+                self.assertFalse(_authenticated_windows_label_replay(case["id"], replay, changed))
+            with patch("nca.ik.data.platform.system", return_value="Linux"):
+                self.assertFalse(_authenticated_windows_label_replay(case["id"], replay, retained))
+
+    def test_windows_inventory_tamper_refuses(self):
+        _windows_replay_inventory.cache_clear()
+        try:
+            with patch.object(Path, "read_bytes", return_value=b"{}"):
+                with self.assertRaisesRegex(ContractError, "inventory bytes changed"):
+                    _windows_replay_inventory()
+        finally:
+            _windows_replay_inventory.cache_clear()
 
     def test_rehashed_one_ulp_fixture_label_still_refused(self):
         def edit(rows):

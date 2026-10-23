@@ -149,14 +149,9 @@ mixed-partition pending journal. An already opened final registry refuses furthe
 training access. Tiny fixtures use a separate constructor and cannot acquire an
 accepted-corpus identity.
 
-The original archive and retrieval instructions remain in the
-[published corpus index](evidence/ik-dataset-20261022/index.json). Obtain that exact
-archive and verify its SHA-256 before extraction. Do not regenerate labels or
-substitute freshly generated data. The preparation session confirmed the
-archive's availability and recorded size; the unavailable workspace prevented
-executing a new original-archive byte readback here. Its previous accepted
-readback remains identified in the index. CPU fixture verification is not a new
-readback of those 7,280 training/tuning rows.
+The [published corpus index](evidence/ik-dataset-20261022/index.json) binds the
+original archive and retrieval instructions. Verify its SHA-256 before using
+the permitted extracted view; never regenerate labels or substitute data.
 
 The original corpus remains byte-identical. A 23 October 2026 Windows run-host
 preflight authenticated the original archive but reported a binary64 arithmetic
@@ -164,24 +159,44 @@ difference in `training-00000.jsonl` row 4, analytic `points[0][1]`:
 retained `7.1951845160020005`, Windows `7.195184516002` (one ULP).
 This is not evidence of archive corruption or authorization to change labels.
 
-The accepted-v1 reader now has a **narrowly source-bound compatibility rule**:
-only after verifying the exact published manifest, original registry and each
-training/tuning shard's retained byte size and SHA-256 can its independent
-label replay admit a one-`math.nextafter` binary64 step in analytic FK
-**point coordinates only**. Original label bytes, analytic configurations,
-statuses, teacher results, branch identities, endpoint/error checks and all
-supervision masks must remain **exactly equal**. A second ULP, any other
-numeric difference, rehashed development fixture or altered identity still
-refuses. Normal fixture replay remains strict. Neither the corpus nor the
-generator, numerical teacher, normalization or final suite is changed.
+The accepted-v1 Windows reader now uses a **source-bound exact replay inventory**
+in `src/nca/ik/accepted_windows_replay_v1.json`, SHA-256
+`ba42f53d140543713e68653f22540cd1cd4ed552252d7b41ce967c0c3f04a39c`.
+It replaces the general one-ULP analytic-point exception with 534 exact
+sample-ID / retained-label-digest / Windows-replay-label-digest pairs from the
+unchanged original training/tuning bytes. It contains hashes and field paths,
+not replacement labels or final rows. Only Windows CPython 3.12.10 can use it,
+and only after the pinned manifest, original registry and each shard's bytes
+have been authenticated. The inventory bytes themselves are hash-pinned and
+included in the executable source closure.
+
+The pairs cover finite differences in analytic configurations/points and the
+independently replayed endpoint/residual. Cancellation can make a tiny absolute
+residual difference span many residual ULPs; no relative or absolute tolerance
+is added. Teacher records, analytic status/proof/reason/branch counts, branch
+identities and all supervision decisions remain exactly equal. An unlisted
+sample, either changed digest, inventory tamper, fixture or changed semantic
+field refuses. Normal replay remains exact. Training batch preparation enables
+this path only for original object references in an authenticated corpus with
+its identical configuration object; copied rows and fixture corpora refuse.
+
+A CPU-only census verified 7,280 permitted rows and independently confirmed the
+534 inventory pairs, but also found **17 separate task-replay mismatches**.
+The first is `training-00005.jsonl`, row 43, sample
+`ded89da95f08e0ab67104319d7b5b700844de4420c78f254a2254d2b340ea958`:
+`inputs.target_root[1]` is retained as `7.787649916742`, versus Windows replay
+`7.787649916741`; `original_point[1]` is retained as `7.21497005474`, versus
+`7.214970054739`. The exact task/schedule gate is preserved and still refuses.
+This repair therefore does **not** establish full corpus admission or verified
+training-only normalization, and supplies no declaration, prospective CUDA
+admission, optimizer work or final opening. The corpus, generator, numerical
+teacher, normalization and every training allocation remain unchanged.
 
 The restored, original archive and its retained copy were separately read back
 as 7,340,716 bytes, SHA-256
 `97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce`.
-An offline Linux binary64 forward computation of 7,120 solved permitted
-training/tuning samples matched **all 14,240 stored analytic point coordinates
-exactly**; no final payloads were inspected in this check. This does not
-establish the unchanged original archive's full Windows semantic admission.
+Historical Linux analytic-point readback is preserved in the PR evidence;
+it does not establish Windows semantic admission.
 
 **Stop condition remains in force:** qualified Windows CPU preflight must run
 again on the patched executable commit and succeed through normalization, with

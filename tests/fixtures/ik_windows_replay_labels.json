@@ -1,0 +1,373 @@
+[
+  {
+    "id": "0161ab558fdc15cf47cdf9d7004a34a042485e91a64f4b5b0bcbf2883a507727",
+    "retained": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5665940728991131,
+          -0.19241122980245542
+        ],
+        "point": [
+          7.842740341662296,
+          7.195184515967169
+        ],
+        "orientation_radians": -0.7590053027015686,
+        "residual_cells": 7.88180653913019e-11,
+        "iterations": 8,
+        "evaluations": 9,
+        "active_limits": [],
+        "projected_coordinates": [
+          1
+        ],
+        "projection_events": 1,
+        "projection_correction_norm": 0.21953710744642052,
+        "correction_norm": 0.8694323790368911,
+        "maximum_step_norm": 0.25,
+        "elapsed_seconds": 0.0006711390014970675,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.5665940729189312,
+            -0.19241122972746827
+          ]
+        ],
+        "points": [
+          [
+            7.842740341733001,
+            7.1951845160020005
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.842740341662296,
+        7.195184515967171
+      ],
+      "endpoint_error_cells": 7.881728041049089e-11,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    },
+    "windows_replay": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5665940728991131,
+          -0.19241122980245542
+        ],
+        "point": [
+          7.842740341662296,
+          7.195184515967169
+        ],
+        "orientation_radians": -0.7590053027015686,
+        "residual_cells": 7.88180653913019e-11,
+        "iterations": 8,
+        "evaluations": 9,
+        "active_limits": [],
+        "projected_coordinates": [
+          1
+        ],
+        "projection_events": 1,
+        "projection_correction_norm": 0.21953710744642052,
+        "correction_norm": 0.8694323790368911,
+        "maximum_step_norm": 0.25,
+        "elapsed_seconds": 0.0006711390014970675,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.5665940729189312,
+            -0.19241122972746827
+          ]
+        ],
+        "points": [
+          [
+            7.842740341733001,
+            7.195184516002
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.842740341662296,
+        7.195184515967171
+      ],
+      "endpoint_error_cells": 7.881728041049089e-11,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    }
+  },
+  {
+    "id": "c2d6700306892534223d0326150a6a6bb86cc1366b3ffd945037db370050060d",
+    "retained": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5762754782059164,
+          -0.16909026445546027
+        ],
+        "point": [
+          7.8799190242609525,
+          7.190874198709979
+        ],
+        "orientation_radians": -0.7453657426613767,
+        "residual_cells": 5.248525774950308e-14,
+        "iterations": 9,
+        "evaluations": 10,
+        "active_limits": [],
+        "projected_coordinates": [
+          1
+        ],
+        "projection_events": 1,
+        "projection_correction_norm": 0.10607379435589398,
+        "correction_norm": 1.1322588215386764,
+        "maximum_step_norm": 0.25,
+        "elapsed_seconds": 0.0006809749975218438,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.57627547820593,
+            -0.16909026445540953
+          ]
+        ],
+        "points": [
+          [
+            7.879919024261,
+            7.19087419871
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.8799190242609525,
+        7.190874198709979
+      ],
+      "endpoint_error_cells": 5.248525774950308e-14,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    },
+    "windows_replay": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5762754782059164,
+          -0.16909026445546027
+        ],
+        "point": [
+          7.8799190242609525,
+          7.190874198709979
+        ],
+        "orientation_radians": -0.7453657426613767,
+        "residual_cells": 5.248525774950308e-14,
+        "iterations": 9,
+        "evaluations": 10,
+        "active_limits": [],
+        "projected_coordinates": [
+          1
+        ],
+        "projection_events": 1,
+        "projection_correction_norm": 0.10607379435589398,
+        "correction_norm": 1.1322588215386764,
+        "maximum_step_norm": 0.25,
+        "elapsed_seconds": 0.0006809749975218438,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.57627547820593,
+            -0.16909026445540953
+          ]
+        ],
+        "points": [
+          [
+            7.879919024261,
+            7.19087419871
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.8799190242609525,
+        7.190874198709978
+      ],
+      "endpoint_error_cells": 5.285221343886746e-14,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    }
+  },
+  {
+    "id": "f96dd9709ef4460fe8dd5bff96195c782afbad11301e30f8eb7aac4f9986a210",
+    "retained": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5482817490468871,
+          -0.1854976954994705
+        ],
+        "point": [
+          7.759797157526971,
+          7.283065437242982
+        ],
+        "orientation_radians": -0.7337794445463577,
+        "residual_cells": 3.42726405150535e-14,
+        "iterations": 4,
+        "evaluations": 5,
+        "active_limits": [],
+        "projected_coordinates": [],
+        "projection_events": 0,
+        "projection_correction_norm": 0.0,
+        "correction_norm": 0.1670329459564622,
+        "maximum_step_norm": 0.20036924504758433,
+        "elapsed_seconds": 0.0003105180003331043,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.5482817490468961,
+            -0.18549769549943607
+          ]
+        ],
+        "points": [
+          [
+            7.759797157527001,
+            7.283065437243
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.75979715752697,
+        7.283065437242982
+      ],
+      "endpoint_error_cells": 3.50352332448907e-14,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    },
+    "windows_replay": {
+      "teacher": {
+        "status": "solved",
+        "reason": "selected nominal endpoint components meet tolerance",
+        "configuration": [
+          -0.5482817490468871,
+          -0.1854976954994705
+        ],
+        "point": [
+          7.759797157526971,
+          7.283065437242982
+        ],
+        "orientation_radians": -0.7337794445463577,
+        "residual_cells": 3.42726405150535e-14,
+        "iterations": 4,
+        "evaluations": 5,
+        "active_limits": [],
+        "projected_coordinates": [],
+        "projection_events": 0,
+        "projection_correction_norm": 0.0,
+        "correction_norm": 0.1670329459564622,
+        "maximum_step_norm": 0.20036924504758433,
+        "elapsed_seconds": 0.0003105180003331043,
+        "emission_adjusted_coordinates": []
+      },
+      "analytic": {
+        "status": "solved",
+        "configurations": [
+          [
+            -0.5482817490468959,
+            -0.18549769549943607
+          ]
+        ],
+        "points": [
+          [
+            7.759797157527,
+            7.283065437243001
+          ]
+        ],
+        "proof_kind": null,
+        "center": [
+          3.6,
+          2.8
+        ],
+        "inner_radius": 3.349218940641789,
+        "outer_radius": 6.550781059358213,
+        "reason": "legal branches ordered from current pose"
+      },
+      "independent_endpoint": [
+        7.75979715752697,
+        7.283065437242982
+      ],
+      "endpoint_error_cells": 3.50352332448907e-14,
+      "branch_id": "negative",
+      "verified": true,
+      "pose_loss": true,
+      "endpoint_loss": true,
+      "status_loss": true
+    }
+  }
+]

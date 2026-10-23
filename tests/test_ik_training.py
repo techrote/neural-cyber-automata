@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 
 from nca.contracts import ContractError
 from nca.ik.data import (DatasetConfig, TaskState, fit_normalization,
@@ -115,6 +115,22 @@ class IKTrainingCPUConformanceTests(unittest.TestCase):
         expected = self.torch.tensor(runtime_features(self.samples[0].task.inputs), dtype=self.torch.float32)
         self.torch.testing.assert_close(self.batch.features[0], expected, rtol=0, atol=0)
         self.assertEqual(self.trainer.loss(self.batch)[2].valid.tolist()[8:], [False, False, False])
+
+    def test_archive_batch_requires_authenticated_original_object_membership(self):
+        from nca.train.ik_corpus import TrainingCorpus, make_fixture_corpus
+        corpus = make_fixture_corpus(self.config, self.samples)
+        with self.assertRaisesRegex(ContractError, "authenticated training objects"):
+            prepare_training_batch(self.samples, self.config, self.context, authenticated_corpus=corpus)
+        # Isolate the identity guard; this mock cannot grant a fixture identity
+        # to production code. Equal copied rows and configurations still refuse.
+        with patch.object(TrainingCorpus, "accepted", new_callable=PropertyMock, return_value=True):
+            batch = prepare_training_batch(self.samples, self.config, self.context,
+                                           authenticated_corpus=corpus)
+            self.assertEqual(batch.sample_ids, self.batch.sample_ids)
+            for rows, config in (((replace(self.samples[0]),), self.config),
+                                 ((self.samples[0],), replace(self.config))):
+                with self.assertRaisesRegex(ContractError, "authenticated training objects"):
+                    prepare_training_batch(rows, config, self.context, authenticated_corpus=corpus)
 
     def test_endpoint_loss_matches_independent_binary64_geometry(self):
         total, terms, prediction, _ = self.trainer.loss(self.batch)

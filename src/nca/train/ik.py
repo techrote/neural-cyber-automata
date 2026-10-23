@@ -65,7 +65,8 @@ class IKTrainingBatch:
     teacher_status_counts: dict[str, int]
 
 
-def prepare_training_batch(samples, config: DatasetConfig, context: DeviceContext) -> IKTrainingBatch:
+def prepare_training_batch(samples, config: DatasetConfig, context: DeviceContext,
+                           *, authenticated_corpus=None) -> IKTrainingBatch:
     """Validate retained labels without re-running the numerical teacher.
 
     Only the training partition is admitted. No normalization is fitted here.
@@ -81,10 +82,19 @@ def prepare_training_batch(samples, config: DatasetConfig, context: DeviceContex
     ids = tuple(s.task.id for s in samples)
     if len(set(ids)) != len(ids):
         raise ContractError("ik_training_duplicate", "a prepared batch cannot duplicate task identities")
+    accepted = False
+    if authenticated_corpus is not None:
+        from nca.train.ik_corpus import TrainingCorpus
+        if (not isinstance(authenticated_corpus, TrainingCorpus)
+                or not authenticated_corpus.accepted or config is not authenticated_corpus.config
+                or not {id(s) for s in samples}.issubset(
+                    {id(s) for s in authenticated_corpus.training})):
+            raise ContractError("ik_training_corpus", "original authenticated training objects required")
+        accepted = True
     profile_hash = runner_right_sole_profile().sha256
     rows, references, pose, endpoint = [], [], [], []
     for sample in samples:
-        validate_sample(sample, config)
+        validate_sample(sample, config, _accepted_archive=accepted)
         task, label = sample.task, sample.label
         supported = task.invalid_specimen is None and task.inputs.profile_sha256 == profile_hash
         rows.append(runtime_features(task.inputs) if supported else (0.,) * 14)
