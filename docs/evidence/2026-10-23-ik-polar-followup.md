@@ -110,8 +110,25 @@ inside the same allocations. It reconstructs only original tuning selections,
 requires all three no-go outcomes and records a permanent training prohibition.
 It cannot grant final opening, reset counters or reclassify the historical
 failed supervisor as successful. Closure admission/execution receipts are
-published separately in the task's factual progress report; this page records
-the independently verified training result and the preserved failure boundary.
+published in the task's factual progress report. The admitted closure ran on
+`71310a4121c5731a05669994065cc2ea01bebce5`, with all five exact-head workflows
+and six jobs passing and fresh non-author approvals from `polar-terminal-a`
+and `holdout-terminal-b`. It completed in 67.937 seconds with return code zero
+and no publication overrun. New conservative debits are 963.203 / 962.937 /
+963.391 seconds; cumulative walls are 1833.610 / 1889.921 / 2005.704 seconds,
+inside the unchanged 7200-second ceilings. Unused reservations are not refunded.
+
+Both independent terminal audits authenticated the signed worker, declaration,
+admission and debit bindings. All 11,225 pre-terminal experiment files and
+11,266 protected original files retain exact sizes and hashes. Only three CPU
+charge files and a permanent no-go marker were added to the experiment run.
+All counters/checkpoints and failed attempt statuses remain unchanged; every
+seed now reports `can_resume=false`. The original holds and missing supervisor
+terminals remain preserved. Fresh final has zero calls and remains unopened.
+Terminal receipt file SHA-256:
+`bf16c9ea0bd7c8289455d5cbae1b330b850ed79397c2354c790c82c4e3a51572`.
+The [immutable public result index](ik-polar-followup-20261023.json) binds exact
+sources, declarations, reviews, checkpoint selections, costs and audit hashes.
 
 Maintainer-held bundle `ik-polar-followup-edfef3f` contains immutable declarations,
 both admission reports, ledgers, checkpoints, supervisor receipts and three

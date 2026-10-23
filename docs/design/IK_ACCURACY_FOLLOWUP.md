@@ -6,10 +6,12 @@ owns: [research.ik_accuracy_followup]
 verified: 2026-10-23
 ---
 
-# IK accuracy diagnosis and proposed follow-up
+# IK accuracy diagnosis and bounded follow-up
 
-[TENTATIVE] Accuracy hypothesis under the D-027 commission; software is
-implemented but execution admission remains pending. The
+[MEASURED NO-GO] The D-027 polar hypothesis was tested in the independently
+admitted [bounded follow-up](../evidence/2026-10-23-ik-polar-followup.md).
+Every tuning-selected candidate failed the unchanged quality gate; fresh final
+remains sealed and unmeasured. The earlier
 [completed result](../evidence/2026-10-23-ik-frozen-evaluation-recovery.md)
 remains accuracy/utility no-go and contribution pass. Its allocation is completed.
 This analysis reads authenticated original shards, saved outputs, 120 tuning
