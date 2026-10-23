@@ -48,6 +48,17 @@ WORK_COUNTERS = (
     "startup_operations",
     "cleanup_operations",
 )
+DESIGN_WORK_MAXIMA = {
+    "host_starts": 1,
+    "resets": 480,
+    "physical_ticks": 460800,
+    "decisions": 76800,
+    "capture_labels": 19200,
+    "optimizer_updates": 9000,
+    "sample_presentations": 1152000,
+    "tuning_episodes": 360,
+    "checkpoint_publications": 63,
+}
 RESOURCE_CEILINGS = (
     "maximum_wall_seconds",
     "maximum_resident_bytes",
@@ -59,6 +70,7 @@ DEPENDENCIES = (
     "actual_host_conformance",
     "teacher_qualification",
     "throughput_measurement",
+    "resource_enforcement",
     "independent_execution_review",
 )
 
@@ -74,6 +86,7 @@ MEASUREMENTS_REQUIRED = (
     "process-tree peak resident memory for host, bridge, learner and evidence writer",
     "capture/journal/checkpoint/publication byte growth and durable storage throughput",
     "final host-call topology and finite startup/cleanup operation counts",
+    "validated wall/RSS/storage enforcement bound to the chosen execution path",
     "independent source-bound execution review bound to the complete declaration",
 )
 
@@ -173,6 +186,10 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     ceilings = _exact_keys(value["work_ceilings"], set(WORK_COUNTERS), "work_ceilings")
     for name in WORK_COUNTERS:
         _positive_int_or_none(ceilings[name], f"work_ceilings.{name}")
+    for name, maximum in DESIGN_WORK_MAXIMA.items():
+        if ceilings[name] is not None and ceilings[name] > maximum:
+            _fail("flight_declaration_ceiling",
+                  f"work_ceilings.{name} exceeds the bounded PR #85 design")
 
     resources = _exact_keys(value["resource_ceilings"], set(RESOURCE_CEILINGS), "resource_ceilings")
     if resources["maximum_wall_seconds"] is not None:
@@ -344,10 +361,6 @@ def execution_gate(declaration: FlightDeclaration, *, current_evidence: Mapping[
             reasons.append("ledger_integrity_uncertain")
         if ledger_snapshot.get("pending_reservations"):
             reasons.append("pending_reservation")
-        charged = ledger_snapshot.get("charged", {})
-        for name, ceiling in value["work_ceilings"].items():
-            if ceiling is not None and charged.get(name, 0) >= ceiling:
-                reasons.append(f"budget_exhausted:{name}")
 
     reasons = sorted(set(reasons))
     admitted = not reasons
@@ -634,6 +647,14 @@ class FlightAccountingLedger:
     def snapshot(self) -> dict[str, Any]:
         return _snapshot(self._state, self.declaration)
 
+    def _commit(self, kind: str, payload: Mapping[str, Any]) -> None:
+        # Validate against a copy before publishing.  Once a record is fsynced it
+        # must never become an invalid tail merely because a caller was wrong.
+        preview = deepcopy(self._state)
+        _apply_record(preview, kind, payload)
+        self._append(kind, payload)
+        _apply_record(self._state, kind, payload)
+
     def _gate_before_work(self) -> None:
         gate = execution_gate(
             self.declaration, current_evidence=self._evidence,
@@ -677,8 +698,7 @@ class FlightAccountingLedger:
             "scope": scope,
             "cleanup": cleanup,
         }
-        self._append("reserve", payload)
-        _apply_record(self._state, "reserve", payload)
+        self._commit("reserve", payload)
         return reservation_id
 
     def reserve_host_start(self) -> str:
@@ -725,18 +745,15 @@ class FlightAccountingLedger:
             "reservation_id": reservation_id,
             "confirmed_physical_ticks": confirmed_physical_ticks,
         }
-        self._append("complete", payload)
-        _apply_record(self._state, "complete", payload)
+        self._commit("complete", payload)
 
     def fail(self, reservation_id: str, reason: str) -> None:
         payload = {"reservation_id": reservation_id, "reason": reason}
-        self._append("failure", payload)
-        _apply_record(self._state, "failure", payload)
+        self._commit("failure", payload)
 
     def mark_unknown(self, reservation_id: str, reason: str) -> None:
         payload = {"reservation_id": reservation_id, "reason": reason}
-        self._append("unknown", payload)
-        _apply_record(self._state, "unknown", payload)
+        self._commit("unknown", payload)
 
     def publish_checkpoint(self, reservation_id: str, *, checkpoint_id: str,
                            sha256: str, parent_id: str | None) -> None:
@@ -746,8 +763,7 @@ class FlightAccountingLedger:
             "sha256": sha256,
             "parent_id": parent_id,
         }
-        self._append("checkpoint", payload)
-        _apply_record(self._state, "checkpoint", payload)
+        self._commit("checkpoint", payload)
 
     def close(self, reason: str = "completed_accounting") -> dict[str, Any]:
         if self._state["closed"]:
@@ -755,8 +771,7 @@ class FlightAccountingLedger:
         for reservation_id in list(self._state["pending"]):
             self.mark_unknown(reservation_id, "closed_with_unresolved_reserved_work")
         payload = {"reason": reason}
-        self._append("attempt_close", payload)
-        _apply_record(self._state, "attempt_close", payload)
+        self._commit("attempt_close", payload)
         try:
             self._stream.flush()
             os.fsync(self._stream.fileno())
