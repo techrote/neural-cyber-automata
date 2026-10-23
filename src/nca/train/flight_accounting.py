@@ -146,11 +146,12 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
         _sha256_or_none(identities[name], name)
 
     interfaces = _exact_keys(value["interfaces"], {
-        "observation_schema", "action_schema", "observation_channels",
-        "action_outputs", "decision_ticks",
+        "observation_schema", "flat_schema", "action_schema",
+        "observation_channels", "action_outputs", "decision_ticks",
     }, "interfaces")
     if interfaces != {
         "observation_schema": "4ly-observation/v1",
+        "flat_schema": "4ly-flat-observation/v1",
         "action_schema": "4ly-action/v1",
         "observation_channels": 54,
         "action_outputs": 2,
@@ -261,6 +262,7 @@ def preparation_declaration() -> FlightDeclaration:
         },
         "interfaces": {
             "observation_schema": "4ly-observation/v1",
+            "flat_schema": "4ly-flat-observation/v1",
             "action_schema": "4ly-action/v1",
             "observation_channels": 54,
             "action_outputs": 2,
