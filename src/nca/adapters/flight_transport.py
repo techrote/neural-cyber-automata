@@ -444,11 +444,18 @@ class FlightGodotTransport(FlightRpcTransport):
             raise ValueError(
                 "host deadline must be in (0,120] seconds"
             )
-        self.identity = inspect_registered_host(checkout, godot)
+        # Preserve the current source-review boundary without charging work:
+        # while no host is accepted we fail before inspecting checkout/runtime.
+        if ACCEPTED_HOST is None:
+            self.identity = inspect_registered_host(checkout, godot)
+            raise AssertionError("unreachable")
         if accounting is None:
             raise FlightProtocolError(
                 "durable accounting is required before actual-host launch"
             )
+        # Once a host is accepted, reserve startup before even invoking its
+        # runtime for identity inspection.  A failed identity/startup attempt is
+        # therefore retained rather than retried for free.
         startup_reservation = accounting.reserve_host_start()
         self._process: subprocess.Popen[bytes] | None = None
         self._temporary = tempfile.TemporaryDirectory(
@@ -461,6 +468,7 @@ class FlightGodotTransport(FlightRpcTransport):
         listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         channel: JsonChannel | None = None
         try:
+            self.identity = inspect_registered_host(checkout, godot)
             listener.bind(("127.0.0.1", 0))
             listener.listen(1)
             listener.settimeout(timeout)
