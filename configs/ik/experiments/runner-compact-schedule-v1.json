@@ -43,13 +43,16 @@
     "cuda_build": "12.6",
     "driver": "581.80",
     "gpu": {
-      "name": "Tesla V100-SXM2-16GB",
+      "allowed_names": [
+        "TITAN RTX",
+        "NVIDIA TITAN RTX"
+      ],
       "capability": [
         7,
-        0
+        5
       ],
-      "multiprocessors": 80,
-      "total_memory_bytes": 17031102464
+      "multiprocessors": 72,
+      "minimum_total_memory_bytes": 21474836480
     }
   }
 }
