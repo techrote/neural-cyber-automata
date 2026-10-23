@@ -145,6 +145,14 @@ class FlightSession:
                 "operation": operation,
                 "state": "unknown",
                 "reason": exc.reason,
+                **{
+                    key: deepcopy(sent[key])
+                    for key in (
+                        "run_id", "actor_id", "epoch", "control_generation",
+                        "observation_id", "physical_tick",
+                    )
+                    if key in sent
+                },
             }
             self._poison()
             raise
