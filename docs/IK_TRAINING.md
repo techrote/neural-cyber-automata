@@ -12,14 +12,14 @@ verified: 2026-10-22
 now has the compact model, authenticated train/tuning corpus reader,
 deterministic whole-trajectory sampler, cumulative attempt/checkpoint ledger,
 training orchestration and independent comparison scorer. CPU conformance uses
-small opened development fixtures. The accepted corpus has not been trained
-or scored, its final registry remains unopened, and this model's actual CUDA
-forward/backward/optimizer path remains unmeasured.
+small opened fixtures. One [admitted TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md)
+now records 128 presentations and one verified CUDA forward/backward/Adam update.
+The final registry remains unopened; complete training and quality are unmeasured.
 
 The [candidate specification](../configs/ik/experiments/runner-compact-v1.json)
 and [fixed schedule](../configs/ik/experiments/runner-compact-schedule-v1.json)
 are prospective software specifications. They do not by themselves admit a
-measured invocation. The current owner continuation stops before GPU work.
+measured invocation. The owner continuation stopped after that one verified batch.
 
 The starting revision is `ccd4c16058f76f422e6a5159915a5e22e7bfd87e`.
 Both accepted dependencies are present: the [CUDA runtime qualification](evidence/2026-10-22-ik-cuda-qualification.md)
@@ -37,8 +37,8 @@ Preparation queries only the selected card's metadata, authenticates the
 existing immutable train/tuning corpus, and binds a SHA-256 fingerprint of that
 private UUID into its declaration. The CUDA worker then checks that the TITAN
 reports capability 7.5, 72 SMs and at least 20 GiB, and derives the fixed
-2 GiB allocator cap from the actual device capacity. No TITAN GPU result is
-claimed until its own source/declaration-bound admission and measured work.
+2 GiB allocator cap from the actual device capacity. The linked evidence binds the actual first-batch result to its prospective
+source/declaration admissions; it does not qualify full training or quality.
 No Linux or historical V100 performance comparison is required.
 
 ## Model and input boundary
@@ -190,8 +190,8 @@ changed configurations, unknown pairs and additional numeric changes refuse.
 
 Windows CPU corpus readback now completes all 7,280 retained rows and exact
 recomputation of the original 14 normalization means/scales from 5,140
-training-only inputs. Successful clean-source preparation, current CI and two
-independent TITAN-specific prospective admissions still precede any CUDA work.
+training-only inputs. Clean-source preparation, all six CI jobs and two independent TITAN-specific
+prospective admissions passed before the single recorded CUDA batch.
 The original corpus, generator, teacher, normalization, seed/schedule and
 allocation identities remain unchanged; the final suite remains unopened.
 
@@ -200,10 +200,9 @@ The original archive and retained copy read back as 7,340,716 bytes, SHA-256
 Historical Linux readback remains provenance, not Windows admission.
 
 **Stop condition remains in force:** qualified Windows CPU preflight must run
-again on the patched executable commit and succeed through normalization, with
-two independent prospective source/declaration-bound reviews before the first
-CUDA allocation. New source/CI evidence cannot be re-labelled as the
-original blocked execution, and no CUDA or final-suite action is implied.
+on the exact declared executable and succeed through normalization, with two
+independent prospective admissions before CUDA. The linked first-batch evidence
+satisfies those gates for its single invocation; it authorizes no further work.
 
 Sampling preserves each complete chronological trajectory group within a batch,
 keeps the declared curriculum stage order and deterministically shuffles whole
@@ -288,8 +287,8 @@ opening receipt. The scorer never opens the suite on its own. The unchanged
 The [GPU execution runbook](IK_TRAINING_RUNBOOK.md#cpu-preparation-then-the-gpu-boundary)
 contains the exact CPU-only original-corpus authentication, environment-bound
 declaration, independent admission record and first supervised CUDA step.
-No CUDA work is authorized by documentation alone, and this software
-checkpoint did not execute the accepted corpus.
+No CUDA work is authorized by documentation alone; the linked evidence records
+only the single admitted original-corpus batch and its verified stop.
 
 ## CPU verification
 

@@ -10,8 +10,8 @@ verified: 2026-10-22
 
 [PARTIAL] This operational continuation of the [IK training reference](IK_TRAINING.md)
 preserves the accepted-corpus CPU preflight, prospective three-seed CUDA gate,
-and focused software validation. No original-corpus training or sealed-final
-scoring has yet occurred.
+and focused software validation. One [TITAN batch](evidence/2026-10-23-ik-titan-first-batch.md)
+has executed and paused; no complete training or sealed-final scoring occurred.
 
 ## CPU preparation, then the GPU boundary
 
@@ -105,7 +105,8 @@ V100 initialization. The supervisor preserves a canonical copy of that review
 and binds its semantic hash to every attempt.
 
 **Stop before the next command when no GPU execution is authorized.** It is the
-first actual device-dependent step for this continuation, and it has not run:
+actual device-dependent step. The recorded invocation has run once and paused;
+its publication does not authorize repeating this command:
 
 ```sh
 python -m nca.train.ik_experiment run --run NEW_RUN_DIRECTORY --declaration-sha256 DECLARATION_FILE_SHA256 --seed 41011 --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --review ADMISSION_REVIEW_JSON --pause-after-batches 1
@@ -113,8 +114,8 @@ python -m nca.train.ik_experiment run --run NEW_RUN_DIRECTORY --declaration-sha2
 
 That one-batch boundary spends the existing seed's allocation and retains its
 real forward/backward/Adam and placement receipts. It is not a new seed or
-free calibration run. Continuing uses the same command without the pause option,
-same declaration and same output; the other two seeds retain their original
+free calibration run. A later explicitly authorized continuation uses the exact declared source,
+same declaration and output; the other two seeds retain their original
 allocations. The CUDA path refuses a CPU substitution. It reports synchronized
 host/CUDA training durations and allocator memory separately from total cost.
 

@@ -15,8 +15,11 @@ The Linux CPU learning and physical-host lanes have executed the bounded
 The exact [Torch CPU deployment bundle](TORCH_RUNTIME_EXPORT.md) has composite
 qualification from the original physical run and separate completed pose evidence.
 The separate [Windows V100 IK smoke](evidence/2026-10-22-ik-cuda-qualification.md)
-has actual device evidence. Other accelerator lanes, Windows physical runtime
-and owner feel remain unmeasured.
+is historical evidence only: that V100 is out of service with a cooling fault
+and must never be initialized or used. Only TITAN RTX is authorized for #54;
+its [one admitted batch](evidence/2026-10-23-ik-titan-first-batch.md) now has scoped
+actual-device evidence. Full training, Windows physical runtime and owner feel
+remain unmeasured.
 Device availability alone does not establish compatibility or useful throughput.
 
 | Lane | Role | Current evidence or remaining requirement |
@@ -26,6 +29,7 @@ Device availability alone does not establish compatibility or useful throughput.
 | Windows CPU package | Installation and protocol conformance | Package CI passes; physical Windows gameplay and pacing remain unmeasured |
 | Compatible accelerator | Batched network updates after host profiling | Device/driver/runtime report, supported operations, actual smoke training and memory/time |
 | Optional IK CPU/CUDA runtime | Fixed Runner inverse-workload smoke and optimizer-boundary resume | [Software conformance](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification](evidence/2026-10-22-ik-cuda-qualification.md): 32 steps / 1,024 samples each on CPU and CUDA; both resume from step 8 |
+| Windows TITAN RTX IK | Sole authorized #54 CUDA target, isolated by UUID | [One verified seed-41011 batch](evidence/2026-10-23-ik-titan-first-batch.md): 128 presentations / one Adam update; no full training or quality claim |
 | Legacy K80 | Optional independent experiments if a compatible stack is justified | Separate environment/architecture verification and workload benchmark |
 | Target game platform | Final inference and feel qualification | Exact host/profile, measured latency and gameplay comparison |
 
@@ -40,11 +44,12 @@ with Torch 2.8.0+cu126 or the CPU comparison wheel. Availability is only preflig
 actual FP32 data/model/loss/gradient/optimizer placement, finite updates and
 unchanged prospective budgets determine the smoke result. The initial software
 environment exposed no NVIDIA device. A later declared Windows 11 / CPython
-3.12.10 / Torch 2.8.0+cu126 / NumPy 2.3.5 execution qualifies the Tesla
+3.12.10 / Torch 2.8.0+cu126 / NumPy 2.3.5 historical execution qualified the Tesla
 V100-SXM2-16GB (sm_70), installed driver 581.80, for that fixed workload.
 The CPU match uses the same CUDA wheel on an AMD Ryzen 5 5600X with one Torch
 thread. Synchronized training totals are 0.491718200 seconds CUDA versus
 0.075995100 seconds CPU; the tiny checked workload shows no GPU speedup.
 CUDA peak allocator memory is 68,178,432 allocated / 69,206,016 reserved bytes;
 driver/context/external allocations and CPU RSS are not measured by those counters.
-Linux CUDA, other GPUs and the historical actor learner retain their separate gates.
+These V100 costs remain historical provenance, not a TITAN performance baseline.
+Linux CUDA and the historical actor learner retain their separate gates.
