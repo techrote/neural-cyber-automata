@@ -30,7 +30,11 @@ from nca.adapters.flight import (
 )
 from nca.contracts import ContractError, canonical_json, sha256_json, strict_json_loads
 from nca.train.flight import build_policy
-from nca.train.flight_accounting import POLICY_SEEDS
+from nca.train.flight_accounting import (
+    DESIGN_WORK_MAXIMA,
+    POLICY_SEEDS,
+    FlightAccountingLedger,
+)
 
 
 CAPTURE_SCHEMA = "nca-4ly-capture-episode/v1"
@@ -39,13 +43,13 @@ CHECKPOINT_RECEIPT_SCHEMA = "nca-4ly-bc-checkpoint-receipt/v1"
 EXPORT_SCHEMA = "nca-4ly-direct-export/v1"
 EXPORT_WRAPPER_SCHEMA = "nca-4ly-direct-export-wrapper/v1"
 
-MAX_CAPTURE_EPISODES = 120
-MAX_CAPTURE_LABELS = 19_200
+MAX_CAPTURE_EPISODES = 44
+MAX_CAPTURE_LABELS = DESIGN_WORK_MAXIMA["capture_labels"]
 BC_EPOCHS = 20
 BC_BATCH_SIZE = 128
 BC_LEARNING_RATE = 0.001
-MAX_OPTIMIZER_UPDATES_PER_SEED = 3_000
-MAX_SAMPLE_PRESENTATIONS_PER_SEED = 384_000
+MAX_OPTIMIZER_UPDATES_PER_SEED = DESIGN_WORK_MAXIMA["optimizer_updates"] // len(POLICY_SEEDS)
+MAX_SAMPLE_PRESENTATIONS_PER_SEED = DESIGN_WORK_MAXIMA["sample_presentations"] // len(POLICY_SEEDS)
 MAX_CHECKPOINT_BYTES = 32 * 1024 * 1024
 
 PREPROCESSING_SPEC = {
@@ -472,7 +476,7 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
         _fail("flight_capture_dataset", "at least one validated training episode is required")
     values = tuple(episodes)
     if len(values) > MAX_CAPTURE_EPISODES:
-        _fail("flight_capture_budget", "capture exceeds the 120-episode design maximum")
+        _fail("flight_capture_budget", "capture exceeds the 44-episode preregistered maximum")
     if any(not isinstance(item, ValidatedFlightCapture) for item in values):
         _fail("flight_capture_dataset", "dataset accepts validated capture records only")
     declaration = values[0].declaration_sha256
@@ -488,7 +492,7 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
     if not samples:
         _fail("flight_capture_dataset", "no admitted supervised labels remain after validation")
     if len(samples) > MAX_CAPTURE_LABELS:
-        _fail("flight_capture_budget", "capture exceeds the 19,200-label design maximum")
+        _fail("flight_capture_budget", "capture exceeds the 11,400-label preregistered maximum")
     identity = {
         "schema": "nca-4ly-capture-dataset/v1",
         "declaration_sha256": declaration,
@@ -563,12 +567,24 @@ class FlightTrainingResult:
     epoch_losses: tuple[float, ...]
 
 
-def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int) -> FlightTrainingResult:
-    """Run only the fixed finite CPU BC schedule over already-validated samples."""
+def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
+                         accounting: FlightAccountingLedger | None = None) -> FlightTrainingResult:
+    """Run the fixed CPU BC schedule only behind the durable accounting gate.
+
+    This function is not an execution admission.  A caller must supply the
+    already-open, source-bound attempt ledger whose declaration owns the
+    capture.  Every batch reserves its optimizer update and sample
+    presentations before constructing tensors, evaluating the batch or calling
+    optimizer.step().
+    """
     if not isinstance(dataset, FlightCaptureDataset):
         _fail("flight_clone_dataset", "behavior cloning requires a validated capture dataset")
     if type(seed) is not int or seed not in POLICY_SEEDS:
         _fail("flight_clone_seed", "behavior cloning seed is not one of the three frozen policy seeds")
+    if not isinstance(accounting, FlightAccountingLedger):
+        _fail("flight_clone_accounting", "durable experiment accounting is required before optimization")
+    if accounting.declaration.sha256 != dataset.declaration_sha256:
+        _fail("flight_clone_accounting", "capture and optimizer ledger declarations differ")
     samples = dataset.samples
     presentations = len(samples) * BC_EPOCHS
     updates = math.ceil(len(samples) / BC_BATCH_SIZE) * BC_EPOCHS
@@ -589,19 +605,39 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int) -> FlightT
         count = 0
         for start in range(0, len(order), BC_BATCH_SIZE):
             chosen = order[start:start + BC_BATCH_SIZE]
-            features = torch.tensor(
-                [samples[index].observation for index in chosen], dtype=torch.float32, device="cpu")
-            labels = torch.tensor(
-                [samples[index].action for index in chosen], dtype=torch.float32, device="cpu")
-            prediction = model(features)
-            loss = ((prediction - labels) ** 2).mean()
-            if not bool(torch.isfinite(loss)):
-                _fail("flight_clone_nonfinite", "nonfinite cloning objective cannot update the policy")
-            optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            optimizer.step()
-            completed_updates += 1
-            completed_presentations += len(chosen)
+            reservation = accounting.reserve_optimizer(
+                updates=1, presentations=len(chosen))
+            settled = False
+            try:
+                features = torch.tensor(
+                    [samples[index].observation for index in chosen],
+                    dtype=torch.float32, device="cpu")
+                labels = torch.tensor(
+                    [samples[index].action for index in chosen],
+                    dtype=torch.float32, device="cpu")
+                prediction = model(features)
+                loss = ((prediction - labels) ** 2).mean()
+                if not bool(torch.isfinite(loss)):
+                    accounting.fail(reservation, "nonfinite_clone_objective")
+                    settled = True
+                    _fail("flight_clone_nonfinite", "nonfinite cloning objective cannot update the policy")
+                optimizer.zero_grad(set_to_none=True)
+                loss.backward()
+                optimizer.step()
+                completed_updates += 1
+                completed_presentations += len(chosen)
+                accounting.complete(reservation)
+                settled = True
+            except BaseException:
+                if not settled:
+                    try:
+                        accounting.mark_unknown(
+                            reservation, "optimizer_batch_interrupted_after_reservation")
+                    except BaseException:
+                        # A ledger write failure leaves the durable reservation
+                        # pending.  Replay will preserve it as unknown.
+                        pass
+                raise
             if (completed_updates > MAX_OPTIMIZER_UPDATES_PER_SEED
                     or completed_presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED):
                 _fail("flight_clone_budget", "cloning work exceeded its fixed ceiling")
