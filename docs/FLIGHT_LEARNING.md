@@ -82,37 +82,62 @@ overshoot, settling/stalls, chatter, saturation and inference/cadence metrics.
 Final failure or inconclusiveness stops the attempt; no automatic retry,
 replacement suite, replay or budget extension exists.
 
-## Remaining admission gates and Windows checks
+## Durable accounting and remaining admission gates
 
-No executable training command is admitted. `training_admission()` remains
-fail-closed. Before execution can exist, bind a clean learner source to the
-accepted #229 host/build, Trainer/controller/teacher identities, exact
-schemas/cadence, immutable capture/checkpoint identities and unopened
-learner-final custody commitment.
+`nca.train.flight_accounting` now implements the preparation-side immutable
+declaration, fail-closed execution gate and hash-linked attempt accounting. The
+declaration binds learner/host/build/profile/controller/teacher identities,
+both owner-observation and 54-float learner schemas, action schema and cadence,
+scenario/split commitments, CPU runtime, the three learner seeds, all work
+ceilings, all resource ceilings, dependency evidence and the one-attempt/no-
+replay policy. Its canonical JSON SHA-256 is the declaration identity.
 
-Durable accounting must reserve work before host or optimizer operations,
-retain failures and unknown consumption, and bind the complete declaration.
-The preregistration now supplies non-resource maxima for host starts, resets,
-physical ticks, decisions, capture labels, optimizer updates, sample
-presentations, tuning episodes and checkpoint publications. Exact host-call
-topology, startup/cleanup operation counts, wall time, resident memory, storage
-and publication ceilings remain null until qualified #229/bridge measurements
-exist. Missing measurements refuse admission rather than inventing resources.
+Each future host call or optimizer operation must consume an fsynced reservation
+before work. Related counters are reserved atomically and never refunded.
+Confirmed physical ticks are recorded separately from reserved tick capacity.
+Original failures remain sticky. A lost reply or crash after reservation but
+before a durable outcome becomes explicit unknown consumption and ordinary
+execution stops; it is never automatically replayed. Duplicate invocation,
+resume of a closed consumed attempt and truncated accounting tails are refused.
+Checkpoint publication has its own reservation and retains immutable parent
+lineage across clean interruption.
 
-Obtain independent source-bound admission only after focused software tests,
-actual-host conformance, accepted teacher qualification and exact-head CI.
-Neither fixtures nor this design can qualify flight or #74.
+The preregistration supplies the non-resource maxima now represented by the
+declaration: one host start, 884 resets, 1,475,280 physical ticks, 245,880
+decisions, 11,400 capture labels, 5,400 optimizer updates, 684,000 sample
+presentations, 480 tuning episodes and 63 checkpoint publications. Exact
+`host_calls`, startup and cleanup operation ceilings remain null. Wall time,
+peak resident memory, storage bytes and publication bytes also remain null.
+No value is inferred from the source-specific #229 pilots while #207/#229
+remains unqualified.
+
+No executable training command is admitted. `training_admission()` evaluates
+the incomplete preparation declaration and therefore remains fail-closed with
+`final_access=false`. Execution additionally requires accepted current
+dependency digests; missing or stale evidence refuses admission. A future
+resource declaration must also bind validated wall/RSS/storage enforcement,
+not merely measured numbers.
+
+Before prospective execution can exist, record the accepted #229 host/build
+and teacher evidence, final bridge actual-host conformance, frozen split
+commitments, selected CPU runtime identity, source-bound throughput and
+host-call/reset latency, whole-process startup/cleanup duration, process-tree
+peak RSS, evidence/checkpoint/publication byte growth, durable storage
+throughput, exact host-call/startup/cleanup topology and an independent
+source-bound review of the complete declaration. Neither these fixtures nor
+the accounting implementation qualify flight or issue an experiment admission.
 
 Windows CPU-only software checks from repository root:
 
 ```powershell
 python -m unittest discover -s tests -p test_flight_preparation.py
+python -m unittest discover -s tests -p test_flight_accounting.py
 python tools/check_docs.py --strict
 ```
 
-The preparation tests use scripted/synthetic fixtures only; they do not run
-Godot/native, collect teacher data, train a model, initialize CUDA or open a
-final payload. Actual-host transport/export/realtime qualification and teacher
-acceptance remain outstanding.
+The tests use scripted/synthetic fixtures only; they do not run Godot/native,
+collect teacher data, train a model, initialize CUDA or open a final payload.
+Actual-host transport/export/realtime qualification and teacher acceptance
+remain outstanding.
 
 © 2026 techrote. All rights reserved.
