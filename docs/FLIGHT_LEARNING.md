@@ -1,7 +1,7 @@
 ---
 title: Trainer flight-learning preparation
 kind: guide
-summary: Versioned protocol fixtures and bounded design with physical execution blocked pending qualified flight host.
+summary: Source-bound persistent flight-owner bridge preparation, fail-stop transport, and bounded design with actual-host execution blocked pending accepted #229.
 owns: [flight.learning.preparation]
 verified: 2026-10-23
 ---
@@ -14,16 +14,35 @@ issues an allocation or reads any final suite. IK #54, Jolt and morphology
 evidence and gates remain unchanged. Both IK final suites are excluded, as are
 the flight teacher's qualification final and every learner final payload.
 
-The separately registered `4ly-preparation@1` adapter implements copied protocol
-observations, numbered request/reply fencing, owner identity/tick validation,
-explicit terminal/truncation handling, bounded unit-disk velocity actions and
-fail-stop sessions. Its injected transport is a preparation protocol, NOT an
-existing Cybersand RPC endpoint. Physical bridge serialization, native receipt
-validation, actual-host normalization parity, lease/cancellation/takeover and
-continuously advancing export qualification remain unmeasured and blocked.
-The `flat` field is a learner-side bridge field, not a claimed host dictionary
-field. The future bridge must use the host's exact 54-channel flatten adapter;
-it must not reconstruct privileged observations or emulate physics in Python.
+The separately registered `4ly-preparation@1` adapter now validates the exact
+source contract reviewed at Cybersand PR #229 head
+`2e20731de0559ed59280d7a11f84f596d1cba985`: real profile
+`4ly_trainer`, actor slot `0`, `4ly-episode/v1`,
+`4ly-observation/v1`, the host-produced
+`4ly-flat-observation/v1` object with exactly 54 finite values, and the
+two-component `4ly_velocity_v1` desired-velocity request at six physical ticks
+per decision with a twelve-tick owner lease. Learner `training` maps only to
+the host's public `development` geometry; `tuning` maps to `tuning`.
+Every final/sealed variant remains refused before transport.
+
+`src/nca/adapters/flight_host_bridge.gd` is an external launcher owned by this
+repository. It wraps Cybersand's real `CyberPhysicalFlightEpisode`; it does
+not add a Cybersand endpoint, patch the plant, reproduce Rapier/material physics
+in Python, or relabel a fixture as host evidence. The loopback
+`nca-4ly-flight/1` transport is one-request-in-flight and authenticates the
+parent-owned connection. Reset, step, policy cancellation, explicit human
+takeover and close are source-prepared. Replies bind request sequence, run,
+actor, epoch, control generation, observation ID and physical tick. Step uses
+the owner's `ticks_consumed` and `physical_ticks_total`, stops on the first
+terminal tick and preserves the owner's final copied observation.
+
+The bridge adds only `source_observation_id` beside the host flat-observation
+object as transport correlation metadata; it does not change the Cybersand
+observation schema. Existing ACT004 `CaptureEvent`/`TickRecord` shared
+fields are unchanged. `FlightSession.last_exchange` instead exposes a
+separate `4ly-flight-exchange/v1` join record containing the exact sequence,
+authority identities and confirmed physical interval for future capture and
+accounting integration.
 
 `nca.train.flight.build_policy` constructs a CPU 54-64-64-2 tanh direct policy.
 It performs no optimization; optional Torch is imported only when called.
@@ -35,6 +54,44 @@ fitted statistics is a new policy configuration and requires a new
 preregistration. The current model is feedforward, with no hidden state to
 carry across episodes. Transport failure poisons the session; there is no
 automatic host restart or replay of possibly consumed work.
+
+## Transport failure, accounting and capture handoff
+
+A request that fails before dispatch may be an ordinary local/refusal failure.
+Once a request has been sent, a missing, malformed, duplicated or reordered
+reply cannot prove whether the owner consumed work. The transport closes,
+records **unknown consumption** and refuses automatic retry/replay. A matching
+host reply must classify consumption as `none`, `confirmed` or `unknown`;
+successful work must be `confirmed`. This preserves the accounting rule that
+uncertain work is charged and stops the attempt rather than being silently
+reissued.
+
+The durable accounting stream remains authoritative and is deliberately not
+embedded in the transport. Before future execution, the driver must reserve
+`reserve_reset()` before reset and `reserve_step(maximum_ticks=6, ...)`
+before each decision. A confirmed reply completes the reservation with the
+owner's exact `ticks_consumed`; `UnknownConsumptionError` maps to
+`mark_unknown(...)`. Only after that durable outcome may a capture stream
+admit a normal supervised row. `4ly-flight-exchange/v1` provides the join
+keys without modifying the existing ACT004 capture record schema. Cancellation,
+takeover and close host-call accounting must be finalized only after the
+accepted bridge topology is measured; the declaration's `host_calls`,
+startup and cleanup ceilings therefore remain null and execution stays blocked.
+
+Actual-host launch is additionally hard-gated in
+`flight_transport.ACCEPTED_HOST`. It is intentionally `None` now.
+`FlightGodotTransport` therefore fails before inspecting a checkout or
+spawning Godot. After #207/#229 is accepted, an independent handoff must bind
+the exact accepted Git revision and tree, Godot version/binary SHA-256,
+native artifact path/SHA-256, Rapier artifact path/SHA-256, and SHA-256 values
+for the reviewed episode/observation/profile/controller/arena source files.
+Then, and only then, run actual-host conformance for reset, full/partial
+terminal step, lease expiry, cancel, human takeover, repeated reset, shutdown
+and induced reply loss. Verify manifest/profile/controller hashes and all
+sequence/run/actor/epoch/control-generation/observation/physical-tick receipts,
+measure serialization/call/startup/cleanup/resource bounds, and publish an
+independent readback. Do not open any teacher or learner final payload during
+that handoff.
 
 ## Bounded prospective experiment
 
