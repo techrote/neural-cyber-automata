@@ -52,6 +52,24 @@ MAX_OPTIMIZER_UPDATES_PER_SEED = DESIGN_WORK_MAXIMA["optimizer_updates"] // len(
 MAX_SAMPLE_PRESENTATIONS_PER_SEED = DESIGN_WORK_MAXIMA["sample_presentations"] // len(POLICY_SEEDS)
 MAX_CHECKPOINT_BYTES = 32 * 1024 * 1024
 
+DEVELOPMENT_SEEDS = (101, 103, 107, 109)
+SCENARIO_FAMILY = {
+    "unsupported_hover": "hover",
+    "horizontal_reach": "free_space",
+    "vertical_reach": "free_space",
+    "diagonal_reach": "free_space",
+    "reverse": "reversal",
+    "arrival_braking": "arrival",
+    "wide_corridor": "obstacles",
+    "offset_gates": "obstacles",
+    "corner": "obstacles",
+    "slalom": "obstacles",
+    "wall_recovery": "recovery",
+}
+TRAINING_FAMILIES = (
+    "hover", "free_space", "reversal", "arrival", "obstacles", "recovery",
+)
+
 PREPROCESSING_SPEC = {
     "schema": "nca-4ly-preprocessing/v1",
     "source_observation_schema": "4ly-observation/v1",
@@ -79,6 +97,7 @@ BC_SCHEDULE = {
     "batch_size": BC_BATCH_SIZE,
     "learning_rate": BC_LEARNING_RATE,
     "loss": "mean_squared_normalized_desired_velocity",
+    "weighting": "equal_family_then_equal_episode_then_equal_admitted_row",
     "maximum_optimizer_updates_per_seed": MAX_OPTIMIZER_UPDATES_PER_SEED,
     "maximum_sample_presentations_per_seed": MAX_SAMPLE_PRESENTATIONS_PER_SEED,
     "checkpoint_epochs": list(range(BC_EPOCHS + 1)),
@@ -207,6 +226,9 @@ class FlightSample:
     observation: tuple[float, ...]
     action: tuple[float, float]
     episode_id: str
+    scenario_id: str
+    family: str
+    host_seed: int
     transition_index: int
     consumed_ticks: int
     terminal: bool
@@ -217,6 +239,9 @@ class FlightSample:
             "observation": list(self.observation),
             "action": list(self.action),
             "episode_id": self.episode_id,
+            "scenario_id": self.scenario_id,
+            "family": self.family,
+            "host_seed": self.host_seed,
             "transition_index": self.transition_index,
             "consumed_ticks": self.consumed_ticks,
             "terminal": self.terminal,
@@ -230,6 +255,9 @@ class ValidatedFlightCapture:
     declaration_sha256: str
     capture_id: str
     episode_id: str
+    scenario_id: str
+    scenario_family: str
+    host_seed: int
     source_sha256: str
     status: str
     samples: tuple[FlightSample, ...]
@@ -246,6 +274,7 @@ class FlightCaptureDataset:
     source_sha256: str
     episodes: tuple[ValidatedFlightCapture, ...]
     samples: tuple[FlightSample, ...]
+    sample_weights: tuple[float, ...]
     sha256: str
 
 
@@ -330,9 +359,13 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
     episode_id = _identifier(record["episode_id"], "episode_id")
     if record["profile"] != TRAINER_PROFILE or record["split"] != "training":
         _fail("flight_capture_scope", "only Trainer training capture can enter behavior cloning")
-    _identifier(record["scenario_id"], "scenario_id")
-    if type(record["host_seed"]) is not int or record["host_seed"] < 0:
-        _fail("flight_capture_seed", "host seed must be an explicit nonnegative integer")
+    scenario_id = _identifier(record["scenario_id"], "scenario_id")
+    if scenario_id not in SCENARIO_FAMILY:
+        _fail("flight_capture_scenario", "training capture scenario is outside the preregistered six-family set")
+    scenario_family = SCENARIO_FAMILY[scenario_id]
+    host_seed = record["host_seed"]
+    if type(host_seed) is not int or host_seed not in DEVELOPMENT_SEEDS:
+        _fail("flight_capture_seed", "training capture seed is outside the preregistered development seed set")
     source = _validate_source(record["source"])
     if source != expected:
         _fail("flight_capture_source", "capture source differs from the declared host/profile/controller/teacher")
@@ -358,7 +391,8 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         canonical = canonical_json(record)
         return ValidatedFlightCapture(
             canonical, hashlib.sha256(canonical.encode()).hexdigest(), declaration_sha256,
-            capture_id, episode_id, source_sha, outcome["status"], (), exclusions)
+            capture_id, episode_id, scenario_id, scenario_family, host_seed,
+            source_sha, outcome["status"], (), exclusions)
 
     current = _validate_observation(record["initial_observation"], "capture.initial_observation")
     current_flat = _validate_flat(
@@ -450,7 +484,8 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         if eligible:
             target = finite_vector(teacher_action["admitted_action"], 2)
             samples.append(FlightSample(
-                policy_input(before, before_flat), target, episode_id, index,
+                policy_input(before, before_flat), target, episode_id,
+                scenario_id, scenario_family, host_seed, index,
                 physical["consumed_ticks"], terminal))
         elif not exclusions or not exclusions[-1].startswith(f"{index}:"):
             exclusions.append(f"{index}:not_supervised")
@@ -478,6 +513,9 @@ def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: st
         declaration_sha256=declaration_sha256,
         capture_id=capture_id,
         episode_id=episode_id,
+        scenario_id=scenario_id,
+        scenario_family=scenario_family,
+        host_seed=host_seed,
         source_sha256=source_sha,
         status=outcome["status"],
         samples=tuple(samples),
@@ -502,11 +540,28 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
     ids = [item.episode_id for item in values]
     if len(ids) != len(set(ids)):
         _fail("flight_capture_dataset", "episode identity was recorded twice")
+    cases = [(item.scenario_id, item.host_seed) for item in values]
+    if len(cases) != len(set(cases)):
+        _fail("flight_capture_dataset", "a preregistered scenario/seed capture case was recorded twice")
     samples = tuple(sample for episode in values for sample in episode.samples)
     if not samples:
         _fail("flight_capture_dataset", "no admitted supervised labels remain after validation")
     if len(samples) > MAX_CAPTURE_LABELS:
         _fail("flight_capture_budget", "capture exceeds the 11,400-label preregistered maximum")
+    active_by_family = {
+        family: tuple(
+            item for item in values
+            if item.scenario_family == family and item.samples)
+        for family in TRAINING_FAMILIES
+    }
+    sample_weights: list[float] = []
+    for item in values:
+        if not item.samples:
+            continue
+        family_episodes = active_by_family[item.scenario_family]
+        episode_weight = 1.0 / (len(TRAINING_FAMILIES) * len(family_episodes))
+        sample_weights.extend([episode_weight / len(item.samples)] * len(item.samples))
+    weights = tuple(sample_weights)
     identity = {
         "schema": "nca-4ly-capture-dataset/v1",
         "declaration_sha256": declaration,
@@ -514,11 +569,12 @@ def build_capture_dataset(episodes: Sequence[ValidatedFlightCapture]) -> FlightC
         "source_sha256": source_sha,
         "episode_sha256": [item.record_sha256 for item in values],
         "sample_sha256": [sample.sha256 for sample in samples],
+        "sample_weights": list(weights),
         "episode_count": len(values),
         "label_count": len(samples),
     }
     return FlightCaptureDataset(
-        declaration, capture_id, source_sha, values, samples, sha256_json(identity))
+        declaration, capture_id, source_sha, values, samples, weights, sha256_json(identity))
 
 
 def _fresh_policy(seed: int):
@@ -600,6 +656,11 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     if accounting.declaration.sha256 != dataset.declaration_sha256:
         _fail("flight_clone_accounting", "capture and optimizer ledger declarations differ")
     samples = dataset.samples
+    if {sample.family for sample in samples} != set(TRAINING_FAMILIES):
+        _fail("flight_clone_families", "cloning requires admitted labels from all six preregistered training families")
+    if len(dataset.sample_weights) != len(samples) or not math.isclose(
+            sum(dataset.sample_weights), 1.0, rel_tol=0.0, abs_tol=1e-12):
+        _fail("flight_clone_weights", "family/episode/sample weights are incomplete")
     presentations = len(samples) * BC_EPOCHS
     updates = math.ceil(len(samples) / BC_BATCH_SIZE) * BC_EPOCHS
     if presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED or updates > MAX_OPTIMIZER_UPDATES_PER_SEED:
@@ -612,11 +673,11 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
     completed_updates = 0
     completed_presentations = 0
     model.train()
+    batch_count = math.ceil(len(samples) / BC_BATCH_SIZE)
     for _epoch in range(BC_EPOCHS):
         order = list(range(len(samples)))
         shuffle_rng.shuffle(order)
-        total_loss = 0.0
-        count = 0
+        weighted_epoch_loss = 0.0
         for start in range(0, len(order), BC_BATCH_SIZE):
             chosen = order[start:start + BC_BATCH_SIZE]
             reservation = accounting.reserve_optimizer(
@@ -629,8 +690,13 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
                 labels = torch.tensor(
                     [samples[index].action for index in chosen],
                     dtype=torch.float32, device="cpu")
+                weights = torch.tensor(
+                    [dataset.sample_weights[index] for index in chosen],
+                    dtype=torch.float32, device="cpu")
                 prediction = model(features)
-                loss = ((prediction - labels) ** 2).mean()
+                per_row_loss = ((prediction - labels) ** 2).mean(dim=1)
+                weighted_batch_loss = (per_row_loss * weights).sum()
+                loss = weighted_batch_loss * batch_count
                 if not bool(torch.isfinite(loss)):
                     accounting.fail(reservation, "nonfinite_clone_objective")
                     settled = True
@@ -655,9 +721,8 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
             if (completed_updates > MAX_OPTIMIZER_UPDATES_PER_SEED
                     or completed_presentations > MAX_SAMPLE_PRESENTATIONS_PER_SEED):
                 _fail("flight_clone_budget", "cloning work exceeded its fixed ceiling")
-            total_loss += float(loss.detach()) * len(chosen)
-            count += len(chosen)
-        losses.append(total_loss / count)
+            weighted_epoch_loss += float(weighted_batch_loss.detach())
+        losses.append(weighted_epoch_loss)
     model.eval()
     return FlightTrainingResult(
         model, optimizer, shuffle_rng, seed, dataset, BC_EPOCHS,
