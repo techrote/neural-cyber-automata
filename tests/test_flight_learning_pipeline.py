@@ -323,6 +323,7 @@ class FlightCaptureTests(unittest.TestCase):
         base = valid_capture().to_dict()
         for mutation in (
             lambda value: value.update(split="final"),
+            lambda value: value.update(split="training"),
             lambda value: value.update(declaration_sha256="e" * 64),
             lambda value: value["source"].update(host_revision="f" * 40),
             lambda value: value["initial_observation"].update(version="legacy"),
