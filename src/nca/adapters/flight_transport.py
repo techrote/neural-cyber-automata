@@ -160,11 +160,20 @@ class FlightRpcTransport:
     """
 
     def __init__(
-        self, channel: JsonChannel, *, hello: Mapping[str, Any] | None = None
+        self,
+        channel: JsonChannel,
+        *,
+        hello: Mapping[str, Any] | None = None,
+        accounting=None,
+        capture_labels_per_step: int = 0,
     ):
+        if type(capture_labels_per_step) is not int or capture_labels_per_step not in (0, 1):
+            raise ValueError("capture_labels_per_step must be zero or one")
         self._channel = channel
         self._closed = False
         self._last_sequence = 0
+        self._accounting = accounting
+        self._capture_labels_per_step = capture_labels_per_step
         if hello is not None:
             self._validate_hello(hello)
 
@@ -197,6 +206,109 @@ class FlightRpcTransport:
                     f"flight transport handshake mismatch: {key}"
                 )
 
+    def set_capture_label_accounting(self, enabled: bool) -> None:
+        """Switch local accounting phase without changing the wire protocol."""
+        if type(enabled) is not bool:
+            raise ValueError("capture accounting phase must be boolean")
+        self._capture_labels_per_step = 1 if enabled else 0
+
+    def _reserve_accounting(self, command: Mapping[str, Any]):
+        if self._accounting is None:
+            return None
+        operation = str(command.get("command", ""))
+        if operation == "reset":
+            return self._accounting.reserve_reset()
+        if operation == "step":
+            repeat = command.get("repeat_ticks")
+            if type(repeat) is not int:
+                raise FlightProtocolError(
+                    "accounted step requires an integer repeat_ticks"
+                )
+            return self._accounting.reserve_step(
+                maximum_ticks=repeat,
+                capture_labels=self._capture_labels_per_step,
+            )
+        if operation == "close":
+            return self._accounting.reserve_cleanup(host_call=True)
+        if operation in ("cancel", "takeover"):
+            return self._accounting.reserve_host_call(
+                scope=f"host_{operation}")
+        raise FlightProtocolError(
+            f"unsupported accounted host operation: {operation}"
+        )
+
+    def _mark_accounting_unknown(self, reservation, reason: str) -> None:
+        if reservation is None:
+            return
+        try:
+            self._accounting.mark_unknown(reservation, reason)
+        except BaseException:
+            # A failed journal append keeps the already-durable reservation
+            # pending; replay therefore remains fail-closed.
+            pass
+
+    def _mark_accounting_failure(self, reservation, reason: str,
+                                 confirmed_ticks: int = 0) -> None:
+        if reservation is None:
+            return
+        try:
+            self._accounting.fail(
+                reservation, reason,
+                confirmed_physical_ticks=confirmed_ticks)
+        except BaseException:
+            pass
+
+    def _complete_accounting(self, reservation, operation: str,
+                             command: Mapping[str, Any],
+                             reply: Mapping[str, Any]) -> None:
+        if reservation is None:
+            return
+        confirmed_ticks = 0
+        failed = False
+        reason = "host_operation_failed"
+        if operation in ("reset", "step"):
+            transition = reply.get("transition")
+            if not isinstance(transition, Mapping):
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_transition_receipt_missing")
+            ticks = transition.get("ticks_consumed")
+            if type(ticks) is not int:
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_tick_receipt_missing")
+            maximum = 0 if operation == "reset" else int(command["repeat_ticks"])
+            if ticks < 0 or ticks > maximum:
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_tick_receipt_out_of_range")
+            confirmed_ticks = ticks
+            if type(transition.get("failed")) is not bool:
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_failure_receipt_missing")
+            failed = bool(transition["failed"])
+            reason = str(transition.get("reason", "host_transition_failed"))
+        elif operation in ("cancel", "takeover"):
+            if not isinstance(reply.get("authority"), Mapping):
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_authority_receipt_missing")
+        elif operation == "close":
+            if reply.get("closed") is not True:
+                raise UnknownConsumptionError(
+                    operation, int(command["sequence"]),
+                    "accounting_close_receipt_missing")
+
+        if failed:
+            self._accounting.fail(
+                reservation, reason,
+                confirmed_physical_ticks=confirmed_ticks)
+        else:
+            self._accounting.complete(
+                reservation,
+                confirmed_physical_ticks=confirmed_ticks)
+
     def request(self, command: Mapping[str, Any]) -> dict[str, Any]:
         if self._closed:
             raise FlightProtocolError("flight transport is closed")
@@ -209,6 +321,7 @@ class FlightRpcTransport:
             )
         sequence = int(command["sequence"])
         operation = str(command.get("command", ""))
+        reservation = self._reserve_accounting(command)
         fields = {
             key: value
             for key, value in command.items()
@@ -230,10 +343,14 @@ class FlightRpcTransport:
         except BaseException as exc:
             self._close_channel()
             if send_started:
+                self._mark_accounting_unknown(
+                    reservation, "transport_failed_after_send_started")
                 raise UnknownConsumptionError(
                     operation, sequence,
                     "transport_failed_after_send_started",
                 ) from exc
+            self._mark_accounting_failure(
+                reservation, "transport_failed_before_send")
             raise
 
         try:
@@ -284,12 +401,19 @@ class FlightRpcTransport:
             reply.pop("id", None)
             reply.pop("ok", None)
             reply["sequence"] = sequence
+            self._complete_accounting(
+                reservation, operation, command, reply)
             self._last_sequence = sequence
             return reply
-        except UnknownConsumptionError:
+        except UnknownConsumptionError as exc:
+            self._mark_accounting_unknown(
+                reservation, exc.reason)
             self._close_channel()
             raise
-        except BaseException:
+        except BaseException as exc:
+            self._mark_accounting_failure(
+                reservation,
+                f"host_reply_failure:{type(exc).__name__}")
             self._close_channel()
             raise
 
@@ -313,12 +437,19 @@ class FlightGodotTransport(FlightRpcTransport):
         godot: str | Path,
         *,
         timeout: float = 30.0,
+        accounting=None,
+        capture_labels_per_step: int = 0,
     ):
         if not 0 < timeout <= 120:
             raise ValueError(
                 "host deadline must be in (0,120] seconds"
             )
         self.identity = inspect_registered_host(checkout, godot)
+        if accounting is None:
+            raise FlightProtocolError(
+                "durable accounting is required before actual-host launch"
+            )
+        startup_reservation = accounting.reserve_host_start()
         self._process: subprocess.Popen[bytes] | None = None
         self._temporary = tempfile.TemporaryDirectory(
             prefix="nca-4ly-flight-"
@@ -386,8 +517,22 @@ class FlightGodotTransport(FlightRpcTransport):
                 )
             hello = dict(hello)
             hello.pop("token", None)
-            super().__init__(channel, hello=hello)
-        except BaseException:
+            super().__init__(
+                channel,
+                hello=hello,
+                accounting=accounting,
+                capture_labels_per_step=capture_labels_per_step,
+            )
+            accounting.complete(startup_reservation)
+            startup_reservation = None
+        except BaseException as exc:
+            if startup_reservation is not None:
+                try:
+                    accounting.fail(
+                        startup_reservation,
+                        f"host_startup_failure:{type(exc).__name__}")
+                except BaseException:
+                    pass
             if channel is not None:
                 try:
                     channel.connection.close()
