@@ -110,6 +110,7 @@ class FlightSession:
         self.observation: dict[str, Any] | None = None
         self.flat_observation: tuple[float, ...] | None = None
         self.manifest: dict[str, Any] | None = None
+        self.teacher_source_sha256: str | None = None
         self.closed = False
         self.failed = False
         self.terminal = True
@@ -218,7 +219,12 @@ class FlightSession:
             "observation_id", "observed_tick",
         ))
 
-    def _validate_manifest(self, manifest: Any, *, scenario: str, seed: int, split: str) -> None:
+    def _validate_manifest(
+        self, manifest: Any, *, scenario: str, seed: int, split: str,
+        source: str = "policy",
+    ) -> None:
+        if source not in ("policy", "teacher"):
+            raise ValueError("unsupported flight owner source")
         if type(manifest) is not dict:
             raise FlightProtocolError("missing flight owner manifest")
         expected = {
@@ -228,7 +234,7 @@ class FlightSession:
             "flat_observation": FLAT_OBSERVATION_VERSION,
             "flat_observation_length": FLAT_CHANNELS,
             "action_profile": ACTION_PROFILE,
-            "source": "policy",
+            "source": source,
             "course_version": COURSE_VERSION,
             "split_geometry_version": SPLIT_GEOMETRY_VERSION,
             "course": scenario,
@@ -248,6 +254,23 @@ class FlightSession:
         for key, value in expected.items():
             if manifest.get(key) != value:
                 raise FlightProtocolError(f"flight manifest mismatch: {key}")
+        teacher_digest = manifest.get("teacher_source_sha256")
+        if source == "teacher":
+            if (
+                not isinstance(teacher_digest, str)
+                or len(teacher_digest) != 64
+                or any(ch not in "0123456789abcdef" for ch in teacher_digest)
+            ):
+                raise FlightProtocolError(
+                    "teacher owner manifest lacks a source SHA-256"
+                )
+            self.teacher_source_sha256 = teacher_digest
+        elif teacher_digest is not None:
+            raise FlightProtocolError(
+                "policy owner unexpectedly exposed a teacher source identity"
+            )
+        else:
+            self.teacher_source_sha256 = None
         self.manifest = deepcopy(manifest)
 
     def _observe(
@@ -365,20 +388,26 @@ class FlightSession:
             "terminal": bool(terminal),
         }
 
-    def reset(
-        self, *, scenario: str, seed: int, split: str = "training"
+    def _reset_owner(
+        self, *, scenario: str, seed: int, split: str, producer: str
     ) -> dict[str, Any]:
+        if producer not in ("policy", "teacher"):
+            raise ValueError("unsupported flight owner producer")
         if (type(seed) is not int or seed < 0
                 or not isinstance(scenario, str) or not scenario):
             raise ValueError("explicit scenario and nonnegative seed required")
         host_split = self._preregistered_case(
             scenario=scenario, seed=seed, split=split
         )
+        if producer == "teacher" and host_split != "development":
+            raise ValueError(
+                "teacher capture is restricted to preregistered development cases"
+            )
         previous = deepcopy(self.observation)
         reply = self._request({
             "command": "reset",
             "profile": TRAINER_PROFILE,
-            "producer": "policy",
+            "producer": producer,
             "scenario": scenario,
             "seed": seed,
             "split": host_split,
@@ -388,7 +417,9 @@ class FlightSession:
                 raise FlightProtocolError(
                     "successful reset requires confirmed consumption")
             self._validate_manifest(
-                reply.get("manifest"), scenario=scenario, seed=seed, split=host_split)
+                reply.get("manifest"), scenario=scenario, seed=seed,
+                split=host_split, source=producer,
+            )
             transition = self._transition(reply, allow_zero=True)
             if (transition["ticks_consumed"] != 0
                     or transition["physical_ticks_total"] != 0):
@@ -419,6 +450,13 @@ class FlightSession:
         except BaseException:
             self._poison()
             raise
+
+    def reset(
+        self, *, scenario: str, seed: int, split: str = "training"
+    ) -> dict[str, Any]:
+        return self._reset_owner(
+            scenario=scenario, seed=seed, split=split, producer="policy"
+        )
 
     def step(self, outputs: Any, *, observation_id: str) -> dict[str, Any]:
         if self.terminal or self.revoked or self.observation is None:
@@ -564,10 +602,144 @@ class FlightSession:
             self.transport.close()
 
 
+
+class FlightTeacherCaptureSession(FlightSession):
+    """Development-only owner-side teacher capture preparation.
+
+    This path calls Cybersand's own reference_action() through the bridge.  It
+    does not expose the teacher to FlightSession or to scored learned inference,
+    and it never opens teacher or learner final suites.
+    """
+
+    def reset(
+        self, *, scenario: str, seed: int, split: str = "training"
+    ) -> dict[str, Any]:
+        if split != "training":
+            raise ValueError(
+                "teacher capture is restricted to learner training/development"
+            )
+        return self._reset_owner(
+            scenario=scenario, seed=seed, split=split, producer="teacher"
+        )
+
+    def step_reference(self) -> dict[str, Any]:
+        if self.terminal or self.revoked or self.observation is None:
+            raise FlightProtocolError("live Trainer teacher episode required")
+        if self.observation["observed_tick"] % DECISION_TICKS:
+            raise FlightProtocolError("decision boundary required")
+        if self.teacher_source_sha256 is None:
+            raise FlightProtocolError(
+                "teacher source identity was not established at reset"
+            )
+
+        before = deepcopy(self.observation)
+        reply = self._request({
+            "command": "teacher_step",
+            "run_id": before["run_id"],
+            "actor_id": ACTOR_ID,
+            "epoch": before["epoch"],
+            "control_generation": before["control_generation"],
+            "observation_id": before["observation_id"],
+            "physical_tick": before["observed_tick"],
+            "repeat_ticks": DECISION_TICKS,
+        })
+        try:
+            receipt = reply.get("teacher_action")
+            if type(receipt) is not dict:
+                raise FlightProtocolError(
+                    "teacher step lacks an owner action receipt"
+                )
+            required = {
+                "source_sha256", "observation_id", "status",
+                "requested_action", "admitted_action", "reason",
+            }
+            if set(receipt) != required:
+                raise FlightProtocolError(
+                    "teacher action receipt field set changed"
+                )
+            if receipt["source_sha256"] != self.teacher_source_sha256:
+                raise FlightProtocolError(
+                    "teacher action source identity changed"
+                )
+            if receipt["observation_id"] != before["observation_id"]:
+                raise FlightProtocolError(
+                    "teacher action belongs to another observation"
+                )
+            if receipt["status"] != "accepted":
+                raise FlightProtocolError(
+                    "owner reference action was not admitted"
+                )
+            if not isinstance(receipt["reason"], str) or not receipt["reason"]:
+                raise FlightProtocolError(
+                    "teacher action receipt requires a reason"
+                )
+            requested = velocity_action(receipt["requested_action"])["move"]
+            admitted = velocity_action(receipt["admitted_action"])["move"]
+            if requested != admitted:
+                raise FlightProtocolError(
+                    "teacher requested/admitted action mismatch"
+                )
+            reply = deepcopy(reply)
+            reply["teacher_action"]["requested_action"] = requested
+            reply["teacher_action"]["admitted_action"] = admitted
+
+            if reply["consumption"] != "confirmed":
+                raise FlightProtocolError(
+                    "teacher step requires authoritative consumption"
+                )
+            transition = self._transition(reply)
+            ticks = transition["ticks_consumed"]
+            old_tick = before["observed_tick"]
+            if transition["physical_ticks_total"] != old_tick + ticks:
+                raise FlightProtocolError("physical tick total discontinuity")
+            if ticks == 0:
+                final = transition.get("observation")
+                if (
+                    type(final) is not dict
+                    or self._identity(final) != self._identity(before)
+                ):
+                    raise FlightProtocolError(
+                        "zero-tick failure changed owner state"
+                    )
+                self._observe(
+                    final, reply.get("flat_observation"), fresh=True
+                )
+            else:
+                self._observe(
+                    transition.get("observation"),
+                    reply.get("flat_observation"),
+                    allow_generation_advance=bool(transition["failed"]),
+                )
+                assert self.observation is not None
+                if self.observation["observed_tick"] != old_tick + ticks:
+                    raise FlightProtocolError(
+                        "physical tick discontinuity"
+                    )
+            self.terminal = bool(transition["episode_done"])
+            self._record_exchange(
+                "teacher_step", before, self.observation, ticks=ticks,
+                terminal=self.terminal, consumption="confirmed",
+            )
+            return reply
+        except BaseException:
+            self._poison()
+            raise
+
+
 registry.register(
     "adapter", "4ly-preparation", 1, FlightSession,
     capabilities=(
         "flight_real_owner_protocol_preparation",
+        "no_execution_admission",
+    ),
+)
+
+registry.register(
+    "adapter", "4ly-teacher-capture-preparation", 1,
+    FlightTeacherCaptureSession,
+    capabilities=(
+        "owner_reference_teacher_capture",
+        "development_only",
         "no_execution_admission",
     ),
 )
