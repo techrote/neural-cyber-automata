@@ -8,6 +8,8 @@ verified: 2026-10-23
 
 # Current state
 
+[PREPARATION ONLY] The owner selected [matched serial/parallel endpoint-loss trial preparation](design/IK_ENDPOINT_MATCHED_TRIALS.md), with no training yet. One untested endpoint-weight change is fixed; original data, polar model, normalization, schedule and gates remain unchanged. Both final suites and saved final scores are excluded. The CPU-only preparer creates separate unadmitted trial packets and six zero-consumption ledgers. Three-worker feasibility, speedup and tensor reproducibility remain unmeasured; a reviewed group supervisor, exact-head CI and two fresh TITAN execution admissions are still required before a later execution instruction can be acted on.
+
 [MEASURED NO-GO] The separately commissioned [polar IK follow-up](evidence/2026-10-23-ik-polar-followup.md) completed all three forty-epoch TITAN RTX runs with unchanged corpus, losses, schedule and acceptance. Each seed has 1,720 real CUDA updates, 210,400 presentations, 80,800 tuning calls and 41 checkpoints. All tuning-selected candidates fail quality; fresh final stays sealed and unmeasured. The failed finish serialization and its charges/holds remain immutable. A separately admitted CPU-only closure published permanent no-go with unchanged models/counters and append-only overhead; two independent terminal audits verified original evidence preservation and `can_resume=false`. No next training or evaluation is authorized.
 
 Nine of ten programme tasks have accepted results. T-106 ([#16](https://github.com/techrote/neural-cyber-automata/issues/16)) remains open: its designated primary fails the fixed 75% mean / 50% every-seed reliability prerequisite. [The roadmap](ROADMAP.md) maps all ten programme tasks and their remaining gates.

@@ -1,0 +1,56 @@
+{
+  "schema": "nca-ik-matched-preparation-evidence/v1",
+  "status": "preparation_only_no_training_authorized",
+  "issue": 54,
+  "pull_request": 78,
+  "final_suites_excluded": true,
+  "saved_final_scores_excluded": true,
+  "gpu": "NVIDIA TITAN RTX",
+  "gpu_visibility_sha256": "e5df8b0db3a22718306c0f68e7ec85b69f1555759649550d74fc44f563c841d9",
+  "artifacts": {
+    "independent-arithmetic-diagnosis": {
+      "bytes": 3825,
+      "sha256": "4c60f451c2b14461c15058cb30dca105fdd68a4dcfed4bdb471983c4dea8b925"
+    },
+    "independent-feature-arithmetic": {
+      "bytes": 16078,
+      "sha256": "26dfffa28e601b43d5bf6ceb0e6f02aabad625730346792407cc87dedb5e79b8"
+    },
+    "independent-stress-tail": {
+      "bytes": 3151,
+      "sha256": "e71dbb97b8f7ee149361dac749f862c763299135d729f4b0068adfcc0912b231"
+    },
+    "independent-training-tuning-comparison": {
+      "bytes": 827009,
+      "sha256": "a0f496a87d01d148c0154b1772901edac5981ba97fbabcb8c49d8415a5282e56"
+    },
+    "independent-comparison-findings": {
+      "bytes": 5297,
+      "sha256": "d5d3817023b4a0a62cf289f4e660b9e9c8cdcde4d9810f96017caf0cef75ecd3"
+    },
+    "gate-review-preparation-source-review.json": {
+      "bytes": 3491,
+      "sha256": "bdc9b22db7c1302e53a5dbe5d26d910a6c9db75b75978191b2b4efb97bfd2c8c",
+      "scope": "preparation_only_not_execution_admission"
+    },
+    "recovery-independent-preparation-review.json": {
+      "bytes": 1967,
+      "sha256": "02813535078c400345403983956eb9af99f47802781eb61d2f84edc54a1c9370",
+      "scope": "preparation_only_not_execution_admission"
+    },
+    "gate-review-preparation-source-review-rebind.json": {
+      "bytes": 1216,
+      "sha256": "818f56c131a74902d5821964c312ffe458205d934dba4d85193dbeba96c761c6",
+      "scope": "preparation_only_not_execution_admission"
+    },
+    "recovery-independent-preparation-review-rebind.json": {
+      "bytes": 934,
+      "sha256": "4eafd9585c96d1999088ca3a6bbc196c356a78ba8996a7239c9ba20fdec9eb5c",
+      "scope": "preparation_only_not_execution_admission"
+    }
+  },
+  "retrieval": "Maintainer-held external evidence, requested by artifact handle and SHA-256; datasets and checkpoints remain outside Git.",
+  "training_performed": false,
+  "parallel_performance": "unmeasured",
+  "execution_admissions": []
+}
