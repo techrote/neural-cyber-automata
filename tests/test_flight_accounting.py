@@ -179,7 +179,7 @@ class DurableAccountingTests(unittest.TestCase):
 
     def test_lost_reply_retains_unknown_consumption_and_refuses_replay(self):
         ledger = self.create()
-        reservation = ledger.reserve_step(maximum_ticks=6)
+        reservation = ledger.reserve_step(maximum_ticks=6, stage="capture")
         ledger.mark_unknown(reservation, "fixture_reply_lost_after_send")
         snapshot = ledger.snapshot()
         self.assertTrue(snapshot["unknown_consumption"])
@@ -191,7 +191,7 @@ class DurableAccountingTests(unittest.TestCase):
 
     def test_failed_partial_step_retains_confirmed_ticks_and_reserved_capacity(self):
         ledger = self.create()
-        reservation = ledger.reserve_step(maximum_ticks=6)
+        reservation = ledger.reserve_step(maximum_ticks=6, stage="capture")
         ledger.fail(
             reservation, "fixture_terminal_integrity_failure",
             confirmed_physical_ticks=2)
@@ -206,7 +206,7 @@ class DurableAccountingTests(unittest.TestCase):
 
     def test_partial_checkpoint_publication_becomes_unknown_on_resume(self):
         ledger = self.create()
-        ledger.reserve_checkpoint_publication()
+        ledger.reserve_checkpoint_publication(seed=74011)
         ledger._stream.close()  # fixture: process dies after durable reservation
 
         resumed = FlightAccountingLedger.resume(
@@ -224,11 +224,11 @@ class DurableAccountingTests(unittest.TestCase):
 
     def test_checkpoint_lineage_and_costs_survive_clean_same_attempt_resume(self):
         ledger = self.create()
-        first = ledger.reserve_checkpoint_publication()
+        first = ledger.reserve_checkpoint_publication(seed=74011)
         ledger.publish_checkpoint(
             first, checkpoint_id="epoch-05",
             sha256=sha256_json(["fixture", "epoch-05"]), parent_id=None)
-        second = ledger.reserve_checkpoint_publication()
+        second = ledger.reserve_checkpoint_publication(seed=74011)
         ledger.publish_checkpoint(
             second, checkpoint_id="epoch-10",
             sha256=sha256_json(["fixture", "epoch-10"]), parent_id="epoch-05")
@@ -248,14 +248,14 @@ class DurableAccountingTests(unittest.TestCase):
         )
         # This is the same durable attempt, not a new attempt or replay: settled
         # work and lineage remain charged while new budgeted work may continue.
-        reset = resumed.reserve_reset()
+        reset = resumed.reserve_reset(stage="capture")
         resumed.complete(reset)
         self.assertEqual(resumed.snapshot()["charged"]["resets"], 1)
         resumed.close("fixture_clean_resume")
 
     def test_interrupted_jsonl_write_is_not_repaired_or_replayed(self):
         ledger = self.create()
-        reservation = ledger.reserve_reset()
+        reservation = ledger.reserve_reset(stage="capture")
         ledger.complete(reservation)
         ledger._stream.close()
         with ledger.path.open("ab") as target:
@@ -328,7 +328,7 @@ class DurableAccountingTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "counter exhausted: host_starts"):
             ledger.reserve_host_start()
 
-        reset = ledger.reserve_reset()
+        reset = ledger.reserve_reset(stage="capture")
         ledger.complete(reset)
         self.assertEqual(ledger.snapshot()["charged"]["resets"], 1)
         ledger.close()
