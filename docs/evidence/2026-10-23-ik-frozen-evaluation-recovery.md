@@ -131,6 +131,6 @@ nominal software evaluation with a negative result, not CPU export or physical
 host qualification.
 
 
-Result index SHA-256: `3aa3572345f236c4e0037f9e129292b28b745ca0f782ce016bed574298bc1e03`.
+Result index SHA-256: `b0a4ba45db8babab83bf3ef6790234d618d4fee42b5e61b8ebb320f068aa098a`.
 
 © 2026 techrote. All rights reserved.
