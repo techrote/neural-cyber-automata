@@ -8,6 +8,14 @@ verified: 2026-10-23
 
 # D-029 — Matched IK trial preparation only
 
+[ACCEPTED AMENDMENT] The later owner instruction commissions completion of
+accounting, lifecycle, tensor comparison and resource qualification, rebound
+declarations, exact-head CI and two fresh admissions while continuing to
+withhold training. A separately declared, independently admitted, one-attempt
+allocation-only TITAN probe is a necessary resource-qualification step under
+this scope. Its finite [protocol and limits](../IK_MATCHED_RUNBOOK.md) authorize
+no corpus reads, model execution, optimizer updates or trial execution.
+
 [ACCEPTED SCOPE] 2026-10-23. The owner requests investigation of the polar-v2
 regression using training/tuning evidence, a reviewed next experiment, and a
 matched parallel run to record evidence for future concurrency. When asked

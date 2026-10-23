@@ -43,5 +43,7 @@
   "tuning_stop_gate": "all_three_original_raw_quality_no_final_access_even_on_pass",
   "automatic_retry": false,
   "trial_overlap_allowed": false,
-  "execution_admitted": false
+  "execution_admitted": false,
+  "coordination_charge_seconds_per_seed": 7195,
+  "group_deadline_seconds": 7190
 }

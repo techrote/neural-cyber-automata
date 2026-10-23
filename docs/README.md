@@ -35,7 +35,7 @@ verified: 2026-10-23
 | What did frozen TITAN IK evaluation conclude? | [Completed recovery and negative accuracy/utility result](evidence/2026-10-23-ik-frozen-evaluation-recovery.md) |
 | Why did compact IK miss accuracy, and what did the bounded follow-up measure? | [Diagnosis and design](design/IK_ACCURACY_FOLLOWUP.md), [three-seed polar tuning no-go with fresh final sealed](evidence/2026-10-23-ik-polar-followup.md) |
 | Why did polar tuning regress, and what is the smallest next test? | [Saved-error diagnosis and one bounded batch-order proposal](design/IK_POLAR_REGRESSION.md) |
-| How are matched serial/parallel IK trials prepared without training or final access? | [Fixed endpoint-loss hypothesis, CPU packets and future execution gates](design/IK_ENDPOINT_MATCHED_TRIALS.md) |
+| How are matched serial/parallel IK trials prepared without training or final access? | [Fixed endpoint-loss hypothesis](design/IK_ENDPOINT_MATCHED_TRIALS.md), [qualification and admission operations](IK_MATCHED_RUNBOOK.md) |
 | Which runs occurred? | [RUNS.md](RUNS.md) |
 | How do I install and run the CPU package? | [Package operations](PACKAGE.md) |
 | How do I launch the pinned physical or sampled game host? | [Host adapter](HOST_ADAPTER.md) |

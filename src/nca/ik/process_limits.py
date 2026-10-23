@@ -1,7 +1,7 @@
 """CPU generator hard memory ceiling, shared IK dataset contract."""
 import os
 
-def memory_limit(mebibytes):
+def memory_limit(mebibytes, *, kill_children_on_exit=False):
     """Hard per-worker memory admission, with no silent unsupported-platform pass."""
     ceiling = int(mebibytes * 1024 * 1024)
     if os.name == "posix":
@@ -37,6 +37,8 @@ def memory_limit(mebibytes):
         job = kernel.CreateJobObjectW(None, None)
         limits = ExtendedLimit()
         limits.BasicLimitInformation.LimitFlags = 0x100  # JOB_OBJECT_LIMIT_PROCESS_MEMORY
+        if kill_children_on_exit:
+            limits.BasicLimitInformation.LimitFlags |= 0x2000  # KILL_ON_JOB_CLOSE
         limits.ProcessMemoryLimit = ceiling
         if not job or not kernel.SetInformationJobObject(job, 9, ctypes.byref(limits), ctypes.sizeof(limits)):
             raise ValueError("hard_memory_limit_unavailable")

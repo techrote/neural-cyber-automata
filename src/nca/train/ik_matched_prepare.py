@@ -50,6 +50,8 @@ def candidate_config():
         "tuning_stop_gate": "all_three_original_raw_quality_no_final_access_even_on_pass",
         "automatic_retry": False, "trial_overlap_allowed": False,
         "execution_admitted": False,
+        "coordination_charge_seconds_per_seed": 7195,
+        "group_deadline_seconds": 7190,
     }
 
 
@@ -125,7 +127,7 @@ def metrics_template():
     }
 
 
-def prepare(corpus_root, registry, output):
+def prepare(corpus_root, registry, output, qualification=None):
     """Authenticate original train/tuning only, then prepare both new trials."""
     root = Path(output).resolve()
     checkout = _project(None)
@@ -135,6 +137,10 @@ def prepare(corpus_root, registry, output):
                    for p in (corpus_path, registry_path))):
         raise ValueError("new output must be outside checkout and disjoint from corpus/registry")
     source = prepared_source()
+    qualified=None
+    if qualification is not None:
+        from nca.train.ik_memory_probe import qualification_record
+        qualified=qualification_record(qualification,source)
     baseline = validate_plan(_read(checkout / PLAN_PATH))
     fingerprint = _titan_visibility(expected_sha256=TITAN_FINGERPRINT,
                                     driver=baseline["qualified_environment"]["driver"])
@@ -155,6 +161,7 @@ def prepare(corpus_root, registry, output):
                   schedules=schedule, acceptance_file_sha256=source["files"][ACCEPTANCE_PATH],
                   allocations={str(s): allocation() for s in SEEDS},
                   execution_admitted=False, final_access_allowed=False)
+    common['resource_qualification']=qualified
     declarations = {}
     for mode, topology in candidate_config()["trials"].items():
         value = dict(common, schema="nca-ik-matched-trial/v1", mode=mode,
@@ -176,7 +183,8 @@ def prepare(corpus_root, registry, output):
                   source_sha256=source["source_sha256"], candidate_sha256=sha256_json(candidate_config()),
                   declaration_file_sha256=files, training_consumed=False,
                   execution_admitted=False, owner_instruction="prepare_both_do_not_train_yet",
-                  reviews=[], resource_feasibility="unmeasured_three_workers_not_qualified",
+                  reviews=[], resource_qualification=qualified,
+                  resource_feasibility="measured_context_allocation_only" if qualified else "unmeasured_three_workers_not_qualified",
                   required_before_future_execution=["owner_execution_instruction",
                       "exact_head_ci", "reviewed_source_bound_parallel_supervisor",
                       "aggregate_memory_monitor_and_worker_partition_validation",
@@ -235,11 +243,12 @@ def main(argv=None):
     command = commands.add_parser("prepare")
     for name in ("corpus", "registry", "output"):
         command.add_argument("--" + name, required=True)
+    command.add_argument('--qualification')
     command = commands.add_parser("inspect")
     command.add_argument("--output", required=True)
     args = parser.parse_args(argv)
     if args.command == "prepare":
-        result = prepare(args.corpus, args.registry, args.output)
+        result = prepare(args.corpus, args.registry, args.output,args.qualification)
     else:
         result = inspect(args.output)
     if "torch" in sys.modules or "numpy" in sys.modules:

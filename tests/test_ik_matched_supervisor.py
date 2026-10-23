@@ -16,16 +16,27 @@ from nca.train.ik_matched_prepare import candidate_config, allocation
 
 
 class MatchedSupervisorReviewTests(unittest.TestCase):
-    def test_unadmitted_cli_run_and_private_worker_are_disabled(self):
-        for command in ('run','_worker'):
-            with self.subTest(command=command), \
-                    patch.object(sys,'argv',['matched',command,'--packet','unused']), \
-                    patch.object(supervisor,'supervise') as run, \
-                    patch.object(supervisor,'worker') as worker, \
-                    patch.object(supervisor,'admission') as admission:
-                with self.assertRaisesRegex(ValueError,'execution admission withheld'):
-                    supervisor.main()
-                run.assert_not_called();worker.assert_not_called();admission.assert_not_called()
+    def setUp(self):
+        for target in ('nca.train.ik_gpu_ownership.acquire',
+                       'nca.train.ik_gpu_ownership.release',
+                       'nca.train.ik_gpu_ownership.verify',
+                       'nca.ik.process_limits.memory_limit'):
+            mocked=patch(target);mocked.start();self.addCleanup(mocked.stop)
+
+    def test_unadmitted_cli_run_and_private_worker_cannot_launch(self):
+        with patch.object(sys,'argv',['matched','run','--packet','unused']), \
+                patch.object(supervisor,'admission',side_effect=ValueError('fresh admissions required')), \
+                patch.object(supervisor.subprocess,'Popen') as launch, \
+                patch.object(supervisor,'board_sample') as board:
+            with self.assertRaisesRegex(ValueError,'fresh admissions required'):
+                supervisor.main()
+            launch.assert_not_called();board.assert_not_called()
+        with patch.object(sys,'argv',['matched','_worker','--packet','unused','--mode','parallel','--claim','fixture']), \
+                patch.object(supervisor,'_read',return_value={'claim':'other','mode':'parallel'}), \
+                patch.object(supervisor,'_titan_visibility') as device:
+            with self.assertRaisesRegex(ValueError,'live group ownership'):
+                supervisor.main()
+            device.assert_not_called()
 
     def test_import_is_runtime_free_in_separate_process(self):
         result = subprocess.run([sys.executable, '-c',
@@ -95,6 +106,7 @@ class MatchedSupervisorReviewTests(unittest.TestCase):
             with patch.object(supervisor,'__name__','__main__'), \
                     patch.object(supervisor,'admission',return_value=packet), \
                     patch.object(supervisor,'board_sample',return_value={'used_bytes':0}), \
+                    patch.object(supervisor,'validate_lifecycle'), \
                     patch.object(supervisor,'ledger',return_value=Mock(inspect=lambda:state)), \
                     patch.object(supervisor.subprocess,'Popen',side_effect=LaunchRefused('fixture')) as launch:
                 with self.assertRaises(LaunchRefused):
@@ -155,7 +167,9 @@ class MatchedSupervisorReviewTests(unittest.TestCase):
                 immutable_json(path,dict(source=source,candidate=candidate_config(),
                     allocations={str(s):allocation() for s in supervisor.SEEDS}))
                 hashes[mode]=sha256_file(path)
-            packet=dict(source_sha256=source['source_sha256'],declaration_file_sha256=hashes)
+            qualification={'root':'fixture','result_file_sha256':'c'*64}
+            packet=dict(source_sha256=source['source_sha256'],declaration_file_sha256=hashes,
+                        resource_qualification=qualification)
             packet['sha256']=sha256_json(packet)
             immutable_json(root/'packet.json',packet)
             checks=dict.fromkeys(('exact_head_ci','corpus_and_final_exclusion',
@@ -171,7 +185,8 @@ class MatchedSupervisorReviewTests(unittest.TestCase):
                     verdict='admit_both_matched_trials',independent_non_author=True,
                     reviewer=f'fixture-{index}',checks=bad))
                 reviews.append(path)
-            with patch.object(supervisor,'prepared_source',return_value=source):
+            with patch.object(supervisor,'prepared_source',return_value=source), \
+                    patch('nca.train.ik_memory_probe.qualification_record',return_value=qualification):
                 with self.assertRaisesRegex(ValueError,'independent TITAN admission'):
                     supervisor.admission(root,reviews)
 
@@ -193,6 +208,7 @@ class MatchedSupervisorReviewTests(unittest.TestCase):
             board=[{'used_bytes':0},{'used_bytes':0},ValueError('lost board telemetry')]
             with patch.object(supervisor,'admission',return_value=packet), \
                     patch.object(supervisor,'board_sample',side_effect=board), \
+                    patch.object(supervisor,'validate_lifecycle'), \
                     patch.object(supervisor,'ledger',return_value=Mock(inspect=lambda:dict(
                         attempt_count=0,active=False,unresolved_work=False))), \
                     patch.object(supervisor.subprocess,'Popen',side_effect=children), \

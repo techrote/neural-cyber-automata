@@ -46,6 +46,11 @@ def admission(packet, reviews):
         raise ValueError('packet identity changed')
     if value['source_sha256'] != source['source_sha256']:
         raise ValueError('packet source is stale')
+    qualification=value.get('resource_qualification')
+    if not qualification: raise ValueError('measured non-training resource qualification required')
+    from nca.train.ik_memory_probe import qualification_record
+    if qualification_record(qualification['root'],source)!=qualification:
+        raise ValueError('resource evidence binding changed')
     reviewers = set()
     for path in reviews:
         review = _read(path)
@@ -132,6 +137,8 @@ def supervise(packet, mode, corpus, registry, reviews, authorization):
     # allow only the other untouched mode through a new explicit invocation.
     board_sample()
     claim = uuid.uuid4().hex
+    from nca.train.ik_gpu_ownership import acquire,release
+    ownership=dict(kind='matched_trial',claim=claim,packet_sha256=value['sha256'])
     lock = root/'group-active.json'
     immutable_json(lock, dict(claim=claim,mode=mode,packet_sha256=value['sha256'],
         reviews=[dict(path=str(Path(p).resolve()),sha256=sha256_file(p)) for p in reviews],
@@ -141,6 +148,10 @@ def supervise(packet, mode, corpus, registry, reviews, authorization):
     pending, active, completed = list(SEEDS), {}, {}
     telemetry = run/'board-telemetry.jsonl'
     try:
+        acquire(ownership)
+        from nca.ik.process_limits import memory_limit
+        memory_limit(2048,kill_children_on_exit=True)
+        validate_lifecycle(root,mode)
         with telemetry.open('x',encoding='utf-8') as monitor:
             while pending or active:
                 sample = board_sample()
@@ -176,23 +187,66 @@ def supervise(packet, mode, corpus, registry, reviews, authorization):
         from nca.train.ik_followup_gate import tuning_stop_gate
         reports={}
         for seed in SEEDS:
-            saved=[_read(run/f'seed-{seed}'/f'tuning-epoch-{epoch:04d}.json',maximum=16*1024**2) for epoch in range(1,41)]
+            from nca.train.ik_matched_compare import authenticated_reports
+            saved=authenticated_reports(run,declaration,seed)
             reports[seed]=min(enumerate(saved),key=lambda pair:(pair[1]['selection_metric'],pair[0]))[1]
         gate=tuning_stop_gate(reports)
-        immutable_json(run/'group-result.json',dict(claim=claim,
+        from nca.train.ik_matched_compare import evidence,compare
+        fingerprints=evidence(run,declaration)
+        immutable_json(run/'group-result.json',dict(claim=claim,packet_sha256=value['sha256'],
             makespan_seconds=time.monotonic()-began,workers=completed,tuning_gate=gate,
+            fingerprints=fingerprints,supervisor_resources=process_metrics(),
             verified=True,final_opened=False))
+        peer=root/('parallel' if mode=='serial' else 'serial')/'group-result.json'
+        if peer.exists():
+            prior=_read(peer,maximum=16*1024**2)
+            serial,parallel=(fingerprints,prior['fingerprints']) if mode=='serial' else (prior['fingerprints'],fingerprints)
+            immutable_json(root/'comparison.json',compare(serial,parallel))
         if any(time.monotonic()-began > ledger(run,declaration,s).inspect()['charged_wall_seconds'] for s in SEEDS):
             raise ValueError('publication exceeded charged reserve')
         lock.unlink()
+        release(ownership)
+        if time.monotonic()-began>7195:
+            raise TimeoutError('group cleanup exceeded prepaid bound')
     except BaseException:
         cleanup_errors=[]
         for process in active.values():
             try: stop_tree(process)
             except BaseException as exc: cleanup_errors.append(type(exc).__name__)
+        # Failed launches and pre-attempt refusals are paid, including seeds
+        # that never reached a child interpreter. Never reconcile an active or
+        # pending attempt by guessing its state; the persistent hold retains it.
+        accounting_errors=[]
+        for seed in SEEDS:
+            try:
+                bound=ledger(run,declaration,seed)
+                state=bound.inspect()
+                if state['attempt_count']==0:
+                    attempt=bound.begin_attempt(started=began)
+                    attempt.finish('failed',reason='group_startup_failure',matched_coordination_charge=True)
+            except BaseException as exc: accounting_errors.append(dict(seed=seed,error=type(exc).__name__))
         immutable_json(root/f'group-failure-{claim}.json',dict(claim=claim,mode=mode,
-            unknown_work_blocks_reuse=True,cleanup_errors=cleanup_errors,elapsed=time.monotonic()-began))
+            unknown_work_blocks_reuse=True,cleanup_errors=cleanup_errors,accounting_errors=accounting_errors,elapsed=time.monotonic()-began))
         raise
+
+
+def validate_lifecycle(root,mode):
+    if mode not in ('serial','parallel'): raise ValueError('declared mode required')
+    for trial in ('serial','parallel'):
+        run=Path(root)/trial; declaration=_read(run/'declaration.json')
+        states=[ledger(run,declaration,s).inspect() for s in SEEDS]
+        if any(s['active'] or s['unresolved_work'] for s in states):
+            raise ValueError('active or unknown peer work blocks launch')
+        if trial==mode:
+            if any(s['attempt_count'] for s in states) or (run/'group-result.json').exists():
+                raise ValueError('no retry or repeat of consumed mode')
+        elif any(s['attempt_count'] for s in states):
+            result=_read(run/'group-result.json',maximum=16*1024**2)
+            from nca.train.ik_matched_compare import evidence
+            if (result.get('verified') is not True or result.get('final_opened') is not False
+                    or result.get('packet_sha256')!=_read(Path(root)/'packet.json')['sha256']
+                    or result.get('fingerprints')!=evidence(run,declaration)):
+                raise ValueError('peer completion is not authenticated')
 
 
 def worker(args):
@@ -206,23 +260,25 @@ def worker(args):
     if sha256_file(claim['authorization'])!=claim['authorization_sha256']:
         raise ValueError('authorization changed')
     validate_authorization(_read(claim['authorization']),claim['packet_sha256'])
+    from nca.train.ik_gpu_ownership import verify
+    verify(dict(kind='matched_trial',claim=args.claim,packet_sha256=claim['packet_sha256']))
     declaration=_read(run/'declaration.json')
-    if declaration['source']!=prepared_source(): raise ValueError('source changed')
-    _titan_visibility(expected_sha256=TITAN_FINGERPRINT)
-    from nca.ik.declaration import runtime_expectation
-    from nca.ik.polar import fit_training_normalization
-    from nca.train.ik_corpus import read_polar_followup_corpus
-    from nca.train.ik_experiment import corpus_identity, train_attempt, _qualified_titan_gpu_bytes, validate_plan, PLAN_PATH
-    from nca.ik.declaration import _project
-    from nca.ik.device import device_report, configure_device
-    if runtime_expectation()!=declaration['runtime']: raise ValueError('runtime changed')
-    corpus=read_polar_followup_corpus(args.corpus,args.registry,source_sha256=declaration['source']['source_sha256'])
-    norm=fit_training_normalization(corpus)
-    if corpus_identity(corpus)!=declaration['dataset'] or norm.to_dict()!=declaration['normalization']:
-        raise ValueError('corpus or normalizer changed')
     bound=ledger(run,declaration,args.seed)
     attempt=bound.begin_attempt(started=args.started)
     try:
+        if declaration['source']!=prepared_source(): raise ValueError('source changed')
+        _titan_visibility(expected_sha256=TITAN_FINGERPRINT)
+        from nca.ik.declaration import runtime_expectation
+        from nca.ik.polar import fit_training_normalization
+        from nca.train.ik_corpus import read_polar_followup_corpus
+        from nca.train.ik_experiment import corpus_identity, train_attempt, _qualified_titan_gpu_bytes, validate_plan, PLAN_PATH
+        from nca.ik.declaration import _project
+        from nca.ik.device import device_report, configure_device
+        if runtime_expectation()!=declaration['runtime']: raise ValueError('runtime changed')
+        corpus=read_polar_followup_corpus(args.corpus,args.registry,source_sha256=declaration['source']['source_sha256'])
+        norm=fit_training_normalization(corpus)
+        if corpus_identity(corpus)!=declaration['dataset'] or norm.to_dict()!=declaration['normalization']:
+            raise ValueError('corpus or normalizer changed')
         expected=validate_plan(_read(_project(None)/PLAN_PATH))['qualified_environment']
         size=_qualified_titan_gpu_bytes(device_report('cuda:0'),expected)
         context=configure_device('cuda:0',args.seed,memory_fraction=5*GIB/size,
@@ -234,7 +290,7 @@ def worker(args):
         result['process_resources']=process_metrics()
         immutable_json(run/f'seed-{args.seed}'/'worker-result.json',result)
     except BaseException:
-        if bound.inspect()['active']: attempt.finish('failed',reason='matched_worker_failure')
+        if bound.inspect()['active']: attempt.finish('failed',reason='matched_worker_failure',matched_coordination_charge=True)
         raise
 
 
@@ -248,8 +304,8 @@ def main():
     parser.add_argument('--seed',type=int,choices=SEEDS); parser.add_argument('--claim'); parser.add_argument('--started',type=float)
     args=parser.parse_args()
     if args.command=='check-admission': admission(args.packet,args.review)
-    else:
-        raise ValueError('matched supervisor draft: execution admission withheld pending validation')
+    elif args.command=='_worker': worker(args)
+    else: supervise(args.packet,args.mode,args.corpus,args.registry,args.review,args.authorization)
 
 
 if __name__=='__main__': main()
