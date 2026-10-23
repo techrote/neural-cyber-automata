@@ -778,6 +778,7 @@ class FlightTrainingResult:
     sample_presentations: int
     accounting_attempt_id: str
     accounting_chain_sha256: str
+    capture_binding_sha256: str
     checkpoints: tuple[FlightCheckpointState, ...]
     epoch_losses: tuple[float, ...]
 
@@ -926,7 +927,7 @@ def train_behavior_clone(dataset: FlightCaptureDataset, *, seed: int,
         model, optimizer, shuffle_rng, torch_rng_state, seed, dataset, BC_EPOCHS,
         completed_updates, completed_presentations,
         accounting_snapshot["attempt_id"], accounting_snapshot["chain_sha256"],
-        tuple(checkpoints), tuple(losses))
+        capture_binding.sha256, tuple(checkpoints), tuple(losses))
 
 
 def _cpu_copy(value: Any) -> Any:
@@ -999,6 +1000,7 @@ def checkpoint_lineage(result: FlightTrainingResult, *, checkpoint_id: str,
         "capture_id": result.dataset.capture_id,
         "capture_dataset_sha256": result.dataset.sha256,
         "capture_source_sha256": result.dataset.source_sha256,
+        "capture_binding_sha256": result.capture_binding_sha256,
         "policy_seed": result.seed,
         "bc_schedule_sha256": BC_SCHEDULE_SHA256,
         "preprocessing_sha256": PREPROCESSING_SHA256,
