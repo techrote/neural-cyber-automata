@@ -21,6 +21,7 @@ from nca.adapters.flight import (
     TRAINER_PROFILE_SHA256,
     FlightProtocolError,
     FlightSession,
+    FlightTeacherCaptureSession,
     UnknownConsumptionError,
     finite_vector,
     velocity_action,
@@ -73,7 +74,7 @@ class Owner:
             "flat_observation": FLAT_OBSERVATION_VERSION,
             "flat_observation_length": FLAT_CHANNELS,
             "action_profile": ACTION_PROFILE,
-            "source": "policy",
+            "source": command["producer"],
             "course_version": COURSE_VERSION,
             "split_geometry_version": SPLIT_GEOMETRY_VERSION,
             "course": command["scenario"],
@@ -89,6 +90,8 @@ class Owner:
             "host_count": 1,
             "sealed_suite_sha256": None,
             "max_ticks": SCENARIO_MAX_TICKS[command["scenario"]],
+            "teacher_source_sha256":
+                "a" * 64 if command["producer"] == "teacher" else None,
         }
 
     def transition(
@@ -125,9 +128,14 @@ class Owner:
         if operation == "reset":
             if (
                 command["profile"] != TRAINER_PROFILE
-                or command["producer"] != "policy"
+                or command["producer"] not in ("policy", "teacher")
             ):
                 raise AssertionError("fixture scope drift")
+            if (
+                command["producer"] == "teacher"
+                and command["split"] != "development"
+            ):
+                raise AssertionError("teacher capture split drift")
             if command["split"] not in ("development", "tuning"):
                 raise AssertionError(
                     "fixture received excluded split"
@@ -136,7 +144,7 @@ class Owner:
             self.epoch += 1
             self.tick = 0
             self.generation = 0
-            self.producer = "policy"
+            self.producer = command["producer"]
             observation = self.observation()
             reply = {
                 "sequence": command["sequence"],
@@ -196,6 +204,57 @@ class Owner:
                     ),
                     "flat_observation": self.flat(),
                 }
+        elif operation == "teacher_step":
+            current = self.observation()
+            if self.producer != "teacher":
+                raise AssertionError(
+                    "fixture teacher step requires teacher owner"
+                )
+            for request_key, observation_key in (
+                ("run_id", "run_id"),
+                ("actor_id", "actor_id"),
+                ("epoch", "epoch"),
+                ("control_generation", "control_generation"),
+                ("observation_id", "observation_id"),
+                ("physical_tick", "observed_tick"),
+            ):
+                if command[request_key] != current[observation_key]:
+                    raise AssertionError(
+                        f"fixture authority mismatch: {request_key}"
+                    )
+            if command["repeat_ticks"] != DECISION_TICKS:
+                raise AssertionError("fixture cadence drift")
+            ticks = (
+                DECISION_TICKS
+                if self.partial_ticks is None
+                else self.partial_ticks
+            )
+            requested = [0.25, -0.5]
+            self.tick += ticks
+            terminal = ticks < DECISION_TICKS
+            reply = {
+                "sequence": command["sequence"],
+                "consumption": "confirmed",
+                "transition": self.transition(
+                    ticks=ticks,
+                    terminated=terminal,
+                    success=terminal,
+                    reason=(
+                        "low_speed_arrival_dwell"
+                        if terminal
+                        else "running"
+                    ),
+                ),
+                "flat_observation": self.flat(),
+                "teacher_action": {
+                    "source_sha256": "a" * 64,
+                    "observation_id": current["observation_id"],
+                    "status": "accepted",
+                    "requested_action": requested,
+                    "admitted_action": requested,
+                    "reason": "owner_reference_action_admitted",
+                },
+            }
         elif operation in ("cancel", "takeover"):
             current = self.observation()
             for request_key, observation_key in (
@@ -288,6 +347,69 @@ class FlightTests(unittest.TestCase):
         self.assertEqual(
             owner.requests[0]["split"], "development"
         )
+
+    def test_teacher_capture_is_isolated_owner_reference_path(self):
+        owner = Owner()
+        session = FlightTeacherCaptureSession(owner)
+        observation = session.reset(
+            scenario="slalom", seed=109
+        )
+        self.assertEqual(
+            owner.requests[0]["producer"], "teacher"
+        )
+        self.assertEqual(
+            owner.requests[0]["split"], "development"
+        )
+        self.assertEqual(
+            session.teacher_source_sha256, "a" * 64
+        )
+        reply = session.step_reference()
+        self.assertEqual(
+            reply["teacher_action"]["observation_id"],
+            observation["observation_id"],
+        )
+        self.assertEqual(
+            reply["teacher_action"]["requested_action"],
+            [0.25, -0.5],
+        )
+        self.assertEqual(
+            reply["teacher_action"]["admitted_action"],
+            [0.25, -0.5],
+        )
+        self.assertEqual(
+            reply["transition"]["ticks_consumed"], 6
+        )
+        self.assertFalse(session.terminal)
+        self.assertFalse(
+            hasattr(FlightSession(Owner()), "step_reference")
+        )
+
+    def test_teacher_capture_rejects_tuning_final_and_foreign_teacher_receipt(self):
+        for split in ("tuning", "final", "sealed"):
+            owner = Owner()
+            session = FlightTeacherCaptureSession(owner)
+            with self.assertRaises(ValueError):
+                session.reset(
+                    scenario="arrival_braking",
+                    seed=211 if split == "tuning" else 101,
+                    split=split,
+                )
+            self.assertEqual(owner.requests, [])
+
+        owner = Owner()
+        session = FlightTeacherCaptureSession(owner)
+        session.reset(
+            scenario="arrival_braking", seed=101
+        )
+        owner.mutate_reply = lambda reply: (
+            reply["teacher_action"].update(
+                observation_id="foreign"
+            )
+            if "teacher_action" in reply else None
+        )
+        with self.assertRaises(FlightProtocolError):
+            session.step_reference()
+        self.assertTrue(session.failed)
 
     def test_final_reset_and_invalid_actions_never_reach_owner(self):
         owner = Owner()
