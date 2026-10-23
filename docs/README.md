@@ -8,6 +8,8 @@ verified: 2026-10-22
 
 # Documentation map
 
+Flight-learning #74: [Trainer preparation and bounded experiment](FLIGHT_LEARNING.md).
+
 | Question | Owning page |
 |---|---|
 | What exists now? | [STATE.md](STATE.md) |

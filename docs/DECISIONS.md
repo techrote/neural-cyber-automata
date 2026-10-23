@@ -5,14 +5,13 @@ summary: Current owner scope and gameplay fidelity, research proposals, and pres
 owns: [decisions.register]
 verified: 2026-10-22
 ---
-
 # Decisions
-
 Newest first. IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
 
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE] 2026-10-23. [Reviewed #74 preparation](FLIGHT_LEARNING.md) while #229 is in progress. No training, capture, issued allocation or final access. Host qualification and admissions remain required; IK/Jolt evidence is unchanged.
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
