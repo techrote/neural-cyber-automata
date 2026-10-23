@@ -26,7 +26,7 @@ from nca.train.flight_learning import (
     policy_sha256,
     serialize_checkpoint,
     train_behavior_clone,
-    validate_capture_episode,
+    validate_declared_capture_episode,
 )
 
 
@@ -191,7 +191,7 @@ def valid_capture(episode_id="ep-valid", *, scenario_id="arrival_braking", host_
     before = observation(0)
     after = observation(6)
     row = transition(0, before, after, terminated=True, success=True)
-    return validate_capture_episode(
+    return validate_declared_capture_episode(
         episode(
             episode_id=episode_id,
             scenario_id=scenario_id,
@@ -200,8 +200,7 @@ def valid_capture(episode_id="ep-valid", *, scenario_id="arrival_braking", host_
             transitions=[row],
             final=outcome("completed", terminated=True, success=True, reason="arrival"),
         ),
-        declaration_sha256=DECLARATION,
-        expected_source=SOURCE,
+        declaration=ACCOUNTING_DECLARATION,
     )
 
 
@@ -218,7 +217,7 @@ class FlightCaptureTests(unittest.TestCase):
         zero, six, twelve = observation(0), observation(6), observation(12)
         first = transition(0, zero, six)
         second = transition(1, six, twelve, failed=True)
-        failed = validate_capture_episode(
+        failed = validate_declared_capture_episode(
             episode(
                 episode_id="ep-failed",
                 initial=zero,
@@ -228,7 +227,7 @@ class FlightCaptureTests(unittest.TestCase):
             declaration_sha256=DECLARATION,
             expected_source=SOURCE,
         )
-        refused = validate_capture_episode(
+        refused = validate_declared_capture_episode(
             episode(
                 episode_id="ep-refused",
                 scenario_id="arrival_braking",
@@ -257,7 +256,7 @@ class FlightCaptureTests(unittest.TestCase):
         before = observation(0)
         failed = transition(0, before, copy.deepcopy(before), failed=True)
         failed["physical"]["consumed_ticks"] = 0
-        captured = validate_capture_episode(
+        captured = validate_declared_capture_episode(
             episode(
                 episode_id="ep-zero-tick-failed",
                 initial=before,
@@ -279,7 +278,7 @@ class FlightCaptureTests(unittest.TestCase):
         after["observation_id"] = "obs-6-revoked"
         failed = transition(0, before, after, failed=True)
         failed["next_flat_observation"] = flat_observation(after)
-        captured = validate_capture_episode(
+        captured = validate_declared_capture_episode(
             episode(
                 episode_id="ep-consumed-failed-revoked",
                 initial=before,
@@ -296,7 +295,7 @@ class FlightCaptureTests(unittest.TestCase):
         before = observation(0)
         unknown = transition(
             0, before, None, teacher_status="accepted", physical_status="unknown", failed=True)
-        captured = validate_capture_episode(
+        captured = validate_declared_capture_episode(
             episode(
                 episode_id="ep-unknown",
                 initial=before,
@@ -311,7 +310,7 @@ class FlightCaptureTests(unittest.TestCase):
 
         after = observation(6)
         refused = transition(0, before, after, teacher_status="refused", terminated=True)
-        captured = validate_capture_episode(
+        captured = validate_declared_capture_episode(
             episode(
                 episode_id="ep-teacher-refused",
                 initial=before,
@@ -336,8 +335,8 @@ class FlightCaptureTests(unittest.TestCase):
             value = copy.deepcopy(base)
             mutation(value)
             with self.assertRaises(ContractError):
-                validate_capture_episode(
-                    value, declaration_sha256=DECLARATION, expected_source=SOURCE)
+                validate_declared_capture_episode(
+                    value, declaration=ACCOUNTING_DECLARATION)
 
     def test_policy_input_does_not_traverse_evaluator_only_state(self):
         class Explodes:
@@ -533,8 +532,8 @@ class FlightLearningTests(unittest.TestCase):
     def test_dataset_refuses_mixed_accounting_or_capture_identity(self):
         second_value = valid_capture("ep-second").to_dict()
         second_value["capture_id"] = "capture-b"
-        second = validate_capture_episode(
-            second_value, declaration_sha256=DECLARATION, expected_source=SOURCE)
+        second = validate_declared_capture_episode(
+            second_value, declaration=ACCOUNTING_DECLARATION)
         with self.assertRaises(ContractError):
             build_capture_dataset((self.capture, second))
 
