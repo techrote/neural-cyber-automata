@@ -34,6 +34,7 @@ from nca.train.flight_accounting import (
     DESIGN_WORK_MAXIMA,
     POLICY_SEEDS,
     FlightAccountingLedger,
+    FlightDeclaration,
 )
 
 
@@ -346,6 +347,34 @@ def _same_lifetime(before: Mapping[str, Any], after: Mapping[str, Any], *,
         return False
     delta = after["control_generation"] - before["control_generation"]
     return delta == 0 or (allow_generation_advance and delta == 1)
+
+
+def declared_capture_source(declaration: FlightDeclaration) -> dict[str, str]:
+    """Return the exact accounting-bound host/profile/controller/teacher capture source."""
+    if not isinstance(declaration, FlightDeclaration):
+        _fail("flight_capture_declaration", "a source-bound FlightDeclaration is required")
+    identities = declaration.to_dict()["identities"]
+    source = {
+        "host_revision": identities["host_revision"],
+        "host_build_sha256": identities["host_build_sha256"],
+        "profile_sha256": identities["profile_sha256"],
+        "controller_sha256": identities["controller_sha256"],
+        "teacher_sha256": identities["teacher_sha256"],
+    }
+    if any(value is None for value in source.values()):
+        _fail("flight_capture_declaration", "capture source identities remain unresolved")
+    return _validate_source(source)
+
+
+def validate_declared_capture_episode(
+    value: Mapping[str, Any], *, declaration: FlightDeclaration
+) -> ValidatedFlightCapture:
+    """Validate capture against the same immutable declaration used by accounting."""
+    return validate_capture_episode(
+        value,
+        declaration_sha256=declaration.sha256,
+        expected_source=declared_capture_source(declaration),
+    )
 
 
 def validate_capture_episode(value: Mapping[str, Any], *, declaration_sha256: str,
