@@ -95,12 +95,22 @@ def observation(tick, *, suffix=None):
         "version": "4ly-observation/v1",
         "action_version": "4ly-action/v1",
         "run_id": "run-1",
-        "actor_id": "Trainer",
+        "actor_id": 0,
         "epoch": 1,
         "observation_id": f"obs-{suffix}",
         "observed_tick": tick,
         "control_generation": 0,
-        "flat": flat,
+    }
+
+
+def flat_observation(owner):
+    values = [0.0] * 54
+    values[0] = owner["observed_tick"] / 100.0
+    return {
+        "version": "4ly-flat-observation/v1",
+        "field_count": 54,
+        "source_observation_id": owner["observation_id"],
+        "values": values,
     }
 
 
@@ -133,6 +143,7 @@ def transition(index, before, after, *, teacher_status="accepted", physical_stat
     return {
         "index": index,
         "observation": before,
+        "flat_observation": flat_observation(before),
         "teacher_action": action(before, status=teacher_status),
         "physical": {
             "status": physical_status,
@@ -140,6 +151,7 @@ def transition(index, before, after, *, teacher_status="accepted", physical_stat
             "reason": physical_status,
         },
         "next_observation": after,
+        "next_flat_observation": None if after is None else flat_observation(after),
         "outcome": outcome(
             terminal_status, terminated=terminated, truncated=truncated,
             failed=failed, success=success, reason="terminal" if terminated else terminal_status),
@@ -159,13 +171,14 @@ def episode(*, episode_id="ep-1", transitions=None, final=None, split="training"
         "declaration_sha256": DECLARATION,
         "capture_id": capture_id,
         "episode_id": episode_id,
-        "profile": "Trainer",
+        "profile": "4ly_trainer",
         "split": split,
         "scenario_id": "arrival_braking",
         "host_seed": 101,
         "source": copy.deepcopy(SOURCE),
         "teacher": copy.deepcopy(TEACHER),
         "initial_observation": initial,
+        "initial_flat_observation": None if initial is None else flat_observation(initial),
         "transitions": transitions,
         "outcome": final,
     }
@@ -283,7 +296,7 @@ class FlightCaptureTests(unittest.TestCase):
         view = observation(0)
         view["evaluator"] = Explodes()
         view["navigation_teacher"] = Explodes()
-        self.assertEqual(len(policy_input(view)), 54)
+        self.assertEqual(len(policy_input(view, flat_observation(view))), 54)
 
 
 @unittest.skipUnless(__import__("importlib").util.find_spec("torch") is not None, "optional Torch unavailable")
@@ -390,7 +403,7 @@ class FlightLearningTests(unittest.TestCase):
         view = observation(0)
         view["navigation_teacher"] = lambda *_: calls.append("teacher")
         view["evaluator_only"] = {"success": True, "reward": 999}
-        result = policy.act(view)
+        result = policy.act(view, flat_observation(view))
         self.assertEqual(calls, [])
         self.assertLessEqual(sum(value * value for value in result["move"]), 1.0 + 1e-7)
         self.assertEqual(policy.policy_sha256, receipt["policy_sha256"])
@@ -412,7 +425,7 @@ class FlightLearningTests(unittest.TestCase):
         bad_view = observation(0)
         bad_view["version"] = "legacy"
         with self.assertRaises(ContractError):
-            policy_input(bad_view)
+            policy_input(bad_view, flat_observation(bad_view))
 
     def test_dataset_refuses_mixed_accounting_or_capture_identity(self):
         second_value = valid_capture("ep-second").to_dict()
