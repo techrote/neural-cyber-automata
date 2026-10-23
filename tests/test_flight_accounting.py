@@ -8,6 +8,9 @@ from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
     DESIGN_WORK_MAXIMA,
+    HOST_CONTRACT_HEAD,
+    SCENARIO_MAX_TICKS,
+    STAGE_CEILINGS,
     FlightAccountingLedger,
     FlightDeclaration,
     execution_gate,
@@ -31,14 +34,15 @@ def admitted_fixture():
     }
     value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
     value["splits"].update({
-        "training_sha256": sha256_json(["fixture", "training"]),
+        "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
-        "final_sha256": sha256_json(["fixture", "sealed-final-manifest"]),
+        "final_commitment_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
     })
     value["runtime"].update({
         "platform": "fixture-linux-x86_64",
         "python": "fixture-python-3.12",
         "torch": "fixture-torch-cpu",
+        "threads": 1,
     })
     value["work_ceilings"].update({
         "host_calls": 100,
@@ -65,20 +69,53 @@ class DeclarationGateTests(unittest.TestCase):
         changed = declaration.to_dict()
         changed["seeds"][0] = 1
         self.assertEqual(declaration.to_dict()["seeds"], [74011, 74013, 74017])
+        value = declaration.to_dict()
         self.assertEqual(
-            {name: declaration.to_dict()["work_ceilings"][name]
-             for name in DESIGN_WORK_MAXIMA},
+            {name: value["work_ceilings"][name] for name in DESIGN_WORK_MAXIMA},
             DESIGN_WORK_MAXIMA,
         )
+        self.assertEqual(value["stage_ceilings"], STAGE_CEILINGS)
+        self.assertEqual(value["source_contract"]["revision"], HOST_CONTRACT_HEAD)
+        self.assertEqual(value["source_contract"]["qualification_status"],
+                         "unqualified_source_contract")
+        self.assertEqual(value["scenario"]["scenario_max_ticks"], SCENARIO_MAX_TICKS)
+        self.assertEqual(value["scenario"]["scenario_max_ticks"]["slalom"], 2400)
+        self.assertIn("development_sha256", value["splits"])
+        self.assertNotIn("training_sha256", value["splits"])
+        self.assertIsNone(value["runtime"]["threads"])
 
         gate = execution_gate(declaration, current_evidence={})
         self.assertFalse(gate["admitted"])
         self.assertFalse(gate["training_enabled"])
         self.assertFalse(gate["final_access"])
         self.assertIn("declaration_not_prospective", gate["reasons"])
+        self.assertIn("runtime_unresolved:threads", gate["reasons"])
         self.assertIn("resource_ceiling_unmeasured:maximum_wall_seconds", gate["reasons"])
         self.assertIn("dependency_unfinished:host_4ly003", gate["reasons"])
+        self.assertIn("dependency_unfinished:stage_accounting_integration", gate["reasons"])
         self.assertGreaterEqual(len(required_measurements()), 10)
+
+    def test_superseded_960_tick_and_generic_training_split_are_rejected(self):
+        value = preparation_declaration().to_dict()
+        value["scenario"]["scenario_max_ticks"]["slalom"] = 960
+        with self.assertRaisesRegex(ContractError, "scenario"):
+            FlightDeclaration.from_mapping(value)
+
+        value = preparation_declaration().to_dict()
+        value["splits"]["training_sha256"] = value["splits"].pop("development_sha256")
+        with self.assertRaisesRegex(ContractError, "splits"):
+            FlightDeclaration.from_mapping(value)
+
+    def test_known_preregistered_work_and_stage_ceilings_are_exact(self):
+        value = preparation_declaration().to_dict()
+        value["work_ceilings"]["physical_ticks"] -= 6
+        with self.assertRaisesRegex(ContractError, "must equal"):
+            FlightDeclaration.from_mapping(value)
+
+        value = preparation_declaration().to_dict()
+        value["stage_ceilings"]["capture"]["physical_ticks"] = 960
+        with self.assertRaisesRegex(ContractError, "stage ceilings"):
+            FlightDeclaration.from_mapping(value)
 
     def test_stale_evidence_refuses_synthetic_complete_declaration(self):
         declaration, evidence = admitted_fixture()
@@ -111,6 +148,9 @@ class DurableAccountingTests(unittest.TestCase):
         self.assertEqual(durable["pending_reservations"], [reservation])
         self.assertEqual(durable["charged"]["physical_ticks"], 6)
         self.assertEqual(durable["charged"]["capture_labels"], 1)
+        self.assertEqual(durable["stage_counts"]["capture"]["physical_ticks"], 6)
+        self.assertEqual(durable["stage_counts"]["capture"]["decisions"], 1)
+        self.assertEqual(durable["stage_counts"]["capture"]["capture_labels"], 1)
         self.assertEqual(durable["confirmed_physical_ticks"], 0)
 
         ledger.complete(reservation, confirmed_physical_ticks=3)
@@ -246,8 +286,39 @@ class DurableAccountingTests(unittest.TestCase):
         self.assertEqual(durable["charged"]["resets"], 1)
         self.assertEqual(durable["charged"]["host_calls"], 1)
         self.assertEqual(durable["charged"]["tuning_episodes"], 1)
+        self.assertEqual(durable["stage_counts"]["tuning"]["resets"], 1)
+        self.assertEqual(durable["stage_counts"]["tuning"]["tuning_episodes"], 1)
         self.assertEqual(durable["pending_reservations"], [reservation])
         ledger.complete(reservation)
+        ledger.close()
+
+    def test_capture_and_per_seed_clone_stage_ceilings_fail_closed(self):
+        ledger = self.create()
+        capture = ledger.reserve_many({
+            "physical_ticks": 68_400,
+            "decisions": 11_400,
+            "capture_labels": 11_400,
+        }, scope="fixture_capture_capacity", stage="capture")
+        ledger.complete(capture)
+        with self.assertRaisesRegex(ContractError, "capture.decisions"):
+            ledger.reserve_many(
+                {"decisions": 1}, scope="fixture_capture_overrun", stage="capture")
+
+        clone = ledger.reserve_optimizer(
+            updates=1_800, presentations=228_000, seed=74011)
+        ledger.complete(clone)
+        self.assertEqual(
+            ledger.snapshot()["stage_counts"]["clone:74011"]["optimizer_updates"],
+            1_800,
+        )
+        with self.assertRaisesRegex(ContractError, "clone:74011.optimizer_updates"):
+            ledger.reserve_optimizer(updates=1, presentations=1, seed=74011)
+        ledger.close()
+
+    def test_final_stage_is_structurally_disabled(self):
+        ledger = self.create()
+        with self.assertRaisesRegex(ContractError, "final work is disabled"):
+            ledger.reserve_reset(stage="final")
         ledger.close()
 
     def test_exhausted_counter_refuses_only_new_work_that_needs_it(self):
