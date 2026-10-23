@@ -21,11 +21,20 @@ from nca.train.jolt_memory_watchdog_v3 import watchdog_policy_v3
 from nca.train.jolt_storage_v3 import storage_bounds_v3
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("jolt_resources_v3", ROOT / "tools/assess_jolt_resources_v3.py")
-ASSESS = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(ASSESS)
+# The ordinary minimal CPU conformance lane intentionally installs neither
+# Torch nor NumPy. The original full-worker resource tool imports the
+# optional learning runtime; discover it only in the pinned optional lane.
+OPTIONAL_RUNTIME_AVAILABLE = (importlib.util.find_spec("torch") is not None
+                              and importlib.util.find_spec("numpy") is not None)
+ASSESS = None
+if OPTIONAL_RUNTIME_AVAILABLE:
+    SPEC = importlib.util.spec_from_file_location(
+        "jolt_resources_v3", ROOT / "tools/assess_jolt_resources_v3.py")
+    ASSESS = importlib.util.module_from_spec(SPEC)
+    SPEC.loader.exec_module(ASSESS)
 
 
+@unittest.skipUnless(OPTIONAL_RUNTIME_AVAILABLE, "optional pinned CPU learning runtime required")
 class ResourceAssessmentTests(unittest.TestCase):
     def fixture(self, folder):
         config = json.loads((ROOT / "configs/learning/jolt-learn-003-v2.json").read_text())
