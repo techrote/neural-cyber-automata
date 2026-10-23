@@ -233,6 +233,18 @@ class DurableAccountingTests(unittest.TestCase):
                 ledger.path, self.declaration, attempt_id="attempt-a1",
                 current_evidence=self.evidence)
 
+    def test_tuning_reset_charges_reset_call_and_tuning_episode_atomically(self):
+        ledger = self.create()
+        reservation = ledger.reserve_reset(tuning=True)
+        durable = FlightAccountingLedger.read_snapshot(
+            ledger.path, self.declaration, attempt_id="attempt-a1")
+        self.assertEqual(durable["charged"]["resets"], 1)
+        self.assertEqual(durable["charged"]["host_calls"], 1)
+        self.assertEqual(durable["charged"]["tuning_episodes"], 1)
+        self.assertEqual(durable["pending_reservations"], [reservation])
+        ledger.complete(reservation)
+        ledger.close()
+
     def test_exhausted_counter_refuses_only_new_work_that_needs_it(self):
         ledger = self.create()
         start = ledger.reserve_host_start()
