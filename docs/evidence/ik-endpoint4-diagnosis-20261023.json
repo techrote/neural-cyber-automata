@@ -20,6 +20,7 @@
     "gate_review_sha256": "f04231cfd6e75c33893ac48913978ca44161a11a6a577724d1a3ff65cc5afbb1",
     "frozen_permutation_review_sha256": "c3df5af48c34305a7f88ddb8abd2d4a2f4885e279d08843237851c92a23ba048",
     "independent_evidence_review_sha256": "1332de9a87d0b6d133fc88303883258643c0761ba12dda4d0be73a46fd0f4f1e",
+    "retained_input_authentication_supplement_sha256": "8d7069bb9c5b5fc4a819aa1f222f32e28c1cca26b6caa7ac42d73867d37f3470",
     "verdict": "approve_preparation_only_not_execution_admissions"
   },
   "authentication_limit": "Analysis script records input hashes and event digests but does not itself enforce tuning-checkpoint linkage. Independent evidence review authenticated all 240 reports against checkpoint history and verified 21852 recorded file hashes. Reanalysis must repeat linkage; archive and tuning shards are bound by whole-archive and shard hashes, outside the input-file map."

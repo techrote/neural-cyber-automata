@@ -146,7 +146,8 @@ Improvement alone is diagnostic, not promotion. No automatic next experiment.
 ## Evidence custody
 
 Maintainer-held bundle `ik-endpoint4-diagnosis-20261023` contains the standard-
-library analysis script, every read input's SHA-256 and its result. The result
+library analysis script, recorded receipt/report hashes, authenticated archive/
+shard pins and its result. The result
 SHA-256 is `6b8546501022350d64a05e4a4a39b2cb696e0014ede9c90eca4a3a8a556e2977`.
 The script reads saved training receipts and tuning reports plus authenticated
 tuning shards only; no model/optimizer/teacher calls, Torch/NumPy import,
