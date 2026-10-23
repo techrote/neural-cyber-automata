@@ -361,8 +361,6 @@ def execution_gate(declaration: FlightDeclaration, *, current_evidence: Mapping[
             reasons.append("attempt_failed")
         if ledger_snapshot.get("unknown_consumption"):
             reasons.append("unknown_consumption")
-        if ledger_snapshot.get("interrupted"):
-            reasons.append("attempt_interrupted")
         if ledger_snapshot.get("poisoned"):
             reasons.append("ledger_integrity_uncertain")
         if ledger_snapshot.get("pending_reservations"):
@@ -438,8 +436,6 @@ def _apply_record(state: dict[str, Any], kind: str, payload: Mapping[str, Any]) 
     if kind == "interruption":
         if set(payload) != {"reason"} or type(payload["reason"]) is not str or not payload["reason"]:
             _fail("flight_ledger_shape", "interruption has an invalid shape")
-        if state["interrupted"]:
-            _fail("flight_attempt_interrupted", "attempt interruption was already recorded")
         state["interrupted"] = True
         return
 
@@ -649,8 +645,6 @@ class FlightAccountingLedger:
         state = _replay(path, declaration, attempt_id)
         if state["closed"]:
             _fail("flight_attempt_consumed", "closed attempt cannot be resumed or replayed")
-        if state["interrupted"]:
-            _fail("flight_attempt_interrupted", "an interrupted attempt cannot be resumed again")
         stream = path.open("ab")
         ledger = cls(path, declaration, attempt_id, stream, state, current_evidence)
         for reservation_id in list(state["pending"]):
@@ -708,10 +702,9 @@ class FlightAccountingLedger:
             _fail("flight_ledger_reservation", "reservation scope/cleanup marker is invalid")
         if not isinstance(increments, Mapping) or not increments:
             _fail("flight_ledger_reservation", "nonempty increments are required")
-        if (self._state["failed"] or self._state["unknown_consumption"]
-                or self._state["interrupted"]) and not cleanup:
+        if (self._state["failed"] or self._state["unknown_consumption"]) and not cleanup:
             _fail("flight_execution_refused",
-                  "failed, unknown or interrupted attempt permits cleanup only")
+                  "failed or unknown attempt permits cleanup only")
         if cleanup and not set(increments) <= {"cleanup_operations", "host_calls"}:
             _fail("flight_cleanup_scope", "cleanup can reserve only cleanup operations and host calls")
         if not cleanup:
