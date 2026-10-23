@@ -4,6 +4,13 @@ from pathlib import Path
 import tempfile
 import unittest
 
+from nca.adapters.flight import (
+    CONTROLLER_SHA256 as ADAPTER_CONTROLLER_SHA256,
+    DEVELOPMENT_SEEDS as ADAPTER_DEVELOPMENT_SEEDS,
+    SCENARIO_MAX_TICKS as ADAPTER_SCENARIO_MAX_TICKS,
+    TRAINER_PROFILE_SHA256 as ADAPTER_TRAINER_PROFILE_SHA256,
+    TUNING_SEEDS as ADAPTER_TUNING_SEEDS,
+)
 from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
@@ -95,6 +102,13 @@ class DeclarationGateTests(unittest.TestCase):
         self.assertIn("dependency_unfinished:host_4ly003", gate["reasons"])
         self.assertIn("dependency_unfinished:stage_accounting_integration", gate["reasons"])
         self.assertGreaterEqual(len(required_measurements()), 10)
+
+    def test_adapter_contract_matches_accounting_source_binding(self):
+        self.assertEqual(ADAPTER_TRAINER_PROFILE_SHA256, TRAINER_PROFILE_SHA256)
+        self.assertEqual(ADAPTER_CONTROLLER_SHA256, CONTROLLER_SHA256)
+        self.assertEqual(dict(ADAPTER_SCENARIO_MAX_TICKS), SCENARIO_MAX_TICKS)
+        self.assertEqual(set(ADAPTER_DEVELOPMENT_SEEDS), {101, 103, 107, 109})
+        self.assertEqual(set(ADAPTER_TUNING_SEEDS), {211, 223, 227, 229})
 
     def test_superseded_960_tick_and_generic_training_split_are_rejected(self):
         value = preparation_declaration().to_dict()
