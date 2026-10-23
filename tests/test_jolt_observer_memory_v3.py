@@ -59,7 +59,7 @@ class ObservedMemoryWatchdogTests(unittest.TestCase):
                 result = observer.observe(args, started=time.monotonic(),
                     command=[sys.executable, "-c", script])
             else:
-                with mock.patch.object(observer, "ProcessTreeWatchdogV3", guard_type):
+                with mock.patch("nca.train.jolt_memory_watchdog_v3.ProcessTreeWatchdogV3", guard_type):
                     result = observer.observe(args, started=time.monotonic(),
                         command=[sys.executable, "-c", script])
         receipt = json.loads(args.output.with_name(args.output.name + "-observed-exit.json").read_bytes())
