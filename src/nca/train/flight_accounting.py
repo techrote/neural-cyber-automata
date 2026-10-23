@@ -28,11 +28,60 @@ from nca.contracts import ContractError, canonical_json, sha256_json, strict_jso
 from nca.evaluation.durable_journal import sync_directory
 
 
-DECLARATION_SCHEMA = "nca-flight-experiment-declaration/v1"
-LEDGER_RECORD_SCHEMA = "nca-flight-accounting-record/v1"
+DECLARATION_SCHEMA = "nca-flight-experiment-declaration/v2"
+LEDGER_RECORD_SCHEMA = "nca-flight-accounting-record/v2"
 ZERO_HASH = "0" * 64
 MAX_RECORD_BYTES = 64 * 1024
 POLICY_SEEDS = (74011, 74013, 74017)
+
+HOST_CONTRACT_HEAD = "2e20731de0559ed59280d7a11f84f596d1cba985"
+TRAINER_PROFILE_SHA256 = "f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704"
+CONTROLLER_SHA256 = "fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae"
+DEVELOPMENT_SEEDS = (101, 103, 107, 109)
+TUNING_SEEDS = (211, 223, 227, 229)
+SCENARIO_MAX_TICKS = {
+    "unsupported_hover": 300,
+    "horizontal_reach": 1080,
+    "vertical_reach": 1080,
+    "diagonal_reach": 1080,
+    "reverse": 1560,
+    "arrival_braking": 1500,
+    "wide_corridor": 1800,
+    "offset_gates": 2100,
+    "corner": 2100,
+    "slalom": 2400,
+    "wall_recovery": 2100,
+}
+SCENARIO_FAMILY = {
+    "unsupported_hover": "hover",
+    "horizontal_reach": "free_space",
+    "vertical_reach": "free_space",
+    "diagonal_reach": "free_space",
+    "reverse": "reversal",
+    "arrival_braking": "arrival",
+    "wide_corridor": "obstacles",
+    "offset_gates": "obstacles",
+    "corner": "obstacles",
+    "slalom": "obstacles",
+    "wall_recovery": "recovery",
+}
+CORE_SCENARIOS = tuple(
+    scenario for scenario in SCENARIO_MAX_TICKS
+    if scenario != "unsupported_hover"
+)
+FINAL_CASES_PER_SCENARIO = {
+    "horizontal_reach": 4,
+    "vertical_reach": 4,
+    "diagonal_reach": 4,
+    "reverse": 12,
+    "arrival_braking": 12,
+    "wide_corridor": 3,
+    "offset_gates": 3,
+    "corner": 3,
+    "slalom": 3,
+    "wall_recovery": 12,
+}
+FINAL_COMPARATORS = 6
 
 WORK_COUNTERS = (
     "host_starts",
@@ -49,17 +98,42 @@ WORK_COUNTERS = (
     "cleanup_operations",
 )
 DESIGN_WORK_MAXIMA = {
-    # Source-bound maxima from docs/FLIGHT_PREREGISTRATION.md.  Host calls and
-    # startup/cleanup remain unmeasured until the accepted #229 bridge exists.
     "host_starts": 1,
     "resets": 884,
-    "physical_ticks": 1475280,
-    "decisions": 245880,
-    "capture_labels": 11400,
-    "optimizer_updates": 5400,
-    "sample_presentations": 684000,
+    "physical_ticks": 1_475_280,
+    "decisions": 245_880,
+    "capture_labels": 11_400,
+    "optimizer_updates": 5_400,
+    "sample_presentations": 684_000,
     "tuning_episodes": 480,
     "checkpoint_publications": 63,
+}
+STAGE_CEILINGS = {
+    "capture": {
+        "resets": 44,
+        "physical_ticks": 68_400,
+        "decisions": 11_400,
+        "capture_labels": 11_400,
+    },
+    "tuning": {
+        "resets": 480,
+        "physical_ticks": 806_400,
+        "decisions": 134_400,
+        "tuning_episodes": 480,
+    },
+    "final": {
+        "resets": 360,
+        "physical_ticks": 600_480,
+        "decisions": 100_080,
+    },
+    **{
+        f"clone:{seed}": {
+            "optimizer_updates": 1_800,
+            "sample_presentations": 228_000,
+            "checkpoint_publications": 21,
+        }
+        for seed in POLICY_SEEDS
+    },
 }
 RESOURCE_CEILINGS = (
     "maximum_wall_seconds",
@@ -73,25 +147,33 @@ DEPENDENCIES = (
     "teacher_qualification",
     "throughput_measurement",
     "resource_enforcement",
+    "stage_accounting_integration",
     "independent_execution_review",
 )
+
+# These arithmetic assertions are deliberately source-derived from #229's
+# scenario deadlines and Stream E's frozen composition. They prevent a future
+# refactor from reintroducing the superseded universal 960-tick assumption.
+assert sum(SCENARIO_MAX_TICKS.values()) * len(DEVELOPMENT_SEEDS) == 68_400
+assert sum(SCENARIO_MAX_TICKS[name] for name in CORE_SCENARIOS) * len(TUNING_SEEDS) * 4 * len(POLICY_SEEDS) == 806_400
+assert sum(SCENARIO_MAX_TICKS[name] * count for name, count in FINAL_CASES_PER_SCENARIO.items()) * FINAL_COMPARATORS == 600_480
+assert sum(FINAL_CASES_PER_SCENARIO.values()) == 60
 
 MEASUREMENTS_REQUIRED = (
     "accepted #229 exact host revision/build and accepted 4LY-003 evidence identity",
     "accepted Trainer profile, controller and scripted-teacher digests",
-    "exact 54-channel observation/action/cadence conformance on the final bridge",
-    "frozen training/tuning/final scenario manifests without opening final payloads",
+    "exact 54-channel observation/action/60Hz/six-tick/12-tick-lease conformance",
+    "frozen development/tuning manifests and learner-final cryptographic commitment",
     "chosen CPU runtime identity: platform, Python, Torch and execution-thread settings",
     "source-bound actual-host ticks/s and decisions/s on the chosen runner",
     "reset/serialization and ordinary host-call latency, including tail behavior",
     "whole-process startup and cleanup duration on the chosen execution path",
     "process-tree peak resident memory for host, bridge, learner and evidence writer",
     "capture/journal/checkpoint/publication byte growth and durable storage throughput",
-    "final host-call topology, capture-label phase transitions and finite startup/cleanup operation counts",
+    "final host-call topology, stage propagation and finite startup/cleanup operation counts",
     "validated wall/RSS/storage enforcement bound to the chosen execution path",
     "independent source-bound execution review bound to the complete declaration",
 )
-
 
 def _fail(code: str, detail: str) -> None:
     raise ContractError(code, detail)
