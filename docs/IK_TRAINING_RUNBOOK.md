@@ -17,21 +17,53 @@ scoring has yet occurred.
 
 Install the already pinned optional runtime using [runtime operations](IK_RUNTIME.md).
 Keep the extracted archive, original registry and new run directory outside the
-source checkout. The measured declaration names the already qualified Windows 11 /
-CPython 3.12.10 / Torch 2.8.0+cu126 / V100 / driver 581.80 environment. Other CUDA
-environments retain their separate qualification requirement. Preparation below
-uses metadata and CPU corpus validation;
-it does not import Torch or initialize a CUDA device:
+source checkout. **TITAN RTX is the only authorized target for this training
+programme.** The previously used V100 has a reported cooling fault: it is
+**out of service and prohibited for all CUDA initialization, training, smoke
+tests and performance qualification**. Its earlier #51 result remains historical
+provenance, not a TITAN qualification or a performance baseline.
+
+The prospective target is Windows 11 / CPython 3.12.10 / Torch 2.8.0+cu126 /
+NumPy 2.3.5 / TITAN RTX (compute capability 7.5, 72 SMs) /
+driver 581.80. The TITAN's **actual** Torch-reported memory is measured during
+the admitted GPU invocation, not copied from the V100. At least 20 GiB must
+be reported; the unchanged allocator budget is 2 GiB.
+
+**Mandatory CPU-only device isolation before preparation:** set
+`CUDA_VISIBLE_DEVICES` to the TITAN RTX **GPU UUID alone**. Obtain the true UUID
+from existing authorized Windows hardware records (a metadata-only inventory
+is permissible); do not substitute `0`, `1`, a GPU index list or any V100 UUID.
+For example in PowerShell, replacing the placeholder with the actual TITAN UUID:
+
+```powershell
+$env:CUDA_VISIBLE_DEVICES = 'GPU-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+nvidia-smi -i $env:CUDA_VISIBLE_DEVICES --query-gpu=name,uuid,driver_version --format=csv,noheader
+```
+
+The command must report **TITAN RTX** and driver **581.80**. It targets that
+UUID for a read-only metadata query; it does not run CUDA kernels. The
+`prepare`, supervisor and worker independently enforce the single-UUID binding
+and exact driver. `cuda:0` thereafter means **the isolated TITAN**, never a
+physical motherboard enumeration index. Its UUID is not published; a SHA-256
+fingerprint binds the private execution declaration to the selected card.
+
+Preparation uses CPU corpus validation without importing Torch or initializing
+CUDA. It checks the original corpus, retained labels, training-only normalization,
+and the source/runtime/visibility binding before producing a declaration:
 
 ```sh
 python -m nca.train.ik_experiment prepare --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --output NEW_RUN_DIRECTORY --device cuda:0
 python -m nca.train.ik_experiment inspect --run NEW_RUN_DIRECTORY --declaration-sha256 DECLARATION_FILE_SHA256
 ```
 
-Use the existing activated PowerShell environment on the qualified Windows
-machine. Preparation refuses different OS/Python/Torch/NumPy metadata before
-CUDA initialization. Preparation publishes exact source, environment, corpus/normalizer, three seeds,
+Use the existing activated PowerShell environment on the designated Windows
+machine. Preparation refuses different OS/Python/Torch/NumPy metadata or absent
+TITAN-only visibility *before* CUDA initialization. Preparation publishes exact
+source, TITAN UUID fingerprint, environment, corpus/normalizer, three seeds,
 all allocations and the unchanged acceptance identity in an immutable declaration.
+A historical V100 declaration or review **cannot** authorize a TITAN run;
+obtain fresh prospective TITAN-specific reviews against this new executable
+source and declaration.
 Independent admission binds that exact declaration and source and checks corpus,
 resume/accounting, scoring/selection, CPU checks and resource feasibility. Use
 the declaration's semantic `sha256` and `source.source_sha256` in the review record;
@@ -57,8 +89,11 @@ hash reported by preparation. The review schema is:
 
 This deliberately incomplete example cannot admit execution. Record at least
 two distinct public reviewer identifiers and their completed checks before
-setting the verdict to `admit_declared_CUDA_comparison`. The supervisor preserves
-a canonical copy of that review and binds its semantic hash to every attempt.
+setting the verdict to `admit_declared_CUDA_comparison`. Both reviewers must
+specifically accept the TITAN-only UUID binding, compute capability, selected
+CUDA architecture route, available memory, finite costs and the absence of
+V100 initialization. The supervisor preserves a canonical copy of that review
+and binds its semantic hash to every attempt.
 
 **Stop before the next command when no GPU execution is authorized.** It is the
 first actual device-dependent step for this continuation, and it has not run:
