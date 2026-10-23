@@ -152,6 +152,11 @@ replay policy. Its canonical JSON SHA-256 is the declaration identity.
 Each future host call or optimizer operation must consume an fsynced reservation
 before work. Related counters are reserved atomically and never refunded.
 Confirmed physical ticks are recorded separately from reserved tick capacity.
+The accepted-host launcher cannot pass its source-review barrier without a
+ledger, and its RPC transport reserves reset/step/revocation/close work before
+dispatch; capture-label counting is a local accounting phase and does not add a
+wire-protocol field. Behavior cloning likewise refuses to enter Torch work
+without a ledger whose declaration hash owns the immutable capture dataset.
 Original failures remain sticky. A lost reply or crash after reservation but
 before a durable outcome becomes explicit unknown consumption and ordinary
 execution stops; it is never automatically replayed. Duplicate invocation,
@@ -180,8 +185,9 @@ and teacher evidence, final bridge actual-host conformance, frozen split
 commitments, selected CPU runtime identity, source-bound throughput and
 host-call/reset latency, whole-process startup/cleanup duration, process-tree
 peak RSS, evidence/checkpoint/publication byte growth, durable storage
-throughput, exact host-call/startup/cleanup topology and an independent
-source-bound review of the complete declaration. Neither these fixtures nor
+throughput, exact host-call and capture-label phase topology, finite
+startup/cleanup operation counts and an independent source-bound review of the
+complete declaration. Neither these fixtures nor
 the accounting implementation qualify flight or issue an experiment admission.
 
 Windows CPU-only software checks from repository root:
