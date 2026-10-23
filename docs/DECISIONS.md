@@ -18,6 +18,9 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 [ACCEPTED] 2026-10-23 by owner. See the [scope and unchanged admission gates](decisions/2026-10-23-ik-windows-labels.md).
 
+### D-022 — CPU identity advisory for Jolt-003
+[ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
+
 ### D-021 — Explicitly gated long-running Jolt CI entry
 
 [ACCEPTED] 2026-10-22 by owner. See the
@@ -39,10 +42,7 @@ admission and qualification thresholds retain their requirements. Simulated
 task ticks, recovery deadlines and inference quality thresholds remain unchanged.
 Historical finite configurations, receipts and published evidence stay immutable.
 
-Remove the repository's CI job timeout overrides and synthetic diagnostic wall
-guards. [GitHub-hosted runner limits](https://docs.github.com/en/actions/reference/limits)
-still impose a six-hour job maximum. Queue fresh CI for the changed source,
-then stop; do not wait for its result or consume the experimental allocation.
+Remove the repository's CI job timeout overrides and synthetic diagnostic wall guards. [GitHub-hosted runner limits](https://docs.github.com/en/actions/reference/limits) still impose a six-hour job maximum. Queue fresh CI for the changed source, then stop; do not wait for its result or consume the experimental allocation.
 
 ### D-019 — Implement and conditionally execute LEARN-JOLT-003
 

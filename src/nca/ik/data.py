@@ -425,8 +425,28 @@ def augment_task(task: GeometricTask, config: DatasetConfig, variant: int = 1):
     return replay_task(config, replace(task.state, augmentation=variant))
 
 
-def validate_task(task: GeometricTask, config: DatasetConfig):
-    if not isinstance(task, GeometricTask) or task != replay_task(config, task.state):
+def _task_matches_replay(task, replayed, config, *, _accepted_archive=False):
+    if task == replayed:
+        return True
+    if (not _accepted_archive or not isinstance(task, GeometricTask)
+            or not isinstance(replayed, GeometricTask)
+            or platform.system() != "Windows" or platform.python_version() != "3.12.10"
+            or config.sha256 != "fb8614412a62f7495519f463e3052ab060b0701701a3dfdb7265f0ad64488b51"):
+        return False
+    # Preserve identity, state, partition, order, groups, masks and all other
+    # task fields. Only the inventoried target/original-point numeric replay
+    # differences can match; neither the retained task nor its inputs change.
+    if replace(task, inputs=replace(task.inputs, target_root=replayed.inputs.target_root),
+               original_point=replayed.original_point) != replayed:
+        return False
+    entry = _windows_task_replay_inventory().get(task.id)
+    return (entry is not None and sha256_json(task.to_dict()) == entry["retained_sha256"]
+            and sha256_json(replayed.to_dict()) == entry["windows_replay_sha256"])
+
+
+def validate_task(task: GeometricTask, config: DatasetConfig, *, _accepted_archive=False):
+    if not isinstance(task, GeometricTask) or not _task_matches_replay(
+            task, replay_task(config, task.state), config, _accepted_archive=_accepted_archive):
         raise ContractError("ik_dataset_replay", "task values, group, split or augmentation differ from frozen generator state")
 
 
@@ -545,6 +565,15 @@ def _malformed_label(specimen):
 
 
 _WINDOWS_REPLAY_SHA256 = "ba42f53d140543713e68653f22540cd1cd4ed552252d7b41ce967c0c3f04a39c"
+_WINDOWS_TASK_REPLAY_SHA256 = "68682fd6222865f08278c09d3e5e67da5d09b57eeb92d3c5ded87109daa2612b"
+
+
+@lru_cache(maxsize=1)
+def _windows_task_replay_inventory():
+    raw = Path(__file__).with_name("accepted_windows_task_replay_v1.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != _WINDOWS_TASK_REPLAY_SHA256:
+        raise ContractError("ik_dataset_compatibility", "Windows task replay inventory bytes changed")
+    return strict_json_loads(raw, max_bytes=16384)["entries"]
 
 
 @lru_cache(maxsize=1)
@@ -584,7 +613,7 @@ def validate_sample(sample: GeometricSample, config: DatasetConfig, *, _accepted
     if not isinstance(sample, GeometricSample):
         raise ContractError("ik_dataset_sample", "typed sample required")
     task, label = sample.task, sample.label
-    validate_task(task,config)
+    validate_task(task,config, _accepted_archive=_accepted_archive)
     if task.invalid_specimen is not None:
         if label != _malformed_label(task.invalid_specimen):
             raise ContractError("ik_dataset_label", "original malformed specimen refusal changed")

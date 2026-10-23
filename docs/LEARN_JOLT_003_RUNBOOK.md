@@ -31,6 +31,38 @@ invocation, phase reserves, episode capture, host startup/transport, cleanup and
 observation limits. Full-worker/native memory and final-source admission remain
 unresolved. No passing execution declaration or experimental invocation is published.
 
+## CPU portability and approximate benchmarking (D-022)
+
+The owner has accepted [D-022](decisions/2026-10-23-jolt-cpu-portability.md):
+do not use changing GitHub-runner CPU model, kernel, libc minor release,
+Python patch or available-core count as an exact-match admission gate.
+Record their original measured values in each declaration/receipt. Only
+the pinned CPU **software-capability** contract is compared across jobs:
+Linux x86_64, Python 3.12, Torch 2.8.0+cpu, NumPy 2.3.5, CPU-only,
+one Torch and interop thread, deterministic algorithms. The exact source,
+configuration, accepted Godot host, workloads, evaluation quality and native
+artifact identities remain fixed.
+
+The current portable resource-admission record is
+`nca-jolt-003-resource-admission/v2`, with
+`runtime_contract_sha256` and
+`cpu_comparison_policy="cpu-hardware-observational-and-normalized/v1"`.
+Each independently authored terminal and operation-envelope source review
+must use `nca-learn-jolt-003-source-admission-review/v2`, bind the same
+stable runtime contract hash plus full prospective-declaration binding, and
+explicitly resolve every required non-time resource gate. Historical v1
+review/resource records retain their exact-runtime interpretation.
+
+The read-only preflight and memory diagnostic now publish an optional fixed
+single-core SHA-256 calibration. For reference timing *planning only*,
+`approx_reference_seconds = raw_seconds * observed_bytes_per_second /
+reference_bytes_per_second`. The reference calibration must be a real saved
+sample, not an assumed frequency or a CPU-model label. Raw timings and
+hardware IDs remain visible; memory bytes, physical outcomes, stage counters
+and the actual per-case inference-p95 <=5 ms gate are **never normalized**.
+Normalizing ballpark throughput does not establish full-worker/native peak
+memory or prospectively accept this allocation.
+
 ## GitHub Actions: long-run dispatch
 
 The [manual LEARN-JOLT-003 workflow](../.github/workflows/learn-jolt-003-long-run.yml)
@@ -111,7 +143,8 @@ lane; Windows preparation does not substitute for Linux process qualification.
 ## Freeze a reviewable prospective declaration
 
 The resource record binds the exact source closure, configuration, host and
-runtime; includes `storage_bounds_v3()` byte/file totals; and explicitly passes
+pinned software-capability contract while independently recording observed CPU
+hardware. It includes `storage_bounds_v3()` byte/file totals and explicitly passes
 serialization, readers, journal bytes, total artifacts/files, peak memory,
 available disk. Under configuration v2, `original_clock_phase_enforcement` and
 `complete_pipeline_time_feasibility` must explicitly be null; the seven other

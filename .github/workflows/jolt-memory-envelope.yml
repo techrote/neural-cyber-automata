@@ -1,0 +1,127 @@
+name: Jolt v3 memory envelope — nonexperimental
+
+# Strictly a pre-admission, synthetic/native-handshake measurement.
+# Never opens the experimental allocation, sealed split, or training.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/jolt-memory-envelope.yml'
+      - 'tools/check_jolt_memory_envelope_v3.py'
+      - 'tools/compare_jolt_cpu_v3.py'
+      - 'tools/jolt_ci_workflow_v3.py'
+      - 'tests/test_jolt_memory_envelope_v3.py'
+      - 'tests/test_jolt_runtime_portability_v3.py'
+      - 'tests/test_jolt_execution_runtime_portability_v3.py'
+      - 'tests/test_jolt_cpu_reference_v3.py'
+      - 'src/nca/**'
+      - 'configs/learning/**'
+      - 'docs/evidence/jolt-003-cpu-reference-20261023.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  memory-envelope:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout the exact commit being measured
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+
+      - name: Install exact optional CPU learner
+        run: |
+          python -m pip install setuptools==84.0.0 wheel==0.45.1 numpy==2.3.5
+          python -m pip install torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --no-build-isolation .
+
+      - name: Prepare the pinned actual native host (no experimental case)
+        run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-host" --github-env "$GITHUB_ENV" --unbounded
+
+      - name: Nonphysical memory-contract unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -p 'test_jolt_memory_envelope_v3.py' -v
+
+      - name: CPU portability and diagnostic normalization regressions
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m unittest discover -s tests -p 'test_jolt_runtime_portability_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_execution_runtime_portability_v3.py' -v
+          python -m unittest discover -s tests -p 'test_jolt_cpu_reference_v3.py' -v
+
+      - name: Measure retained-worker proxies with original host handshake
+        env:
+          PYTHONPATH: src
+          OMP_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+        run: |
+          python tools/check_jolt_memory_envelope_v3.py \
+            --checkout "$NCA_HOST_CHECKOUT" \
+            --godot "$NCA_GODOT" \
+            --output "$RUNNER_TEMP/jolt-003-memory-report.json"
+
+      - name: Normalize measured diagnostic seconds to the saved reference CPU
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          original_seconds=$(python -c 'import json,os,pathlib; print(json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"jolt-003-memory-report.json").read_text())["elapsed_seconds"])')
+          python tools/compare_jolt_cpu_v3.py \
+            --reference docs/evidence/jolt-003-cpu-reference-20261023.json \
+            --observed "$RUNNER_TEMP/jolt-003-memory-report.json" \
+            --duration-seconds "$original_seconds" \
+            --output "$RUNNER_TEMP/jolt-003-cpu-normalization.json"
+
+      - name: Independently verify published scope/identities
+        env:
+          PYTHONPATH: src
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          from nca.contracts import sha256_json
+          from nca.train.jolt_screen import source_inventory
+          report = json.loads((Path(os.environ["RUNNER_TEMP"]) / "jolt-003-memory-report.json").read_bytes())
+          revision = subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+          assert report["source_revision"] == revision
+          assert report["source_sha256"] == sha256_json(source_inventory(Path.cwd()))
+          assert report["memory"]["maximum_overlapping_worker_plus_native_rss_bytes"] > 0
+          assert report["memory"]["native_samples"] > 0
+          assert report["admission"]["accepted"] is False
+          assert report["admission"]["peak_resident_memory_gate_established"] is False
+          assert report["physical_experiment_started"] is False
+          assert report["allocation_consumed"] is False
+          assert report["native_handshake_only"] is True
+          assert report["sealed_case_inspection_or_training"] is False
+          assert report["synthetic_shape"]["results"] == 6464
+          normalized = json.loads((Path(os.environ["RUNNER_TEMP"])/"jolt-003-cpu-normalization.json").read_bytes())
+          assert normalized["schema"] == "nca-jolt-cpu-reference-comparison/v1"
+          assert normalized["observed_source_revision"] == revision
+          assert normalized["software_capability_sha256"] == report["runtime_software_contract_sha256"]
+          assert normalized["normalization"]["reference_seconds_approximate"] >= 0
+          assert normalized["experimental_admission_inferred"] is False
+          assert normalized["quality_thresholds_unchanged"] is True
+          print(json.dumps({"readback_verified":True, "admitted":False,
+              "source_revision":revision,
+              "report_sha256":hashlib.sha256((Path(os.environ["RUNNER_TEMP"])/"jolt-003-memory-report.json").read_bytes()).hexdigest()}))
+          PY
+
+      - name: Publish original memory specimen and unchanged error receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jolt-003-memory-prepass-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/jolt-003-memory-report.json
+            ${{ runner.temp }}/jolt-003-cpu-normalization.json
+          retention-days: 90
+          if-no-files-found: warn

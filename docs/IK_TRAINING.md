@@ -153,11 +153,9 @@ The [published corpus index](evidence/ik-dataset-20261022/index.json) binds the
 original archive and retrieval instructions. Verify its SHA-256 before using
 the permitted extracted view; never regenerate labels or substitute data.
 
-The original corpus remains byte-identical. A 23 October 2026 Windows run-host
-preflight authenticated the original archive but reported a binary64 arithmetic
-difference in `training-00000.jsonl` row 4, analytic `points[0][1]`:
-retained `7.1951845160020005`, Windows `7.195184516002` (one ULP).
-This is not evidence of archive corruption or authorization to change labels.
+The byte-identical original corpus first refused Windows replay at row 4,
+analytic `points[0][1]`: retained `7.1951845160020005` versus Windows
+`7.195184516002` (one ULP). No retained label was changed.
 
 The accepted-v1 Windows reader now uses a **source-bound exact replay inventory**
 in `src/nca/ik/accepted_windows_replay_v1.json`, SHA-256
@@ -180,23 +178,26 @@ field refuses. Normal replay remains exact. Training batch preparation enables
 this path only for original object references in an authenticated corpus with
 its identical configuration object; copied rows and fixture corpora refuse.
 
-A CPU-only census verified 7,280 permitted rows and independently confirmed the
-534 inventory pairs, but also found **17 separate task-replay mismatches**.
-The first is `training-00005.jsonl`, row 43, sample
-`ded89da95f08e0ab67104319d7b5b700844de4420c78f254a2254d2b340ea958`:
-`inputs.target_root[1]` is retained as `7.787649916742`, versus Windows replay
-`7.787649916741`; `original_point[1]` is retained as `7.21497005474`, versus
-`7.214970054739`. The exact task/schedule gate is preserved and still refuses.
-This repair therefore does **not** establish full corpus admission or verified
-training-only normalization, and supplies no declaration, prospective CUDA
-admission, optimizer work or final opening. The corpus, generator, numerical
-teacher, normalization and every training allocation remain unchanged.
+The separately pinned `src/nca/ik/accepted_windows_task_replay_v1.json`
+(SHA-256 `68682fd6222865f08278c09d3e5e67da5d09b57eeb92d3c5ded87109daa2612b`)
+binds exactly 17 original/Windows **whole-task** digest pairs. Only
+`inputs.target_root` and `original_point` replay coordinates differ; identities,
+state, partition, grouping, masks and every other field stay exact. The ordered
+reader must match the expected scheduled task through this same exact-pair
+gate after original-byte authentication. No task/input is replaced and no
+numeric tolerance, missing-row or reordering exception is granted. Fixtures,
+changed configurations, unknown pairs and additional numeric changes refuse.
 
-The restored, original archive and its retained copy were separately read back
-as 7,340,716 bytes, SHA-256
+Windows CPU corpus readback now completes all 7,280 retained rows and exact
+recomputation of the original 14 normalization means/scales from 5,140
+training-only inputs. Successful clean-source preparation, current CI and two
+independent TITAN-specific prospective admissions still precede any CUDA work.
+The original corpus, generator, teacher, normalization, seed/schedule and
+allocation identities remain unchanged; the final suite remains unopened.
+
+The original archive and retained copy read back as 7,340,716 bytes, SHA-256
 `97e3c547c7056e6ef727dc07437f469fde54b545bb091503a791aed85a4f99ce`.
-Historical Linux analytic-point readback is preserved in the PR evidence;
-it does not establish Windows semantic admission.
+Historical Linux readback remains provenance, not Windows admission.
 
 **Stop condition remains in force:** qualified Windows CPU preflight must run
 again on the patched executable commit and succeed through normalization, with

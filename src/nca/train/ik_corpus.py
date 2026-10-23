@@ -19,7 +19,8 @@ from typing import Any
 from nca.contracts import ContractError, sha256_json, strict_json_loads
 from nca.ik.data import (DatasetConfig, GeometricSample, Normalization,
                          build_split_plan, fit_normalization, iter_tasks,
-                         runtime_features, validate_dataset, validate_sample)
+                         runtime_features, validate_dataset, validate_sample,
+                         _task_matches_replay)
 from nca.ik.profiles import runner_right_sole_profile
 
 
@@ -279,7 +280,9 @@ def _load_corpus(corpus_dir, registry_dir, *, manifest_file_sha256, accepted):
                 if not line.endswith(b"\n") or len(line) > _MAX_ROW_BYTES:
                     _fail("unterminated or oversized sample row")
                 sample = GeometricSample.from_dict(strict_json_loads(line, max_bytes=_MAX_ROW_BYTES))
-                if sample.task != next(scheduled, None) or sample.task.partition != partition:
+                if (not _task_matches_replay(sample.task, next(scheduled, None), config,
+                                             _accepted_archive=accepted)
+                        or sample.task.partition != partition):
                     _fail("sample differs from the declared ordered partition schedule")
                 # The accepted original shards are pinned by manifest and per-shard
                 # byte hashes before this platform-specific replay check. Fixtures

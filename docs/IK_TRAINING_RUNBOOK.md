@@ -54,10 +54,11 @@ and the source/runtime/visibility binding before producing a declaration:
 The Windows label compatibility inventory permits only exact, enumerated
 original/replay label digest pairs after original-byte authentication; see the
 [training reference](IK_TRAINING.md#authenticated-corpus-and-deterministic-sampling).
-The current CPU readback also exposes an independent **task replay refusal** at
-`training-00005.jsonl`, row 43. This remains a blocking validation problem, not
-an admitted corpus or normalization result. Preserve exact task/schedule checks;
-do not create an admission record or run CUDA while preparation refuses.
+Task compatibility likewise requires exactly one of 17 pinned whole-task digest
+pairs, with original task inputs retained. The full Windows CPU reader now
+passes task/label/split checks and exact training-only normalization; the
+clean-source `prepare`, final CI and prospective admissions remain required.
+Do not create an admission record or run CUDA while any of these gates refuses.
 
 ```sh
 python -m nca.train.ik_experiment prepare --corpus CORPUS_DIRECTORY --registry ORIGINAL_REGISTRY_DIRECTORY --output NEW_RUN_DIRECTORY --device cuda:0

@@ -16,7 +16,9 @@ from unittest.mock import patch
 from nca.contracts import ContractError, canonical_json, sha256_json
 from nca.ik.data import (DatasetConfig, build_split_plan, fit_normalization,
                          generate_sample, iter_tasks, validate_sample, TeacherLabel,
-                         _authenticated_windows_label_replay, _windows_replay_inventory)
+                         _authenticated_windows_label_replay, _windows_replay_inventory,
+                         GeometricTask, validate_task, _task_matches_replay,
+                         _windows_task_replay_inventory)
 from nca.ik.profiles import runner_right_sole_profile
 from nca.ik.reference import SolverConfig
 from nca.train.ik_corpus import (
@@ -247,6 +249,55 @@ class IKCorpusTests(unittest.TestCase):
                     _windows_replay_inventory()
         finally:
             _windows_replay_inventory.cache_clear()
+
+    def test_windows_task_replay_requires_exact_pair_config_identity_and_order(self):
+        config = DatasetConfig.from_dict(json.loads((ROOT / "configs/ik/datasets/runner_v1.json").read_text()))
+        cases = json.loads((ROOT / "tests/fixtures/ik_windows_replay_tasks.json").read_text())
+        with patch("nca.ik.data.platform.system", return_value="Windows"), \
+                patch("nca.ik.data.platform.python_version", return_value="3.12.10"):
+            for case in cases:
+                retained = GeometricTask.from_dict(case["retained"])
+                replay = GeometricTask.from_dict(case["windows_replay"])
+                self.assertFalse(_task_matches_replay(retained, replay, config))
+                self.assertTrue(_task_matches_replay(retained, replay, config, _accepted_archive=True))
+                with patch("nca.ik.data.replay_task", return_value=replay):
+                    validate_task(retained, config, _accepted_archive=True)
+                    with self.assertRaises(ContractError):
+                        validate_task(retained, config)
+                with self.assertRaises(ContractError):
+                    replace(retained, partition="tuning")
+                for key, value in (("id", "0" * 64),
+                                   ("family_id", "0" * 64), ("stage", retained.stage + 1)):
+                    self.assertFalse(_task_matches_replay(replace(retained, **{key: value}), replay,
+                                                         config, _accepted_archive=True))
+                third = math.nextafter(replay.inputs.target_root[0], math.inf)
+                if third == retained.inputs.target_root[0]:
+                    third = math.nextafter(third, math.inf)
+                changed = replace(replay, inputs=replace(replay.inputs, target_root=(
+                    third, replay.inputs.target_root[1])))
+                self.assertFalse(_task_matches_replay(retained, changed, config, _accepted_archive=True))
+                self.assertFalse(_task_matches_replay(retained, replay, self.config, _accepted_archive=True))
+                other = GeometricTask.from_dict(cases[1 if case is cases[0] else 0]["windows_replay"])
+                self.assertFalse(_task_matches_replay(retained, other, config, _accepted_archive=True))
+            with patch("nca.ik.data.platform.system", return_value="Linux"):
+                self.assertFalse(_task_matches_replay(retained, replay, config, _accepted_archive=True))
+
+    def test_windows_task_inventory_tamper_refuses(self):
+        _windows_task_replay_inventory.cache_clear()
+        try:
+            with patch.object(Path, "read_bytes", return_value=b"{}"):
+                with self.assertRaisesRegex(ContractError, "task replay inventory bytes changed"):
+                    _windows_task_replay_inventory()
+        finally:
+            _windows_task_replay_inventory.cache_clear()
+
+    def test_rehashed_fixture_target_change_still_refuses(self):
+        def edit(rows):
+            value = rows[0]["task"]["inputs"]["target_root"][0]
+            rows[0]["task"]["inputs"]["target_root"][0] = math.nextafter(value, math.inf)
+        self._replace_shard("training", edit)
+        with self.assertRaises(ContractError):
+            self.read()
 
     def test_rehashed_one_ulp_fixture_label_still_refused(self):
         def edit(rows):
