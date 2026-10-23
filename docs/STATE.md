@@ -274,8 +274,7 @@ checkpoints, normal/delayed/lost/partitioned/reset communication, and untrained 
 private recurrence, one neighbor round and root-only readout; the equal-size no-message candidate shares its features
 and action limits. Original declarations, failures and audit corrections remain in the [evidence index](evidence/2026-10-19-t110.md).
 
-The predeclared result is no-go: graph and no-message each succeeded in one of
-six normal holdout trials, with zero paired success gain; the graph was slightly
+The predeclared result is no-go: graph and no-message each succeeded in one of six normal holdout trials, with zero paired success gain; the graph was slightly
 slower under the capped-completion metric. Each untrained method succeeded in
 three of six. The trained successes did not require a purposeful hop, a retained
 limitation of the frozen quiet-arrival task. Other declared gates passed, but
@@ -283,8 +282,7 @@ these observations provide no reason to promote communication in this screen.
 Aggregate work stayed within 4,000 decisions / 900 seconds: 3,315 decisions and
 227.1865 seconds through final ledger publication. Owner feel remains unjudged.
 
-The independent local reproduction stopped producing records after 112 episodes,
-3,096 confirmed decisions and 18,576 ticks; its completion and termination are
+The independent local reproduction stopped producing records after 112 episodes, 3,096 confirmed decisions and 18,576 ticks; its completion and termination are
 unconfirmed. Its audited archive is saved. A concurrently launched GitHub repeat
 later completed 119 rows / 3,297 decisions and reported the same no-go. These are
 separate executions. Their combined confirmed decisions are at least **6,393**,
