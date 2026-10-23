@@ -111,6 +111,7 @@ def hello(**overrides):
         "lease_ticks": LEASE_TICKS,
         "actor_id": ACTOR_ID,
         "producer": "policy",
+        "teacher_capture": "owner_reference_action_development_only",
         "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
         "controller_sha256": CONTROLLER_SHA256,
         "native_coupling": True,
@@ -186,6 +187,86 @@ class TransportTests(unittest.TestCase):
             accounting.events[-1],
             ("complete", "r1", {"confirmed_physical_ticks": 0}),
         )
+
+    def test_accounted_teacher_reset_is_capture_stage_without_label_precharge(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(response=lambda request: success(
+                request,
+                transition={
+                    "ticks_consumed": 0,
+                    "failed": False,
+                    "reason": "reset",
+                },
+            )),
+            accounting=accounting,
+        )
+        transport.request({
+            "sequence": 1,
+            "command": "reset",
+            "split": "development",
+            "producer": "teacher",
+        })
+        self.assertEqual(
+            accounting.events[0],
+            ("reserve", "reset", "r1", {
+                "tuning": False,
+                "stage": "capture",
+            }),
+        )
+
+    def test_teacher_step_is_capture_stage_and_does_not_precharge_label(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(response=lambda request: success(
+                request,
+                transition={
+                    "ticks_consumed": 6,
+                    "failed": False,
+                    "reason": "running",
+                },
+            )),
+            accounting=accounting,
+        )
+        transport.request({
+            "sequence": 1,
+            "command": "teacher_step",
+            "repeat_ticks": 6,
+        })
+        self.assertEqual(
+            accounting.events[0],
+            ("reserve", "step", "r1", {
+                "maximum_ticks": 6,
+                "capture_labels": 0,
+                "stage": "capture",
+            }),
+        )
+        self.assertEqual(
+            accounting.events[-1],
+            ("complete", "r1", {
+                "confirmed_physical_ticks": 6,
+            }),
+        )
+
+    def test_teacher_step_refuses_transport_label_precharge_before_send(self):
+        accounting = Accounting()
+        channel = Channel()
+        transport = FlightRpcTransport(
+            channel,
+            accounting=accounting,
+            capture_labels_per_step=1,
+        )
+        with self.assertRaisesRegex(
+            FlightProtocolError,
+            "durable capture eligibility",
+        ):
+            transport.request({
+                "sequence": 1,
+                "command": "teacher_step",
+                "repeat_ticks": 6,
+            })
+        self.assertEqual(accounting.events, [])
+        self.assertEqual(channel.sent, [])
 
     def test_accounted_capture_reset_preserves_capture_stage(self):
         accounting = Accounting()
