@@ -19,8 +19,17 @@ and cannot substitute for either required reviewer.
 
 - The current reviewed implementation lives in
   [PR #81](https://github.com/techrote/neural-cyber-automata/pull/81).
-  Exact final executable revision and source inventory must be frozen from
-  its final passing checks. The approved preceding source baseline was
+  The first tested watchdog/reviewer-request executable revision is
+  `638d59b49d5a70e7c439baffa88691a6f8b20600`, with exact
+  261-file source inventory SHA-256
+  `580608deade828f1668f357115ef7f3bc51ea850ce8551bf510c2db698bd2687`.
+  This source identity was independently verified by
+  [nonexperimental CI #39880610724](https://github.com/techrote/neural-cyber-automata/actions/runs/39880610724);
+  the resource assessment original SHA-256 is
+  `6d897a3280887a28b8c2725593e232f828dff6465cd8c4d2d3f5d2274074fd0d`.
+  Later docs-only commits do not alter the source closure, but exact
+  executable revision must still be reviewed and frozen intentionally.
+  The approved preceding source baseline was
   [PR #80 merge \`9747ef0b\`](https://github.com/techrote/neural-cyber-automata/commit/9747ef0b610053b837cce1f57b62c6f880c8144f),
   merge tree \`e4dd3f939ae6e95338df97233e364794993155aa\`.
 - Unchanged experiment configuration:
@@ -95,6 +104,15 @@ The immutable CI artifact
 \`accepted=false\`, \`prospective_experiment_admitted=false\`,
 \`peak_resident_memory=false\` and an empty independent-review list.
 Its *negative* result is checked by the same source-bound CI job.
+The [observed draft from run #39880610724](https://github.com/techrote/neural-cyber-automata/actions/runs/39880610724)
+recorded 641,118,208 sampled RSS bytes, a nonbinding fourfold allowance
+of 2,564,472,832 bytes, an 8,589,934,592-byte soft threshold,
+89,737,969,664 bytes sampled disk free and
+16,895,424,646 bytes required. Five static resource gates passed;
+the diagnostic-runner available-disk sample passed; both historical
+time-fit gates were explicitly null. The **peak resident memory gate
+remained false**, four explicit blockers were preserved, and no
+allocation or reviewer identity was consumed.
 It is intentionally **not** a validator-admitted
 \`nca-jolt-003-resource-admission/v2\` record. A green synthetic CI
 run cannot upgrade this assessment to a passing resource declaration.
