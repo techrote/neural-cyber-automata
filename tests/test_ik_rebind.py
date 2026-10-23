@@ -35,6 +35,18 @@ class RebindTests(unittest.TestCase):
                 api.load('run','parent','0'*64,'failed','hash','registry',_historical=True)
             read.assert_not_called()
 
+    def test_original_paid_intent_is_copied_byte_exact_before_debit(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder); old=root/'old';old.mkdir();new=root/'new';new.mkdir()
+            raw=b'{ "original": true }\r\n'
+            (old/'recovery-intent.json').write_bytes(raw)
+            api._copy_paid_intent(old/'amendment.json', {'recovery_intent':{'original':True}}, new)
+            self.assertEqual((new/'recovery-intent.json').read_bytes(),raw)
+            with self.assertRaises(FileExistsError):
+                api._copy_paid_intent(old/'amendment.json', {'recovery_intent':{'original':True}}, new)
+            with self.assertRaisesRegex(ValueError,'paid authority changed'):
+                api._copy_paid_intent(old/'amendment.json', {'recovery_intent':{'changed':True}}, new)
+
     def fixture(self, root):
         parent = {k:{} for k in api._FIELDS}
         parent.update(sha256='a'*64, source={'source_sha256': api.REBIND_PARENT_SOURCE_SHA256})

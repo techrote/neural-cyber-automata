@@ -463,6 +463,19 @@ def _validate_rebind(run, registry, a, failed_path, failed_digest):
             raise ValueError("rebind reset accounting, checkpoint or refused launcher debit")
 
 
+def _copy_paid_intent(parent_path, parent, output):
+    """Retain the exact original authority bytes before any new debit."""
+    source = Path(parent_path).parent/"recovery-intent.json"
+    if _read(source) != parent["recovery_intent"]:
+        raise ValueError("original paid authority changed before rebind publication")
+    raw = source.read_bytes()
+    target = Path(output)/"recovery-intent.json"
+    with target.open("xb") as stream:
+        stream.write(raw)
+    if target.read_bytes() != raw:
+        raise ValueError("original paid authority copy readback differs")
+
+
 def rebind(run, parent_path, parent_digest, failed_path, failed_digest, corpus, registry,
            refusal_observation, output):
     """Rebind one refused launcher, retaining original paid authority and candidates."""
@@ -511,6 +524,7 @@ def rebind(run, parent_path, parent_digest, failed_path, failed_digest, corpus, 
         raise ValueError("source changed during rebind preflight")
     output.mkdir(parents=True, exist_ok=False)
     immutable_json(output/"rebind-intent.json", intent)
+    _copy_paid_intent(parent_path, parent, output)
     for seed in SEEDS:
         ledgers[seed].record_recovery_overhead(proofs[str(seed)])
     body = {k:v for k,v in parent.items() if k != "sha256"}
