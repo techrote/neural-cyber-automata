@@ -1,0 +1,212 @@
+{
+  "accepted": true,
+  "allocation_consumed": false,
+  "allocation_id": "learn-jolt-003-20261022-a1",
+  "config_sha256": "cbedd0adc389bafa0f7d053737181f5e4fc2a34a0d6fa6b9b1ada8acb27a3c51",
+  "cpu_comparison_policy": "cpu-hardware-observational-and-normalized/v1",
+  "execution_restrictions": [
+    "Do not dispatch execute from this review.",
+    "Do not claim or consume learn-jolt-003-20261022-a1 from this review.",
+    "The independent operation_serialization_deadline_feasibility v2 review is still required.",
+    "The actual execution runner must independently show at least 16895424646 free bytes before the one-use allocation is durably claimed.",
+    "Owner acceptance of residual memory risk is not proof of a hard memory bound."
+  ],
+  "findings": [
+    {
+      "id": "TERM-REVIEW-01",
+      "resolution": "This independently authored v2 record binds the exact frozen source/configuration/host/runtime/prospective declaration and is not copied from the unsigned request or an earlier review.",
+      "status": "closed"
+    },
+    {
+      "id": "TERM-REVIEW-02",
+      "resolution": "Independent source inspection confirms terminal/cutoff/GAE semantics, same-seed BC-to-residual authority and recurrence, fixed seeds/update size/checkpoint barrier/qualification gates, and fail-closed propagation from the sampled process-tree watchdog and evidence/audit failures.",
+      "status": "closed"
+    }
+  ],
+  "host_identity_sha256": "dd6cbd59425a43497f41ed4bef98fef35eacd1d6cceba9ba11d484ebd721191e",
+  "merged_implementation": {
+    "frozen_executable_is_ancestor": true,
+    "merge_commit": "fb57c32c878485df26c3efeb57cd18d7bc0e9b01",
+    "post_freeze_changed_paths": [
+      ".github/workflows/jolt-003-prospective-binding.yml",
+      "docs/evidence/2026-10-23-jolt003-resource-assessment-review.md",
+      "docs/evidence/jolt-003-resource-admission-20261023/operations-resource-review-request.json",
+      "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json",
+      "docs/evidence/jolt-003-resource-admission-20261023/prospective-binding-review-summary-v2.json",
+      "docs/evidence/jolt-003-resource-admission-20261023/terminal-learning-review-request.json"
+    ],
+    "post_freeze_executable_change_found": false,
+    "pull_request": 81
+  },
+  "offline_scope_only": false,
+  "overall_execution_authorized": false,
+  "overall_execution_status": "HOLD",
+  "physical_experiment_started": false,
+  "prospective_binding_sha256": "06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba",
+  "prospective_binding_source_readback": {
+    "actual_execution_runner_disk_check_passed": false,
+    "allocation_claimed": false,
+    "artifact_id": 12472417540,
+    "artifact_name": "jolt-003-prospective-binding-39885557723",
+    "artifact_zip_sha256": "250bc274e83cbd7c5292e90f30e22347ae6f5ebc76fdaf37bf5921edf3243aab",
+    "clean_frozen_source_checkout": "40d4339a31433572b5433bb344291b3e9303d317",
+    "diagnostic_runner_disk_check_passed": true,
+    "diagnostic_runner_free_disk_bytes": 89721016320,
+    "job_id": 120192800393,
+    "matches_owner_risk_candidate": true,
+    "physical_experiment_started": false,
+    "source_api": "nca.train.jolt_cli_v3.build_prospective + nca.train.jolt_admission_v3.prospective_binding",
+    "workflow_candidate_head": "bfa6464acddfef7ee4a8b3aab0fab192c3ecfed3",
+    "workflow_run_id": 39885557723
+  },
+  "prospective_experiment_admitted": true,
+  "resource_candidate": {
+    "canonical_sha256": "6f241259d3592b7b1eee75afc59990dd613204eafb23737565dd22cb602e4b72",
+    "file_sha256": "8748331810de5da4741c042347e24f0cf5d7cb21121b215559795131b5d2b5d7",
+    "full_peak_memory_claimed": false,
+    "owner_risk_acceptance_comment": 6355227817,
+    "path": "docs/evidence/jolt-003-resource-admission-20261023/owner-risk-resource-candidate-v2.json",
+    "required_execution_runner_free_disk_bytes": 16895424646,
+    "soft_watchdog_bytes": 8589934592,
+    "watchdog_sample_interval_seconds": 0.25
+  },
+  "review_date": "2026-10-23",
+  "review_decision": "ACCEPT",
+  "review_request": {
+    "git_blob_sha": "b7e6c3ace6d2067fad7e5351070d1d962b7e1ce8",
+    "original_blockers": [
+      "TERM-REVIEW-01",
+      "TERM-REVIEW-02"
+    ],
+    "originally_accepted": false,
+    "path": "docs/evidence/jolt-003-resource-admission-20261023/terminal-learning-review-request.json",
+    "requested_role": "terminal_learning_qualification"
+  },
+  "review_roles": [
+    "terminal_learning_qualification"
+  ],
+  "reviewer": "openai-chatgpt-gpt-5.6-sol-terminal-learning-qualification",
+  "reviewer_identity": {
+    "independence_statement": "Single-session terminal-learning reviewer only; no claim to be or substitute for the independent operations/resource reviewer.",
+    "model": "GPT-5.6 Sol",
+    "product": "ChatGPT",
+    "provider": "OpenAI",
+    "publication_actor": "techrote",
+    "review_role": "terminal_learning_qualification"
+  },
+  "runtime_contract_sha256": "f65e3b731f44ce91511b5d51532f5b24cb622d586a26675c7150ec8988ba2406",
+  "schema": "nca-learn-jolt-003-source-admission-review/v2",
+  "source_file_count": 261,
+  "source_revision": "40d4339a31433572b5433bb344291b3e9303d317",
+  "source_sha256": "d8005b498772234a4ed8678522579509d2403fe2b7781298fa441fb96d4c2d44",
+  "supporting_evidence": [
+    {
+      "kind": "exact_source_binding_replay",
+      "reference": "GitHub Actions run 39885557723 / job 120192800393",
+      "result": "Clean checkout of frozen executable reconstructed source/config/host/runtime/prospective hashes and matched prospective binding 06a9957deb898e4ee69c596e69fca6d47604432875dccd553207217b3fbe20ba without opening an experiment."
+    },
+    {
+      "kind": "source_semantics",
+      "paths": [
+        "src/nca/evaluation/jolt_retirement.py",
+        "src/nca/train/jolt_capture_v3.py",
+        "src/nca/train/jolt_learning.py",
+        "src/nca/controllers/jolt_learned.py",
+        "src/nca/train/jolt_screen.py",
+        "src/nca/evaluation/jolt_learning.py",
+        "src/nca/train/jolt_admission_v3.py",
+        "src/nca/train/jolt_memory_watchdog_v3.py",
+        "tools/observe_jolt_v3.py"
+      ],
+      "result": "Source inspection supports every terminal-learning check recorded above."
+    },
+    {
+      "kind": "watchdog_negative_regression_source",
+      "path": "tests/test_jolt_observer_memory_v3.py",
+      "result": "The source-level regression suite contains a forced-overage case that requires observer exit 2, terminal completed=false, watchdog-triggered evidence and owned-tree cleanup; changed policy refuses before spawn."
+    },
+    {
+      "kind": "teacher_prerequisite",
+      "paths": [
+        "docs/evidence/2026-10-20-jolt-recovery-v4.md",
+        "docs/evidence/jolt-recovery-v4-review-20261020.json",
+        "docs/evidence/jolt-recovery-v4-acceptance-reconciliation-20261021.json"
+      ],
+      "result": "Original and restored independent evidence confirms the accepted 30/32 authored teacher and explicitly does not claim learned/sealed qualification."
+    },
+    {
+      "kind": "sealed_freshness",
+      "paths": [
+        "configs/learning/jolt-static-split-v2.json",
+        "configs/learning/jolt-opened-inventory-v2.json",
+        "docs/evidence/jolt-learn-003-unopened-sealed-proof-20261022.json"
+      ],
+      "result": "The prior consumed invocation had five finals, no frozen-finals/sealed-opened barriers and zero open/sealed rows; the current sixteen sealed cases are not in the conservative opened inventory."
+    },
+    {
+      "kind": "post_freeze_drift_check",
+      "reference": "compare 40d4339a31433572b5433bb344291b3e9303d317...fb57c32c878485df26c3efeb57cd18d7bc0e9b01",
+      "result": "Only workflow/evidence paths changed after the frozen executable; no executable source path changed."
+    }
+  ],
+  "teacher_prerequisite": {
+    "accepted_merge": "0d9d74631012c60e0286784cb25634c04bcedbf7",
+    "arrival_regressions": 0,
+    "arrivals": 30,
+    "cases": 32,
+    "complete_original_evidence": true,
+    "controller": "authored-jolt-recovery@4",
+    "frozen_physical_source": "46a22f98dce78be3c4ba534d955e58d5691c7d96",
+    "historical_rescues": 3,
+    "purposeful_airborne_cases": 32,
+    "reference_arrivals": 27,
+    "sealed_learned_qualification_claimed": false,
+    "unchanged_teacher_gates_passed": 13
+  },
+  "terminal_learning_checks": {
+    "administrative_cutoff_bootstrap_and_trace_masks_preserved": true,
+    "bc_runs_before_ppo": true,
+    "confirmed_decisions_per_ppo_update": 256,
+    "emergency_expiry_replayed_from_complete_history": true,
+    "mean_angle_margin_radians": 0.1,
+    "mean_arrival_gate": 0.75,
+    "mean_own_initial_gain_gate": 0.125,
+    "minimum_per_seed_arrival_gate": 0.5,
+    "no_new_terminal_penalty": true,
+    "open_and_sealed_case_separation_preserved": true,
+    "ordinary_learned_policy_authority_unchanged_except_shared_supervisor": true,
+    "ordinary_trim_margin_per_second": 0.5,
+    "original_invocation_lifetime_not_renewed": true,
+    "ppo_updates_per_seed": 8,
+    "purposeful_airborne_loss_maximum": 0.125,
+    "raw_per_case_inference_p95_maximum_ms": 5.0,
+    "recurrent_state_is_explicit_and_separate_for_residual_and_base": true,
+    "residual_ppo_uses_same_seed_frozen_bc_final_base": true,
+    "safe_retirement_has_no_ppo_bootstrap": true,
+    "safe_retirement_is_failure_not_success": true,
+    "safe_retirement_requires_native_cancellation": true,
+    "sealed_case_count": 16,
+    "sealed_cases_proved_unreached_by_consumed_prior_invocation": true,
+    "sealed_comparison_rows": 224,
+    "sealed_controller_count": 14,
+    "seed_resamples": 27,
+    "six_final_checkpoints_required_before_sealed_outcomes": true,
+    "strictly_positive_lower95_required": true,
+    "ticks_per_confirmed_decision": 6,
+    "toward_speed_ratio_range": [
+      0.7,
+      1.5
+    ],
+    "training_seeds": [
+      190103,
+      190207,
+      190301
+    ],
+    "watchdog_or_evidence_failure_cannot_upgrade_to_success": true
+  },
+  "unresolved_blocking_findings": [],
+  "validation_notes": [
+    "The review record contains the exact fields required by validate_declaration_reviews() for the portable v2 schema, one terminal-learning role, accepted=true, offline_scope_only=false, prospective_experiment_admitted=true, and zero unresolved blocking findings.",
+    "A new connector-side 261-blob byte-for-byte SHA-256 recomputation was attempted but could not complete because the connector fan-out limit was reached. The source-closure hash is therefore corroborated by the inspected exact-checkout build_prospective() replay, the repository source_inventory()/sha256_json algorithm, and the no-executable-drift comparison rather than claimed as a second full 261-file rehash."
+  ]
+}
