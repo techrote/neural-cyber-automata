@@ -65,7 +65,7 @@ class MemoryPolicyTests(unittest.TestCase):
         self.assertEqual(policy["sample_interval_seconds"], .25)
         self.assertIs(policy["kernel_hard_limit_enforced"], False)
         self.assertIs(policy["peak_between_samples_guaranteed"], False)
-        self.assertIsNone(validate_watchdog_policy_v3(policy) if False else None)
+        self.assertEqual(validate_watchdog_policy_v3(policy), policy)
         for field, altered in [
             ("soft_threshold_bytes", 12 * 1024 ** 3),
             ("sample_interval_seconds", 2.0),
