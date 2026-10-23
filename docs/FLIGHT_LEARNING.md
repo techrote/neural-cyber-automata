@@ -55,6 +55,47 @@ preregistration. The current model is feedforward, with no hidden state to
 carry across episodes. Transport failure poisons the session; there is no
 automatic host restart or replay of possibly consumed work.
 
+## Trainer-only capture, cloning and export preparation
+
+`nca.train.flight_learning` is an offline preparation surface over already
+recorded values; it has no host launcher, capture command or execution-admission
+override. Each capture episode is canonicalized and content-hashed against the
+accounting declaration, capture identity and exact host/build/profile/controller/
+teacher source tuple. Raw owner observations are paired with the host-produced
+`4ly-flat-observation/v1` view, admitted teacher actions, confirmed physical
+tick consumption and explicit terminal outcomes. Failed, refused, canceled and
+uncertain work remains in the immutable episode record. Unknown consumption,
+refused/unknown teacher actions, failed transitions and invalid identity/schema
+rows never become ordinary supervised samples.
+
+Training capture is restricted to the preregistered eleven development
+scenario IDs and seeds `101/103/107/109`, with at most 44 episodes and 11,400
+eligible labels. The dataset identity includes every retained episode and
+eligible sample digest. The fixed loss assigns each of the six training
+families weight `1/6`; within a family, each episode containing admitted rows
+has equal total weight and its admitted rows divide that episode weight. The
+three fixed policy seeds use deterministic seed-bound shuffles for twenty
+epochs. Every optimizer batch must first reserve one optimizer update and its
+sample presentations in the source-bound `FlightAccountingLedger`; missing or
+mismatched accounting refuses optimization.
+
+Checkpoint preparation retains the exact compact-model state, Adam state,
+deterministic shuffle RNG, Torch CPU RNG, learner source/revision, policy seed,
+capture/declaration/source identities, schedule identity, preprocessing/action
+identities and parent-checkpoint lineage. The exact export bundle contains the
+54-channel host preprocessing contract, two-output action contract and numeric
+CPU float32 weights. Its scored inference object has no teacher/oracle
+reference and consumes only the raw owner identity needed to bind the separate
+54-channel learner view; evaluator-only values are never policy inputs. Export
+qualification flags remain explicitly false for trained quality, actual-host
+parity and realtime operation, and final access remains false.
+
+The focused learning tests run only tiny synthetic capture records and a tiny
+synthetic CPU BC fixture behind a synthetic admitted accounting ledger. That
+optimizer exercise is software conformance, not the declared #74 experiment:
+it collects no teacher data, starts no host, initializes no CUDA path, reads no
+teacher/learner/IK final payload and establishes no learned flight quality.
+
 ## Transport failure, accounting and capture handoff
 
 A request that fails before dispatch may be an ordinary local/refusal failure.
@@ -195,12 +236,15 @@ Windows CPU-only software checks from repository root:
 ```powershell
 python -m unittest discover -s tests -p test_flight_preparation.py
 python -m unittest discover -s tests -p test_flight_accounting.py
+python -m unittest discover -s tests -p test_flight_learning_pipeline.py
 python tools/check_docs.py --strict
 ```
 
-The tests use scripted/synthetic fixtures only; they do not run Godot/native,
-collect teacher data, train a model, initialize CUDA or open a final payload.
-Actual-host transport/export/realtime qualification and teacher acceptance
-remain outstanding.
+The tests use scripted/synthetic fixtures only. They do not run Godot/native,
+collect teacher data, execute the declared learning experiment, initialize CUDA
+or open a final payload. The learning-pipeline test performs only tiny synthetic
+CPU optimization to verify deterministic cloning, accounting, checkpoint and
+export mechanics. Trained quality, actual-host export parity, realtime
+qualification and teacher acceptance remain outstanding.
 
 © 2026 techrote. All rights reserved.
