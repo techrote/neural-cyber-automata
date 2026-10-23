@@ -90,6 +90,9 @@ class Accounting:
     def mark_unknown(self, reservation, reason, **fields):
         self.events.append(("unknown", reservation, reason, fields))
 
+    def abort(self, reason):
+        self.events.append(("abort", reason))
+
 
 def hello(**overrides):
     value = {
@@ -159,6 +162,19 @@ class TransportTests(unittest.TestCase):
         self.assertTrue(reply["closed"])
         self.assertEqual(
             channel.sent[0]["op"], "close"
+        )
+
+    def test_post_reply_abort_delegates_to_durable_accounting(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(), accounting=accounting
+        )
+        transport.abort_after_reply(
+            "step_semantic_validation:fixture"
+        )
+        self.assertEqual(
+            accounting.events,
+            [("abort", "step_semantic_validation:fixture")],
         )
 
     def test_accounted_tuning_reset_reserves_tuning_episode_atomically(self):
