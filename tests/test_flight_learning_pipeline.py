@@ -439,6 +439,15 @@ class FlightLearningTests(unittest.TestCase):
             restored.lineage["sample_presentations"],
             len(self.dataset.samples) * BC_EPOCHS,
         )
+        self.assertEqual(
+            restored.lineage["accounting_attempt_id"],
+            trained.accounting_attempt_id,
+        )
+        self.assertEqual(
+            restored.lineage["accounting_chain_sha256"],
+            trained.accounting_chain_sha256,
+        )
+        self.assertNotEqual(trained.accounting_chain_sha256, "0" * 64)
 
         original_probe = random.Random()
         original_probe.setstate(trained.shuffle_rng.getstate())
