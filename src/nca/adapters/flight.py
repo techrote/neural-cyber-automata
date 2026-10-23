@@ -31,6 +31,30 @@ DECISION_TICKS = 6
 LEASE_TICKS = 12
 FLAT_CHANNELS = 54
 
+# Source-bound #74 case contract from FLIGHT_PREREGISTRATION.md and the
+# reviewed-but-unqualified Cybersand #229 head 2e20731d. These are physical
+# episode deadlines, not a universal repeat cap.
+SCENARIO_MAX_TICKS = {
+    "unsupported_hover": 300,
+    "horizontal_reach": 1080,
+    "vertical_reach": 1080,
+    "diagonal_reach": 1080,
+    "reverse": 1560,
+    "arrival_braking": 1500,
+    "wide_corridor": 1800,
+    "offset_gates": 2100,
+    "corner": 2100,
+    "slalom": 2400,
+    "wall_recovery": 2100,
+}
+DEVELOPMENT_SEEDS = frozenset((101, 103, 107, 109))
+TUNING_SEEDS = frozenset((211, 223, 227, 229))
+TRAINING_SCENARIOS = frozenset(SCENARIO_MAX_TICKS)
+TUNING_SCENARIOS = frozenset(
+    scenario for scenario in SCENARIO_MAX_TICKS
+    if scenario != "unsupported_hover"
+)
+
 
 class FlightProtocolError(RuntimeError):
     """The host reply cannot be used as a trustworthy flight transition."""
@@ -168,6 +192,25 @@ class FlightSession:
             return "tuning"
         raise ValueError("all final/sealed suites are excluded")
 
+    @classmethod
+    def _preregistered_case(
+        cls, *, scenario: str, seed: int, split: str
+    ) -> str:
+        host_split = cls._host_split(split)
+        if host_split == "development":
+            scenarios, seeds = TRAINING_SCENARIOS, DEVELOPMENT_SEEDS
+        else:
+            scenarios, seeds = TUNING_SCENARIOS, TUNING_SEEDS
+        if scenario not in scenarios:
+            raise ValueError(
+                f"{split} scenario is outside the preregistered #74 case set"
+            )
+        if seed not in seeds:
+            raise ValueError(
+                f"{split} seed is outside the preregistered #74 case set"
+            )
+        return host_split
+
     @staticmethod
     def _identity(observation: Mapping[str, Any]) -> tuple[Any, ...]:
         return tuple(observation.get(key) for key in (
@@ -199,6 +242,8 @@ class FlightSession:
             "controller_sha256": CONTROLLER_SHA256,
             "native_coupling": True,
             "host_count": 1,
+            "sealed_suite_sha256": None,
+            "max_ticks": SCENARIO_MAX_TICKS[scenario],
         }
         for key, value in expected.items():
             if manifest.get(key) != value:
@@ -323,10 +368,12 @@ class FlightSession:
     def reset(
         self, *, scenario: str, seed: int, split: str = "training"
     ) -> dict[str, Any]:
-        host_split = self._host_split(split)
         if (type(seed) is not int or seed < 0
                 or not isinstance(scenario, str) or not scenario):
             raise ValueError("explicit scenario and nonnegative seed required")
+        host_split = self._preregistered_case(
+            scenario=scenario, seed=seed, split=split
+        )
         previous = deepcopy(self.observation)
         reply = self._request({
             "command": "reset",
