@@ -71,11 +71,14 @@ rows never become ordinary supervised samples.
 Training capture is restricted to the preregistered eleven development
 scenario IDs and seeds `101/103/107/109`, with at most 44 episodes and 11,400
 eligible labels. The dataset identity includes every retained episode and
-eligible sample digest. The fixed loss assigns each of the six training
-families weight `1/6`; within a family, each episode containing admitted rows
-has equal total weight and its admitted rows divide that episode weight. The
-three fixed policy seeds use deterministic seed-bound shuffles for twenty
-epochs. Every optimizer batch must first reserve one optimizer update and its
+eligible sample digest. Experimental cloning refuses an incomplete development
+case set: all 11 scenarios x four registered seeds must be present exactly once,
+even when an episode retained no eligible labels. The fixed loss assigns each of
+the six training families nominal weight `1/6`; within a family, every retained
+capture episode owns an equal nominal share and its admitted rows divide that
+share. An episode with no eligible rows contributes zero rather than transferring
+its share to successful episodes. The three fixed policy seeds use deterministic
+seed-bound shuffles for twenty epochs. Every optimizer batch must first reserve one optimizer update and its
 sample presentations in the source-bound `FlightAccountingLedger`; missing or
 mismatched accounting refuses optimization.
 
