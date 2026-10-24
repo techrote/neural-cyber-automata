@@ -1,22 +1,27 @@
 ---
 title: Trainer flight-learning preparation
 kind: guide
-summary: Source-bound persistent flight-owner bridge preparation, fail-stop transport, and bounded design with actual-host execution blocked pending accepted #229.
+summary: Accepted Cybersand host/teacher source binding, fail-stop flight transport preparation, and bounded learner design with NCA runtime/bridge conformance still gated.
 owns: [flight.learning.preparation]
-verified: 2026-10-23
+verified: 2026-10-25
 ---
 
 # Trainer flight learning
 
-[PREPARATION ONLY] Issue #74 depends on accepted Cybersand #205/#206/#207.
-PR #229 remains in progress. Nothing here launches a host, trains a policy,
-issues an allocation or reads any final suite. IK #54, Jolt and morphology
-evidence and gates remain unchanged. Both IK final suites are excluded, as are
-the flight teacher's qualification final and every learner final payload.
+[PREPARATION ONLY] Cybersand #207 / PR #229 is accepted at merge
+`b5a8570e5123e1f633766e9390761a1c8134cfa2`. This reconciliation imports the
+qualified Trainer profile `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
+controller `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
+and frozen teacher `0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761`.
+It still launches no host, trains no policy, issues no allocation and opens no
+learner final. The teacher qualification used checkout
+`2bc2b6cfa9ad62512266df5804c5662b5ba8bd04` and one-use suite SHA-256
+`4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401`;
+that suite is evidence for the frozen teacher only and is explicitly ineligible
+for learner-final reuse.
 
 The separately registered `4ly-preparation@1` adapter now validates the exact
-source contract reviewed at Cybersand PR #229 head
-`2e20731de0559ed59280d7a11f84f596d1cba985`: real profile
+accepted Cybersand #229 source contract: real profile
 `4ly_trainer`, actor slot `0`, `4ly-episode/v1`,
 `4ly-observation/v1`, the host-produced
 `4ly-flat-observation/v1` object with exactly 54 finite values, and the
@@ -124,14 +129,15 @@ join keys without modifying the existing ACT004 capture record schema. Exact
 host-call/capture-phase/startup/cleanup topology and ceilings still require the
 accepted bridge measurements; the declaration therefore remains fail-closed.
 
-Actual-host launch is additionally hard-gated in
-`flight_transport.ACCEPTED_HOST`. It is intentionally `None` now.
-`FlightGodotTransport` therefore fails before inspecting a checkout or
-spawning Godot. After #207/#229 is accepted, an independent handoff must bind
-the exact accepted Git revision and tree, Godot version/binary SHA-256,
-native artifact path/SHA-256, Rapier artifact path/SHA-256, and SHA-256 values
-for the reviewed episode/observation/profile/controller/arena source files.
-Then, and only then, run actual-host conformance for reset, full/partial
+The accepted source identity is bound in `flight_transport.ACCEPTED_HOST`.
+`ACCEPTED_RUNTIME_BUILD` remains intentionally `None`: the accepted merge
+does not justify inventing portable Godot/native/Rapier binary hashes for a
+future NCA execution runner. `FlightGodotTransport` therefore still fails
+before spawning Godot. Before actual-host execution, an independent handoff
+must bind the exact accepted tree, Godot version/binary SHA-256, native artifact
+path/SHA-256, Rapier artifact path/SHA-256, and SHA-256 values for the reviewed
+episode/observation/profile/controller/arena source files. Then run NCA bridge
+actual-host conformance for reset, full/partial
 terminal step, lease expiry, cancel, human takeover, repeated reset, shutdown
 and induced reply loss. Verify manifest/profile/controller hashes and all
 sequence/run/actor/epoch/control-generation/observation/physical-tick receipts,
@@ -216,8 +222,10 @@ decisions, 11,400 capture labels, 5,400 optimizer updates, 684,000 sample
 presentations, 480 tuning episodes and 63 checkpoint publications. Exact
 `host_calls`, startup and cleanup operation ceilings remain null. Wall time,
 peak resident memory, storage bytes and publication bytes also remain null.
-No value is inferred from the source-specific #229 pilots while #207/#229
-remains unqualified.
+The accepted #229 teacher/host evidence is carried only as a source-bound
+prerequisite. Its source-specific pilot does not substitute for NCA transport,
+startup/cleanup, inference, memory or storage measurements on the chosen
+execution runner.
 
 No executable training command is admitted. `training_admission()` evaluates
 the incomplete preparation declaration and therefore remains fail-closed with
@@ -226,9 +234,9 @@ dependency digests; missing or stale evidence refuses admission. A future
 resource declaration must also bind validated wall/RSS/storage enforcement,
 not merely measured numbers.
 
-Before prospective execution can exist, record the accepted #229 host/build
-and teacher evidence, final bridge actual-host conformance, frozen split
-commitments, selected CPU runtime identity, source-bound throughput and
+Before prospective execution can exist, record the NCA execution runtime build
+identity, final bridge actual-host conformance, frozen split commitments,
+selected CPU runtime identity, source-bound throughput and
 host-call/reset latency, whole-process startup/cleanup duration, process-tree
 peak RSS, evidence/checkpoint/publication byte growth, durable storage
 throughput, exact host-call and capture-label phase topology, finite
@@ -250,7 +258,8 @@ The tests use scripted/synthetic fixtures only. They do not run Godot/native,
 collect teacher data, execute the declared learning experiment, initialize CUDA
 or open a final payload. The learning-pipeline test performs only tiny synthetic
 CPU optimization to verify deterministic cloning, accounting, checkpoint and
-export mechanics. Trained quality, actual-host export parity, realtime
-qualification and teacher acceptance remain outstanding.
+export mechanics. Host/teacher source qualification is now bound; trained
+quality, NCA actual-host export parity, realtime qualification, resource
+admission and independent learner-final custody remain outstanding.
 
 © 2026 techrote. All rights reserved.
