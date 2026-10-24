@@ -3,10 +3,14 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-23
+verified: 2026-10-24
 ---
 
 # Run ledger
+
+[MEASURED DEVELOPMENT] 2026-10-24: all 45 [IK54 development runs](evidence/2026-10-24-ik-dev-sweep.md),
+D-032, source `dcb1cb7`, TITAN RTX, seeds 41011/42013/43019; one attempt each,
+no learner failures, retries or drops. Top-three tuning confirmed once; Part B unexecuted.
 
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 

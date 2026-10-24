@@ -172,3 +172,26 @@ binds the training/tuning-only diagnostic bundles. Existing outcomes, ledgers,
 failure markers, charges, candidates and both final protections stay intact.
 
 © 2026 techrote. All rights reserved.
+
+## Dated correction — independent review, 23 October 2026
+
+The later independent training/tuning-only review corrects the earlier evidence
+limits and interpretation; the historical text above is retained.
+
+1. Every optimizer receipt contains pre-update per-batch `terms.endpoint`.
+   Training RMS by stage and point-batch position is therefore measurable
+   without replay. Polar end-of-point-stage RMS over epochs 36–40 is
+   0.140726 / 0.142422 / 0.145177 cells (seeds 41011 / 42013 / 43019).
+   Per-row training p95 and within-epoch snapshots remain unmeasured.
+2. All endpoint4 clipped steps (11 / 11 / 5) occur in epoch 1, mostly point
+   batches; seed 41011 has nine point and two trajectory clipped updates.
+3. The roughly 3.6-fold gradient-norm rise reflects loss rescaling, not evidence
+   of a new optimization pathology. Endpoint already dominates at weight 1;
+   clipping is a startup transient and does not explain late underfitting.
+4. The frozen D-028 permutation ends on a point batch in 40/40 epochs for
+   41011, 29/40 for 42013 and 34/40 for 43019. The legitimate prospective
+   treatment differs across seeds; report this with order comparisons.
+
+The [D-032 development sweep](IK_DEV_SWEEP.md) is now the authorized immediate
+experiment. These corrections and the review's output-head hypothesis do not
+establish a trained improvement, acceptance or any physical-actor result.
