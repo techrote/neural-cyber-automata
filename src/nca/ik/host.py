@@ -524,17 +524,25 @@ def inspect_joint_host(checkout: str | Path, godot: str | Path,
         revision, tree = git("rev-parse", "HEAD"), git("rev-parse", "HEAD^{tree}")
         if revision != PINNED_JOINT_HOST_REVISION or tree != PINNED_JOINT_HOST_TREE:
             raise HostError("joint host revision/tree is not the reviewed candidate")
-        if git("diff", "--name-only", "HEAD"):
-            raise HostError("tracked joint host differs from the pinned revision")
         native_manifest = json.loads((root / "godot/addons/cybersand_native/runtime-provenance.linux.json").read_text())
         rapier_manifest = json.loads((root / "godot/addons/godot-rapier2d/runtime-provenance.linux.json").read_text())
-        native_path = root / native_manifest["artifact"]
-        rapier_path = root / rapier_manifest["artifact"]
+        native_rel = str(native_manifest["artifact"])
+        rapier_rel = str(rapier_manifest["artifact"])
+        changed = git("diff", "--name-only", "HEAD", "--", ".",
+                      ":!" + native_rel, ":!" + rapier_rel, ":!godot/.godot")
+        if changed:
+            raise HostError("tracked joint host source differs from the pinned revision: " + changed.replace("\n", ","))
+        native_path = root / native_rel
+        rapier_path = root / rapier_rel
         native_digest, rapier_digest = _sha256_file(native_path), _sha256_file(rapier_path)
         if native_digest != native_manifest["sha256"] or native_digest != PINNED_NATIVE_LINUX:
             raise HostError("joint host native artifact identity differs")
         if rapier_digest != rapier_manifest["sha256"] or rapier_digest != PINNED_RAPIER_LINUX:
             raise HostError("joint host Rapier artifact identity differs")
+        if f"oid sha256:{native_digest}" not in git("show", "HEAD:" + native_rel):
+            raise HostError("joint host native bytes differ from the committed LFS pointer")
+        if f"oid sha256:{rapier_digest}" not in git("show", "HEAD:" + rapier_rel):
+            raise HostError("joint host Rapier bytes differ from the committed LFS pointer")
         executable = Path(shutil.which(str(godot)) or str(godot)).resolve()
         version = subprocess.check_output([str(executable), "--version"], text=True, timeout=timeout).strip()
         godot_digest = _sha256_file(executable)
