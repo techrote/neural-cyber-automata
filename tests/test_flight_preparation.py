@@ -19,6 +19,7 @@ from nca.adapters.flight import (
     SPLIT_GEOMETRY_VERSION,
     TRAINER_PROFILE,
     TRAINER_PROFILE_SHA256,
+    TEACHER_SHA256,
     FlightProtocolError,
     FlightSession,
     FlightTeacherCaptureSession,
@@ -30,7 +31,7 @@ from nca.train.flight import export_preprocessing, training_admission
 
 
 class Owner:
-    """Software fixture shaped exactly like the reviewed #229 owner bridge."""
+    """Software fixture shaped exactly like the accepted #229 owner bridge."""
 
     def __init__(self):
         self.run = 0
@@ -95,7 +96,7 @@ class Owner:
             "sealed_suite_sha256": None,
             "max_ticks": SCENARIO_MAX_TICKS[command["scenario"]],
             "teacher_source_sha256":
-                "a" * 64 if command["producer"] == "teacher" else None,
+                TEACHER_SHA256 if command["producer"] == "teacher" else None,
         }
 
     def transition(
@@ -240,7 +241,7 @@ class Owner:
                     ),
                     "flat_observation": self.flat(),
                     "teacher_action": {
-                        "source_sha256": "a" * 64,
+                        "source_sha256": TEACHER_SHA256,
                         "observation_id": current["observation_id"],
                         "status": "refused",
                         "requested_action": requested,
@@ -271,7 +272,7 @@ class Owner:
                     ),
                     "flat_observation": self.flat(),
                     "teacher_action": {
-                        "source_sha256": "a" * 64,
+                        "source_sha256": TEACHER_SHA256,
                         "observation_id": current["observation_id"],
                         "status": "accepted",
                         "requested_action": requested,
@@ -385,7 +386,7 @@ class FlightTests(unittest.TestCase):
             owner.requests[0]["split"], "development"
         )
         self.assertEqual(
-            session.teacher_source_sha256, "a" * 64
+            session.teacher_source_sha256, TEACHER_SHA256
         )
         with self.assertRaisesRegex(
             FlightProtocolError,
