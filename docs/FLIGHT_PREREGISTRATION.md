@@ -1,6 +1,6 @@
 ---
 title: 4LY-004 prospective preregistration and evidence custody
-kind: contract
+kind: reference
 summary: Source-bound Trainer-only behavior-cloning design, split custody, exact work ceilings and fail-closed admission checklist.
 owns: [flight.learning.preregistration, flight.learning.custody]
 verified: 2026-10-23
