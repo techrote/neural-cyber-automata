@@ -2,7 +2,7 @@
 title: IK-CUDA-006 joint-target adapter conformance
 kind: evidence
 summary: Exact-head NCA software and actual-host conformance for the separate Cybersand physical_joint_target/v1 candidate.
-owns: [ik.host-handoff]
+owns: [ik.host-adapter-evidence]
 verified: 2026-10-24
 ---
 
