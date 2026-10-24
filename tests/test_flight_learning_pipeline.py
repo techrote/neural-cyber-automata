@@ -60,7 +60,6 @@ def accounting_fixture():
         "controller_sha256": SOURCE["controller_sha256"],
         "teacher_sha256": SOURCE["teacher_sha256"],
     }
-    value["scenario"]["manifest_sha256"] = sha256_json(["fixture", "scenarios"])
     value["splits"].update({
         "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
