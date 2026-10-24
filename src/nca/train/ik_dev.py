@@ -30,7 +30,7 @@ class DevConfig:
                 or self.lr_schedule not in ("constant", "cosine", "constant_3e-4")
                 or type(self.epochs) is not int or not 1 <= self.epochs <= 1000
                 or self.batch_order not in ("stage", "shuffled")
-                or self.hidden_width not in (64, 128)):
+                or type(self.hidden_width) is not int or self.hidden_width not in (64, 128)):
             raise ValueError("invalid development recipe")
 
     @property

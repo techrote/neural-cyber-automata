@@ -3,7 +3,7 @@ title: IK54 development sweep and strict qualification
 kind: guide
 summary: Owner-authorized training-only development lane, frozen family split and grid, followed by one separately gated qualification recipe.
 owns: [design.ik_dev_sweep]
-verified: 2026-10-23
+verified: 2026-10-24
 ---
 
 # IK54 development sweep
@@ -77,10 +77,22 @@ point-stage RMS averaged over epochs 36–40 of 0.140726283241 / 0.142421846632 
 0.145176795841 cells. A small original-receipt fixture tests the calculation.
 Historical design pages append review §5 corrections without deleting old text.
 
-[UNMEASURED] Part A has not started at this preparation revision. The final
-report will retain every seed, learning curve, resource measurement and failure,
-and test hip max absolute bin mean at most 0.015 rad, eta-squared at most 0.4,
-and point-stage RMS below 0.10 cells. These are mechanism diagnostics.
+[MEASURED DEVELOPMENT] All 45 runs completed with one attempt each, no learner
+failures, retries or budget drops. The [results and evidence limits](../evidence/2026-10-24-ik-dev-sweep.md)
+retain all seeds, learning curves, mechanism diagnostics and once-only tuning
+confirmation. The full reports and large artifacts use external bundle handle
+`ik54-dev-sweep-20261023`; their hashes are in the public evidence index.
+
+The head accelerates short-budget learning, while long tanh training also escapes
+the original short-run RMS floor. Width 128 brings no median gain in the matched
+200-epoch recipe; whole-batch order has a smaller effect. Dev remains within-lane
+evidence and no acceptance is claimed.
+
+| Dev rank | Frozen recipe | Median best dev p95 cells |
+|---:|---|---:|
+| 1 | tanh-cosine-e1000-stage-w64 | 0.004522 |
+| 2 | tanh-constant-e1000-stage-w64 | 0.005153 |
+| 3 | interior_linear-cosine-e200-shuffled-w64 | 0.014366 |
 
 ## Strict qualification preparation
 

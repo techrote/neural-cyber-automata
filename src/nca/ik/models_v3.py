@@ -8,12 +8,11 @@ runs here; this model alone does not implement the host target contract.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
 
 from nca.contracts import ContractError
 from .data import FEATURE_NAMES, Normalization
 from .device import DeviceContext
+from .models import IKPrediction
 from .kinematics import _float32_bound
 from .profiles import runner_right_sole_profile
 
@@ -31,19 +30,10 @@ OUT_OF_BOUNDS = 16
 NONFINITE_OUTPUT = 32
 
 
-@dataclass(frozen=True)
-class IKPrediction:
-    """Batched absolute references, validity and per-row bit flags."""
-
-    reference: Any
-    valid: Any
-    invalid_code: Any
-
-
 def build_model(context: DeviceContext, normalization, *, head="interior_linear", hidden_width=64):
     from .polar import TRANSFORM
     feature_transform = TRANSFORM
-    if head not in ("tanh", "interior_linear") or hidden_width not in (64, 128):
+    if head not in ("tanh", "interior_linear") or type(hidden_width) is not int or hidden_width not in (64, 128):
         raise ContractError("ik_model_v3_config", "registered head and width required")
     """Construct the fixed 14 -> 64 -> 64 -> 2 FP32 model explicitly.
 
@@ -146,14 +136,14 @@ def build_model(context: DeviceContext, normalization, *, head="interior_linear"
             # inside their inward FP32 limits without a hidden projection.
             reference = midpoint + radius * (interior_linear(torch, logits, radius)
                                                if head == "interior_linear" else torch.tanh(logits))
-            output_finite = (~torch.isnan(logits)).all(dim=1) & torch.isfinite(reference).all(dim=1)
+            output_finite = torch.isfinite(logits).all(dim=1) & torch.isfinite(reference).all(dim=1)
             code = code | ((~output_finite).to(torch.int64) * NONFINITE_OUTPUT)
             valid = code == 0
             return IKPrediction(torch.where(valid[:, None], reference, torch.zeros_like(reference)),
                                 valid, code)
 
-    # Preserve the historical v1 qualified class name and state dictionary.
-    # A different input interpretation must never share its checkpoint identity.
+    # Both feature and head markers distinguish this version from v2.
+    # The polar input interpretation itself remains identical.
     class RunnerIKPolarV3MLP(RunnerIKMLP):
         def __init__(self):
             super().__init__()

@@ -25,6 +25,9 @@ class DevContracts(unittest.TestCase):
         self.assertEqual(c.lr(0, 1720), .001)
         self.assertAlmostEqual(c.lr(1719, 1720), .00001)
         self.assertEqual(DevConfig(lr_schedule="constant_3e-4").lr(0, 10), .0003)
+        for invalid in (0, 64.0, True, "64"):
+            with self.assertRaises(ValueError):
+                DevConfig(hidden_width=invalid)
         with self.assertRaises(ValueError):
             DevConfig(epochs=0)
 
@@ -135,10 +138,19 @@ class DevTensorTests(unittest.TestCase):
             model(x); hook.remove()
         self.assertTrue(torch.equal(captured[0],captured[1]))
         self.assertTrue(torch.equal(a(x).invalid_code,b(x).invalid_code))
-        with torch.no_grad():
-            a.network[-1].bias.fill_(math.nan)
-        prediction=a(x[:1]); self.assertFalse(bool(prediction.valid[0]))
-        self.assertTrue(int(prediction.invalid_code[0]) & 32)
+        from nca.ik.models import IKPrediction
+        self.assertIsInstance(a(x[:1]), IKPrediction)
+        for value in (math.nan, math.inf, -math.inf):
+            for model in (a,b):
+                with torch.no_grad():
+                    model.network[-1].bias.fill_(value)
+                prediction=model(x[:1])
+                self.assertFalse(bool(prediction.valid[0]))
+                self.assertTrue(int(prediction.invalid_code[0]) & 32)
+                self.assertTrue(bool(torch.isfinite(prediction.reference).all()))
+        for invalid in (64.0, True, "64"):
+            with self.assertRaises(ContractError):
+                build_model(self.ctx,self.norm,hidden_width=invalid)
 
     def test_width128_and_batch_one_parity_on_every_fixture_row(self):
         from nca.ik.models_v3 import build_model
@@ -166,6 +178,25 @@ class DevTensorTests(unittest.TestCase):
         self.assertEqual(official["complete"],dev["complete"])
 
 
+    def test_synthetic_default_optimizer_step_matches_v2(self):
+        from nca.ik.polar import build_trainer
+        from nca.ik.data import DatasetConfig, iter_tasks, generate_sample
+        from nca.ik.reference import SolverConfig
+        from nca.train.ik import prepare_training_batch
+        from nca.train.ik_dev_trainer import DevTrainer
+        config=DatasetConfig(mode="fixture",points_per_bin=(1,1,1),trajectories_per_partition=1,
+                             trajectory_steps=3,stress_per_class=1,
+                             teacher=SolverConfig(tolerance_cells=1e-7,max_seconds=1.))
+        rows=tuple(generate_sample(t,config) for t in iter_tasks(config,"training"))
+        selected=sampler(rows,41011,DevConfig()).next_batch()
+        batch=prepare_training_batch(selected,config,self.ctx)
+        self.torch.manual_seed(41011); old=build_trainer(self.ctx,self.norm,config)
+        self.torch.manual_seed(41011); new=DevTrainer(self.ctx,self.norm,config,DevConfig())
+        old.step(batch); new.step(batch)
+        for a,b in zip(old.model.parameters(),new.model.parameters()):
+            self.assertTrue(self.torch.equal(a,b))
+
+
 @unittest.skipUnless(os.environ.get("IK_DEV_CORPUS"), "explicit authenticated training/tuning local readback")
 class DevAcceptedReadback(unittest.TestCase):
     @classmethod
@@ -189,7 +220,7 @@ class DevAcceptedReadback(unittest.TestCase):
             self.assertEqual(sorted(i for b in shuffled for i in b),list(range(len(train))))
 
     @unittest.skipUnless(OPTIONAL,"optional Torch runtime")
-    def test_cached_batches_match_original_and_default_step(self):
+    def test_cached_batches_match_original_without_optimizer_work(self):
         from nca.ik.device import configure_device
         from nca.ik.polar import fit_training_normalization, build_trainer
         from nca.train.ik import prepare_training_batch
@@ -205,11 +236,5 @@ class DevAcceptedReadback(unittest.TestCase):
             for name in ("features","teacher_reference","pose_mask","endpoint_mask","continuity_pairs"):
                 self.assertTrue(ctx.torch.equal(getattr(original,name),getattr(cached,name)),name)
             self.assertEqual(original.sample_ids,cached.sample_ids)
-        norm=fit_training_normalization(self.corpus)
-        ctx.torch.manual_seed(41011); old=build_trainer(ctx,norm,self.corpus.config)
-        ctx.torch.manual_seed(41011); new=DevTrainer(ctx,norm,self.corpus.config,DevConfig())
-        batch=cache.batch(batches[0]); old.step(batch); new.step(batch)
-        for a,b in zip(old.model.parameters(),new.model.parameters()):
-            self.assertTrue(ctx.torch.equal(a,b))
 
 # Copyright 2026 techrote. All rights reserved.
