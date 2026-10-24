@@ -3,16 +3,18 @@ title: Run ledger
 kind: evidence
 summary: Immutable training and benchmark provenance ledger, with source identities and evidence limits.
 owns: [runs.ledger]
-verified: 2026-10-23
+verified: 2026-10-25
 ---
 
 # Run ledger
 
 The [4LY-004 preparation](FLIGHT_LEARNING.md) performs software-only protocol,
 transport, accounting and learning-pipeline tests. The source bridge wraps the
-real #229 episode owner contract but its launcher is hard-gated before Godot
-until an accepted host/build is registered; therefore it contributes no
-physical-host evidence. Tests fault-inject malformed/dropped/duplicate/reordered
+real #229 episode owner contract and now binds accepted Cybersand merge
+`b5a8570e5123e1f633766e9390761a1c8134cfa2` plus the qualified
+Trainer/controller/teacher identities. Its launcher is still hard-gated before
+Godot until the exact NCA execution runtime build and bridge conformance are
+registered; therefore PR #85 itself contributes no new physical-host evidence. Tests fault-inject malformed/dropped/duplicate/reordered
 replies, partial terminal intervals, lease failure, authority revocation,
 interrupted accounting writes, duplicate attempts, startup failure, unknown
 consumption, partial checkpoint publication, consumed attempts, stale evidence
@@ -22,8 +24,9 @@ optimizer/RNG restoration, exact export reconstruction, schema refusal, action
 bounds and teacher-free scored inference. This synthetic optimizer work is
 software conformance only: no physical episode, experimental teacher capture,
 declared #74 learning experiment, experiment-trained policy, new allocation or
-final payload access is recorded. Host PR #229 qualification and measured
-resource ceilings remain hard dependencies.
+final payload access is recorded. Host PR #229 qualification is now a bound
+prerequisite; NCA actual-host bridge/runtime conformance and measured resource
+ceilings remain hard dependencies.
 
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 
