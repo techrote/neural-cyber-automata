@@ -9,10 +9,12 @@ from nca.adapters.flight import (
     DEVELOPMENT_SEEDS as ADAPTER_DEVELOPMENT_SEEDS,
     SCENARIO_MAX_TICKS as ADAPTER_SCENARIO_MAX_TICKS,
     TRAINER_PROFILE_SHA256 as ADAPTER_TRAINER_PROFILE_SHA256,
+    TEACHER_SHA256 as ADAPTER_TEACHER_SHA256,
     TUNING_SEEDS as ADAPTER_TUNING_SEEDS,
 )
 from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
+    ACCEPTED_DEPENDENCY_EVIDENCE,
     DEPENDENCIES,
     DESIGN_WORK_MAXIMA,
     CONTROLLER_SHA256,
@@ -20,6 +22,7 @@ from nca.train.flight_accounting import (
     SCENARIO_MAX_TICKS,
     STAGE_CEILINGS,
     TRAINER_PROFILE_SHA256,
+    TEACHER_SHA256,
     FlightAccountingLedger,
     FlightDeclaration,
     execution_gate,
@@ -35,11 +38,11 @@ def admitted_fixture():
     value["identities"] = {
         "learner_revision": "a" * 40,
         "learner_source_sha256": sha256_json(["fixture", "learner"]),
-        "host_revision": "b" * 40,
+        "host_revision": HOST_CONTRACT_HEAD,
         "host_build_sha256": sha256_json(["fixture", "host-build"]),
         "profile_sha256": TRAINER_PROFILE_SHA256,
         "controller_sha256": CONTROLLER_SHA256,
-        "teacher_sha256": sha256_json(["fixture", "teacher"]),
+        "teacher_sha256": TEACHER_SHA256,
     }
     value["splits"].update({
         "development_sha256": sha256_json(["fixture", "development"]),
@@ -85,27 +88,36 @@ class DeclarationGateTests(unittest.TestCase):
         self.assertEqual(value["stage_ceilings"], STAGE_CEILINGS)
         self.assertEqual(value["source_contract"]["revision"], HOST_CONTRACT_HEAD)
         self.assertEqual(value["source_contract"]["qualification_status"],
-                         "unqualified_source_contract")
+                         "accepted_host_and_qualified_teacher")
+        self.assertEqual(value["identities"]["host_revision"], HOST_CONTRACT_HEAD)
+        self.assertEqual(value["identities"]["teacher_sha256"], TEACHER_SHA256)
+        self.assertFalse(
+            value["source_contract"]["teacher_final_may_be_reused_as_learner_final"]
+        )
+        self.assertEqual(value["dependencies"]["host_4ly003"]["status"], "accepted")
+        self.assertEqual(value["dependencies"]["teacher_qualification"]["status"], "accepted")
         self.assertEqual(value["scenario"]["scenario_max_ticks"], SCENARIO_MAX_TICKS)
         self.assertEqual(value["scenario"]["scenario_max_ticks"]["slalom"], 2400)
         self.assertIn("development_sha256", value["splits"])
         self.assertNotIn("training_sha256", value["splits"])
         self.assertIsNone(value["runtime"]["threads"])
 
-        gate = execution_gate(declaration, current_evidence={})
+        gate = execution_gate(
+            declaration, current_evidence=ACCEPTED_DEPENDENCY_EVIDENCE
+        )
         self.assertFalse(gate["admitted"])
         self.assertFalse(gate["training_enabled"])
         self.assertFalse(gate["final_access"])
         self.assertIn("declaration_not_prospective", gate["reasons"])
         self.assertIn("runtime_unresolved:threads", gate["reasons"])
         self.assertIn("resource_ceiling_unmeasured:maximum_wall_seconds", gate["reasons"])
-        self.assertIn("dependency_unfinished:host_4ly003", gate["reasons"])
         self.assertIn("dependency_unfinished:stage_accounting_integration", gate["reasons"])
         self.assertGreaterEqual(len(required_measurements()), 10)
 
     def test_adapter_contract_matches_accounting_source_binding(self):
         self.assertEqual(ADAPTER_TRAINER_PROFILE_SHA256, TRAINER_PROFILE_SHA256)
         self.assertEqual(ADAPTER_CONTROLLER_SHA256, CONTROLLER_SHA256)
+        self.assertEqual(ADAPTER_TEACHER_SHA256, TEACHER_SHA256)
         self.assertEqual(dict(ADAPTER_SCENARIO_MAX_TICKS), SCENARIO_MAX_TICKS)
         self.assertEqual(set(ADAPTER_DEVELOPMENT_SEEDS), {101, 103, 107, 109})
         self.assertEqual(set(ADAPTER_TUNING_SEEDS), {211, 223, 227, 229})
