@@ -17,10 +17,13 @@ from nca.adapters.flight import (
     PHYSICS_HZ,
     SPLIT_GEOMETRY_VERSION,
     TRAINER_PROFILE_SHA256,
+    TEACHER_SHA256,
     FlightProtocolError,
     UnknownConsumptionError,
 )
 from nca.adapters.flight_transport import (
+    ACCEPTED_HOST,
+    ACCEPTED_RUNTIME_BUILD,
     FLIGHT_PROTOCOL,
     FlightGodotTransport,
     FlightRpcTransport,
@@ -499,10 +502,23 @@ class TransportTests(unittest.TestCase):
             channel.connection.closed
         )
 
-    def test_actual_host_launcher_fails_before_inspecting_or_spawning_unaccepted_build(self):
+    def test_accepted_source_is_bound_while_runtime_launch_remains_fail_closed(self):
+        self.assertEqual(
+            ACCEPTED_HOST["revision"],
+            "b5a8570e5123e1f633766e9390761a1c8134cfa2",
+        )
+        self.assertEqual(
+            ACCEPTED_HOST["trainer_profile_sha256"], TRAINER_PROFILE_SHA256
+        )
+        self.assertEqual(ACCEPTED_HOST["controller_sha256"], CONTROLLER_SHA256)
+        self.assertEqual(ACCEPTED_HOST["teacher_sha256"], TEACHER_SHA256)
+        self.assertFalse(
+            ACCEPTED_HOST["teacher_final_may_be_reused_as_learner_final"]
+        )
+        self.assertIsNone(ACCEPTED_RUNTIME_BUILD)
         with self.assertRaisesRegex(
             FlightProtocolError,
-            "actual-host conformance pending",
+            "actual-host runtime build/conformance pending",
         ):
             inspect_registered_host(
                 "definitely-not-a-checkout",
@@ -510,7 +526,7 @@ class TransportTests(unittest.TestCase):
             )
         with self.assertRaisesRegex(
             FlightProtocolError,
-            "actual-host conformance pending",
+            "actual-host runtime build/conformance pending",
         ):
             FlightGodotTransport(
                 "definitely-not-a-checkout",
