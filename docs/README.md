@@ -3,7 +3,7 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-22
+verified: 2026-10-24
 ---
 
 # Documentation map
@@ -27,7 +27,7 @@ verified: 2026-10-22
 | Which primary sources support the design? | [Sources](research/SOURCES.md) |
 | What remains optional? | [IDEAS.md](IDEAS.md) |
 | What compute is supported or measured? | [HARDWARE.md](HARDWARE.md) |
-| How is the first CUDA IK task defined and qualified? | [IK contracts](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md) and [host handoff](IK_HOST_HANDOFF.md) |
+| How is the first CUDA IK task defined and qualified? | [IK contracts](IK_LAYER.md), [acceptance](IK_ACCEPTANCE.md), [host handoff](IK_HOST_HANDOFF.md) and [joint-target adapter evidence](evidence/2026-10-24-ik-host-adapter.md) |
 | How do independent FK, Jacobians and bounded inverse references work? | [IK kinematics](IK_KINEMATICS.md) and [reference evidence](evidence/2026-10-21-ik-kinematics.md) |
 | How are geometric IK data, guarded splits and final-suite access handled? | [IK datasets](IK_DATASETS.md) and [configuration recipes](../configs/ik/datasets/README.md); [declared corpus and evidence](evidence/2026-10-22-ik-datasets.md) |
 | How do I install, declare and resume the optional IK device workload? | [IK runtime operations](IK_RUNTIME.md), [software evidence](evidence/2026-10-21-ik-runtime-software.md) and [Windows V100 qualification with matched CPU costs](evidence/2026-10-22-ik-cuda-qualification.md) |

@@ -23,4 +23,4 @@ nca = "nca.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-nca = ["adapters/*.gd", "profiles/*.json", "ik/*.json"]
+nca = ["adapters/*.gd", "profiles/*.json", "ik/*.json", "ik/*.gd"]

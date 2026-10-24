@@ -22,10 +22,14 @@ jobs:
           python -m pip install --no-build-isolation '.[export]'
       - name: Prepare and verify accepted game runtime
         run: python tools/host_setup.py --destination "$RUNNER_TEMP/nca-host" --github-env "$GITHUB_ENV"
+      - name: Prepare and verify ACT-IK-001 joint-target runtime
+        run: python tools/ik_host_setup.py --destination "$RUNNER_TEMP/nca-ik-host" --godot "$NCA_GODOT" --github-env "$GITHUB_ENV"
       - name: Require the actual host and export-owner lane
         run: |
           test -x "$NCA_GODOT"
           test -d "$NCA_HOST_CHECKOUT/.git"
+          test -x "$NCA_IK_GODOT"
+          test -d "$NCA_IK_HOST_CHECKOUT/.git"
           python - <<'PY'
           import sys
           import numpy

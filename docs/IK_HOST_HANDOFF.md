@@ -3,7 +3,7 @@ title: IK joint-target host handoff
 kind: guide
 summary: Required Cybersand capability, authority, timing and receipts for the separately scoped IK host bridge.
 owns: [ik.host-handoff]
-verified: 2026-10-20
+verified: 2026-10-24
 ---
 
 # IK joint-target host handoff
@@ -12,8 +12,26 @@ This is the host contract handoff for
 [IK-CUDA-006 / #55](https://github.com/techrote/neural-cyber-automata/issues/55).
 The [IK layer](IK_LAYER.md) defines the first profile and geometric interfaces;
 [IK acceptance](IK_ACCEPTANCE.md) defines prospective numerical and physical
-criteria. This document specifies the required future physical boundary.
-It does not implement a host action lane or report physical conformance.
+criteria. This document specifies the physical boundary now implemented by the
+separate NCA joint-target adapter and Cybersand ACT-IK-001 companion. The
+[exact-head adapter evidence](evidence/2026-10-24-ik-host-adapter.md) records
+the source/runtime binding and actual-host conformance without qualifying a
+learned policy.
+
+## Implemented joint-target lane
+
+NCA PR #87 adds a strict `physical_joint_target/v1` client, a separately
+pinned actual-host launcher and an NCA-owned loopback bridge. It does not
+replace the accepted historical ACT004 adapter. The candidate client binds one
+source grant and one issued observation to each single-use `ik_submit`, fails
+closed on unknown transport outcome until owner-confirmed cancellation, and
+requires continuous per-base-tick receipts.
+
+The companion implementation is Cybersand #210 / PR #224. NCA's hosted
+conformance authenticates its exact source/tree plus Godot, native and Rapier
+bytes before exercising authority, contact, receipts, cancellation, takeover
+and expiry. Final acceptance remains a cross-repository merge gate; fixture or
+source-only passes do not substitute for the companion's own hosted checks.
 
 ## Existing capability and separate ownership
 
@@ -86,7 +104,7 @@ passive joint cannot become an actuator merely because its pose is observed.
 
 ## Required capability negotiation
 
-The future handshake must identify the exact host source/build, packet and
+The joint-target handshake identifies the exact host source/build, packet and
 observation schema versions, profile/topology/effector hashes, supported joint
 IDs and units, target limits and masks, timing rules and receipt availability.
 The client must refuse an absent, unknown or incompatible target capability.
@@ -182,7 +200,7 @@ target field or call passive/contact motion a learned action. The accepted
 ACT004 host has aggregate actor impulse/torque and part motion but lacks a
 separate passive-wrench decomposition. Preserve unavailable fields explicitly.
 
-The future handshake must state which contact sensors and per-joint receipts
+The joint-target handshake states which contact sensors and per-joint receipts
 exist. Available local contacts are observations, not a complete contact-force
 oracle. Evaluator-only state cannot enter policy preprocessing. Arbitrary torque
 injection, support removal, individual body replacement, assist mutation or
