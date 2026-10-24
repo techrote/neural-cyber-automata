@@ -287,7 +287,8 @@ func _json_value(value: Variant) -> Variant:
 
 
 func _integer(value: Variant, minimum: int, maximum: int) -> bool:
-	return typeof(value) == TYPE_INT and int(value) >= minimum and int(value) <= maximum
+	return (value is int or value is float) and is_finite(float(value)) \
+		and float(value) == floorf(float(value)) and float(value) >= minimum and float(value) <= maximum
 
 
 func _hex(value: String, length: int) -> bool:
