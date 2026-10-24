@@ -27,7 +27,7 @@ from nca.adapters.protocol import (
     HostError, JsonChannel, ProtocolError, PROTOCOL, integer, owned_json,
 )
 from nca.contracts import sha256_json
-from .profiles import load_profile
+from .profiles import runner_right_sole_profile
 
 CAPABILITY = "physical_joint_target/v1"
 PROFILE_ID = "runner-right-sole@1"
@@ -209,7 +209,7 @@ def validate_capability(value: Mapping[str, Any], identity: Mapping[str, Any] | 
     if dict(motor) != expected_motor:
         _fail("joint capability motor limits differ")
     # The immutable NCA profile must still describe the same accepted semantics.
-    profile = load_profile()
+    profile = runner_right_sole_profile()
     if profile.id + "@" + str(profile.version) != PROFILE_ID or profile.sha256 != PROFILE_SHA256:
         _fail("local immutable IK profile no longer matches the host capability")
     return owned_json(dict(cap))
@@ -466,7 +466,7 @@ class JointTargetClient:
                              mode=mode, lease_ticks=lease_ticks)
         try:
             response = self.transport.request("ik_submit", packet=packet)
-        except BaseException:
+        except (HostError, OSError):
             self.uncertain = True
             raise
         admission = validate_admission(response.get("admission", {}), packet)
