@@ -3,7 +3,7 @@ title: Decisions
 kind: decisions
 summary: Current owner scope and gameplay fidelity, research proposals, and preserved historical decisions.
 owns: [decisions.register]
-verified: 2026-10-22
+verified: 2026-10-25
 ---
 # Decisions
 Newest first. IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
@@ -11,7 +11,7 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
-### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE] 2026-10-23. [Reviewed #74 preparation](FLIGHT_LEARNING.md) while #229 is in progress, including a narrow external transport around the real #229 flight episode owner with actual-host launch hard-gated until an accepted build is registered. No training, capture, issued allocation or final access. Host qualification and admissions remain required; IK/Jolt evidence is unchanged.
+### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE, RECONCILED] 2026-10-25. [#74 preparation](FLIGHT_LEARNING.md) is reconciled to accepted Cybersand #229 merge `b5a8570e5123e1f633766e9390761a1c8134cfa2` and its qualified Trainer/controller/frozen-teacher identities. The one-use teacher-final suite remains teacher evidence only and cannot become learner-final data. NCA runtime/bridge conformance, resources, independent learner-final custody and execution admission remain gated; no training allocation or learner-final access is granted.
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
