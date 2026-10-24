@@ -1,9 +1,9 @@
 """Persistent transport preparation for Cybersand 4LY flight episodes.
 
 The external GDScript launcher wraps CyberPhysicalFlightEpisode directly. This
-module deliberately refuses to launch an unaccepted PR #229 build: source review
-can prepare the bridge, but actual-host conformance begins only after an accepted
-host/runtime identity is registered here.
+module binds the accepted PR #229 merge and qualified Trainer/controller/teacher
+identities. Actual-host launch still remains fail-closed until an NCA-specific
+runtime build identity is registered and the bridge conformance gate is exercised.
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ from .flight import (
     ACTION_VERSION,
     ACTOR_ID,
     CONTROLLER_SHA256,
+    TEACHER_SHA256,
     COURSE_ID,
     COURSE_VERSION,
     DECISION_TICKS,
@@ -44,16 +45,22 @@ from .protocol import JsonChannel
 
 FLIGHT_PROTOCOL = "nca-4ly-flight/1"
 
-CANDIDATE_HOST = {
+ACCEPTED_HOST = {
     "repository": "techrote/cybersand",
     "pull_request": 229,
-    "source_review_head": "2e20731de0559ed59280d7a11f84f596d1cba985",
-    "status": "SOURCE_CANDIDATE_NOT_ADMITTED",
+    "revision": "b5a8570e5123e1f633766e9390761a1c8134cfa2",
+    "status": "ACCEPTED_HOST_AND_QUALIFIED_TEACHER",
+    "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
+    "controller_sha256": CONTROLLER_SHA256,
+    "teacher_sha256": TEACHER_SHA256,
+    "teacher_qualification_checkout": "2bc2b6cfa9ad62512266df5804c5662b5ba8bd04",
+    "teacher_final_suite_sha256": "4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401",
+    "teacher_final_may_be_reused_as_learner_final": False,
 }
 
-# Populate only after #229's exact revision/build is accepted and independently
-# qualified. Required keys are documented in docs/FLIGHT_LEARNING.md.
-ACCEPTED_HOST: dict[str, Any] | None = None
+# The accepted source identity above does not invent a portable Godot/native/Rapier
+# binary build. Populate this only after the NCA bridge records that exact runtime.
+ACCEPTED_RUNTIME_BUILD: dict[str, Any] | None = None
 
 
 def sha256_file(path: Path) -> str:
@@ -67,19 +74,20 @@ def sha256_file(path: Path) -> str:
 def inspect_registered_host(
     checkout: str | Path, godot: str | Path
 ) -> dict[str, Any]:
-    """Verify the future accepted #229 source/runtime without running Godot.
+    """Verify the accepted #229 source and an explicitly registered runtime build.
 
-    The current preparation has no accepted host identity, so it fails before
-    reading or executing the supplied checkout.
+    Source acceptance is already bound. Runtime artifact identity and NCA bridge
+    conformance remain separate prerequisites, so no executable is inspected or
+    launched until that runtime record exists.
     """
-    if ACCEPTED_HOST is None:
+    if ACCEPTED_RUNTIME_BUILD is None:
         raise FlightProtocolError(
-            "accepted #229 flight host/build is not registered; "
-            "actual-host conformance pending"
+            "accepted #229 source is registered; actual-host runtime build/"
+            "conformance pending"
         )
 
     root = Path(checkout).resolve()
-    expected = ACCEPTED_HOST
+    expected = ACCEPTED_RUNTIME_BUILD
     try:
         def git(*args: str) -> str:
             return subprocess.check_output(
@@ -88,7 +96,7 @@ def inspect_registered_host(
 
         revision = git("rev-parse", "HEAD")
         tree = git("rev-parse", "HEAD^{tree}")
-        if revision != expected["revision"] or tree != expected["tree"]:
+        if revision != ACCEPTED_HOST["revision"] or tree != expected["tree"]:
             raise FlightProtocolError(
                 "flight host source differs from the accepted revision/tree"
             )
@@ -475,7 +483,7 @@ class FlightRpcTransport:
 
 
 class FlightGodotTransport(FlightRpcTransport):
-    """Future actual-host launcher, hard-gated on an accepted #229 build."""
+    """Actual-host launcher, hard-gated on registered runtime build/conformance."""
 
     def __init__(
         self,
@@ -490,9 +498,9 @@ class FlightGodotTransport(FlightRpcTransport):
             raise ValueError(
                 "host deadline must be in (0,120] seconds"
             )
-        # Preserve the current source-review boundary without charging work:
-        # while no host is accepted we fail before inspecting checkout/runtime.
-        if ACCEPTED_HOST is None:
+        # Cybersand source is accepted, but runtime/build identity is still an
+        # explicit downstream gate. Fail before charging work or spawning Godot.
+        if ACCEPTED_RUNTIME_BUILD is None:
             self.identity = inspect_registered_host(checkout, godot)
             raise AssertionError("unreachable")
         if accounting is None:
