@@ -175,7 +175,7 @@ func _handle(request: Dictionary) -> void:
 				return
 			_reply(request_id, {"observation": observation})
 		"ik_submit":
-			var packet: Variant = request.get("packet")
+			var packet: Variant = _canonical_joint_packet(request.get("packet"))
 			var admission: Dictionary = session.ik_submit(packet)
 			# Refusals are protocol results, not transport failures.
 			_reply(request_id, {"admission": admission})
@@ -284,6 +284,23 @@ func _json_value(value: Variant) -> Variant:
 			result.append(_json_value(item))
 		return result
 	return value
+
+
+func _canonical_joint_packet(value: Variant) -> Variant:
+	# JSON has one numeric type at the wire boundary.  Canonicalize only fields
+	# whose public Cybersand schema is integral; preserve every other field and
+	# every malformed value so the owner remains the authority that refuses it.
+	if not value is Dictionary:
+		return value
+	var packet: Dictionary = value.duplicate(true)
+	for key: String in [
+		"version", "actor_id", "epoch", "incarnation", "control_generation",
+		"grant_generation", "goal_deadline_tick", "sequence", "observed_tick",
+		"lease_ticks"
+	]:
+		if packet.has(key) and _integer(packet[key], -9007199254740991, 9007199254740991):
+			packet[key] = int(packet[key])
+	return packet
 
 
 func _integer(value: Variant, minimum: int, maximum: int) -> bool:
