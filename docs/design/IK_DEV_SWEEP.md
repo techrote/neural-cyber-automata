@@ -96,6 +96,10 @@ evidence and no acceptance is claimed.
 
 ## Strict qualification preparation
 
+The [24 October independent review](IK_QUALIFICATION_REVIEW.md) refused the
+original v3 packet. A separate versioned repair and fresh resource proof supersede
+that unspent preparation; original declarations and development evidence remain.
+
 Freeze the top-ranked recipe and fixed epoch count for Part B. Retrain on all
 5,260 original training rows. Select only by lowest complete raw tuning nominal
 p95, earliest ties, at a declared cadence. Compute finite optimizer,

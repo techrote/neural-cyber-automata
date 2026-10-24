@@ -6,7 +6,7 @@ owns: [state.summary]
 verified: 2026-10-24
 ---
 # Current state
-[MEASURED DEVELOPMENT; QUALIFICATION PREPARED ONLY] D-032: all 45 [IK54 development runs and shortlist tuning confirmations](evidence/2026-10-24-ik-dev-sweep.md) completed, with no learner failures or acceptance claim. The top dev recipe is frozen for full-training qualification; Part B remains unexecuted, pending two independent admissions and new owner go. No final access.
+[OWNER STOPPED; UNFINISHED QUALIFICATION REPAIR] All 45 [IK54 development runs](evidence/2026-10-24-ik-dev-sweep.md) remain unchanged. Two independent reviewers refused the original Part B packet for terminal metadata size and unsupported finalization time. A [versioned repair and scale proof](design/IK_QUALIFICATION_REVIEW.md) remain unfinished, unadmitted work under [D-033](decisions/2026-10-24-training-resource-policy.md). Part B remains unexecuted; fresh admissions and new owner go are required. No final access.
 
 [MEASURED NO-GO; NEXT DESIGN ONLY] The admitted matched endpoint-weight-4 trials completed at `6a6961f`: serial and three-worker TITAN runs agree exactly at all paired checkpoints and tuning reports, with recorded prepublication elapsed times 2438.985 / 1245.062 seconds. Every seed fails tuning quality; both final suites remain excluded. [The diagnosis and bounded next parallel order experiment](design/IK_ENDPOINT4_FOLLOWUP.md) preserve every consumed allocation and propose one whole-batch-order change. The earlier D-030 owner instruction authorized investigation and reviewed preparation only, with no training, no issued allocation and no execution admission. Physical actor faults are not established by this synthetic geometric task.
 

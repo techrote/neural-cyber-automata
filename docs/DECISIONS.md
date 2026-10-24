@@ -3,15 +3,15 @@ title: Decisions
 kind: decisions
 summary: Current owner scope and gameplay fidelity, research proposals, and preserved historical decisions.
 owns: [decisions.register]
-verified: 2026-10-22
+verified: 2026-10-24
 ---
 
-# Decisions
-Newest first. IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
-
+# Decisions — newest first
+IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-033 — Generous development and useful VRAM utilization; [ACCEPTED SCOPE] 2026-10-24; [larger finite local allowances, preserving explicit caps and strict gates](decisions/2026-10-24-training-resource-policy.md). Current Part B review only; stop before training.
 ### D-032 — IK54 development lane; [ACCEPTED SCOPE] 2026-10-23; [owner-commissioned development sweep and strict qualification preparation](decisions/2026-10-23-ik-development-lane.md). No final access or Part B execution.
 ### D-030 — Investigate endpoint-weight failure and prepare one parallel order experiment; [ACCEPTED SCOPE] 2026-10-23; [no training, no new issued allocation, both finals excluded](design/IK_ENDPOINT4_FOLLOWUP.md). The preceding owner execution instruction consumed both D-029 matched trials at `6a6961f`; their verified results and charges remain immutable. This new scope ends at reviewed preparation, not execution admission.
 ### D-029 — Prepare matched IK trials; no training; [ACCEPTED SCOPE] 2026-10-23; [endpoint-loss hypothesis, serial/parallel packets and excluded finals](decisions/2026-10-23-ik-matched-preparation.md).
