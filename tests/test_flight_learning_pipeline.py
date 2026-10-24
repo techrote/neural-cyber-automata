@@ -4,10 +4,15 @@ import random
 import tempfile
 import unittest
 
-from nca.adapters.flight import CONTROLLER_SHA256, TRAINER_PROFILE_SHA256
+from nca.adapters.flight import (
+    CONTROLLER_SHA256,
+    TEACHER_SHA256,
+    TRAINER_PROFILE_SHA256,
+)
 from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
+    HOST_CONTRACT_HEAD,
     FlightAccountingLedger,
     FlightDeclaration,
     preparation_declaration,
@@ -39,11 +44,11 @@ from nca.train.flight_learning import (
 
 
 SOURCE = {
-    "host_revision": "1" * 40,
+    "host_revision": HOST_CONTRACT_HEAD,
     "host_build_sha256": "2" * 64,
     "profile_sha256": TRAINER_PROFILE_SHA256,
     "controller_sha256": CONTROLLER_SHA256,
-    "teacher_sha256": "5" * 64,
+    "teacher_sha256": TEACHER_SHA256,
 }
 TEACHER = {"id": "4ly003-teacher", "sha256": SOURCE["teacher_sha256"]}
 
