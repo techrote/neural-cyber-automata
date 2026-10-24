@@ -25,15 +25,16 @@ HOST_SCHEDULE = "synchronous-mask-actuation-effects-material-feedback-terrain-ra
 TRAINER_PROFILE = "4ly_trainer"
 TRAINER_PROFILE_SHA256 = "f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704"
 CONTROLLER_SHA256 = "fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae"
+TEACHER_SHA256 = "0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761"
 ACTOR_ID = 0
 PHYSICS_HZ = 60
 DECISION_TICKS = 6
 LEASE_TICKS = 12
 FLAT_CHANNELS = 54
 
-# Source-bound #74 case contract from FLIGHT_PREREGISTRATION.md and the
-# reviewed-but-unqualified Cybersand #229 head 2e20731d. These are physical
-# episode deadlines, not a universal repeat cap.
+# Source-bound #74 case contract from FLIGHT_PREREGISTRATION.md and accepted
+# Cybersand #229 merge b5a8570e5123e1f633766e9390761a1c8134cfa2. These are
+# physical episode deadlines, not a universal repeat cap.
 SCENARIO_MAX_TICKS = {
     "unsupported_hover": 300,
     "horizontal_reach": 1080,
@@ -271,9 +272,10 @@ class FlightSession:
                 not isinstance(teacher_digest, str)
                 or len(teacher_digest) != 64
                 or any(ch not in "0123456789abcdef" for ch in teacher_digest)
+                or teacher_digest != TEACHER_SHA256
             ):
                 raise FlightProtocolError(
-                    "teacher owner manifest lacks a source SHA-256"
+                    "teacher owner manifest does not match the qualified source SHA-256"
                 )
             self.teacher_source_sha256 = teacher_digest
         elif teacher_digest is not None:
