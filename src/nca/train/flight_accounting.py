@@ -34,9 +34,28 @@ ZERO_HASH = "0" * 64
 MAX_RECORD_BYTES = 64 * 1024
 POLICY_SEEDS = (74011, 74013, 74017)
 
-HOST_CONTRACT_HEAD = "2e20731de0559ed59280d7a11f84f596d1cba985"
+HOST_CONTRACT_HEAD = "b5a8570e5123e1f633766e9390761a1c8134cfa2"
 TRAINER_PROFILE_SHA256 = "f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704"
 CONTROLLER_SHA256 = "fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae"
+TEACHER_QUALIFICATION_CHECKOUT = "2bc2b6cfa9ad62512266df5804c5662b5ba8bd04"
+TEACHER_SHA256 = "0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761"
+TEACHER_FINAL_SUITE_SHA256 = "4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401"
+HOST_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
+    "accepted_merge": HOST_CONTRACT_HEAD,
+    "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
+    "controller_sha256": CONTROLLER_SHA256,
+    "teacher_sha256": TEACHER_SHA256,
+})
+TEACHER_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
+    "qualification_checkout": TEACHER_QUALIFICATION_CHECKOUT,
+    "teacher_sha256": TEACHER_SHA256,
+    "teacher_final_suite_sha256": TEACHER_FINAL_SUITE_SHA256,
+    "teacher_final_may_be_reused_as_learner_final": False,
+})
+ACCEPTED_DEPENDENCY_EVIDENCE = {
+    "host_4ly003": HOST_QUALIFICATION_EVIDENCE_SHA256,
+    "teacher_qualification": TEACHER_QUALIFICATION_EVIDENCE_SHA256,
+}
 DEVELOPMENT_SEEDS = (101, 103, 107, 109)
 TUNING_SEEDS = (211, 223, 227, 229)
 SCENARIO_MAX_TICKS = {
@@ -165,8 +184,6 @@ assert sum(SCENARIO_MAX_TICKS[name] * count for name, count in FINAL_CASES_PER_S
 assert sum(FINAL_CASES_PER_SCENARIO.values()) == 60
 
 MEASUREMENTS_REQUIRED = (
-    "accepted #229 exact host revision/build and accepted 4LY-003 evidence identity",
-    "accepted Trainer profile, controller and scripted-teacher digests",
     "exact 54-channel observation/action/60Hz/six-tick/12-tick-lease conformance",
     "frozen development/tuning manifests and learner-final cryptographic commitment",
     "chosen CPU runtime identity: platform, Python, Torch and execution-thread settings",
@@ -225,18 +242,24 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
 
     source = _exact_keys(value["source_contract"], {
         "repository", "pull_request", "revision", "qualification_status",
-        "trainer_profile_sha256", "controller_sha256",
+        "trainer_profile_sha256", "controller_sha256", "teacher_sha256",
+        "teacher_qualification_checkout", "teacher_final_suite_sha256",
+        "teacher_final_may_be_reused_as_learner_final",
     }, "source_contract")
     expected_source = {
         "repository": "techrote/cybersand",
         "pull_request": 229,
         "revision": HOST_CONTRACT_HEAD,
-        "qualification_status": "unqualified_source_contract",
+        "qualification_status": "accepted_host_and_qualified_teacher",
         "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
         "controller_sha256": CONTROLLER_SHA256,
+        "teacher_sha256": TEACHER_SHA256,
+        "teacher_qualification_checkout": TEACHER_QUALIFICATION_CHECKOUT,
+        "teacher_final_suite_sha256": TEACHER_FINAL_SUITE_SHA256,
+        "teacher_final_may_be_reused_as_learner_final": False,
     }
     if dict(source) != expected_source:
-        _fail("flight_source_contract", "reviewed #229 source contract changed or was represented as qualified")
+        _fail("flight_source_contract", "accepted #229 host/teacher source binding changed")
 
     learner = _exact_keys(value["learner_configuration"], {
         "profile_id", "architecture", "algorithm", "optimizer",
@@ -268,10 +291,14 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     _revision_or_none(identities["host_revision"], "host_revision")
     for name in ("host_build_sha256", "profile_sha256", "controller_sha256", "teacher_sha256"):
         _sha256_or_none(identities[name], name)
+    if identities["host_revision"] is not None and identities["host_revision"] != HOST_CONTRACT_HEAD:
+        _fail("flight_host_identity", "host revision differs from the accepted Cybersand merge")
     if identities["profile_sha256"] is not None and identities["profile_sha256"] != TRAINER_PROFILE_SHA256:
         _fail("flight_profile_identity", "accepted Trainer profile differs from the preregistered contract")
     if identities["controller_sha256"] is not None and identities["controller_sha256"] != CONTROLLER_SHA256:
         _fail("flight_controller_identity", "accepted controller differs from the preregistered contract")
+    if identities["teacher_sha256"] is not None and identities["teacher_sha256"] != TEACHER_SHA256:
+        _fail("flight_teacher_identity", "teacher differs from the qualified frozen source")
 
     interfaces = _exact_keys(value["interfaces"], {
         "episode_schema", "observation_schema", "flat_schema", "action_schema",
@@ -402,6 +429,8 @@ class FlightDeclaration:
 def preparation_declaration() -> FlightDeclaration:
     """Incomplete source-bound template; deliberately not an execution admission."""
     pending = {name: {"status": "pending", "evidence_sha256": None} for name in DEPENDENCIES}
+    for name, digest in ACCEPTED_DEPENDENCY_EVIDENCE.items():
+        pending[name] = {"status": "accepted", "evidence_sha256": digest}
     return FlightDeclaration.from_mapping({
         "schema": DECLARATION_SCHEMA,
         "experiment_id": "4ly004-trainer-flight-v2",
@@ -410,9 +439,13 @@ def preparation_declaration() -> FlightDeclaration:
             "repository": "techrote/cybersand",
             "pull_request": 229,
             "revision": HOST_CONTRACT_HEAD,
-            "qualification_status": "unqualified_source_contract",
+            "qualification_status": "accepted_host_and_qualified_teacher",
             "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
             "controller_sha256": CONTROLLER_SHA256,
+            "teacher_sha256": TEACHER_SHA256,
+            "teacher_qualification_checkout": TEACHER_QUALIFICATION_CHECKOUT,
+            "teacher_final_suite_sha256": TEACHER_FINAL_SUITE_SHA256,
+            "teacher_final_may_be_reused_as_learner_final": False,
         },
         "learner_configuration": {
             "profile_id": "4ly_trainer",
@@ -431,11 +464,11 @@ def preparation_declaration() -> FlightDeclaration:
         "identities": {
             "learner_revision": None,
             "learner_source_sha256": None,
-            "host_revision": None,
+            "host_revision": HOST_CONTRACT_HEAD,
             "host_build_sha256": None,
-            "profile_sha256": None,
-            "controller_sha256": None,
-            "teacher_sha256": None,
+            "profile_sha256": TRAINER_PROFILE_SHA256,
+            "controller_sha256": CONTROLLER_SHA256,
+            "teacher_sha256": TEACHER_SHA256,
         },
         "interfaces": {
             "episode_schema": "4ly-episode/v1",
