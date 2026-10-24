@@ -3,7 +3,7 @@ title: 4LY-004 prospective preregistration and evidence custody
 kind: reference
 summary: Source-bound Trainer-only behavior-cloning design, split custody, exact work ceilings and fail-closed admission checklist.
 owns: [flight.learning.preregistration, flight.learning.custody]
-verified: 2026-10-23
+verified: 2026-10-25
 ---
 
 # 4LY-004 prospective preregistration and evidence custody
@@ -12,20 +12,20 @@ verified: 2026-10-23
 experiment shape for issue #74 without issuing an allocation, opening a final
 payload, collecting teacher data, training a model or approving execution.
 
-The design was reconciled against NCA PR #85 preparation head
-`053911de6ee174b02cc3ad83f41619c02b883b76` and Cybersand PR #229 contract
-head `2e20731de0559ed59280d7a11f84f596d1cba985`. The latter is an
-**unqualified design source**, not an accepted host identity: #207/#229 must
-still produce accepted actual-host and teacher evidence. The merged 4LY-002
-plant base remains `1f9336388f11be39abaae340a781a5eef52115d4`.
-Current source contracts provide 60 Hz physics, six-tick decisions, the
-54-float `4ly-flat-observation/v1`, two normalized desired-velocity outputs,
-Trainer profile digest
-`f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`
-and controller digest
-`fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`.
-Any accepted #229 revision that changes those contracts requires a new
-preregistration review.
+The design is now reconciled to accepted Cybersand PR #229 merge
+`b5a8570e5123e1f633766e9390761a1c8134cfa2`. The merged 4LY-002 plant base
+remains `1f9336388f11be39abaae340a781a5eef52115d4`. The accepted source
+provides 60 Hz physics, six-tick decisions, the 54-float
+`4ly-flat-observation/v1`, two normalized desired-velocity outputs, Trainer
+profile digest `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
+controller digest `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
+and qualified frozen teacher digest
+`0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761`.
+The teacher score was source-bound to checkout
+`2bc2b6cfa9ad62512266df5804c5662b5ba8bd04`; its one-use final suite SHA-256
+is `4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401`.
+That teacher-final suite is not a learner-final asset. Any future Cybersand
+revision that changes these contracts requires a new preregistration review.
 
 ## Frozen learner configuration
 
@@ -74,12 +74,16 @@ Tuning uses only #229's distinct `tuning` geometry and seeds
 `211,223,227,229`, over the five core families: 40 cases per eligible
 checkpoint (12 free-space, 4 reversal, 4 arrival, 16 obstacles, 4 recovery).
 
-The **teacher qualification holdout is never a learner holdout**. Its geometry,
-episode traces and final payload stay outside the learner workflow. #74 may
-consume only independently verified teacher qualification identities and
-summary evidence. Once any suite has been opened, disclosed or used to tune a
-teacher or learner, it is development evidence and cannot later be represented
-as an untouched learner final.
+The **teacher qualification holdout is never a learner holdout**. The scored
+teacher suite `4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401`,
+its geometry, episode traces and payload stay outside the learner workflow.
+#74 may consume only the accepted teacher identity and summary evidence. The
+teacher-final generator source was visible in transient CI and its reviewer
+label was automation-supplied, so the result does not establish independent
+blind custody and the suite must not be transferred to learner evaluation.
+Once any suite has been opened, disclosed or used to tune a teacher or learner,
+it is development evidence and cannot later be represented as an untouched
+learner final.
 
 The learner final is a separate externally held suite. Its public
 preregistration reveals only composition: exactly 60 core cases, with 12 cases
@@ -236,12 +240,13 @@ untouched final in a retry or later experiment.
 
 ## Parameters intentionally unresolved
 
-The following must remain unresolved until qualified #229 evidence and the
-coordinated bridge/accounting/capture streams exist:
+The accepted #229 source, Trainer/controller identities and frozen teacher
+qualification are now resolved. The following remain unresolved for learner
+execution:
 
-- accepted #229 source SHA, native/Rapier/Godot build digests and qualified
-  teacher source/evidence identities;
-- persistent transport serialization is source-prepared as `nca-4ly-flight/1`; accepted host-call topology, actual-host conformance evidence and measured transport costs remain unresolved;
+- exact Godot/native/Rapier build digests for the NCA execution runner and
+  source-bound NCA bridge actual-host conformance evidence;
+- persistent transport serialization is source-prepared as `nca-4ly-flight/1`; host-call topology and measured transport costs remain unresolved;
 - exact CPU platform/Python/Torch/thread identities;
 - source-bound ticks/s, decisions/s, reset/call latency and serialization
   throughput on the chosen runner;
@@ -256,11 +261,13 @@ None may be filled with an estimate merely to make admission pass.
 
 ## Admission checklist
 
-- [ ] #207/#229 is accepted at an exact source/build, with independent
-  actual-host readback and a qualified scripted teacher.
-- [ ] The accepted host still matches the 54-channel, two-output, 60 Hz,
-  six-tick, Trainer/controller contracts above; otherwise this draft is
-  superseded and reviewed again.
+- [x] #207/#229 is accepted at source merge
+  `b5a8570e5123e1f633766e9390761a1c8134cfa2`; the qualified Trainer,
+  controller and frozen-teacher identities are imported from retained evidence.
+- [x] The accepted source matches the 54-channel, two-output, 60 Hz, six-tick,
+  Trainer/controller contracts above.
+- [ ] The exact NCA execution Godot/native/Rapier build is registered and the
+  external bridge passes source-bound actual-host conformance.
 - [ ] CPU learner source/config/export identities and all three policy seeds are
   frozen; PPO/sweeps/morphology/CUDA remain absent.
 - [ ] Development capture and tuning manifests exactly match the family/split
@@ -272,9 +279,9 @@ None may be filled with an estimate merely to make admission pass.
 - [ ] All currently unresolved host-call and resource ceilings are populated
   from qualified measurements, with no null or invented values in an
   executable declaration.
-- [ ] Teacher qualification holdout is referenced only by accepted identities
+- [x] Teacher qualification holdout is referenced only by accepted identities
   and summary evidence; no teacher-final payload is imported as learner
-  tuning/final data.
+  tuning/final data and its one-use suite is explicitly ineligible for reuse.
 - [ ] A separate 60-case learner-final suite is committed under independent
   custody and privately verified disjoint/feasible without being opened.
 - [ ] All three checkpoints are selected and hashed using tuning only before
