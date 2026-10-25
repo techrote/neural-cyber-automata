@@ -1214,12 +1214,17 @@ class FlightAccountingLedger:
         return self.reserve_many(increments, scope="cleanup", cleanup=True)
 
     def complete(self, reservation_id: str, *, confirmed_physical_ticks: int = 0) -> None:
-        self.resource_checkpoint("before_complete")
+        reservation = self._state["pending"].get(reservation_id)
         payload = {
             "reservation_id": reservation_id,
             "confirmed_physical_ticks": confirmed_physical_ticks,
         }
+        # Publish the authoritative outcome first. A resource violation discovered
+        # after work was consumed must stop subsequent work, never turn confirmed
+        # consumption into an unresolved reservation.
         self._commit("complete", payload)
+        if not (isinstance(reservation, Mapping) and reservation.get("cleanup") is True):
+            self.resource_checkpoint("after_complete")
 
     def fail(self, reservation_id: str, reason: str, *,
              confirmed_physical_ticks: int = 0) -> None:
