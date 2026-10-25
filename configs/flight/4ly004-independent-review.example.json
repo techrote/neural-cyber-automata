@@ -1,0 +1,15 @@
+{
+  "schema": "nca-4ly004-independent-execution-review/v1",
+  "review_binding_sha256": "REPLACE_WITH_REVIEW_BINDING_SHA256",
+  "accepted": true,
+  "reviewer_identity": "REPLACE_WITH_INDEPENDENT_EXECUTION_REVIEWER",
+  "independent": true,
+  "source_clean": true,
+  "runtime_accepted": true,
+  "resource_policy_accepted": true,
+  "stage_accounting_accepted": true,
+  "custody_accepted": true,
+  "final_access_unopened": true,
+  "training_not_executed": true,
+  "findings": []
+}
