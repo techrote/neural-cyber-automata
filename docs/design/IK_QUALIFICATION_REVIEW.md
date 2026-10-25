@@ -115,6 +115,23 @@ No new learner or CUDA probe is part of this preparation.
 The public [resource artifact index](../evidence/ik54-qualification-v4-resources-20261025.json)
 records exact retained fixture hashes and measurement limits.
 
+## Current blocker - target metadata unavailable
+
+At source `da0a3763e9fa7d60c59dfd629dfcd184674507b6`, actual packet
+preparation invoked the existing target-only visibility check. The metadata
+query reported a lost GPU and required a system reboot. Preparation refused
+before creating its packet root, allocations or attempts. No CUDA context,
+training, ownership claim, owner execution record or final call was created.
+The [append-only refusal record](../evidence/ik54-v4-preparation-refusal-20261025.json)
+binds the exact recipe, source and retained error log. No gate was bypassed,
+no alternate device was queried or used, and no host repair was performed.
+
+The final CPU suite passed 526 tests with four skips in 151.158 seconds.
+This completes software validation locally, not hardware readiness or packet
+admission. After target metadata is recovered, new clean-source preparation,
+measured startup validation, exact-head CI and two fresh exact-packet admissions
+remain necessary. The owner explicitly requires stopping before the long GPU run.
+
 ## Resource proof and final review
 
 [PREPARATION ONLY] A new CPU storage fixture exercises three concurrent workers,
