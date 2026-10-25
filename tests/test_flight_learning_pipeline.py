@@ -70,6 +70,7 @@ def accounting_fixture():
         "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
         "final_commitment_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
+        "final_custody_sha256": sha256_json(["fixture", "sealed-final-custody"]),
     })
     value["runtime"].update({
         "platform": "fixture-linux-x86_64",
