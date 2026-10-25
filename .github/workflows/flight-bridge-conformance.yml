@@ -37,9 +37,9 @@ jobs:
         run: python tools/flight_bridge_conformance.py plan
       - name: Execute one persistent actual native/Rapier host
         run: |
-          python tools/flight_bridge_conformance.py run \\
-            --checkout "$NCA_FLIGHT_HOST" \\
-            --godot "$NCA_FLIGHT_GODOT" \\
+          python tools/flight_bridge_conformance.py run \
+            --checkout "$NCA_FLIGHT_HOST" \
+            --godot "$NCA_FLIGHT_GODOT" \
             --output "$RUNNER_TEMP/4ly004-bridge"
       - name: Independent post-exit owner-receipt readback
         run: python tools/flight_bridge_conformance.py verify --output "$RUNNER_TEMP/4ly004-bridge"
