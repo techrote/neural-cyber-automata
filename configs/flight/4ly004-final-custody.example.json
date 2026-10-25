@@ -1,0 +1,39 @@
+{
+  "schema": "nca-4ly004-final-custody/v1",
+  "suite_schema": "nca-4ly004-learner-final-suite/v1",
+  "suite_sha256": "REPLACE_WITH_EXTERNAL_SUITE_SHA256",
+  "suite_bytes": 1,
+  "case_count": 60,
+  "family_composition": {
+    "free_space": 12,
+    "reversal": 12,
+    "arrival": 12,
+    "obstacles": 12,
+    "recovery": 12
+  },
+  "scenario_composition": {
+    "horizontal_reach": 4,
+    "vertical_reach": 4,
+    "diagonal_reach": 4,
+    "reverse": 12,
+    "arrival_braking": 12,
+    "wide_corridor": 3,
+    "offset_gates": 3,
+    "corner": 3,
+    "slalom": 3,
+    "wall_recovery": 12
+  },
+  "host_revision": "9935d5696721d2c72a8273ea70454ab0c5b11361",
+  "host_build_sha256": "55e5ba334b6683adf2ba0d8fc93fb7defba109cd4a319d2f366a2a86e4dfdf84",
+  "evaluator_contract_sha256": "33619869779c1e3eec65de28e3514eef0a32f331e9b284a322b14d437f4ca435",
+  "teacher_final_suite_sha256": "4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401",
+  "teacher_final_reused": false,
+  "custodian_identity": "REPLACE_WITH_EXTERNAL_CUSTODIAN",
+  "reviewer_identity": "REPLACE_WITH_DISTINCT_PRIVATE_REVIEWER",
+  "custodian_independent": true,
+  "reviewer_independent": true,
+  "repository_payload_present": false,
+  "executor_opened_payload": false,
+  "private_disjointness_verified": true,
+  "private_feasibility_verified": true
+}
