@@ -958,6 +958,11 @@ class FlightAccountingLedger:
             if binder is None:
                 _fail("flight_resource_guard", "resource guard lacks declaration binding")
             binder(declaration)
+            if getattr(resource_guard, "running", False) is not True:
+                _fail(
+                    "flight_resource_guard",
+                    "production resource guard must be actively monitoring",
+                )
             resource_guard.checkpoint("ledger_create")
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1006,6 +1011,11 @@ class FlightAccountingLedger:
             if binder is None:
                 _fail("flight_resource_guard", "resource guard lacks declaration binding")
             binder(declaration)
+            if getattr(resource_guard, "running", False) is not True:
+                _fail(
+                    "flight_resource_guard",
+                    "production resource guard must be actively monitoring",
+                )
             resource_guard.checkpoint("ledger_resume")
         stream = path.open("ab")
         ledger = cls(
