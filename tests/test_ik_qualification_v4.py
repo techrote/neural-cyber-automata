@@ -14,6 +14,30 @@ from nca.train import ik_qualification_v4 as q
 
 
 class QualificationContracts(unittest.TestCase):
+    def test_frozen_recipe_retains_training_contract_and_finite_resource_room(self):
+        import json
+        recipe=q.recipe_record()
+        root=Path(__file__).resolve().parents[1]
+        old=json.loads((root/'configs/ik/experiments/runner-qualification-v3.json').read_text())
+        for key in ('config','training_seeds','schedules','selection','tuning_epochs','normalization_sha256',
+                    'corpus_identity','loss_weights','optimizer','runtime','final_calls'):
+            self.assertEqual(recipe[key],old[key],key)
+        self.assertEqual(recipe['resource_policy'],q.resource_policy())
+        self.assertEqual(recipe['ceilings_per_seed'],dict(max_optimizer_steps=43000,
+            max_sample_presentations=5260000,max_tuning_calls=404000,max_evaluation_calls=0,
+            max_checkpoints=201,max_attempts=1,max_wall_seconds=86400,max_memory_bytes=1024**3))
+        self.assertIs(recipe['execution_authorized'],False)
+        self.assertGreater(q.WORK_RESERVE_SECONDS-q.PUBLICATION_RESERVE_SECONDS,3*464.)
+
+    def test_new_paid_reserve_is_bounded_without_model_work(self):
+        with tempfile.TemporaryDirectory() as directory:
+            ledger=self.fixture_ledger(Path(directory)/'ledger');attempt=ledger.begin_attempt()
+            with self.assertRaises(ValueError):
+                attempt.finish('failed',reason='fixture_above_cap',publication_reserve_seconds=7201.)
+            state=attempt.finish('failed',reason='fixture_paid_reserve',publication_reserve_seconds=7200.)
+            self.assertGreaterEqual(state['charged_wall_seconds'],7200.)
+            self.assertFalse(state['active']);self.assertFalse(state['can_resume'])
+
     def test_cleanup_is_bounded_by_earliest_seed_charge(self):
         states=[dict(charged_wall_seconds=x) for x in (100.,200.,300.)]
         q.validate_cleanup_budget(89.,states)
@@ -63,7 +87,7 @@ class QualificationContracts(unittest.TestCase):
     def test_hard_wall_exit_has_no_io_or_telemetry_dependency(self):
         from unittest.mock import Mock
         stop=Mock();stop.wait.return_value=False
-        with patch.object(q.time,'monotonic',return_value=28800),patch.object(q.os,'_exit',side_effect=RuntimeError('fixture exit')) as exit_call:
+        with patch.object(q.time,'monotonic',return_value=86400),patch.object(q.os,'_exit',side_effect=RuntimeError('fixture exit')) as exit_call:
             with self.assertRaisesRegex(RuntimeError,'fixture exit'):q.hard_wall_watchdog(stop,0)
             exit_call.assert_called_once_with(2)
 
@@ -103,7 +127,7 @@ class QualificationContracts(unittest.TestCase):
             self.assertEqual(limits["max_sample_presentations"],len(self.training)*epochs)
             self.assertEqual(limits["max_tuning_calls"],2020*len(config.evaluation_epochs()))
             self.assertEqual(limits["max_checkpoints"],1+len(config.evaluation_epochs()))
-            self.assertEqual(limits["max_wall_seconds"],28800)
+            self.assertEqual(limits["max_wall_seconds"],86400)
 
     def test_shuffled_order_is_frozen_and_ledger_prefix_is_correct(self):
         config=DevConfig(epochs=200,batch_order="shuffled")

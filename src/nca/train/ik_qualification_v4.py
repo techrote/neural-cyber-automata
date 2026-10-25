@@ -5,6 +5,7 @@ No final access path exists. A development result is never execution admission.
 from __future__ import annotations
 import argparse
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -21,6 +22,10 @@ from nca.train.ik_run_state_v2 import IKRunLedger
 
 RECIPE = "configs/ik/experiments/runner-qualification-v4.json"
 REPORT_MAX_BYTES = 8*1024**2
+GROUP_WALL_SECONDS = 24*60*60
+EXIT_MARGIN_SECONDS = 10
+PUBLICATION_RESERVE_SECONDS = 7200
+WORK_RESERVE_SECONDS = 10800
 CHECKS = ("exact_head_ci", "source_and_cpu_checks", "corpus_and_splits",
           "allocation_and_no_retry", "scoring_and_selection", "environment_and_resource_feasibility")
 
@@ -80,7 +85,18 @@ def ceilings(config, samples):
                 max_sample_presentations=plan.total_presentations,
                 max_tuning_calls=2020*len(config.evaluation_epochs()),
                 max_evaluation_calls=0, max_checkpoints=1+len(config.evaluation_epochs()),
-                max_attempts=1, max_wall_seconds=28800, max_memory_bytes=GIB)
+                max_attempts=1, max_wall_seconds=GROUP_WALL_SECONDS, max_memory_bytes=GIB)
+
+
+
+def resource_policy():
+    return {"workers":3,"board_cap_bytes":20*GIB,"host_commit_per_process_bytes":8*GIB,
+            "allocator_per_process_bytes":GIB,"cpu_threads":1,"group_wall_seconds":GROUP_WALL_SECONDS,
+            "startup_admission_limit_seconds":60,"active_deadline_seconds":GROUP_WALL_SECONDS-EXIT_MARGIN_SECONDS,
+            "worker_publication_reserve_seconds":PUBLICATION_RESERVE_SECONDS,
+            "work_admission_reserve_seconds":WORK_RESERVE_SECONDS,"exit_margin_seconds":EXIT_MARGIN_SECONDS,
+            "hard_timer_through_interpreter_exit":True,
+            "startup_free_disk_bytes":16*GIB,"continuous_free_disk_floor_bytes":4*GIB}
 
 
 def source():
@@ -151,12 +167,7 @@ def prepare(args):
                        tuning_epochs=list(config.evaluation_epochs()),
                        selection="lowest_complete_raw_nominal_p95_earliest_ties",
                        independent_admissions_required=2, owner_execution_required=True,
-                       resource_policy={"workers":3,"board_cap_bytes":20*GIB,"host_commit_per_process_bytes":8*GIB,
-                                        "allocator_per_process_bytes":GIB,"cpu_threads":1,"group_wall_seconds":28800,
-                                        "startup_admission_limit_seconds":60,"active_deadline_seconds":28790,
-                                        "worker_publication_reserve_seconds":3600,
-                                        "work_admission_reserve_seconds":5400,"exit_margin_seconds":10,
-                                        "hard_timer_through_interpreter_exit":True})
+                       resource_policy=resource_policy())
     validate_declaration(declaration,source(),recipe)
     root.mkdir(parents=True)
     freeze(root/"declaration.json",declaration)
@@ -214,7 +225,7 @@ def strict_train(ledger, attempt, corpus, context, config, normalization):
         cursor+=count;ends[cursor]=e
     best=None
     while not plan.exhausted:
-        if attempt.remaining_wall_seconds<5400:
+        if attempt.remaining_wall_seconds<WORK_RESERVE_SECONDS:
             raise TimeoutError("qualification allocation cannot extend")
         indexes=plan._batches[plan.cursor]
         plan.next_batch()
@@ -250,7 +261,7 @@ def strict_train(ledger, attempt, corpus, context, config, normalization):
         if best is None or item["metric"]<best["metric"]:
             best={**item,"checkpoint":saved,"gate":_accuracy(score)}
     freeze(ledger.root/"selected.json",best)
-    attempt.finish("completed",reason="fixed_full_training_tuning_only",publication_reserve_seconds=3600.)
+    attempt.finish("completed",reason="fixed_full_training_tuning_only",publication_reserve_seconds=PUBLICATION_RESERVE_SECONDS)
     return best
 
 
@@ -275,7 +286,7 @@ def worker(args):
         strict_train(ledger,attempt,corpus,context,DevConfig(**declaration["recipe"]["config"]),
                      PolarNormalization.from_dict(declaration["normalization"]))
     except BaseException:
-        if not attempt.closed:attempt.finish("failed",reason="strict_qualification_failed",publication_reserve_seconds=3600.)
+        if not attempt.closed:attempt.finish("failed",reason="strict_qualification_failed",publication_reserve_seconds=PUBLICATION_RESERVE_SECONDS)
         raise
 
 
@@ -312,7 +323,7 @@ def validate_terminal(state, allocation):
         raise ValueError('strict ledger did not complete the exact fixed recipe')
 
 
-def hard_wall_watchdog(stop, began, deadline_seconds=28790):
+def hard_wall_watchdog(stop, began, deadline_seconds=GROUP_WALL_SECONDS-EXIT_MARGIN_SECONDS):
     """Never block the whole-process timer on filesystem or metadata queries."""
     while not stop.wait(.25):
         if time.monotonic()-began>=(deadline_seconds() if callable(deadline_seconds) else deadline_seconds):
@@ -320,7 +331,7 @@ def hard_wall_watchdog(stop, began, deadline_seconds=28790):
 
 
 def validate_cleanup_budget(elapsed, states):
-    if elapsed+10.>=min(x['charged_wall_seconds'] for x in states):
+    if elapsed+EXIT_MARGIN_SECONDS>=min(x['charged_wall_seconds'] for x in states):
         raise ValueError('supervisor publication/cleanup lacks paid per-seed wall reserve')
 
 
@@ -329,7 +340,7 @@ def run(args):
     from threading import Thread,Event
     from nca.ik.process_limits import memory_limit
     memory_limit(8192,kill_children_on_exit=True)
-    hard_stop=Event();finish_deadline=[28790.]
+    hard_stop=Event();finish_deadline=[float(GROUP_WALL_SECONDS-EXIT_MARGIN_SECONDS)]
     timer=Thread(target=hard_wall_watchdog,args=(hard_stop,began,lambda:finish_deadline[0]),daemon=True)
     timer.start()  # Protect source/admission preflight too; never stop before interpreter exit.
     root=Path(args.root)
@@ -340,6 +351,7 @@ def run(args):
     from nca.train.ik_matched_supervisor import board_sample,stop_tree
     from nca.train.ik_dev_sweep import _host_free_commit
     if _host_free_commit()<32*GIB:raise ValueError("strict three-worker host commitment headroom insufficient")
+    if shutil.disk_usage(root).free<16*GIB:raise ValueError("strict storage headroom insufficient")
     board_sample()
     ownership={"kind":"ik_v4_strict_qualification","claim":uuid.uuid4().hex,
                "declaration_file_sha256":sha256_file(root/"declaration.json")}
@@ -356,8 +368,9 @@ def run(args):
                     now=time.monotonic()
                     if now-sampled>=2:
                         sample=board_sample();sample["host_free_commit_bytes"]=_host_free_commit()
-                        if sample["temperature"]>80 or sample["host_free_commit_bytes"]<4*GIB:
-                            raise ValueError("whole-invocation thermal/host headroom cap")
+                        sample["disk_free_bytes"]=shutil.disk_usage(root).free
+                        if sample["temperature"]>80 or sample["host_free_commit_bytes"]<4*GIB or sample["disk_free_bytes"]<4*GIB:
+                            raise ValueError("whole-invocation thermal/host/storage headroom cap")
                         append(log,sample);sampled=now
         except BaseException as exc:
             try:freeze(root/"resource-cap-failure.json",{"wall_seconds":time.monotonic()-began,"reason":str(exc)})
@@ -380,16 +393,16 @@ def run(args):
         from nca.train.ik_run_state_v2 import _record
         for seed in SEEDS:
             paid=_record(root/f'seed-{seed}/attempts/attempt-0001/finish.json')['record']['elapsed_seconds']
-            finish_deadline[0]=min(finish_deadline[0],paid-10.)
+            finish_deadline[0]=min(finish_deadline[0],paid-EXIT_MARGIN_SECONDS)
         for seed,process in zip(SEEDS,active):
             if process.returncode!=0:raise ValueError("strict worker failed")
             ledger=IKRunLedger.open(root/f"seed-{seed}",expected_identity=identity(declaration,seed),
                                    expected_allocation=declaration["allocations"])
             state=ledger.inspect()
             validate_terminal(state,declaration['allocations'])
-            finish_deadline[0]=min(finish_deadline[0],state['charged_wall_seconds']-10.)
+            finish_deadline[0]=min(finish_deadline[0],state['charged_wall_seconds']-EXIT_MARGIN_SECONDS)
             outcomes.append({"seed":seed,"selected":verify_selected(ledger,state,declaration),"ledger":state})
-        if time.monotonic()-began>=28790:raise ValueError("strict finalization exceeded active deadline")
+        if time.monotonic()-began>=GROUP_WALL_SECONDS-EXIT_MARGIN_SECONDS:raise ValueError("strict finalization exceeded active deadline")
         freeze(root/"group-result.json",{"wall_seconds":time.monotonic()-began,"outcomes":outcomes,
                                           "final_calls":0,"all_tuning_gates_pass":all(x["selected"]["gate"]=="pass" for x in outcomes)})
         if any(x["selected"]["gate"]!="pass" for x in outcomes):

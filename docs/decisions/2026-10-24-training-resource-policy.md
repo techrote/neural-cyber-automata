@@ -3,7 +3,7 @@ title: D-033 generous development allocations and useful VRAM utilization
 kind: decisions
 summary: Owner-authorized general local development allowances, preserving explicit packet limits, sealed finals and strict qualification.
 owns: [decisions.training_resources]
-verified: 2026-10-24
+verified: 2026-10-25
 ---
 
 # D-033 — Generous development, measured resource use
@@ -60,9 +60,9 @@ until a separate owner-approved declaration. This policy commissions no current
 Part B training, final access, paid service, new compute acquisition or host edit.
 
 The independently identified IK54 terminal-size/finalization defect is addressed
-through an unfinished separate versioned ledger and prospective v4 packet. No v4
-recipe or packet has been frozen or admitted. Its proposed eight-hour wall
-ceiling and 3,600-second paid finalization reserve must be frozen before execution;
+through a separate versioned ledger and prospective v4 packet. On 25 October the
+owner resumed preparation/review only. The new recipe uses a generous 24-hour wall
+ceiling and 7,200-second paid finalization reserve, frozen before execution;
 they do not change the winning recipe, consumed evidence or acceptance gates.
 Resource proof and fresh exact-packet independent admissions precede any new
 owner execution instruction. See [the review/repair record](../design/IK_QUALIFICATION_REVIEW.md).

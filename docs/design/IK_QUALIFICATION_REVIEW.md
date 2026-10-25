@@ -3,7 +3,7 @@ title: IK54 independent qualification review and versioned repair
 kind: guide
 summary: Two non-author refusals of the v3 packet, a separate large-run ledger repair and fresh exact-packet admission before any training.
 owns: [design.ik_qualification_review]
-verified: 2026-10-24
+verified: 2026-10-25
 ---
 
 # IK54 qualification review
@@ -36,9 +36,10 @@ uses a distinct schema, bounded 64 MiB metadata, a 1 MiB checkpoint cap and supp
 for finite local allocations up to 72 hours. The new v4 qualification path retains
 the same frozen hyperparameters, seeds, full training partition, tuning cadence,
 one attempt, selection rule and acceptance. Its prospective resource declaration
-uses eight hours per invocation and a charged 3,600-second worker publication reserve.
-Work admission stops with 5,400 seconds remaining. These are unfinished source
-defaults: no v4 recipe or packet has been frozen, issued or admitted.
+uses twenty-four hours per invocation and a charged 7,200-second worker publication reserve.
+Work admission stops with 10,800 seconds remaining. The versioned recipe is
+[preregistered](../../configs/ik/experiments/runner-qualification-v4.json); preparing
+a new external packet grants no execution authority.
 
 The hard wall timer is independent of potentially blocking telemetry queries.
 Board/thermal and host-commit monitoring continue through supervisor finalization;
@@ -71,6 +72,48 @@ The last completed CPU suite passed 524 tests with four skips in 130.480 seconds
 The recorded CPU result is not exact-head CI admission for this repair. Resuming would require completing
 and freezing the recipe/packet, final-head checks and the required admissions;
 these steps were not performed after the stop instruction.
+
+## Resumption - 25 October 2026
+
+The owner's "Continue" resumes the unfinished preparation and two independent
+reviews. It does not execute Part B: the separately required owner go remains
+absent. The preserved v3 refusal, previous stop and publication remain historical.
+The v4 recipe restores every original training family, fixed tanh/cosine/1,000
+recipe, all three original seeds and five-epoch tuning cadence. Per seed:
+43,000 optimizer steps, 5,260,000 presentations, 404,000 tuning calls, 201
+checkpoints, one attempt, zero final calls and no extension or re-selection.
+All original acceptance thresholds and gates remain unchanged.
+
+The prospective 24-hour ceiling replaces the unfinished eight-hour draft before
+any v4 packet is frozen. Existing v3 and consumed allocations remain unchanged.
+It is a ceiling, not a commitment to spend all of it. The slower historical
+three-worker matched harness took 1,245.062 seconds for 40 epochs; multiplying
+by 25 gives a conservative cross-harness warning of 31,126.55 seconds, already
+beyond eight hours. This extrapolation is not measured v4 throughput. The actual
+development trainer completed the winning 1,000-epoch runs in at most 2,510.438
+seconds under up to eight workers. Scaling the entire duration by the largest
+full/dev count ratio (2,020/787), adding the complete 1,224.763-second storage
+fixture and 10,800-second reserve gives about 18,469 seconds plus preflight.
+Both are planning estimates with retained limits; a hard stop enforces the ceiling.
+
+A fresh independent cold-disk replay took 543.296 seconds for one ledger,
+versus the saved supervisor's approximately 70 seconds. That variability is
+retained. A 10,800-second work reserve leaves 3,600 seconds before the new
+7,200-second paid publication reserve. The earlier full-scale fixture measured
+first inventory about 464 seconds, worker finish 658 seconds and serial tail
+213 seconds. The fresh cold replay suggests allowing substantially more I/O
+headroom. The only ledger change since that fixture raises the allowed reserve
+upper bound; hashing, inventory and readback semantics remain unchanged.
+A focused no-model fixture checks the new reserve and rejection above it.
+The supervisor timer tightens to the earliest paid seed envelope and remains
+active through interpreter exit. Startup requires 16 GiB free storage and
+32 GiB available host commitment; monitoring retains 4 GiB disk/host floors.
+Fresh reviewers assess transfer, later guards, storage and composite costs.
+No successful fixture guarantees a later run.
+No new learner or CUDA probe is part of this preparation.
+
+The public [resource artifact index](../evidence/ik54-qualification-v4-resources-20261025.json)
+records exact retained fixture hashes and measurement limits.
 
 ## Resource proof and final review
 

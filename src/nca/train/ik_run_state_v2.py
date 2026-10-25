@@ -800,8 +800,8 @@ class IKAttempt:
             raise ValueError("successful terminal status cannot hide a pending operation")
         if (type(publication_reserve_seconds) not in (int, float)
                 or not math.isfinite(publication_reserve_seconds)
-                or not 5.0 <= publication_reserve_seconds <= 3600.0):
-            raise ValueError("publication reserve must be finite and between five and 3600 seconds")
+                or not 5.0 <= publication_reserve_seconds <= 7200.0):
+            raise ValueError("publication reserve must be finite and between five and 7200 seconds")
         inventory = _inventory(self.folder)
         observed = time.monotonic() - self.started
         remaining = max(0.0, self.ledger.allocation["max_wall_seconds"]
