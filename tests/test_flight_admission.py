@@ -25,6 +25,7 @@ from nca.train.flight_admission import (
     RUNTIME_THREADS,
     RUNTIME_TORCH,
     FlightResourceGuard,
+    _parse_proc_stat,
     admission_candidate,
     build_split_manifest,
     prospective_declaration,
@@ -219,6 +220,16 @@ class ProspectiveDeclarationTests(unittest.TestCase):
                 guard.close()
 
 
+class ProcfsParsingTests(unittest.TestCase):
+    def test_proc_stat_parser_handles_spaces_in_process_name(self):
+        fields = ["S", "45"] + ["0"] * 19 + ["7"]
+        pid, ppid, rss = _parse_proc_stat(
+            "123 (worker process name) " + " ".join(fields),
+            page_size=4096,
+        )
+        self.assertEqual((pid, ppid, rss), (123, 45, 7 * 4096))
+
+
 class ResourceGuardTests(unittest.TestCase):
     def guard(self, root, clock, rss=1024, storage=0):
         return FlightResourceGuard(
@@ -230,6 +241,48 @@ class ResourceGuardTests(unittest.TestCase):
                 storage[0] if isinstance(storage, list) else storage
             ),
         )
+
+    def test_consumed_work_settles_before_resource_violation_refuses_more(self):
+        binding = review_binding(
+            source=source_fixture(),
+            development_sha256=DEV_SHA,
+            tuning_sha256=TUNING_SHA,
+            custody=custody_fixture(),
+        )
+        declaration, evidence, _ = prospective_declaration(
+            source=source_fixture(),
+            development_sha256=DEV_SHA,
+            tuning_sha256=TUNING_SHA,
+            custody=custody_fixture(),
+            independent_review=review_fixture(binding),
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            clock = [0.0]
+            guard = self.guard(temporary, clock).start()
+            try:
+                ledger = FlightAccountingLedger.create(
+                    Path(temporary) / "settlement.jsonl",
+                    declaration,
+                    attempt_id="resource-settlement",
+                    current_evidence=evidence,
+                    resource_guard=guard,
+                )
+                reservation = ledger.reserve_step(
+                    maximum_ticks=1, stage="capture")
+                clock[0] = MAX_WALL_SECONDS + 1.0
+                with self.assertRaisesRegex(
+                    ContractError, "maximum_wall_seconds"
+                ):
+                    ledger.complete(
+                        reservation, confirmed_physical_ticks=1)
+                snapshot = ledger.snapshot()
+                self.assertEqual(snapshot["pending_reservations"], [])
+                self.assertEqual(snapshot["confirmed_physical_ticks"], 1)
+                cleanup = ledger.reserve_cleanup()
+                ledger.complete(cleanup)
+                ledger.close("resource_limit_reached")
+            finally:
+                guard.close()
 
     def test_resource_policy_has_finite_whole_attempt_caps(self):
         ceilings = resource_ceilings()
