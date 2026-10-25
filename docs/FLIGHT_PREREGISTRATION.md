@@ -246,77 +246,41 @@ suite and custody digests **before** the first final parse/reset. If the run
 fails after opening, that suite is opened evidence; it cannot be recycled as an
 untouched final in a retry or later experiment.
 
-## Remaining external and post-admission state
+## Remaining admission state
 
-The accepted #249 host/runtime, NCA bridge conformance, Trainer/controller/
-teacher identities, public development/tuning manifests, CPU runtime contract,
-finite work topology, whole-attempt resource ceilings and enforcement surface
-are now resolved by source.
+Source now resolves the accepted host/bridge, public development/tuning
+manifests, CPU learner contract, complete work topology and finite fail-stop
+resource enforcement. Exact valid-label count remains bounded by 11,400 until
+admitted capture; tuning-only checkpoint selection and realtime/export
+qualification remain post-admission work.
 
-Two gates remain intentionally external before the first experimental capture
-or optimizer work:
-
-- a separate 60-case learner-final commitment/custody record from an independent
-  custodian/private reviewer, with the payload still outside Git and unopened by
-  the executor; and
-- an independently authored execution review bound to the exact final learner
-  source, public split hashes, custody digest, runtime/resource policy and
-  `final_access=false`.
-
-The exact valid-label count remains naturally unknown until admitted development
-capture occurs; the fixed ceiling remains 11,400 and cannot be increased.
-Tuning-only checkpoint selection and realtime/export qualification are
-post-admission experiment/deployment gates, not facts that may be fabricated
-before training. Learner-final bytes remain unavailable until the later
-final-open barrier.
+Before experimental capture or optimizer work, two genuinely external records
+are still required: (1) an independently held, privately reviewed, disjoint and
+feasible 60-case learner-final custody commitment whose payload remains outside
+Git and unopened by the executor; and (2) an independently authored execution
+review bound to the exact final-head source, split hashes, custody digest,
+runtime/resource policy and `final_access=false`.
 
 ## Admission checklist
 
-- [x] #249 is accepted at host merge
-  `9935d5696721d2c72a8273ea70454ab0c5b11361`; the qualified Trainer,
-  controller and frozen-teacher lineage remains bound to accepted #229
-  `b5a8570e5123e1f633766e9390761a1c8134cfa2`.
-- [x] The accepted source matches the 54-channel, two-output, 60 Hz, six-tick,
-  Trainer/controller contracts above.
-- [x] The exact NCA execution Godot/native/Rapier build is registered and the
-  external bridge passes source-bound actual-host conformance with independent
-  post-exit receipt readback (run `40211483325`, evidence
-  `193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`).
-- [x] The CPU learner contract is frozen to 54-64-64-2 tanh BC, seeds
-  74011/74013/74017, Linux x86_64, Python 3.12.10, Torch 2.8.0+cpu and one
-  Torch thread; PPO/sweeps/morphology/CUDA remain absent. Exact learner revision
-  and source-closure SHA-256 are generated from the clean final head.
-- [x] Development and tuning manifests exactly freeze the public family/split
-  membership: development SHA-256
-  `8b68faa6d3bf6172d0ba1dcf6d2752aae6ff9e83d521cfe33cf537cbbad9e5e7`
-  and tuning SHA-256
+- [x] Accepted #249/#229 host, Trainer/controller/teacher lineage and exact
+  Godot/native/Rapier bridge conformance are bound; run `40211483325` passed
+  independent post-exit receipt readback.
+- [x] Trainer-only 54-64-64-2 tanh BC, seeds 74011/74013/74017, Ubuntu 24.04
+  Linux x86_64, Python 3.12.10, Torch 2.8.0+cpu and one Torch thread are frozen;
+  PPO/sweeps/morphology/CUDA remain absent.
+- [x] Public development/tuning manifests are frozen at
+  `8b68faa6d3bf6172d0ba1dcf6d2752aae6ff9e83d521cfe33cf537cbbad9e5e7` and
   `0295a669549bc7cf852fd12934d85506ef1f55ceec07340531f801084e08b3df`.
-- [x] Capture validation excludes uncertain/invalid transitions without hiding
-  failed or refused episodes.
-- [x] Durable accounting reserves every host/optimizer/publication operation
-  before work and carries failures/unknown consumption forward.
-- [x] Host-call/startup/cleanup work ceilings are populated from the qualified
-  persistent-host topology.
-- [x] Whole-attempt wall/RSS/storage/publication hard ceilings are finite and
-  enforced by the source-bound live resource guard; host-only projections are
-  retained only as rationale, not substituted as learner measurements.
-- [x] Teacher qualification holdout is referenced only by accepted identities
-  and summary evidence; no teacher-final payload is imported as learner
-  tuning/final data and its one-use suite is explicitly ineligible for reuse.
-- [ ] A separate 60-case learner-final suite is committed under independent
-  custody and privately verified disjoint/feasible without being opened.
-- [ ] An independent source-bound execution review accepts the exact
-  final-head review binding and external custody commitment before experimental
-  capture/training begins.
+- [x] Capture validation, durable no-refund accounting, exact host-call topology
+  and finite 18,000 s / 4 GiB RSS / 8 GiB storage / 4 GiB publication guard are
+  source-enforced; teacher-final reuse remains forbidden.
+- [ ] External unopened learner-final custody commitment is supplied.
+- [ ] Independent execution review accepts the exact final-head binding.
 - [ ] Exact-head admission/software CI passes and publishes the review candidate.
-- [x] Final-access state remains false/unopened throughout this admission
-  package.
+- [x] Final access remains false/unopened.
 
-After admission, all three trained checkpoints must still be selected and
-hashed using tuning only before the final-open barrier, and realtime/export
-qualification remains separate from training admission. Until the two external
-pre-execution gates and exact-head CI pass, `training_admission()` and final
-access remain refused. This document itself grants neither execution nor final
-access.
-
+After admission, selected checkpoint hashes must still come from tuning only
+before the final-open barrier. Until the three unchecked items pass,
+`training_admission()` and final access remain refused.
 © 2026 techrote. All rights reserved.
