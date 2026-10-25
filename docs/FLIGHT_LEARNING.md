@@ -1,7 +1,7 @@
 ---
 title: Trainer flight-learning preparation
 kind: guide
-summary: Accepted Cybersand host/teacher source binding, fail-stop flight transport preparation, and bounded learner design with NCA runtime/bridge conformance still gated.
+summary: Qualified Cybersand bridge, bounded Trainer learner design, and fail-closed experiment-admission package with external final custody and review still gated.
 owns: [flight.learning.preparation]
 verified: 2026-10-25
 ---
@@ -81,9 +81,12 @@ and was not replayed. Earlier source-digest, non-finite-RPC and duplicate
 cleanup-reservation attempts remain retained negative evidence.
 
 This qualification resolves the exact host build, physical bridge semantics,
-host-call topology and host-side performance measurements. It does not collect
-teacher capture or qualify the CPU learner's whole-process resource envelope,
-and therefore does not grant training admission.
+host-call topology and host-side performance measurements. The later
+[experiment-admission package](evidence/2026-10-25-4ly004-admission-package.md)
+adds a frozen CPU runtime contract, exact public development/tuning manifests
+and finite whole-attempt resource enforcement. Neither step collects teacher
+capture or grants training admission; independent learner-final custody and an
+independently authored execution review remain external prerequisites.
 
 ## Trainer-only capture, cloning and export preparation
 
@@ -150,25 +153,21 @@ reply completes the reservation with the owner's exact `ticks_consumed`;
 `UnknownConsumptionError` maps to `mark_unknown(...)`. No accounting field is
 added to `nca-4ly-flight/1`. Only after that durable outcome may a capture
 stream admit a normal supervised row. `4ly-flight-exchange/v1` provides the
-join keys without modifying the existing ACT004 capture record schema. Exact
-host-call/capture-phase/startup/cleanup topology and ceilings still require the
-accepted bridge measurements; the declaration therefore remains fail-closed.
+join keys without modifying the existing ACT004 capture record schema. The accepted bridge measurements resolve the exact planned topology:
+246,765 host calls, one startup operation and one cleanup operation across the
+884-reset / 245,880-decision work ceiling. Capture-label charging remains a
+post-validation local accounting step and cannot turn refused or uncertain
+physical work into supervision.
 
-The accepted source identity is bound in `flight_transport.ACCEPTED_HOST`.
-`ACCEPTED_RUNTIME_BUILD` remains intentionally `None`: the accepted merge
-does not justify inventing portable Godot/native/Rapier binary hashes for a
-future NCA execution runner. `FlightGodotTransport` therefore still fails
-before spawning Godot. Before actual-host execution, an independent handoff
-must bind the exact accepted tree, Godot version/binary SHA-256, native artifact
-path/SHA-256, Rapier artifact path/SHA-256, and SHA-256 values for the reviewed
-episode/observation/profile/controller/arena source files. Then run NCA bridge
-actual-host conformance for reset, full/partial
-terminal step, lease expiry, cancel, human takeover, repeated reset, shutdown
-and induced reply loss. Verify manifest/profile/controller hashes and all
-sequence/run/actor/epoch/control-generation/observation/physical-tick receipts,
-measure serialization/call/startup/cleanup/resource bounds, and publish an
-independent readback. Do not open any teacher or learner final payload during
-that handoff.
+The accepted source and Linux runtime are bound in
+`flight_transport.ACCEPTED_HOST` and `ACCEPTED_RUNTIME_BUILD`: Cybersand
+#249 merge `9935d5696721d2c72a8273ea70454ab0c5b11361`, accepted tree
+`607158a7b938471022edee62d150988db769bb78`, Godot 4.7, exact native/Rapier
+artifacts and reviewed host-source hashes. `FlightGodotTransport` still
+requires durable accounting before launch; source/runtime acceptance does not
+grant experiment admission. The independent actual-host conformance has already
+passed and is retained as immutable bridge evidence. No teacher or learner final
+payload was opened during that qualification.
 
 ## Bounded prospective experiment
 
@@ -241,33 +240,33 @@ resume of a closed consumed attempt and truncated accounting tails are refused.
 Checkpoint publication has its own reservation and retains immutable parent
 lineage across clean interruption.
 
-The preregistration supplies the non-resource maxima now represented by the
-declaration: one host start, 884 resets, 1,475,280 physical ticks, 245,880
-decisions, 11,400 capture labels, 5,400 optimizer updates, 684,000 sample
-presentations, 480 tuning episodes and 63 checkpoint publications. Exact
-`host_calls`, startup and cleanup operation ceilings remain null. Wall time,
-peak resident memory, storage bytes and publication bytes also remain null.
-The accepted #229 teacher/host evidence is carried only as a source-bound
-prerequisite. Its source-specific pilot does not substitute for NCA transport,
-startup/cleanup, inference, memory or storage measurements on the chosen
-execution runner.
+The declaration now has complete finite work ceilings: one host start, 884
+resets, 246,765 host calls, 1,475,280 physical ticks, 245,880 decisions, 11,400
+capture labels, 5,400 optimizer updates, 684,000 sample presentations, 480
+tuning episodes, 63 checkpoint publications, one startup operation and one
+cleanup operation.
 
-No executable training command is admitted. `training_admission()` evaluates
-the incomplete preparation declaration and therefore remains fail-closed with
-`final_access=false`. Execution additionally requires accepted current
-dependency digests; missing or stale evidence refuses admission. A future
-resource declaration must also bind validated wall/RSS/storage enforcement,
-not merely measured numbers.
+The admission package additionally freezes Linux x86_64 / Python 3.12.10 /
+Torch 2.8.0+cpu / one-thread execution and hard whole-attempt caps of 18,000 s
+wall time, 4 GiB process-tree RSS, 8 GiB retained attempt storage and 4 GiB
+publication bytes. These are fail-stop allocation ceilings, not claims about
+future learner consumption. A continuously running resource guard is mandatory
+before a production accounting ledger can open or resume, and each subsequent
+reservation is checked against it.
 
-Before prospective execution can exist, record the NCA execution runtime build
-identity, final bridge actual-host conformance, frozen split commitments,
-selected CPU runtime identity, source-bound throughput and
-host-call/reset latency, whole-process startup/cleanup duration, process-tree
-peak RSS, evidence/checkpoint/publication byte growth, durable storage
-throughput, exact host-call and capture-label phase topology, finite
-startup/cleanup operation counts and an independent source-bound review of the
-complete declaration. Neither these fixtures nor
-the accounting implementation qualify flight or issue an experiment admission.
+`training_admission()` intentionally continues to evaluate the incomplete
+repository preparation declaration and remains fail-closed. The separately
+versioned admission builder can produce an executable prospective declaration
+only after it receives (1) an external 60-case learner-final custody record,
+without receiving the payload, and (2) an independently authored execution
+review bound to the exact final-head source/split/runtime/resource/custody
+candidate. Missing or stale evidence refuses admission and `final_access`
+remains false even after training admission.
+
+Development capture determines the exact valid-label count below the fixed
+11,400 ceiling. Tuning-only checkpoint selection occurs only after admitted
+training, and continuously advancing export qualification is a later deployment
+gate. None is fabricated as pre-execution evidence.
 
 Windows CPU-only software checks from repository root:
 
@@ -276,6 +275,7 @@ python -m unittest discover -s tests -p test_flight_preparation.py
 python -m unittest discover -s tests -p test_flight_transport.py
 python -m unittest discover -s tests -p test_flight_accounting.py
 python -m unittest discover -s tests -p test_flight_learning_pipeline.py
+python -m unittest discover -s tests -p test_flight_admission.py
 python tools/check_docs.py --strict
 ```
 
@@ -283,8 +283,10 @@ The tests use scripted/synthetic fixtures only. They do not run Godot/native,
 collect teacher data, execute the declared learning experiment, initialize CUDA
 or open a final payload. The learning-pipeline test performs only tiny synthetic
 CPU optimization to verify deterministic cloning, accounting, checkpoint and
-export mechanics. Host/teacher source qualification is now bound; trained
-quality, NCA actual-host export parity, realtime qualification, resource
-admission and independent learner-final custody remain outstanding.
+export mechanics. Host/teacher source qualification, the public split manifests, CPU runtime
+contract and fail-stop resource-enforcement surface are now bound. Trained
+quality, realtime export qualification, external learner-final custody and the
+independent execution review remain outstanding; exact-head admission CI must
+also pass before this package is accepted.
 
 © 2026 techrote. All rights reserved.

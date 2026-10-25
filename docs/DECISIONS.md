@@ -11,6 +11,8 @@ Newest first. IDs are never reused. A replaced decision keeps its entry and is t
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-032 — Finish the 4LY-004 experiment-admission package
+[ACCEPTED] 2026-10-25 by owner: freeze the source/split/runtime/resource package while preserving external custody and review gates. See the [full decision](decisions/2026-10-25-4ly004-admission.md).
 ### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE, HOST BRIDGE QUALIFIED] 2026-10-25. [#74 preparation](FLIGHT_LEARNING.md) is rebound to accepted Cybersand #249 merge `9935d5696721d2c72a8273ea70454ab0c5b11361` while retaining the qualified #229 Trainer/controller/frozen-teacher lineage. NCA actual-host bridge conformance passed with independent receipt readback at run `40211483325`; exact host-call/startup/cleanup topology and host-side measurements are now bound. The one-use teacher-final suite remains teacher evidence only and cannot become learner-final data. Learner CPU runtime/resource ceilings, split/final custody, independent execution review and execution admission remain gated; no training allocation or learner-final access is granted.
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
@@ -18,9 +20,7 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 [ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
 
 ### D-021 — Explicitly gated long-running Jolt CI entry
-
-[ACCEPTED] 2026-10-22 by owner. See the
-[full decision and unchanged admission gates](decisions/2026-10-22-jolt-ci.md).
+[ACCEPTED] 2026-10-22 by owner. See the [full decision and unchanged admission gates](decisions/2026-10-22-jolt-ci.md).
 
 ### D-020 — Remove operational wall-clock limits and rerun CI
 

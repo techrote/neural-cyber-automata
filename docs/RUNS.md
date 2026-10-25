@@ -8,25 +8,26 @@ verified: 2026-10-25
 
 # Run ledger
 
-The [4LY-004 preparation](FLIGHT_LEARNING.md) performs software-only protocol,
-transport, accounting and learning-pipeline tests. The source bridge wraps the
-real #229 episode owner contract and now binds accepted Cybersand merge
-`b5a8570e5123e1f633766e9390761a1c8134cfa2` plus the qualified
-Trainer/controller/teacher identities. Its launcher is still hard-gated before
-Godot until the exact NCA execution runtime build and bridge conformance are
-registered; therefore PR #85 itself contributes no new physical-host evidence. Tests fault-inject malformed/dropped/duplicate/reordered
-replies, partial terminal intervals, lease failure, authority revocation,
-interrupted accounting writes, duplicate attempts, startup failure, unknown
-consumption, partial checkpoint publication, consumed attempts, stale evidence
-and prospective counter exhaustion. Tiny synthetic capture records additionally
-exercise deterministic accounting-gated CPU behavior cloning, checkpoint/model/
-optimizer/RNG restoration, exact export reconstruction, schema refusal, action
-bounds and teacher-free scored inference. This synthetic optimizer work is
-software conformance only: no physical episode, experimental teacher capture,
-declared #74 learning experiment, experiment-trained policy, new allocation or
-final payload access is recorded. Host PR #229 qualification is now a bound
-prerequisite; NCA actual-host bridge/runtime conformance and measured resource
-ceilings remain hard dependencies.
+The [4LY-004 preparation](FLIGHT_LEARNING.md) now includes accepted
+actual-host bridge qualification and a separate software-only experiment-
+admission package. Bridge run `40211483325` is the physical evidence: one
+persistent accepted Cybersand #249 native/Rapier host exercised reset,
+full/partial stepping, null continuation, real lease expiry, cancel, human
+takeover, re-reset, shutdown and deliberately lost-close unknown consumption;
+independent post-exit readback verified all 20 confirmed physical ticks.
+
+The later admission package starts **no experiment**. It freezes the 44-case
+development manifest (canonical SHA-256
+`8b68faa6d3bf6172d0ba1dcf6d2752aae6ff9e83d521cfe33cf537cbbad9e5e7`),
+40-case tuning manifest (canonical SHA-256
+`0295a669549bc7cf852fd12934d85506ef1f55ceec07340531f801084e08b3df`),
+the Linux CPU runtime contract and finite whole-attempt resource enforcement.
+Routine admission CI generates an exact-head source/split review candidate but
+must remain nonadmitted because it has neither external learner-final custody
+nor an independent execution-review record. Tiny synthetic capture/cloning
+tests remain software conformance only; no experimental teacher capture,
+optimizer allocation, trained checkpoint, CUDA initialization or learner-final
+payload access is recorded.
 
 The ledger records bounded actual-host pilots, trained-policy screens and retained failed attempts. Each linked evidence record separates implementation, measured efficacy and owner feel. Documentation checks and source review are not training records.
 

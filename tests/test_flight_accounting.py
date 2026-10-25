@@ -50,6 +50,7 @@ def admitted_fixture():
         "development_sha256": sha256_json(["fixture", "development"]),
         "tuning_sha256": sha256_json(["fixture", "tuning"]),
         "final_commitment_sha256": sha256_json(["fixture", "sealed-final-commitment"]),
+        "final_custody_sha256": sha256_json(["fixture", "sealed-final-custody"]),
     })
     value["runtime"].update({
         "platform": "fixture-linux-x86_64",
@@ -109,6 +110,7 @@ class DeclarationGateTests(unittest.TestCase):
         self.assertEqual(value["scenario"]["scenario_max_ticks"], SCENARIO_MAX_TICKS)
         self.assertEqual(value["scenario"]["scenario_max_ticks"]["slalom"], 2400)
         self.assertIn("development_sha256", value["splits"])
+        self.assertIn("final_custody_sha256", value["splits"])
         self.assertNotIn("training_sha256", value["splits"])
         self.assertIsNone(value["runtime"]["threads"])
         self.assertEqual(value["work_ceilings"]["host_calls"], 246_765)
@@ -124,7 +126,12 @@ class DeclarationGateTests(unittest.TestCase):
         self.assertIn("declaration_not_prospective", gate["reasons"])
         self.assertIn("runtime_unresolved:threads", gate["reasons"])
         self.assertIn("resource_ceiling_unmeasured:maximum_wall_seconds", gate["reasons"])
-        self.assertIn("dependency_unfinished:stage_accounting_integration", gate["reasons"])
+        self.assertEqual(
+            value["dependencies"]["resource_enforcement"]["status"], "accepted")
+        self.assertEqual(
+            value["dependencies"]["stage_accounting_integration"]["status"], "accepted")
+        self.assertNotIn(
+            "dependency_unfinished:stage_accounting_integration", gate["reasons"])
         self.assertGreaterEqual(len(required_measurements()), 10)
 
     def test_adapter_contract_matches_accounting_source_binding(self):

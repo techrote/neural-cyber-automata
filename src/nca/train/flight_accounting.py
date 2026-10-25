@@ -28,7 +28,7 @@ from nca.contracts import ContractError, canonical_json, sha256_json, strict_jso
 from nca.evaluation.durable_journal import sync_directory
 
 
-DECLARATION_SCHEMA = "nca-flight-experiment-declaration/v2"
+DECLARATION_SCHEMA = "nca-flight-experiment-declaration/v3"
 LEDGER_RECORD_SCHEMA = "nca-flight-accounting-record/v2"
 ZERO_HASH = "0" * 64
 MAX_RECORD_BYTES = 64 * 1024
@@ -62,6 +62,24 @@ QUALIFIED_HOST_MEASUREMENTS = {
     "evidence_file_bytes": 67363,
     "accounting_journal_bytes": 5363,
 }
+RESOURCE_ENFORCEMENT_CONTRACT = {
+    "schema": "nca-4ly004-resource-enforcement/v1",
+    "whole_attempt": True,
+    "process_tree_rss": "linux_procfs_root_plus_descendants",
+    "wall_clock": "monotonic",
+    "storage": "attempt_root_regular_files_no_symlink_follow",
+    "publication": "explicit_prepublication_byte_charge",
+    "sampling_seconds": 0.25,
+    "check_before_reserved_work": True,
+    "fail_stop": True,
+}
+RESOURCE_ENFORCEMENT_EVIDENCE_SHA256 = sha256_json(RESOURCE_ENFORCEMENT_CONTRACT)
+STAGE_ACCOUNTING_CONTRACT = {
+    "schema": "nca-4ly004-stage-accounting/v1",
+    "requires_stage_for_stage_sensitive_work": True,
+    "optimizer_seed_isolation": list(POLICY_SEEDS),
+    "final_stage_disabled_before_final_open_barrier": True,
+}
 HOST_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
     "accepted_merge": HOST_CONTRACT_HEAD,
     "teacher_source_merge": TEACHER_SOURCE_MERGE,
@@ -80,6 +98,7 @@ ACCEPTED_DEPENDENCY_EVIDENCE = {
     "teacher_qualification": TEACHER_QUALIFICATION_EVIDENCE_SHA256,
     "actual_host_conformance": ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
     "throughput_measurement": ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
+    "resource_enforcement": RESOURCE_ENFORCEMENT_EVIDENCE_SHA256,
 }
 DEVELOPMENT_SEEDS = (101, 103, 107, 109)
 TUNING_SEEDS = (211, 223, 227, 229)
@@ -187,6 +206,14 @@ STAGE_SENSITIVE_COUNTERS = frozenset({
     "optimizer_updates", "sample_presentations", "tuning_episodes",
     "checkpoint_publications",
 })
+STAGE_ACCOUNTING_CONTRACT = {
+    **STAGE_ACCOUNTING_CONTRACT,
+    "stage_ceilings": deepcopy(STAGE_CEILINGS),
+}
+STAGE_ACCOUNTING_EVIDENCE_SHA256 = sha256_json(STAGE_ACCOUNTING_CONTRACT)
+ACCEPTED_DEPENDENCY_EVIDENCE["stage_accounting_integration"] = (
+    STAGE_ACCOUNTING_EVIDENCE_SHA256
+)
 RESOURCE_CEILINGS = (
     "maximum_wall_seconds",
     "maximum_resident_bytes",
@@ -367,10 +394,13 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
         _fail("flight_scenario_contract", "scenario/deadline/split composition differs from Stream E")
 
     splits = _exact_keys(value["splits"], {
-        "development_sha256", "tuning_sha256",
-        "final_commitment_sha256", "opened_final",
+        "development_sha256", "tuning_sha256", "final_commitment_sha256",
+        "final_custody_sha256", "opened_final",
     }, "splits")
-    for name in ("development_sha256", "tuning_sha256", "final_commitment_sha256"):
+    for name in (
+        "development_sha256", "tuning_sha256", "final_commitment_sha256",
+        "final_custody_sha256",
+    ):
         _sha256_or_none(splits[name], f"splits.{name}")
     if splits["opened_final"] is not False:
         _fail("flight_final_access", "learner final payload must remain unopened")
@@ -527,6 +557,7 @@ def preparation_declaration() -> FlightDeclaration:
             "development_sha256": None,
             "tuning_sha256": None,
             "final_commitment_sha256": None,
+            "final_custody_sha256": None,
             "opened_final": False,
         },
         "runtime": {
@@ -584,7 +615,10 @@ def execution_gate(declaration: FlightDeclaration, *, current_evidence: Mapping[
     for name, identity in value["identities"].items():
         if identity is None:
             reasons.append(f"identity_unresolved:{name}")
-    for name in ("development_sha256", "tuning_sha256", "final_commitment_sha256"):
+    for name in (
+        "development_sha256", "tuning_sha256", "final_commitment_sha256",
+        "final_custody_sha256",
+    ):
         if value["splits"][name] is None:
             reasons.append(f"split_unresolved:{name}")
     for name in ("platform", "python", "torch", "threads"):
@@ -890,22 +924,46 @@ class FlightAccountingLedger:
     """One durable attempt ledger.  It never starts a host or optimizer."""
 
     def __init__(self, path: Path, declaration: FlightDeclaration, attempt_id: str,
-                 stream, state: dict[str, Any], current_evidence: Mapping[str, str]):
+                 stream, state: dict[str, Any], current_evidence: Mapping[str, str],
+                 resource_guard=None):
         self.path = path
         self.declaration = declaration
         self.attempt_id = attempt_id
         self._stream = stream
         self._state = state
         self._evidence = dict(current_evidence)
+        self._resource_guard = resource_guard
 
     @classmethod
     def create(cls, path: str | Path, declaration: FlightDeclaration, *, attempt_id: str,
-               current_evidence: Mapping[str, str]) -> "FlightAccountingLedger":
+               current_evidence: Mapping[str, str],
+               resource_guard=None) -> "FlightAccountingLedger":
         if type(attempt_id) is not str or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}", attempt_id):
             _fail("flight_attempt_id", "attempt identity is invalid")
         gate = execution_gate(declaration, current_evidence=current_evidence)
         if not gate["admitted"]:
             _fail("flight_execution_refused", ",".join(gate["reasons"]))
+        resource_dependency = declaration.to_dict()["dependencies"]["resource_enforcement"]
+        if (
+            resource_dependency["evidence_sha256"]
+            == RESOURCE_ENFORCEMENT_EVIDENCE_SHA256
+            and resource_guard is None
+        ):
+            _fail(
+                "flight_resource_guard",
+                "accepted production resource enforcement requires a live guard",
+            )
+        if resource_guard is not None:
+            binder = getattr(resource_guard, "bind_declaration", None)
+            if binder is None:
+                _fail("flight_resource_guard", "resource guard lacks declaration binding")
+            binder(declaration)
+            if getattr(resource_guard, "running", False) is not True:
+                _fail(
+                    "flight_resource_guard",
+                    "production resource guard must be actively monitoring",
+                )
+            resource_guard.checkpoint("ledger_create")
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         try:
@@ -915,7 +973,10 @@ class FlightAccountingLedger:
         try:
             sync_directory(path.parent)
             state = _empty_state(declaration, attempt_id)
-            ledger = cls(path, declaration, attempt_id, stream, state, current_evidence)
+            ledger = cls(
+                path, declaration, attempt_id, stream, state, current_evidence,
+                resource_guard=resource_guard,
+            )
             ledger._append("attempt_open", {
                 "attempt_id": attempt_id, "declaration_sha256": declaration.sha256,
             })
@@ -929,13 +990,38 @@ class FlightAccountingLedger:
 
     @classmethod
     def resume(cls, path: str | Path, declaration: FlightDeclaration, *, attempt_id: str,
-               current_evidence: Mapping[str, str]) -> "FlightAccountingLedger":
+               current_evidence: Mapping[str, str],
+               resource_guard=None) -> "FlightAccountingLedger":
         path = Path(path)
         state = _replay(path, declaration, attempt_id)
         if state["closed"]:
             _fail("flight_attempt_consumed", "closed attempt cannot be resumed or replayed")
+        resource_dependency = declaration.to_dict()["dependencies"]["resource_enforcement"]
+        if (
+            resource_dependency["evidence_sha256"]
+            == RESOURCE_ENFORCEMENT_EVIDENCE_SHA256
+            and resource_guard is None
+        ):
+            _fail(
+                "flight_resource_guard",
+                "accepted production resource enforcement requires a live guard",
+            )
+        if resource_guard is not None:
+            binder = getattr(resource_guard, "bind_declaration", None)
+            if binder is None:
+                _fail("flight_resource_guard", "resource guard lacks declaration binding")
+            binder(declaration)
+            if getattr(resource_guard, "running", False) is not True:
+                _fail(
+                    "flight_resource_guard",
+                    "production resource guard must be actively monitoring",
+                )
+            resource_guard.checkpoint("ledger_resume")
         stream = path.open("ab")
-        ledger = cls(path, declaration, attempt_id, stream, state, current_evidence)
+        ledger = cls(
+            path, declaration, attempt_id, stream, state, current_evidence,
+            resource_guard=resource_guard,
+        )
         for reservation_id in list(state["pending"]):
             ledger.mark_unknown(
                 reservation_id, "interrupted_after_reservation_before_durable_outcome")
@@ -974,7 +1060,12 @@ class FlightAccountingLedger:
         self._append(kind, payload)
         _apply_record(self._state, kind, payload)
 
+    def resource_checkpoint(self, scope: str) -> None:
+        if self._resource_guard is not None:
+            self._resource_guard.checkpoint(scope)
+
     def _gate_before_work(self) -> None:
+        self.resource_checkpoint("before_reserved_work")
         gate = execution_gate(
             self.declaration, current_evidence=self._evidence,
             ledger_snapshot=self.snapshot())
@@ -1123,11 +1214,17 @@ class FlightAccountingLedger:
         return self.reserve_many(increments, scope="cleanup", cleanup=True)
 
     def complete(self, reservation_id: str, *, confirmed_physical_ticks: int = 0) -> None:
+        reservation = self._state["pending"].get(reservation_id)
         payload = {
             "reservation_id": reservation_id,
             "confirmed_physical_ticks": confirmed_physical_ticks,
         }
+        # Publish the authoritative outcome first. A resource violation discovered
+        # after work was consumed must stop subsequent work, never turn confirmed
+        # consumption into an unresolved reservation.
         self._commit("complete", payload)
+        if not (isinstance(reservation, Mapping) and reservation.get("cleanup") is True):
+            self.resource_checkpoint("after_complete")
 
     def fail(self, reservation_id: str, reason: str, *,
              confirmed_physical_ticks: int = 0) -> None:
