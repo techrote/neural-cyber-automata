@@ -165,14 +165,22 @@ The prospective accounting declaration therefore freezes
 `checkpoint_publications=63`, `startup_operations=1` and
 `cleanup_operations=1`. These are work ceilings, **not an issued allocation**.
 
-### Qualified host/bridge resource envelope
+### Qualified host/bridge and whole-attempt resource envelope
 
 Run `40211483325` qualified the exact host/bridge path and measured startup,
 latency, throughput, serialization, shutdown/cleanup, RSS and evidence growth.
-Exact values and transparent non-budget projections are retained in
+Exact host-path values remain in
 [the bridge evidence](../evidence/2026-10-25-4ly004-bridge-conformance.md).
-They resolve physical-host topology only; learner-inclusive wall/RSS/storage/
-publication ceilings remain null rather than being invented.
+
+The separately versioned
+[experiment-admission package](evidence/2026-10-25-4ly004-admission-package.md)
+now supplies finite **whole-attempt hard ceilings**, rather than pretending the
+host measurements are learner measurements: 18,000 s wall time, 4 GiB
+process-tree RSS, 8 GiB retained attempt storage and 4 GiB publication bytes.
+These are allocation caps, not expected consumption. A live 0.25 s process-tree
+resource guard is required before a production accounting ledger can open or
+resume; exceeding a cap makes the one attempt fail-stop/inconclusive and does
+not enlarge its allocation.
 
 ## Final scoring, gates and failure disposition
 
@@ -238,22 +246,29 @@ suite and custody digests **before** the first final parse/reset. If the run
 fails after opening, that suite is opened evidence; it cannot be recycled as an
 untouched final in a retry or later experiment.
 
-## Parameters intentionally unresolved
+## Remaining external and post-admission state
 
-The accepted #249 host/runtime, NCA bridge conformance, Trainer/controller
-identities and frozen #229 teacher qualification are now resolved. The
-following remain unresolved for learner execution:
+The accepted #249 host/runtime, NCA bridge conformance, Trainer/controller/
+teacher identities, public development/tuning manifests, CPU runtime contract,
+finite work topology, whole-attempt resource ceilings and enforcement surface
+are now resolved by source.
 
-- exact CPU platform/Python/Torch/thread identities for the admitted learner;
-- whole-attempt process-tree peak memory and wall time with the learner present;
-- complete retained capture/checkpoint/storage growth and publication ceiling
-  under the selected learner runtime;
-- exact valid-label count (bounded by 11,400) and therefore the exact update
-  and presentation counts below their ceilings;
-- learner-final suite/custody hashes and private payload;
-- realtime/continuously advancing export qualification.
+Two gates remain intentionally external before the first experimental capture
+or optimizer work:
 
-None may be filled with an estimate merely to make admission pass.
+- a separate 60-case learner-final commitment/custody record from an independent
+  custodian/private reviewer, with the payload still outside Git and unopened by
+  the executor; and
+- an independently authored execution review bound to the exact final learner
+  source, public split hashes, custody digest, runtime/resource policy and
+  `final_access=false`.
+
+The exact valid-label count remains naturally unknown until admitted development
+capture occurs; the fixed ceiling remains 11,400 and cannot be increased.
+Tuning-only checkpoint selection and realtime/export qualification are
+post-admission experiment/deployment gates, not facts that may be fabricated
+before training. Learner-final bytes remain unavailable until the later
+final-open barrier.
 
 ## Admission checklist
 
@@ -267,32 +282,41 @@ None may be filled with an estimate merely to make admission pass.
   external bridge passes source-bound actual-host conformance with independent
   post-exit receipt readback (run `40211483325`, evidence
   `193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`).
-- [ ] CPU learner source/config/export identities and all three policy seeds are
-  frozen; PPO/sweeps/morphology/CUDA remain absent.
-- [ ] Development capture and tuning manifests exactly match the family/split
-  membership and counts above.
-- [ ] Capture validation excludes uncertain/invalid transitions without hiding
+- [x] The CPU learner contract is frozen to 54-64-64-2 tanh BC, seeds
+  74011/74013/74017, Linux x86_64, Python 3.12.10, Torch 2.8.0+cpu and one
+  Torch thread; PPO/sweeps/morphology/CUDA remain absent. Exact learner revision
+  and source-closure SHA-256 are generated from the clean final head.
+- [x] Development and tuning manifests exactly freeze the public family/split
+  membership: development SHA-256
+  `8b68faa6d3bf6172d0ba1dcf6d2752aae6ff9e83d521cfe33cf537cbbad9e5e7`
+  and tuning SHA-256
+  `0295a669549bc7cf852fd12934d85506ef1f55ceec07340531f801084e08b3df`.
+- [x] Capture validation excludes uncertain/invalid transitions without hiding
   failed or refused episodes.
-- [ ] Durable accounting reserves every host/optimizer/publication operation
+- [x] Durable accounting reserves every host/optimizer/publication operation
   before work and carries failures/unknown consumption forward.
 - [x] Host-call/startup/cleanup work ceilings are populated from the qualified
   persistent-host topology.
-- [ ] Whole-attempt wall/RSS/storage/publication resource ceilings are populated
-  from learner-inclusive measurements or hard bounds; host-only projections
-  are not accepted as executable budgets.
+- [x] Whole-attempt wall/RSS/storage/publication hard ceilings are finite and
+  enforced by the source-bound live resource guard; host-only projections are
+  retained only as rationale, not substituted as learner measurements.
 - [x] Teacher qualification holdout is referenced only by accepted identities
   and summary evidence; no teacher-final payload is imported as learner
   tuning/final data and its one-use suite is explicitly ineligible for reuse.
 - [ ] A separate 60-case learner-final suite is committed under independent
   custody and privately verified disjoint/feasible without being opened.
-- [ ] All three checkpoints are selected and hashed using tuning only before
-  final opening.
-- [ ] Independent source-bound execution/evidence review accepts the exact
-  declaration, capture, checkpoints, host and custody commitments.
-- [ ] Exact-head software/actual-host tests and required CI pass.
-- [ ] Final-access state is still false/unopened at admission review.
+- [ ] An independent source-bound execution review accepts the exact
+  final-head review binding and external custody commitment before experimental
+  capture/training begins.
+- [ ] Exact-head admission/software CI passes and publishes the review candidate.
+- [x] Final-access state remains false/unopened throughout this admission
+  package.
 
-Until every item passes, `training_admission()` and final access remain
-refused. This document itself grants neither execution nor final access.
+After admission, all three trained checkpoints must still be selected and
+hashed using tuning only before the final-open barrier, and realtime/export
+qualification remains separate from training admission. Until the two external
+pre-execution gates and exact-head CI pass, `training_admission()` and final
+access remain refused. This document itself grants neither execution nor final
+access.
 
 © 2026 techrote. All rights reserved.
