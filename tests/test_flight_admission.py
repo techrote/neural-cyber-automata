@@ -205,15 +205,18 @@ class ProspectiveDeclarationTests(unittest.TestCase):
                 clock=lambda: 0.0,
                 rss_reader=lambda: 1024,
                 storage_reader=lambda _root: 0,
-            )
-            ledger = FlightAccountingLedger.create(
-                root / "guarded.jsonl",
-                declaration,
-                attempt_id="guarded",
-                current_evidence=evidence,
-                resource_guard=guard,
-            )
-            ledger.close("fixture_complete")
+            ).start()
+            try:
+                ledger = FlightAccountingLedger.create(
+                    root / "guarded.jsonl",
+                    declaration,
+                    attempt_id="guarded",
+                    current_evidence=evidence,
+                    resource_guard=guard,
+                )
+                ledger.close("fixture_complete")
+            finally:
+                guard.close()
 
 
 class ResourceGuardTests(unittest.TestCase):
