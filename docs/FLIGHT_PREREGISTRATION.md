@@ -12,43 +12,31 @@ verified: 2026-10-25
 experiment shape for issue #74 without issuing an allocation, opening a final
 payload, collecting teacher data, training a model or approving execution.
 
-The design is now reconciled to accepted Cybersand PR #249 lease-expiry repair
-merge `9935d5696721d2c72a8273ea70454ab0c5b11361`. The qualified
-Trainer/controller/frozen-teacher lineage remains the accepted PR #229 merge
-`b5a8570e5123e1f633766e9390761a1c8134cfa2`; its final suite remains teacher
-evidence only. The merged 4LY-002 plant base remains
-`1f9336388f11be39abaae340a781a5eef52115d4`. The accepted source provides 60 Hz physics, six-tick decisions, the 54-float
-`4ly-flat-observation/v1`, two normalized desired-velocity outputs, Trainer
-profile digest `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
-controller digest `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
-and qualified frozen teacher digest
-`0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761`.
-The teacher score was source-bound to checkout
-`2bc2b6cfa9ad62512266df5804c5662b5ba8bd04`; its one-use final suite SHA-256
-is `4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401`.
-That teacher-final suite is not a learner-final asset. Any future Cybersand
-revision that changes these contracts requires a new preregistration review.
+The accepted physical host is Cybersand PR #249 merge
+`9935d5696721d2c72a8273ea70454ab0c5b11361`; the qualified
+Trainer/controller/frozen-teacher lineage remains PR #229 merge
+`b5a8570e5123e1f633766e9390761a1c8134cfa2`. The source fixes 60 Hz physics,
+six-tick decisions, 54 flat observation values, two desired-velocity outputs,
+profile `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
+controller `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
+and teacher `0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761`.
+The one-use teacher-final suite remains teacher evidence only; any contract
+change requires new preregistration review.
 
 ## Frozen learner configuration
 
 Exactly one learned configuration is allowed:
 
 - balanced **Trainer only**;
-- direct feed-forward CPU policy, 54 -> 64 -> 64 -> 2 with tanh hidden/output
-  activations;
-- behavior cloning only, Adam `lr=0.001`, normalized desired-velocity MSE,
-  batch capacity 128, twenty epochs;
+- direct feed-forward CPU policy, 54 -> 64 -> 64 -> 2 with tanh hidden/output activations;
+- behavior cloning only, Adam `lr=0.001`, normalized desired-velocity MSE, batch capacity 128, twenty epochs;
 - policy/training seeds exactly `74011`, `74013`, `74017`;
-- checkpoint identities at epoch 0 and after every epoch; only epochs
-  5/10/15/20 are eligible for tuning selection;
+- checkpoint identities at epoch 0 and after every epoch; only epochs 5/10/15/20 are eligible for tuning selection;
 - one persistent physical host, no parallel physical hosts;
-- no PPO, architecture/hyperparameter sweep, recurrence, morphology expansion,
-  domain randomization, CUDA path or inference-time navigation teacher.
+- no PPO, architecture/hyperparameter sweep, recurrence, morphology expansion, domain randomization, CUDA path or inference-time navigation teacher.
 
-Host-defined normalization, masks, axis conventions and action saturation are
-authoritative. Additional fitted statistics are prohibited by this
-configuration; adding them is a new configuration and requires a new
-preregistration.
+Host-defined normalization, masks, axis conventions and action saturation are authoritative.
+Additional fitted statistics require a new configuration and preregistration.
 
 ## Family membership and split separation
 
@@ -179,29 +167,12 @@ The prospective accounting declaration therefore freezes
 
 ### Qualified host/bridge resource envelope
 
-Actual-host run `40211483325` at NCA head
-`7e3fd442e111d91e47239c5a2457943d96323737` retained evidence SHA-256
-`193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`.
-On the one persistent accepted Godot/native/Rapier host it measured startup
-`0.899644376 s`, reset max/median `0.047778348/0.039766714 s`, step
-max/median `0.018060448/0.010230353 s`, `282.8249` confirmed physical
-ticks/s, owner serialization max `6164 us`, shutdown `0.163780543 s`,
-containment cleanup `0.000515674 s`, and process-tree peak RSS
-`254550016` bytes. Twenty confirmed ticks produced 36,038 owner-receipt
-bytes, 63,519 event bytes, a 67,363-byte evidence file and a 5,363-byte fsynced
-accounting journal.
-
-Those measurements resolve the host/bridge envelope and topology, but they do
-**not** measure the Torch learner process or full retained capture/checkpoint
-set. For planning only, mechanically scaling the observed evidence density to
-the physical-tick ceiling yields 4,968,964,332 evidence bytes and scaling the
-observed journal density to 246,765 host calls yields about 94,528,621 journal
-bytes; repeating the observed conformance max reset/step latencies across the
-declared call counts yields 4,484.003 seconds of host-call time. These are
-transparent projections, **not executable ceilings**. Whole-attempt wall/RSS/
-storage ceilings stay null until the CPU learner and complete evidence writer
-are measured together. They must not be filled from these projections merely
-to pass admission.
+Run `40211483325` qualified the exact host/bridge path and measured startup,
+latency, throughput, serialization, shutdown/cleanup, RSS and evidence growth.
+Exact values and transparent non-budget projections are retained in
+[the bridge evidence](../evidence/2026-10-25-4ly004-bridge-conformance.md).
+They resolve physical-host topology only; learner-inclusive wall/RSS/storage/
+publication ceilings remain null rather than being invented.
 
 ## Final scoring, gates and failure disposition
 
@@ -249,8 +220,8 @@ geometry, starts, goals, hidden seeds or episode payload.
 Before the first learner-final byte is made available to the executor, all of
 these must already be immutable and independently verified:
 
-- accepted #229 host source/build/runtime, Trainer profile/controller and
-  qualified teacher identities;
+- accepted #249 host source/build/runtime plus qualified #229
+  Trainer/controller/teacher lineage;
 - clean learner source and exact policy/configuration/preprocessing/export
   bundle;
 - immutable teacher capture plus its complete provenance/readback;
