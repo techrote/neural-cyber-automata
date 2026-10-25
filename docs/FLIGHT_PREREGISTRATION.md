@@ -12,10 +12,12 @@ verified: 2026-10-25
 experiment shape for issue #74 without issuing an allocation, opening a final
 payload, collecting teacher data, training a model or approving execution.
 
-The design is now reconciled to accepted Cybersand PR #229 merge
-`b5a8570e5123e1f633766e9390761a1c8134cfa2`. The merged 4LY-002 plant base
-remains `1f9336388f11be39abaae340a781a5eef52115d4`. The accepted source
-provides 60 Hz physics, six-tick decisions, the 54-float
+The design is now reconciled to accepted Cybersand PR #249 lease-expiry repair
+merge `9935d5696721d2c72a8273ea70454ab0c5b11361`. The qualified
+Trainer/controller/frozen-teacher lineage remains the accepted PR #229 merge
+`b5a8570e5123e1f633766e9390761a1c8134cfa2`; its final suite remains teacher
+evidence only. The merged 4LY-002 plant base remains
+`1f9336388f11be39abaae340a781a5eef52115d4`. The accepted source provides 60 Hz physics, six-tick decisions, the 54-float
 `4ly-flat-observation/v1`, two normalized desired-velocity outputs, Trainer
 profile digest `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
 controller digest `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
@@ -158,21 +160,48 @@ episodes. The separate upstream #229 teacher-qualification campaign is not
 charged or counted as #74 work.
 
 Per final comparator, the source deadlines bound 60 cases to 100,080 physical
-ticks and 16,680 decisions. The persistent-host design permits at most one host
-start and 884 planned reset attempts. Exact host-call topology, startup/cleanup
-operation counts and resource ceilings remain unresolved until the accepted
-bridge and qualified #229 throughput evidence exist; they must not be inferred
-from the tick/decision counts.
+ticks and 16,680 decisions. The persistent-host design permits at most one host start and 884 reset
+attempts. The qualified NCA bridge proves the source topology used by the
+prospective experiment: every planned episode consumes one reset, every planned
+decision consumes one step RPC, and one final close consumes the single cleanup
+call. Therefore the exact prospective topology is now
+`host_calls=884+245880+1=246765`, `startup_operations=1` and
+`cleanup_operations=1`; no cancel/takeover/null-continuation call is part of
+the planned experiment workload.
 
-The prospective accounting declaration may therefore freeze these non-resource
-work ceilings now: `host_starts=1`, `resets=884`,
+The prospective accounting declaration therefore freezes
+`host_starts=1`, `resets=884`, `host_calls=246765`,
 `physical_ticks=1475280`, `decisions=245880`,
 `capture_labels=11400`, `optimizer_updates=5400`,
-`sample_presentations=684000`, `tuning_episodes=480` and
-`checkpoint_publications=63`. `host_calls`,
-`startup_operations`, `cleanup_operations`, wall time, resident memory,
-storage and publication bytes remain null until measured. These are design
-ceilings, **not an issued allocation**.
+`sample_presentations=684000`, `tuning_episodes=480`,
+`checkpoint_publications=63`, `startup_operations=1` and
+`cleanup_operations=1`. These are work ceilings, **not an issued allocation**.
+
+### Qualified host/bridge resource envelope
+
+Actual-host run `40211483325` at NCA head
+`7e3fd442e111d91e47239c5a2457943d96323737` retained evidence SHA-256
+`193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`.
+On the one persistent accepted Godot/native/Rapier host it measured startup
+`0.899644376 s`, reset max/median `0.047778348/0.039766714 s`, step
+max/median `0.018060448/0.010230353 s`, `282.8249` confirmed physical
+ticks/s, owner serialization max `6164 us`, shutdown `0.163780543 s`,
+containment cleanup `0.000515674 s`, and process-tree peak RSS
+`254550016` bytes. Twenty confirmed ticks produced 36,038 owner-receipt
+bytes, 63,519 event bytes, a 67,363-byte evidence file and a 5,363-byte fsynced
+accounting journal.
+
+Those measurements resolve the host/bridge envelope and topology, but they do
+**not** measure the Torch learner process or full retained capture/checkpoint
+set. For planning only, mechanically scaling the observed evidence density to
+the physical-tick ceiling yields 4,968,964,332 evidence bytes and scaling the
+observed journal density to 246,765 host calls yields about 94,528,621 journal
+bytes; repeating the observed conformance max reset/step latencies across the
+declared call counts yields 4,484.003 seconds of host-call time. These are
+transparent projections, **not executable ceilings**. Whole-attempt wall/RSS/
+storage ceilings stay null until the CPU learner and complete evidence writer
+are measured together. They must not be filled from these projections merely
+to pass admission.
 
 ## Final scoring, gates and failure disposition
 
@@ -240,18 +269,14 @@ untouched final in a retry or later experiment.
 
 ## Parameters intentionally unresolved
 
-The accepted #229 source, Trainer/controller identities and frozen teacher
-qualification are now resolved. The following remain unresolved for learner
-execution:
+The accepted #249 host/runtime, NCA bridge conformance, Trainer/controller
+identities and frozen #229 teacher qualification are now resolved. The
+following remain unresolved for learner execution:
 
-- exact Godot/native/Rapier build digests for the NCA execution runner and
-  source-bound NCA bridge actual-host conformance evidence;
-- persistent transport serialization is source-prepared as `nca-4ly-flight/1`; host-call topology and measured transport costs remain unresolved;
-- exact CPU platform/Python/Torch/thread identities;
-- source-bound ticks/s, decisions/s, reset/call latency and serialization
-  throughput on the chosen runner;
-- complete process-tree peak memory, storage growth, publication bytes and
-  whole-process startup/cleanup/wall-clock measurements;
+- exact CPU platform/Python/Torch/thread identities for the admitted learner;
+- whole-attempt process-tree peak memory and wall time with the learner present;
+- complete retained capture/checkpoint/storage growth and publication ceiling
+  under the selected learner runtime;
 - exact valid-label count (bounded by 11,400) and therefore the exact update
   and presentation counts below their ceilings;
 - learner-final suite/custody hashes and private payload;
@@ -261,13 +286,16 @@ None may be filled with an estimate merely to make admission pass.
 
 ## Admission checklist
 
-- [x] #207/#229 is accepted at source merge
-  `b5a8570e5123e1f633766e9390761a1c8134cfa2`; the qualified Trainer,
-  controller and frozen-teacher identities are imported from retained evidence.
+- [x] #249 is accepted at host merge
+  `9935d5696721d2c72a8273ea70454ab0c5b11361`; the qualified Trainer,
+  controller and frozen-teacher lineage remains bound to accepted #229
+  `b5a8570e5123e1f633766e9390761a1c8134cfa2`.
 - [x] The accepted source matches the 54-channel, two-output, 60 Hz, six-tick,
   Trainer/controller contracts above.
-- [ ] The exact NCA execution Godot/native/Rapier build is registered and the
-  external bridge passes source-bound actual-host conformance.
+- [x] The exact NCA execution Godot/native/Rapier build is registered and the
+  external bridge passes source-bound actual-host conformance with independent
+  post-exit receipt readback (run `40211483325`, evidence
+  `193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`).
 - [ ] CPU learner source/config/export identities and all three policy seeds are
   frozen; PPO/sweeps/morphology/CUDA remain absent.
 - [ ] Development capture and tuning manifests exactly match the family/split
@@ -276,9 +304,11 @@ None may be filled with an estimate merely to make admission pass.
   failed or refused episodes.
 - [ ] Durable accounting reserves every host/optimizer/publication operation
   before work and carries failures/unknown consumption forward.
-- [ ] All currently unresolved host-call and resource ceilings are populated
-  from qualified measurements, with no null or invented values in an
-  executable declaration.
+- [x] Host-call/startup/cleanup work ceilings are populated from the qualified
+  persistent-host topology.
+- [ ] Whole-attempt wall/RSS/storage/publication resource ceilings are populated
+  from learner-inclusive measurements or hard bounds; host-only projections
+  are not accepted as executable budgets.
 - [x] Teacher qualification holdout is referenced only by accepted identities
   and summary evidence; no teacher-final payload is imported as learner
   tuning/final data and its one-use suite is explicitly ineligible for reuse.

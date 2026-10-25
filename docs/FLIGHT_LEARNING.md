@@ -8,7 +8,9 @@ verified: 2026-10-25
 
 # Trainer flight learning
 
-[PREPARATION ONLY] Cybersand #207 / PR #229 is accepted at merge
+[PREPARATION ONLY] Cybersand PR #249 is accepted at lease-expiry repair merge
+`9935d5696721d2c72a8273ea70454ab0c5b11361`. The qualified source lineage
+for the Trainer/controller/frozen teacher remains accepted PR #229
 `b5a8570e5123e1f633766e9390761a1c8134cfa2`. This reconciliation imports the
 qualified Trainer profile `f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704`,
 controller `fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae`
@@ -21,7 +23,7 @@ that suite is evidence for the frozen teacher only and is explicitly ineligible
 for learner-final reuse.
 
 The separately registered `4ly-preparation@1` adapter now validates the exact
-accepted Cybersand #229 source contract: real profile
+accepted Cybersand #249 source contract: real profile
 `4ly_trainer`, actor slot `0`, `4ly-episode/v1`,
 `4ly-observation/v1`, the host-produced
 `4ly-flat-observation/v1` object with exactly 54 finite values, and the
@@ -37,9 +39,12 @@ in Python, or relabel a fixture as host evidence. The loopback
 `nca-4ly-flight/1` transport is one-request-in-flight and authenticates the
 parent-owned connection. Reset, step, policy cancellation, explicit human
 takeover and close are source-prepared. Replies bind request sequence, run,
-actor, epoch, control generation, observation ID and physical tick. Step uses
-the owner's `ticks_consumed` and `physical_ticks_total`, stops on the first
-terminal tick and preserves the owner's final copied observation.
+actor, epoch, control generation, observation ID and physical tick. Fresh decisions remain six-tick-boundary admitted. The bridge additionally
+exposes the owner's source-faithful 1-6-tick partial surface and a null
+continuation that is valid only for an already-live lease, never renews
+authority and may not cross the next decision boundary. Step uses the owner's
+`ticks_consumed` and `physical_ticks_total`, stops on the first terminal tick
+and preserves the owner's final copied observation.
 
 The bridge adds only `source_observation_id` beside the host flat-observation
 object as transport correlation metadata; it does not change the Cybersand
@@ -59,6 +64,26 @@ fitted statistics is a new policy configuration and requires a new
 preregistration. The current model is feedforward, with no hidden state to
 carry across episodes. Transport failure poisons the session; there is no
 automatic host restart or replay of possibly consumed work.
+
+## Actual-host bridge qualification
+
+The bridge is qualified against accepted Cybersand #249 on one persistent
+real native/Rapier host. Run `40211483325`, NCA source head
+`7e3fd442e111d91e47239c5a2457943d96323737`, bridge SHA-256
+`23f115d5947eb84858262208fc3411a481c5219f7fd0213901b0bf08e59d0bf6`
+and evidence SHA-256
+`193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9`
+prove reset, full/partial stepping, null continuation, real tick-18 lease
+expiry, cancellation, human takeover, re-reset, graceful shutdown and a
+deliberately lost close reply. Independent post-exit readback reconciled all
+20 confirmed physical ticks against owner receipts; the close remains unknown
+and was not replayed. Earlier source-digest, non-finite-RPC and duplicate
+cleanup-reservation attempts remain retained negative evidence.
+
+This qualification resolves the exact host build, physical bridge semantics,
+host-call topology and host-side performance measurements. It does not collect
+teacher capture or qualify the CPU learner's whole-process resource envelope,
+and therefore does not grant training admission.
 
 ## Trainer-only capture, cloning and export preparation
 
