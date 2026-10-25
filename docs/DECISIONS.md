@@ -20,9 +20,7 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 [ACCEPTED] 2026-10-23 by owner: [portable CPU contract and ballpark timings](decisions/2026-10-23-jolt-cpu-portability.md).
 
 ### D-021 — Explicitly gated long-running Jolt CI entry
-
-[ACCEPTED] 2026-10-22 by owner. See the
-[full decision and unchanged admission gates](decisions/2026-10-22-jolt-ci.md).
+[ACCEPTED] 2026-10-22 by owner. See the [full decision and unchanged admission gates](decisions/2026-10-22-jolt-ci.md).
 
 ### D-020 — Remove operational wall-clock limits and rerun CI
 
