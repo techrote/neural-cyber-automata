@@ -3,16 +3,15 @@ title: Decisions
 kind: decisions
 summary: Current owner scope and gameplay fidelity, research proposals, and preserved historical decisions.
 owns: [decisions.register]
-verified: 2026-10-22
+verified: 2026-10-25
 ---
-
 # Decisions
-
 Newest first. IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
 
 D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 
 ## Current entries
+### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE, HOST BRIDGE QUALIFIED] 2026-10-25. [#74 preparation](FLIGHT_LEARNING.md) is rebound to accepted Cybersand #249 merge `9935d5696721d2c72a8273ea70454ab0c5b11361` while retaining the qualified #229 Trainer/controller/frozen-teacher lineage. NCA actual-host bridge conformance passed with independent receipt readback at run `40211483325`; exact host-call/startup/cleanup topology and host-side measurements are now bound. The one-use teacher-final suite remains teacher evidence only and cannot become learner-final data. Learner CPU runtime/resource ceilings, split/final custody, independent execution review and execution admission remain gated; no training allocation or learner-final access is granted.
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
 ### D-022 — CPU identity advisory for Jolt-003
