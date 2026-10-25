@@ -74,7 +74,7 @@ ACCEPTED_RUNTIME_BUILD: dict[str, Any] | None = {
         "godot/scripts/physical_actor_session.gd": "993fdca10bc9ad6be42b8ffd7b1f352de9d460b9c2bdafcc6b668e721057bf83",
         "godot/scripts/physical_flight_controller.gd": "47ce24b4253d8e4f7aee2d79bc329d2589fa416d258125c540a999e0151e7b4d",
         "godot/scripts/physical_flight_course.gd": "29557a84577fce245fc84c9d5922939bf118404c223dcd0dad42b537e49c2915",
-        "godot/scripts/physical_flight_episode.gd": "d546b9142b92c7f0b1f1510392aad9ceb9d6aedfa866eadf9e49059c0611c0d2",
+        "godot/scripts/physical_flight_episode.gd": "b8b42195c97dcf3b5292f841ff53043db8b7fb486e8b46a35707838a7e75f8d0",
         "godot/scripts/physical_flight_observation_adapter.gd": "afa43dad5ed8737961567070bbf04754107547c065ab61cb58c56b2df447d71d",
         "godot/scripts/physical_flight_profile.gd": "82e9e7f156c29d9baf0fd4c6ac36ff6a130467e4209b7b28d22030554f57a440",
     },
