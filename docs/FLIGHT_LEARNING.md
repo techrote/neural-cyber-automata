@@ -1,7 +1,7 @@
 ---
 title: Trainer flight-learning preparation
 kind: guide
-summary: Accepted Cybersand host/teacher source binding, fail-stop flight transport preparation, and bounded learner design with NCA runtime/bridge conformance still gated.
+summary: Qualified Cybersand bridge, bounded Trainer learner design, and fail-closed experiment-admission package with external final custody and review still gated.
 owns: [flight.learning.preparation]
 verified: 2026-10-25
 ---
