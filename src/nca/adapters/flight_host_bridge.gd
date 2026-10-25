@@ -378,7 +378,6 @@ func _reply_transition(request_id: int, transition: Dictionary, include_manifest
 			"process_wall_microseconds":
 				int(record.get("process_wall_microseconds", 0)),
 		},
-		"owner_metrics": record.get("metrics", {}).duplicate(true),
 	}
 	for key: Variant in extra:
 		if body.has(key):
