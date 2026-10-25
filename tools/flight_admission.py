@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from nca.contracts import canonical_json, strict_json_loads  # noqa: E402
+from nca.contracts import canonical_json, sha256_json, strict_json_loads  # noqa: E402
 from nca.train.flight_admission import (  # noqa: E402
     RUNTIME_THREADS,
     admission_candidate,
@@ -67,6 +67,8 @@ def main() -> int:
         independent_review=review,
     )
     packet["observed_runtime"] = runtime
+    packet.pop("packet_sha256", None)
+    packet["packet_sha256"] = sha256_json(packet)
 
     (output / "source-binding.json").write_text(
         canonical_json(source) + "\n", encoding="utf-8"
