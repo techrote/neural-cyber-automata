@@ -87,8 +87,9 @@ class DeclarationGateTests(unittest.TestCase):
         )
         self.assertEqual(value["stage_ceilings"], STAGE_CEILINGS)
         self.assertEqual(value["source_contract"]["revision"], HOST_CONTRACT_HEAD)
-        self.assertEqual(value["source_contract"]["qualification_status"],
-                         "accepted_host_and_qualified_teacher")
+        self.assertEqual(
+            value["source_contract"]["qualification_status"],
+            "accepted_lease_repair_host_with_qualified_teacher_lineage")
         self.assertEqual(value["identities"]["host_revision"], HOST_CONTRACT_HEAD)
         self.assertEqual(value["identities"]["teacher_sha256"], TEACHER_SHA256)
         self.assertFalse(
@@ -341,6 +342,18 @@ class DurableAccountingTests(unittest.TestCase):
             FlightAccountingLedger.resume(
                 ledger.path, self.declaration, attempt_id="attempt-a1",
                 current_evidence=self.evidence)
+
+    def test_null_continuation_charges_ticks_without_decision(self):
+        ledger = self._ledger()
+        reservation = ledger.reserve_step(
+            maximum_ticks=3, capture_labels=0, decision=False)
+        durable = FlightAccountingLedger.read_snapshot(
+            ledger.path, self.declaration, attempt_id="attempt-a1")
+        self.assertEqual(durable["charged"]["host_calls"], 1)
+        self.assertEqual(durable["charged"]["physical_ticks"], 3)
+        self.assertEqual(durable["charged"]["decisions"], 0)
+        ledger.complete(reservation, confirmed_physical_ticks=3)
+        ledger.close()
 
     def test_tuning_reset_charges_reset_call_and_tuning_episode_atomically(self):
         ledger = self.create()

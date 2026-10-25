@@ -34,7 +34,8 @@ ZERO_HASH = "0" * 64
 MAX_RECORD_BYTES = 64 * 1024
 POLICY_SEEDS = (74011, 74013, 74017)
 
-HOST_CONTRACT_HEAD = "b5a8570e5123e1f633766e9390761a1c8134cfa2"
+HOST_CONTRACT_HEAD = "9935d5696721d2c72a8273ea70454ab0c5b11361"
+TEACHER_SOURCE_MERGE = "b5a8570e5123e1f633766e9390761a1c8134cfa2"
 TRAINER_PROFILE_SHA256 = "f1f9286a27b929c96caca5aaf2be70cbd82e0fd933f29968c1aaaa43ac8f1704"
 CONTROLLER_SHA256 = "fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971cc8ae"
 TEACHER_QUALIFICATION_CHECKOUT = "2bc2b6cfa9ad62512266df5804c5662b5ba8bd04"
@@ -42,6 +43,7 @@ TEACHER_SHA256 = "0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e297
 TEACHER_FINAL_SUITE_SHA256 = "4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401"
 HOST_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
     "accepted_merge": HOST_CONTRACT_HEAD,
+    "teacher_source_merge": TEACHER_SOURCE_MERGE,
     "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
     "controller_sha256": CONTROLLER_SHA256,
     "teacher_sha256": TEACHER_SHA256,
@@ -248,9 +250,9 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
     }, "source_contract")
     expected_source = {
         "repository": "techrote/cybersand",
-        "pull_request": 229,
+        "pull_request": 249,
         "revision": HOST_CONTRACT_HEAD,
-        "qualification_status": "accepted_host_and_qualified_teacher",
+        "qualification_status": "accepted_lease_repair_host_with_qualified_teacher_lineage",
         "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
         "controller_sha256": CONTROLLER_SHA256,
         "teacher_sha256": TEACHER_SHA256,
@@ -259,7 +261,7 @@ def _validate_declaration(value: Mapping[str, Any]) -> None:
         "teacher_final_may_be_reused_as_learner_final": False,
     }
     if dict(source) != expected_source:
-        _fail("flight_source_contract", "accepted #229 host/teacher source binding changed")
+        _fail("flight_source_contract", "accepted #249 host / #229 teacher-lineage binding changed")
 
     learner = _exact_keys(value["learner_configuration"], {
         "profile_id", "architecture", "algorithm", "optimizer",
@@ -437,9 +439,9 @@ def preparation_declaration() -> FlightDeclaration:
         "status": "preparation_only",
         "source_contract": {
             "repository": "techrote/cybersand",
-            "pull_request": 229,
+            "pull_request": 249,
             "revision": HOST_CONTRACT_HEAD,
-            "qualification_status": "accepted_host_and_qualified_teacher",
+            "qualification_status": "accepted_lease_repair_host_with_qualified_teacher_lineage",
             "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
             "controller_sha256": CONTROLLER_SHA256,
             "teacher_sha256": TEACHER_SHA256,
@@ -1039,11 +1041,15 @@ class FlightAccountingLedger:
         return self.reserve_many({"host_calls": 1}, scope=scope, stage=stage)
 
     def reserve_step(self, *, maximum_ticks: int = 6, capture_labels: int = 0,
-                     stage: str | None = None) -> str:
+                     stage: str | None = None, decision: bool = True) -> str:
         if type(maximum_ticks) is not int or not 1 <= maximum_ticks <= 6:
             _fail("flight_step_reservation", "step capacity must be one through six physical ticks")
         if type(capture_labels) is not int or capture_labels < 0:
             _fail("flight_step_reservation", "capture label reservation must be nonnegative")
+        if type(decision) is not bool:
+            _fail("flight_step_reservation", "decision marker must be boolean")
+        if capture_labels and not decision:
+            _fail("flight_capture_accounting", "null continuation cannot reserve a capture label")
         if capture_labels and stage is None:
             stage = "capture"
         if stage is None:
@@ -1051,8 +1057,9 @@ class FlightAccountingLedger:
         increments = {
             "host_calls": 1,
             "physical_ticks": maximum_ticks,
-            "decisions": 1,
         }
+        if decision:
+            increments["decisions"] = 1
         if capture_labels:
             if stage != "capture":
                 _fail("flight_capture_accounting", "capture labels may only be charged to capture")

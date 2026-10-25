@@ -1,9 +1,9 @@
-"""Persistent transport preparation for Cybersand 4LY flight episodes.
+"""Persistent transport for source-bound Cybersand 4LY flight episodes.
 
-The external GDScript launcher wraps CyberPhysicalFlightEpisode directly. This
-module binds the accepted PR #229 merge and qualified Trainer/controller/teacher
-identities. Actual-host launch still remains fail-closed until an NCA-specific
-runtime build identity is registered and the bridge conformance gate is exercised.
+The external GDScript launcher wraps CyberPhysicalFlightEpisode directly. The
+runtime is pinned to the accepted #249 lease-expiry repair merge while the
+qualified frozen-teacher lineage remains bound to #229. Experiment admission
+and final-suite custody remain separate fail-closed gates.
 """
 
 from __future__ import annotations
@@ -47,9 +47,10 @@ FLIGHT_PROTOCOL = "nca-4ly-flight/1"
 
 ACCEPTED_HOST = {
     "repository": "techrote/cybersand",
-    "pull_request": 229,
-    "revision": "b5a8570e5123e1f633766e9390761a1c8134cfa2",
-    "status": "ACCEPTED_HOST_AND_QUALIFIED_TEACHER",
+    "pull_request": 249,
+    "revision": "9935d5696721d2c72a8273ea70454ab0c5b11361",
+    "status": "ACCEPTED_HOST_LEASE_REPAIR",
+    "teacher_source_merge": "b5a8570e5123e1f633766e9390761a1c8134cfa2",
     "trainer_profile_sha256": TRAINER_PROFILE_SHA256,
     "controller_sha256": CONTROLLER_SHA256,
     "teacher_sha256": TEACHER_SHA256,
@@ -58,10 +59,26 @@ ACCEPTED_HOST = {
     "teacher_final_may_be_reused_as_learner_final": False,
 }
 
-# The accepted source identity above does not invent a portable Godot/native/Rapier
-# binary build. Populate this only after the NCA bridge records that exact runtime.
-ACCEPTED_RUNTIME_BUILD: dict[str, Any] | None = None
-
+# Exact accepted Linux build carried by Cybersand #249. Registration allows the
+# finite bridge conformance run; it is not an experiment/training admission.
+ACCEPTED_RUNTIME_BUILD: dict[str, Any] | None = {
+    "tree": "607158a7b938471022edee62d150988db769bb78",
+    "godot_version": "4.7.stable.official.5b4e0cb0f",
+    "godot_sha256": "f85bbc6b15e22416c7d797cd60b63286dd67b9cb13498847056c18520ae55a75",
+    "native_artifact": "godot/addons/cybersand_native/bin/libcybersand_native.linux.x86_64.so",
+    "native_sha256": "ff3fb29e2260a587ab0f65b902abdd3f3e132885a31ed3a3b3a85cb80ab102cc",
+    "rapier_artifact": "godot/addons/godot-rapier2d/bin/libgodot_rapier.linux.x86_64-unknown-linux-gnu.so",
+    "rapier_sha256": "566e68ae53bfb2eb7018c8e7d0dd3727121bf696462039b780a33d6b8369c66a",
+    "host_source_sha256": {
+        "godot/scripts/physical_actor_arena.gd": "39ed6d5afcde4a6096d9a1ff9df28a78fc8007b79723304e3894f2117fef18c2",
+        "godot/scripts/physical_actor_session.gd": "993fdca10bc9ad6be42b8ffd7b1f352de9d460b9c2bdafcc6b668e721057bf83",
+        "godot/scripts/physical_flight_controller.gd": "47ce24b4253d8e4f7aee2d79bc329d2589fa416d258125c540a999e0151e7b4d",
+        "godot/scripts/physical_flight_course.gd": "29557a84577fce245fc84c9d5922939bf118404c223dcd0dad42b537e49c2915",
+        "godot/scripts/physical_flight_episode.gd": "d546b9142b92c7f0b1f1510392aad9ceb9d6aedfa866eadf9e49059c0611c0d2",
+        "godot/scripts/physical_flight_observation_adapter.gd": "afa43dad5ed8737961567070bbf04754107547c065ab61cb58c56b2df447d71d",
+        "godot/scripts/physical_flight_profile.gd": "82e9e7f156c29d9baf0fd4c6ac36ff6a130467e4209b7b28d22030554f57a440",
+    },
+}
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -74,15 +91,10 @@ def sha256_file(path: Path) -> str:
 def inspect_registered_host(
     checkout: str | Path, godot: str | Path
 ) -> dict[str, Any]:
-    """Verify the accepted #229 source and an explicitly registered runtime build.
-
-    Source acceptance is already bound. Runtime artifact identity and NCA bridge
-    conformance remain separate prerequisites, so no executable is inspected or
-    launched until that runtime record exists.
-    """
+    """Verify the accepted #249 source and explicitly registered runtime bytes."""
     if ACCEPTED_RUNTIME_BUILD is None:
         raise FlightProtocolError(
-            "accepted #229 source is registered; actual-host runtime build/"
+            "accepted #249 source is registered; actual-host runtime build/"
             "conformance pending"
         )
 
@@ -183,6 +195,7 @@ class FlightRpcTransport:
         self._last_sequence = 0
         self._accounting = accounting
         self._capture_labels_per_step = capture_labels_per_step
+        self._drop_next_reply_for_conformance = False
         if hello is not None:
             self._validate_hello(hello)
 
@@ -223,6 +236,14 @@ class FlightRpcTransport:
         if type(enabled) is not bool:
             raise ValueError("capture accounting phase must be boolean")
         self._capture_labels_per_step = 1 if enabled else 0
+
+    def arm_reply_loss_for_conformance(self) -> None:
+        """Deliberately discard one post-dispatch reply, then fail-stop."""
+        if self._closed:
+            raise FlightProtocolError("flight transport is closed")
+        if self._drop_next_reply_for_conformance:
+            raise FlightProtocolError("conformance reply loss already armed")
+        self._drop_next_reply_for_conformance = True
 
     def abort_after_reply(self, reason: str) -> None:
         """Record a semantic/integrity failure after a settled host receipt."""
@@ -278,9 +299,12 @@ class FlightRpcTransport:
                 raise FlightProtocolError(
                     "accounted step requires an integer repeat_ticks"
                 )
+            decision = command.get("action") is not None
             return self._accounting.reserve_step(
                 maximum_ticks=repeat,
-                capture_labels=self._capture_labels_per_step,
+                capture_labels=(
+                    self._capture_labels_per_step if decision else 0),
+                **({} if decision else {"decision": False}),
             )
         if operation == "close":
             return self._accounting.reserve_cleanup(host_call=True)
@@ -387,25 +411,37 @@ class FlightRpcTransport:
             "op": operation,
             **fields,
         }
-        send_started = False
         try:
             # Once socket transmission is attempted, a write failure cannot
             # prove that the peer consumed no complete request.
-            send_started = True
             self._channel.send(envelope)
+        except BaseException as exc:
+            self._close_channel()
+            self._mark_accounting_unknown(
+                reservation, "transport_failed_after_send_started")
+            raise UnknownConsumptionError(
+                operation, sequence,
+                "transport_failed_after_send_started",
+            ) from exc
+
+        if self._drop_next_reply_for_conformance:
+            self._drop_next_reply_for_conformance = False
+            self._close_channel()
+            self._mark_accounting_unknown(
+                reservation, "conformance_deliberate_reply_loss")
+            raise UnknownConsumptionError(
+                operation, sequence, "conformance_deliberate_reply_loss")
+
+        try:
             result = self._channel.receive()
         except BaseException as exc:
             self._close_channel()
-            if send_started:
-                self._mark_accounting_unknown(
-                    reservation, "transport_failed_after_send_started")
-                raise UnknownConsumptionError(
-                    operation, sequence,
-                    "transport_failed_after_send_started",
-                ) from exc
-            self._mark_accounting_failure(
-                reservation, "transport_failed_before_send")
-            raise
+            self._mark_accounting_unknown(
+                reservation, "transport_failed_after_send_started")
+            raise UnknownConsumptionError(
+                operation, sequence,
+                "transport_failed_after_send_started",
+            ) from exc
 
         try:
             if (
@@ -498,8 +534,8 @@ class FlightGodotTransport(FlightRpcTransport):
             raise ValueError(
                 "host deadline must be in (0,120] seconds"
             )
-        # Cybersand source is accepted, but runtime/build identity is still an
-        # explicit downstream gate. Fail before charging work or spawning Godot.
+        # Exact source/runtime bytes are registered; bridge qualification and
+        # experiment admission remain separate fail-closed gates.
         if ACCEPTED_RUNTIME_BUILD is None:
             self.identity = inspect_registered_host(checkout, godot)
             raise AssertionError("unreachable")
@@ -618,6 +654,20 @@ class FlightGodotTransport(FlightRpcTransport):
     @property
     def diagnostics(self) -> tuple[str, ...]:
         return tuple(self._diagnostics)
+
+    @property
+    def process_id(self) -> int:
+        if self._process is None:
+            raise FlightProtocolError("flight host process is unavailable")
+        return int(self._process.pid)
+
+    def wait_for_process_exit(self, timeout: float = 5.0) -> int | None:
+        if self._process is None:
+            raise FlightProtocolError("flight host process is unavailable")
+        try:
+            return self._process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            return None
 
     def _shutdown_process(self) -> None:
         if self._process is not None:

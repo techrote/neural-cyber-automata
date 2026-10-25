@@ -1,0 +1,53 @@
+name: 4LY bridge actual-host conformance
+
+on:
+  pull_request:
+    paths:
+      - "src/nca/adapters/flight.py"
+      - "src/nca/adapters/flight_host_bridge.gd"
+      - "src/nca/adapters/flight_transport.py"
+      - "src/nca/train/flight_accounting.py"
+      - "tools/flight_host_setup.py"
+      - "tools/flight_bridge_conformance.py"
+      - "tests/test_flight_*.py"
+      - "docs/FLIGHT_*.md"
+      - "docs/STATE.md"
+      - "docs/DECISIONS.md"
+      - ".github/workflows/flight-bridge-conformance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  actual-host-qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.10"
+      - name: Install package without learning extras
+        run: |
+          python -m pip install setuptools==84.0.0 wheel==0.45.1
+          python -m pip install --no-build-isolation --no-deps .
+      - name: Prepare exact accepted #249 host
+        run: python tools/flight_host_setup.py --destination "$RUNNER_TEMP/nca-flight-host" --github-env "$GITHUB_ENV"
+      - name: Review finite conformance-only plan
+        run: python tools/flight_bridge_conformance.py plan
+      - name: Execute one persistent actual native/Rapier host
+        run: |
+          python tools/flight_bridge_conformance.py run \\
+            --checkout "$NCA_FLIGHT_HOST" \\
+            --godot "$NCA_FLIGHT_GODOT" \\
+            --output "$RUNNER_TEMP/4ly004-bridge"
+      - name: Independent post-exit owner-receipt readback
+        run: python tools/flight_bridge_conformance.py verify --output "$RUNNER_TEMP/4ly004-bridge"
+      - name: Publish qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 4ly004-bridge-conformance-${{ github.sha }}
+          path: ${{ runner.temp }}/4ly004-bridge
+          if-no-files-found: error
+          retention-days: 30

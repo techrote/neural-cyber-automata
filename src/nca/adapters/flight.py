@@ -335,7 +335,12 @@ class FlightSession:
         self.flat_observation = values
 
     @staticmethod
-    def _transition(reply: Mapping[str, Any], *, allow_zero: bool = False) -> dict[str, Any]:
+    def _transition(
+        reply: Mapping[str, Any], *, allow_zero: bool = False,
+        requested_ticks: int = DECISION_TICKS,
+    ) -> dict[str, Any]:
+        if type(requested_ticks) is not int or not 1 <= requested_ticks <= DECISION_TICKS:
+            raise FlightProtocolError("invalid requested physical tick count")
         transition = reply.get("transition")
         if type(transition) is not dict or transition.get("version") != EPISODE_VERSION:
             raise FlightProtocolError("incompatible flight transition")
@@ -354,11 +359,13 @@ class FlightSession:
             raise FlightProtocolError("terminal flags disagree")
         if transition["success"] and not transition["terminated"]:
             raise FlightProtocolError("success without task termination")
+        if ticks > requested_ticks:
+            raise FlightProtocolError("owner consumed more ticks than requested")
         if ticks == 0 and not allow_zero and not transition["failed"]:
             raise FlightProtocolError(
                 "zero-tick step requires an authoritative owner failure")
-        if 0 < ticks < DECISION_TICKS and not terminal:
-            raise FlightProtocolError("short nonterminal decision interval")
+        if 0 < ticks < requested_ticks and not terminal:
+            raise FlightProtocolError("short nonterminal requested interval")
         return deepcopy(transition)
 
     def _record_exchange(
@@ -478,16 +485,31 @@ class FlightSession:
             scenario=scenario, seed=seed, split=split, producer="policy"
         )
 
-    def step(self, outputs: Any, *, observation_id: str) -> dict[str, Any]:
+    def _step_owner(
+        self, action: dict[str, Any] | None, *, observation_id: str,
+        repeat_ticks: int, exchange_operation: str,
+    ) -> dict[str, Any]:
         if self.terminal or self.revoked or self.observation is None:
             raise FlightProtocolError("live Trainer episode required")
         if observation_id != self.observation["observation_id"]:
             raise FlightProtocolError("live matching observation required")
-        if self.observation["observed_tick"] % DECISION_TICKS:
-            raise FlightProtocolError("decision boundary required")
-
+        if type(repeat_ticks) is not int or not 1 <= repeat_ticks <= DECISION_TICKS:
+            raise FlightProtocolError("repeat_ticks must be one through six")
         before = deepcopy(self.observation)
         old_tick = before["observed_tick"]
+        offset = old_tick % DECISION_TICKS
+        if offset + repeat_ticks > DECISION_TICKS:
+            raise FlightProtocolError("step may not cross a decision boundary")
+        if action is not None and offset:
+            raise FlightProtocolError("fresh action requires a decision boundary")
+        if action is None and (
+            before.get("command_live") is not True
+            or type(before.get("lease_remaining_ticks")) is not int
+            or before["lease_remaining_ticks"] <= 0
+        ):
+            raise FlightProtocolError(
+                "null continuation requires an already-live owner lease")
+
         reply = self._request({
             "command": "step",
             "run_id": before["run_id"],
@@ -496,14 +518,15 @@ class FlightSession:
             "control_generation": before["control_generation"],
             "observation_id": observation_id,
             "physical_tick": old_tick,
-            "action": velocity_action(outputs),
-            "repeat_ticks": DECISION_TICKS,
+            "action": deepcopy(action),
+            "repeat_ticks": repeat_ticks,
         })
         try:
             if reply["consumption"] != "confirmed":
                 raise FlightProtocolError(
                     "step requires authoritative consumption")
-            transition = self._transition(reply)
+            transition = self._transition(
+                reply, requested_ticks=repeat_ticks)
             ticks = transition["ticks_consumed"]
             if transition["physical_ticks_total"] != old_tick + ticks:
                 raise FlightProtocolError("physical tick total discontinuity")
@@ -517,10 +540,24 @@ class FlightSession:
                 self._observe(
                     final, reply.get("flat_observation"), fresh=True)
             else:
+                after = transition.get("observation")
+                expiry_generation_advance = (
+                    action is None
+                    and type(after) is dict
+                    and before.get("command_live") is True
+                    and after.get("command_live") is False
+                    and after.get("lease_remaining_ticks") == 0
+                    and after.get("actuator_mode") == "passive_no_lease"
+                    and after.get("assistance_valid") is False
+                    and after.get("control_generation")
+                        == before["control_generation"] + 1
+                )
                 self._observe(
-                    transition.get("observation"),
-                    reply.get("flat_observation"),
-                    allow_generation_advance=bool(transition["failed"]),
+                    after, reply.get("flat_observation"),
+                    allow_generation_advance=(
+                        bool(transition["failed"])
+                        or expiry_generation_advance
+                    ),
                 )
                 assert self.observation is not None
                 if self.observation["observed_tick"] != old_tick + ticks:
@@ -529,16 +566,35 @@ class FlightSession:
 
             self.terminal = bool(transition["episode_done"])
             self._record_exchange(
-                "step", before, self.observation, ticks=ticks,
+                exchange_operation, before, self.observation, ticks=ticks,
                 terminal=self.terminal, consumption="confirmed",
             )
             return deepcopy(reply)
         except BaseException as exc:
             try:
-                self._abort_after_reply("step", exc)
+                self._abort_after_reply(exchange_operation, exc)
             finally:
                 self._poison()
             raise
+
+    def step(
+        self, outputs: Any, *, observation_id: str,
+        repeat_ticks: int = DECISION_TICKS,
+    ) -> dict[str, Any]:
+        return self._step_owner(
+            velocity_action(outputs), observation_id=observation_id,
+            repeat_ticks=repeat_ticks, exchange_operation="step",
+        )
+
+    def continue_step(
+        self, *, observation_id: str, repeat_ticks: int = 1,
+    ) -> dict[str, Any]:
+        """Advance only an already-admitted lease; submit no new decision."""
+        return self._step_owner(
+            None, observation_id=observation_id,
+            repeat_ticks=repeat_ticks, exchange_operation="continue_step",
+        )
+
 
     def _revoke(self, operation: str, *, producer: str) -> dict[str, Any]:
         if self.terminal or self.revoked or self.observation is None:

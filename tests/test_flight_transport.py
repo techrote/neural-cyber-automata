@@ -502,9 +502,63 @@ class TransportTests(unittest.TestCase):
             channel.connection.closed
         )
 
-    def test_accepted_source_is_bound_while_runtime_launch_remains_fail_closed(self):
+    def test_null_continuation_reserves_ticks_without_decision_or_label(self):
+        accounting = Accounting()
+        transport = FlightRpcTransport(
+            Channel(response=lambda request: success(
+                request,
+                transition={
+                    "ticks_consumed": 3,
+                    "failed": False,
+                    "reason": "running",
+                },
+            )),
+            accounting=accounting,
+            capture_labels_per_step=1,
+        )
+        transport.request({
+            "sequence": 1,
+            "command": "step",
+            "action": None,
+            "repeat_ticks": 3,
+        })
+        self.assertEqual(
+            accounting.events[0],
+            ("reserve", "step", "r1", {
+                "maximum_ticks": 3,
+                "capture_labels": 0,
+                "decision": False,
+            }),
+        )
+
+    def test_deliberate_conformance_reply_loss_is_unknown_and_closes(self):
+        accounting = Accounting()
+        channel = Channel(response=lambda request: success(
+            request, closed=True))
+        transport = FlightRpcTransport(channel, accounting=accounting)
+        transport.arm_reply_loss_for_conformance()
+        with self.assertRaisesRegex(
+            UnknownConsumptionError,
+            "conformance_deliberate_reply_loss",
+        ):
+            transport.request({
+                "sequence": 1,
+                "command": "close",
+            })
+        self.assertTrue(channel.connection.closed)
+        self.assertEqual(len(channel.sent), 1)
+        self.assertEqual(
+            accounting.events[-1][0:3],
+            ("unknown", "r1", "conformance_deliberate_reply_loss"),
+        )
+
+    def test_accepted_source_and_runtime_are_bound_to_lease_repair_merge(self):
         self.assertEqual(
             ACCEPTED_HOST["revision"],
+            "9935d5696721d2c72a8273ea70454ab0c5b11361",
+        )
+        self.assertEqual(
+            ACCEPTED_HOST["teacher_source_merge"],
             "b5a8570e5123e1f633766e9390761a1c8134cfa2",
         )
         self.assertEqual(
@@ -515,15 +569,14 @@ class TransportTests(unittest.TestCase):
         self.assertFalse(
             ACCEPTED_HOST["teacher_final_may_be_reused_as_learner_final"]
         )
-        self.assertIsNone(ACCEPTED_RUNTIME_BUILD)
-        with self.assertRaisesRegex(
-            FlightProtocolError,
-            "actual-host runtime build/conformance pending",
-        ):
-            inspect_registered_host(
-                "definitely-not-a-checkout",
-                "definitely-not-godot",
-            )
+        self.assertEqual(
+            ACCEPTED_RUNTIME_BUILD["tree"],
+            "607158a7b938471022edee62d150988db769bb78",
+        )
+        self.assertEqual(
+            ACCEPTED_RUNTIME_BUILD["native_sha256"],
+            "ff3fb29e2260a587ab0f65b902abdd3f3e132885a31ed3a3b3a85cb80ab102cc",
+        )
         with self.assertRaisesRegex(
             FlightProtocolError,
             "actual-host runtime build/conformance pending",

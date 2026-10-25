@@ -212,15 +212,29 @@ func _step(request_id: int, request: Dictionary) -> void:
 	if episode.source != &"policy":
 		_error(request_id, "policy_owner_required", "none")
 		return
-	if not _integer(request.repeat_ticks, FlightEpisode.DECISION_TICKS, FlightEpisode.DECISION_TICKS) \
-		or int(current.observed_tick) % FlightEpisode.DECISION_TICKS != 0:
+	if not _integer(request.repeat_ticks, 1, FlightEpisode.DECISION_TICKS):
 		_error(request_id, "decision_cadence", "none")
 		return
-	if not _valid_action(request.action):
-		_error(request_id, "action_schema", "none")
+	var repeat_ticks: int = int(request.repeat_ticks)
+	var offset: int = int(current.observed_tick) % FlightEpisode.DECISION_TICKS
+	if offset + repeat_ticks > FlightEpisode.DECISION_TICKS:
+		_error(request_id, "decision_cadence", "none")
 		return
+	var action: Variant = request.get("action")
+	if action == null:
+		if not bool(current.get("command_live", false)) \
+				or int(current.get("lease_remaining_ticks", 0)) <= 0:
+			_error(request_id, "live_lease_required", "none")
+			return
+	else:
+		if offset != 0:
+			_error(request_id, "action_outside_decision_boundary", "none")
+			return
+		if not _valid_action(action):
+			_error(request_id, "action_schema", "none")
+			return
 	var transition: Dictionary = episode.tick(
-		request.action, str(request.observation_id), int(request.repeat_ticks))
+		action, str(request.observation_id) if action != null else "", repeat_ticks)
 	# The owner reports exact physical consumption, including partial terminal
 	# intervals and zero-tick authoritative failures.
 	_reply_transition(request_id, transition, false)
@@ -346,9 +360,25 @@ func _reply_transition(request_id: int, transition: Dictionary, include_manifest
 	if not flat.is_empty() and not observation.is_empty():
 		# Transport correlation metadata; not a new Cybersand observation field.
 		flat["source_observation_id"] = str(observation.get("observation_id", ""))
+	var record: Dictionary = episode.record()
+	var trace: Array = record.get("trace", [])
+	var consumed: int = int(transition.get("ticks_consumed", 0))
+	var receipts: Array = []
+	if consumed > 0 and trace.size() >= consumed:
+		for index: int in range(trace.size() - consumed, trace.size()):
+			receipts.append(trace[index].duplicate(true))
 	var body: Dictionary = {
 		"transition": transition.duplicate(true),
 		"flat_observation": flat.duplicate(true),
+		"owner_receipts": receipts,
+		"owner_timing": {
+			"reset_microseconds": int(record.get("reset_microseconds", 0)),
+			"observation_serialization_microseconds":
+				int(record.get("observation_serialization_microseconds", 0)),
+			"process_wall_microseconds":
+				int(record.get("process_wall_microseconds", 0)),
+		},
+		"owner_metrics": record.get("metrics", {}).duplicate(true),
 	}
 	for key: Variant in extra:
 		if body.has(key):

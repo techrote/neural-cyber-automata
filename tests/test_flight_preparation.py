@@ -45,6 +45,7 @@ class Owner:
         self.partial_ticks = None
         self.step_failure = None
         self.aborts = []
+        self.lease_deadline = 0
 
     def abort_after_reply(self, reason):
         self.aborts.append(reason)
@@ -60,6 +61,13 @@ class Owner:
                 f"run-{self.run}:{self.epoch}:{ACTOR_ID}:{self.generation}:{self.tick}",
             "observed_tick": self.tick,
             "control_generation": self.generation,
+            "command_live": self.lease_deadline > self.tick,
+            "lease_remaining_ticks": max(0, self.lease_deadline - self.tick),
+            "actuator_mode": (
+                "assisted" if self.lease_deadline > self.tick
+                else "passive_no_lease"
+            ),
+            "assistance_valid": self.lease_deadline > self.tick,
         }
 
     def flat(self, observation=None):
@@ -149,6 +157,7 @@ class Owner:
             self.epoch += 1
             self.tick = 0
             self.generation = 0
+            self.lease_deadline = 0
             self.producer = command["producer"]
             observation = self.observation()
             reply = {
@@ -172,8 +181,23 @@ class Owner:
                     raise AssertionError(
                         f"fixture authority mismatch: {request_key}"
                     )
-            if command["repeat_ticks"] != DECISION_TICKS:
+            repeat = command["repeat_ticks"]
+            if (
+                type(repeat) is not int
+                or not 1 <= repeat <= DECISION_TICKS
+                or self.tick % DECISION_TICKS + repeat > DECISION_TICKS
+            ):
                 raise AssertionError("fixture cadence drift")
+            action = command.get("action")
+            if action is None:
+                if self.lease_deadline <= self.tick:
+                    raise AssertionError(
+                        "fixture null continuation without live lease")
+            else:
+                if self.tick % DECISION_TICKS:
+                    raise AssertionError(
+                        "fixture fresh action outside decision boundary")
+                self.lease_deadline = self.tick + LEASE_TICKS
 
             if self.step_failure == "expired_lease":
                 reply = {
@@ -188,12 +212,19 @@ class Owner:
                 }
             else:
                 ticks = (
-                    DECISION_TICKS
+                    repeat
                     if self.partial_ticks is None
-                    else self.partial_ticks
+                    else min(repeat, self.partial_ticks)
                 )
+                previous_tick = self.tick
                 self.tick += ticks
-                terminal = ticks < DECISION_TICKS
+                if (
+                    self.lease_deadline
+                    and previous_tick < self.lease_deadline <= self.tick
+                ):
+                    self.lease_deadline = 0
+                    self.generation += 1
+                terminal = ticks < repeat
                 reply = {
                     "sequence": command["sequence"],
                     "consumption": "confirmed",
@@ -371,6 +402,55 @@ class FlightTests(unittest.TestCase):
         )
         self.assertEqual(
             owner.requests[0]["split"], "development"
+        )
+
+    def test_partial_step_null_continuation_and_real_lease_expiry(self):
+        owner = Owner()
+        session = FlightSession(owner)
+        session.reset(
+            scenario="horizontal_reach", seed=101, split="training")
+        session.step(
+            [0.25, 0.0],
+            observation_id=session.observation["observation_id"],
+            repeat_ticks=6,
+        )
+        session.step(
+            [0.25, 0.0],
+            observation_id=session.observation["observation_id"],
+            repeat_ticks=3,
+        )
+        session.continue_step(
+            observation_id=session.observation["observation_id"],
+            repeat_ticks=3,
+        )
+        session.continue_step(
+            observation_id=session.observation["observation_id"],
+            repeat_ticks=5,
+        )
+        before_generation = session.observation["control_generation"]
+        reply = session.continue_step(
+            observation_id=session.observation["observation_id"],
+            repeat_ticks=1,
+        )
+        self.assertEqual(reply["transition"]["physical_ticks_total"], 18)
+        self.assertEqual(
+            session.observation["control_generation"],
+            before_generation + 1,
+        )
+        self.assertFalse(session.observation["command_live"])
+        self.assertEqual(session.observation["lease_remaining_ticks"], 0)
+        self.assertEqual(
+            session.observation["actuator_mode"], "passive_no_lease")
+        self.assertFalse(session.observation["assistance_valid"])
+        steps = [
+            request for request in owner.requests
+            if request["command"] == "step"
+        ]
+        self.assertEqual(
+            [item["repeat_ticks"] for item in steps], [6, 3, 3, 5, 1])
+        self.assertEqual(
+            [item["action"] is None for item in steps],
+            [False, False, True, True, True],
         )
 
     def test_teacher_capture_is_isolated_owner_reference_path(self):
