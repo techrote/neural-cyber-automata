@@ -12,6 +12,7 @@ from nca.adapters.flight import (
 from nca.contracts import ContractError, sha256_json
 from nca.train.flight_accounting import (
     DEPENDENCIES,
+    DESIGN_WORK_MAXIMA,
     HOST_CONTRACT_HEAD,
     FlightAccountingLedger,
     FlightDeclaration,
@@ -77,9 +78,9 @@ def accounting_fixture():
         "threads": 1,
     })
     value["work_ceilings"].update({
-        "host_calls": 100,
-        "startup_operations": 4,
-        "cleanup_operations": 4,
+        "host_calls": DESIGN_WORK_MAXIMA["host_calls"],
+        "startup_operations": DESIGN_WORK_MAXIMA["startup_operations"],
+        "cleanup_operations": DESIGN_WORK_MAXIMA["cleanup_operations"],
     })
     value["resource_ceilings"].update({
         "maximum_wall_seconds": 60.0,

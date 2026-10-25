@@ -358,7 +358,8 @@ class DurableAccountingTests(unittest.TestCase):
     def test_null_continuation_charges_ticks_without_decision(self):
         ledger = self.create()
         reservation = ledger.reserve_step(
-            maximum_ticks=3, capture_labels=0, decision=False)
+            maximum_ticks=3, capture_labels=0, decision=False,
+            stage="capture")
         durable = FlightAccountingLedger.read_snapshot(
             ledger.path, self.declaration, attempt_id="attempt-a1")
         self.assertEqual(durable["charged"]["host_calls"], 1)
