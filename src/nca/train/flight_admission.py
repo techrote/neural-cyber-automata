@@ -800,6 +800,30 @@ def admission_candidate(
     return body
 
 
+def _parse_proc_stat(raw: str, *, page_size: int) -> tuple[int, int, int]:
+    """Parse Linux /proc/<pid>/stat even when the parenthesized comm has spaces."""
+    if type(raw) is not str or type(page_size) is not int or page_size <= 0:
+        _fail("flight_resource_procfs", "invalid procfs stat input")
+    left = raw.find("(")
+    right = raw.rfind(")")
+    if left <= 0 or right <= left or right + 2 > len(raw):
+        _fail("flight_resource_procfs", "malformed procfs stat record")
+    try:
+        pid = int(raw[:left].strip())
+        fields = raw[right + 2:].split()
+        # fields[0] is stat field 3 (state), fields[1] is field 4 (ppid),
+        # and fields[21] is field 24 (rss pages).
+        if len(fields) <= 21:
+            raise ValueError("short procfs stat")
+        ppid = int(fields[1])
+        rss = max(0, int(fields[21])) * page_size
+    except (ValueError, IndexError) as exc:
+        raise ContractError(
+            "flight_resource_procfs", "malformed procfs stat fields"
+        ) from exc
+    return pid, ppid, rss
+
+
 def _proc_table() -> dict[int, tuple[int, int]]:
     """Return pid -> (ppid, rss_bytes) from Linux procfs."""
     result: dict[int, tuple[int, int]] = {}
@@ -814,18 +838,15 @@ def _proc_table() -> dict[int, tuple[int, int]]:
         if not entry.name.isdigit():
             continue
         try:
-            stat_fields = (entry / "stat").read_text().split()
-            if len(stat_fields) < 24:
-                continue
-            pid = int(stat_fields[0])
-            ppid = int(stat_fields[3])
-            rss = int(stat_fields[23]) * page
-            result[pid] = (ppid, max(0, rss))
+            pid, ppid, rss = _parse_proc_stat(
+                (entry / "stat").read_text(), page_size=page
+            )
+            result[pid] = (ppid, rss)
         except (
             FileNotFoundError,
             ProcessLookupError,
             PermissionError,
-            ValueError,
+            ContractError,
             OSError,
         ):
             continue
