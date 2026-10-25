@@ -344,7 +344,7 @@ class DurableAccountingTests(unittest.TestCase):
                 current_evidence=self.evidence)
 
     def test_null_continuation_charges_ticks_without_decision(self):
-        ledger = self._ledger()
+        ledger = self.create()
         reservation = ledger.reserve_step(
             maximum_ticks=3, capture_labels=0, decision=False)
         durable = FlightAccountingLedger.read_snapshot(

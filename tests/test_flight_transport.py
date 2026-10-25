@@ -342,6 +342,7 @@ class TransportTests(unittest.TestCase):
         reply = transport.request({
             "sequence": 1,
             "command": "step",
+            "action": {"move": [0.0, 0.0]},
             "repeat_ticks": 6,
         })
         self.assertEqual(reply["transition"]["ticks_consumed"], 3)
@@ -579,7 +580,7 @@ class TransportTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(
             FlightProtocolError,
-            "actual-host runtime build/conformance pending",
+            "durable accounting is required",
         ):
             FlightGodotTransport(
                 "definitely-not-a-checkout",
