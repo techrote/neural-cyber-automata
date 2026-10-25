@@ -1,0 +1,322 @@
+{
+  "schema": "nca-4ly004-split-manifest/v1",
+  "host_revision": "9935d5696721d2c72a8273ea70454ab0c5b11361",
+  "host_build_sha256": "55e5ba334b6683adf2ba0d8fc93fb7defba109cd4a319d2f366a2a86e4dfdf84",
+  "course_id": "4ly-flight-course/v1",
+  "course_version": 1,
+  "split_geometry_version": 3,
+  "split": "development",
+  "case_count": 44,
+  "max_ticks": 68400,
+  "max_decisions": 11400,
+  "cases": [
+    {
+      "scenario_id": "arrival_braking",
+      "family": "arrival",
+      "seed": 101,
+      "max_ticks": 1500,
+      "max_decisions": 250
+    },
+    {
+      "scenario_id": "arrival_braking",
+      "family": "arrival",
+      "seed": 103,
+      "max_ticks": 1500,
+      "max_decisions": 250
+    },
+    {
+      "scenario_id": "arrival_braking",
+      "family": "arrival",
+      "seed": 107,
+      "max_ticks": 1500,
+      "max_decisions": 250
+    },
+    {
+      "scenario_id": "arrival_braking",
+      "family": "arrival",
+      "seed": 109,
+      "max_ticks": 1500,
+      "max_decisions": 250
+    },
+    {
+      "scenario_id": "corner",
+      "family": "obstacles",
+      "seed": 101,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "corner",
+      "family": "obstacles",
+      "seed": 103,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "corner",
+      "family": "obstacles",
+      "seed": 107,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "corner",
+      "family": "obstacles",
+      "seed": 109,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "diagonal_reach",
+      "family": "free_space",
+      "seed": 101,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "diagonal_reach",
+      "family": "free_space",
+      "seed": 103,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "diagonal_reach",
+      "family": "free_space",
+      "seed": 107,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "diagonal_reach",
+      "family": "free_space",
+      "seed": 109,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "horizontal_reach",
+      "family": "free_space",
+      "seed": 101,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "horizontal_reach",
+      "family": "free_space",
+      "seed": 103,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "horizontal_reach",
+      "family": "free_space",
+      "seed": 107,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "horizontal_reach",
+      "family": "free_space",
+      "seed": 109,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "offset_gates",
+      "family": "obstacles",
+      "seed": 101,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "offset_gates",
+      "family": "obstacles",
+      "seed": 103,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "offset_gates",
+      "family": "obstacles",
+      "seed": 107,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "offset_gates",
+      "family": "obstacles",
+      "seed": 109,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "reverse",
+      "family": "reversal",
+      "seed": 101,
+      "max_ticks": 1560,
+      "max_decisions": 260
+    },
+    {
+      "scenario_id": "reverse",
+      "family": "reversal",
+      "seed": 103,
+      "max_ticks": 1560,
+      "max_decisions": 260
+    },
+    {
+      "scenario_id": "reverse",
+      "family": "reversal",
+      "seed": 107,
+      "max_ticks": 1560,
+      "max_decisions": 260
+    },
+    {
+      "scenario_id": "reverse",
+      "family": "reversal",
+      "seed": 109,
+      "max_ticks": 1560,
+      "max_decisions": 260
+    },
+    {
+      "scenario_id": "slalom",
+      "family": "obstacles",
+      "seed": 101,
+      "max_ticks": 2400,
+      "max_decisions": 400
+    },
+    {
+      "scenario_id": "slalom",
+      "family": "obstacles",
+      "seed": 103,
+      "max_ticks": 2400,
+      "max_decisions": 400
+    },
+    {
+      "scenario_id": "slalom",
+      "family": "obstacles",
+      "seed": 107,
+      "max_ticks": 2400,
+      "max_decisions": 400
+    },
+    {
+      "scenario_id": "slalom",
+      "family": "obstacles",
+      "seed": 109,
+      "max_ticks": 2400,
+      "max_decisions": 400
+    },
+    {
+      "scenario_id": "unsupported_hover",
+      "family": "hover",
+      "seed": 101,
+      "max_ticks": 300,
+      "max_decisions": 50
+    },
+    {
+      "scenario_id": "unsupported_hover",
+      "family": "hover",
+      "seed": 103,
+      "max_ticks": 300,
+      "max_decisions": 50
+    },
+    {
+      "scenario_id": "unsupported_hover",
+      "family": "hover",
+      "seed": 107,
+      "max_ticks": 300,
+      "max_decisions": 50
+    },
+    {
+      "scenario_id": "unsupported_hover",
+      "family": "hover",
+      "seed": 109,
+      "max_ticks": 300,
+      "max_decisions": 50
+    },
+    {
+      "scenario_id": "vertical_reach",
+      "family": "free_space",
+      "seed": 101,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "vertical_reach",
+      "family": "free_space",
+      "seed": 103,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "vertical_reach",
+      "family": "free_space",
+      "seed": 107,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "vertical_reach",
+      "family": "free_space",
+      "seed": 109,
+      "max_ticks": 1080,
+      "max_decisions": 180
+    },
+    {
+      "scenario_id": "wall_recovery",
+      "family": "recovery",
+      "seed": 101,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "wall_recovery",
+      "family": "recovery",
+      "seed": 103,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "wall_recovery",
+      "family": "recovery",
+      "seed": 107,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "wall_recovery",
+      "family": "recovery",
+      "seed": 109,
+      "max_ticks": 2100,
+      "max_decisions": 350
+    },
+    {
+      "scenario_id": "wide_corridor",
+      "family": "obstacles",
+      "seed": 101,
+      "max_ticks": 1800,
+      "max_decisions": 300
+    },
+    {
+      "scenario_id": "wide_corridor",
+      "family": "obstacles",
+      "seed": 103,
+      "max_ticks": 1800,
+      "max_decisions": 300
+    },
+    {
+      "scenario_id": "wide_corridor",
+      "family": "obstacles",
+      "seed": 107,
+      "max_ticks": 1800,
+      "max_decisions": 300
+    },
+    {
+      "scenario_id": "wide_corridor",
+      "family": "obstacles",
+      "seed": 109,
+      "max_ticks": 1800,
+      "max_decisions": 300
+    }
+  ]
+}
