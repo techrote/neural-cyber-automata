@@ -191,7 +191,7 @@ class ProspectiveDeclarationTests(unittest.TestCase):
         declaration, evidence = self.admitted()
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            with self.assertRaisesRegex(ContractError, "resource guard"):
+            with self.assertRaisesRegex(ContractError, "live guard"):
                 FlightAccountingLedger.create(
                     root / "unguarded.jsonl",
                     declaration,
