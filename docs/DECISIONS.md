@@ -12,28 +12,7 @@ D-002 to D-008 record the original 13 October acceptance, qualified at that time
 
 ## Current entries
 ### D-032 — Finish the 4LY-004 experiment-admission package
-[ACCEPTED SCOPE, EXTERNAL CUSTODY/REVIEW STILL REQUIRED] 2026-10-25 by owner:
-finish #74's experiment-admission package after bridge PR #85 merged.
-
-Freeze the exact public development/tuning manifests, Linux CPU learner runtime
-contract, clean-source binding and finite one-attempt resource envelope without
-starting capture or training. The admitted-resource policy is 18,000 seconds
-whole-attempt wall time, 4 GiB process-tree RSS, 8 GiB retained attempt storage
-and 4 GiB publication bytes, enforced fail-stop by a continuously running
-resource guard tied to the declaration. These are allocation ceilings, not
-claims of measured learner consumption, and they do not authorize extension or
-retry.
-
-Do not generate, open or store learner-final payload bytes in this repository.
-Prospective execution still requires an external custodian/private reviewer to
-commit an unopened, disjoint and feasible 60-case learner-final suite, followed
-by a distinct independently authored execution review bound to the exact
-source/splits/runtime/resource/custody candidate. Routine CI may prepare and
-retain that review candidate but cannot self-admit the experiment. Tuning-only
-checkpoint selection and continuously advancing export qualification remain
-post-admission gates. Teacher-final reuse, CUDA, sweeps and automatic retries
-remain forbidden.
-
+[ACCEPTED] 2026-10-25 by owner: freeze the source/split/runtime/resource package while preserving external custody and review gates. See the [full decision](decisions/2026-10-25-4ly004-admission.md).
 ### D-031 — Prepare Trainer flight learning; [ACCEPTED SCOPE, HOST BRIDGE QUALIFIED] 2026-10-25. [#74 preparation](FLIGHT_LEARNING.md) is rebound to accepted Cybersand #249 merge `9935d5696721d2c72a8273ea70454ab0c5b11361` while retaining the qualified #229 Trainer/controller/frozen-teacher lineage. NCA actual-host bridge conformance passed with independent receipt readback at run `40211483325`; exact host-call/startup/cleanup topology and host-side measurements are now bound. The one-use teacher-final suite remains teacher evidence only and cannot become learner-final data. Learner CPU runtime/resource ceilings, split/final custody, independent execution review and execution admission remain gated; no training allocation or learner-final access is granted.
 ### D-023 — Risk-managed LEARN-JOLT-003 resource admission
 [ACCEPTED] 2026-10-23: [8 GiB watchdog and two independent reviews](decisions/2026-10-23-jolt-resource-risk.md).
