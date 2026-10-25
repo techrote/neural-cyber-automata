@@ -79,6 +79,8 @@ SOURCE_CLOSURE_PATHS = (
     "src/nca/train/flight_accounting.py",
     "src/nca/train/flight_learning.py",
     "src/nca/train/flight_admission.py",
+    "tools/flight_admission.py",
+    ".github/workflows/flight-admission.yml",
     "configs/flight/4ly004-development-v1.json",
     "configs/flight/4ly004-tuning-v1.json",
 )
@@ -287,14 +289,44 @@ def load_split_manifest(
     return manifest, sha256_json(manifest)
 
 
+def _os_release() -> dict[str, str]:
+    path = Path("/etc/os-release")
+    if not path.is_file():
+        return {}
+    result: dict[str, str] = {}
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        if "=" not in raw or raw.startswith("#"):
+            continue
+        key, value = raw.split("=", 1)
+        result[key] = value.strip().strip('"')
+    return result
+
+
+def _cpu_model() -> str:
+    path = Path("/proc/cpuinfo")
+    if not path.is_file():
+        return "unavailable"
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if line.lower().startswith("model name") and ":" in line:
+            value = line.split(":", 1)[1].strip()
+            if value:
+                return value[:256]
+    return "unavailable"
+
+
 def runtime_identity(*, enforce: bool = True) -> dict[str, Any]:
     """Return the declared CPU runtime; optionally refuse any runtime drift."""
+    release = _os_release()
     observed = {
         "device": "cpu",
         "platform": RUNTIME_PLATFORM,
         "python": ".".join(map(str, sys.version_info[:3])),
         "torch": None,
         "threads": None,
+        "os_id": release.get("ID"),
+        "os_version_id": release.get("VERSION_ID"),
+        "machine": platform.machine(),
+        "cpu_model": _cpu_model(),
     }
     try:
         import torch
@@ -308,10 +340,12 @@ def runtime_identity(*, enforce: bool = True) -> dict[str, Any]:
         if (
             not sys.platform.startswith("linux")
             or platform.machine().lower() not in {"x86_64", "amd64"}
+            or observed["os_id"] != "ubuntu"
+            or observed["os_version_id"] != "24.04"
         ):
             _fail(
                 "flight_runtime",
-                "4LY-004 admitted runtime is Linux x86_64 only",
+                "4LY-004 admitted runtime is Ubuntu 24.04 Linux x86_64 only",
             )
         if (
             observed["python"] != RUNTIME_PYTHON
