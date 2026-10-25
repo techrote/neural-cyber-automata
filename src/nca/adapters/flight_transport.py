@@ -44,6 +44,9 @@ from .flight import (
 from .protocol import JsonChannel
 
 FLIGHT_PROTOCOL = "nca-4ly-flight/1"
+QUALIFIED_BRIDGE_SHA256 = "23f115d5947eb84858262208fc3411a481c5219f7fd0213901b0bf08e59d0bf6"
+QUALIFIED_CONFORMANCE_EVIDENCE_SHA256 = "193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9"
+QUALIFIED_CONFORMANCE_RUN_ID = 40211483325
 
 ACCEPTED_HOST = {
     "repository": "techrote/cybersand",
@@ -149,6 +152,12 @@ def inspect_registered_host(
                 )
             source_hashes[relative] = actual
 
+        bridge_sha256 = sha256_file(
+            Path(__file__).with_name("flight_host_bridge.gd")
+        )
+        if bridge_sha256 != QUALIFIED_BRIDGE_SHA256:
+            raise FlightProtocolError(
+                "NCA flight bridge differs from qualified actual-host bytes")
         return {
             "repository": "techrote/cybersand",
             "host_revision": revision,
@@ -158,11 +167,11 @@ def inspect_registered_host(
             "native_artifact_sha256": expected["native_sha256"],
             "rapier_artifact_sha256": expected["rapier_sha256"],
             "host_source_sha256": source_hashes,
-            "bridge_sha256": sha256_file(
-                Path(__file__).with_name("flight_host_bridge.gd")
-            ),
-            "conformance_status":
-                "REGISTERED_ACCEPTED_BUILD_NOT_YET_EXERCISED",
+            "bridge_sha256": bridge_sha256,
+            "conformance_status": "QUALIFIED_ACTUAL_HOST_CONFORMANCE",
+            "conformance_evidence_sha256":
+                QUALIFIED_CONFORMANCE_EVIDENCE_SHA256,
+            "conformance_run_id": QUALIFIED_CONFORMANCE_RUN_ID,
         }
     except FlightProtocolError:
         raise

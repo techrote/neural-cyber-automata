@@ -41,6 +41,27 @@ CONTROLLER_SHA256 = "fb86190c68c6a87e7d2ef7e845b1fb97305f188723a326f67f07caa6971
 TEACHER_QUALIFICATION_CHECKOUT = "2bc2b6cfa9ad62512266df5804c5662b5ba8bd04"
 TEACHER_SHA256 = "0fb571cfd314a53fc86b3517fb5a8258a77d7215fcbcb43fc7f53519e7e29761"
 TEACHER_FINAL_SUITE_SHA256 = "4bd18d728581f64fa770c4dc29f765eff956f61999b96d03d8e378d54efc3401"
+HOST_BUILD_SHA256 = "55e5ba334b6683adf2ba0d8fc93fb7defba109cd4a319d2f366a2a86e4dfdf84"
+ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256 = "193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9"
+ACTUAL_HOST_CONFORMANCE_ARTIFACT_SHA256 = "6578a638cf3f70a59974b152474b908ab5836b1baf29dc51f80b7d20695059ea"
+ACTUAL_HOST_CONFORMANCE_RUN_ID = 40211483325
+QUALIFIED_HOST_MEASUREMENTS = {
+    "startup_seconds": 0.899644376,
+    "reset_latency_max_seconds": 0.047778348,
+    "reset_latency_median_seconds": 0.039766714,
+    "step_latency_max_seconds": 0.018060448,
+    "step_latency_median_seconds": 0.010230353,
+    "confirmed_physical_ticks": 20,
+    "confirmed_ticks_per_second": 282.8249100698098,
+    "owner_serialization_microseconds_max": 6164,
+    "shutdown_seconds": 0.163780543,
+    "cleanup_seconds": 0.000515674,
+    "process_tree_peak_resident_bytes": 254550016,
+    "owner_receipt_bytes": 36038,
+    "event_payload_bytes": 63519,
+    "evidence_file_bytes": 67363,
+    "accounting_journal_bytes": 5363,
+}
 HOST_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
     "accepted_merge": HOST_CONTRACT_HEAD,
     "teacher_source_merge": TEACHER_SOURCE_MERGE,
@@ -57,6 +78,8 @@ TEACHER_QUALIFICATION_EVIDENCE_SHA256 = sha256_json({
 ACCEPTED_DEPENDENCY_EVIDENCE = {
     "host_4ly003": HOST_QUALIFICATION_EVIDENCE_SHA256,
     "teacher_qualification": TEACHER_QUALIFICATION_EVIDENCE_SHA256,
+    "actual_host_conformance": ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
+    "throughput_measurement": ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
 }
 DEVELOPMENT_SEEDS = (101, 103, 107, 109)
 TUNING_SEEDS = (211, 223, 227, 229)
@@ -121,6 +144,7 @@ WORK_COUNTERS = (
 DESIGN_WORK_MAXIMA = {
     "host_starts": 1,
     "resets": 884,
+    "host_calls": 246_765,
     "physical_ticks": 1_475_280,
     "decisions": 245_880,
     "capture_labels": 11_400,
@@ -128,6 +152,8 @@ DESIGN_WORK_MAXIMA = {
     "sample_presentations": 684_000,
     "tuning_episodes": 480,
     "checkpoint_publications": 63,
+    "startup_operations": 1,
+    "cleanup_operations": 1,
 }
 STAGE_CEILINGS = {
     "capture": {
@@ -467,7 +493,7 @@ def preparation_declaration() -> FlightDeclaration:
             "learner_revision": None,
             "learner_source_sha256": None,
             "host_revision": HOST_CONTRACT_HEAD,
-            "host_build_sha256": None,
+            "host_build_sha256": HOST_BUILD_SHA256,
             "profile_sha256": TRAINER_PROFILE_SHA256,
             "controller_sha256": CONTROLLER_SHA256,
             "teacher_sha256": TEACHER_SHA256,
@@ -514,7 +540,7 @@ def preparation_declaration() -> FlightDeclaration:
         "work_ceilings": {
             "host_starts": DESIGN_WORK_MAXIMA["host_starts"],
             "resets": DESIGN_WORK_MAXIMA["resets"],
-            "host_calls": None,
+            "host_calls": DESIGN_WORK_MAXIMA["host_calls"],
             "physical_ticks": DESIGN_WORK_MAXIMA["physical_ticks"],
             "decisions": DESIGN_WORK_MAXIMA["decisions"],
             "capture_labels": DESIGN_WORK_MAXIMA["capture_labels"],
@@ -522,8 +548,8 @@ def preparation_declaration() -> FlightDeclaration:
             "sample_presentations": DESIGN_WORK_MAXIMA["sample_presentations"],
             "tuning_episodes": DESIGN_WORK_MAXIMA["tuning_episodes"],
             "checkpoint_publications": DESIGN_WORK_MAXIMA["checkpoint_publications"],
-            "startup_operations": None,
-            "cleanup_operations": None,
+            "startup_operations": DESIGN_WORK_MAXIMA["startup_operations"],
+            "cleanup_operations": DESIGN_WORK_MAXIMA["cleanup_operations"],
         },
         "stage_ceilings": deepcopy(STAGE_CEILINGS),
         "resource_ceilings": {

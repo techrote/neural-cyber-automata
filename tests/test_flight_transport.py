@@ -24,6 +24,8 @@ from nca.adapters.flight import (
 from nca.adapters.flight_transport import (
     ACCEPTED_HOST,
     ACCEPTED_RUNTIME_BUILD,
+    QUALIFIED_BRIDGE_SHA256,
+    QUALIFIED_CONFORMANCE_EVIDENCE_SHA256,
     FLIGHT_PROTOCOL,
     FlightGodotTransport,
     FlightRpcTransport,
@@ -577,6 +579,14 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(
             ACCEPTED_RUNTIME_BUILD["native_sha256"],
             "ff3fb29e2260a587ab0f65b902abdd3f3e132885a31ed3a3b3a85cb80ab102cc",
+        )
+        self.assertEqual(
+            QUALIFIED_BRIDGE_SHA256,
+            "23f115d5947eb84858262208fc3411a481c5219f7fd0213901b0bf08e59d0bf6",
+        )
+        self.assertEqual(
+            QUALIFIED_CONFORMANCE_EVIDENCE_SHA256,
+            "193c150e83d7e83217692be75407ccc5acb4038e1a60183fbb489bd0b78bece9",
         )
         with self.assertRaisesRegex(
             FlightProtocolError,

@@ -17,7 +17,9 @@ from nca.train.flight_accounting import (
     ACCEPTED_DEPENDENCY_EVIDENCE,
     DEPENDENCIES,
     DESIGN_WORK_MAXIMA,
+    ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
     CONTROLLER_SHA256,
+    HOST_BUILD_SHA256,
     HOST_CONTRACT_HEAD,
     SCENARIO_MAX_TICKS,
     STAGE_CEILINGS,
@@ -56,9 +58,9 @@ def admitted_fixture():
         "threads": 1,
     })
     value["work_ceilings"].update({
-        "host_calls": 100,
-        "startup_operations": 4,
-        "cleanup_operations": 4,
+        "host_calls": DESIGN_WORK_MAXIMA["host_calls"],
+        "startup_operations": DESIGN_WORK_MAXIMA["startup_operations"],
+        "cleanup_operations": DESIGN_WORK_MAXIMA["cleanup_operations"],
     })
     value["resource_ceilings"].update({
         "maximum_wall_seconds": 60.0,
@@ -91,17 +93,27 @@ class DeclarationGateTests(unittest.TestCase):
             value["source_contract"]["qualification_status"],
             "accepted_lease_repair_host_with_qualified_teacher_lineage")
         self.assertEqual(value["identities"]["host_revision"], HOST_CONTRACT_HEAD)
+        self.assertEqual(value["identities"]["host_build_sha256"], HOST_BUILD_SHA256)
         self.assertEqual(value["identities"]["teacher_sha256"], TEACHER_SHA256)
         self.assertFalse(
             value["source_contract"]["teacher_final_may_be_reused_as_learner_final"]
         )
         self.assertEqual(value["dependencies"]["host_4ly003"]["status"], "accepted")
         self.assertEqual(value["dependencies"]["teacher_qualification"]["status"], "accepted")
+        self.assertEqual(value["dependencies"]["actual_host_conformance"]["status"], "accepted")
+        self.assertEqual(
+            value["dependencies"]["actual_host_conformance"]["evidence_sha256"],
+            ACTUAL_HOST_CONFORMANCE_EVIDENCE_SHA256,
+        )
+        self.assertEqual(value["dependencies"]["throughput_measurement"]["status"], "accepted")
         self.assertEqual(value["scenario"]["scenario_max_ticks"], SCENARIO_MAX_TICKS)
         self.assertEqual(value["scenario"]["scenario_max_ticks"]["slalom"], 2400)
         self.assertIn("development_sha256", value["splits"])
         self.assertNotIn("training_sha256", value["splits"])
         self.assertIsNone(value["runtime"]["threads"])
+        self.assertEqual(value["work_ceilings"]["host_calls"], 246_765)
+        self.assertEqual(value["work_ceilings"]["startup_operations"], 1)
+        self.assertEqual(value["work_ceilings"]["cleanup_operations"], 1)
 
         gate = execution_gate(
             declaration, current_evidence=ACCEPTED_DEPENDENCY_EVIDENCE
