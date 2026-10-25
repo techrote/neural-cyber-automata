@@ -465,12 +465,13 @@ def run_sequence(
         graceful_exit_code = transport.wait_for_process_exit(
             timeout=5.0)
         shutdown_seconds = time.perf_counter() - shutdown_started
-        cleanup_reservation = ledger.reserve_cleanup(
-            host_call=False)
+        # The deliberately lost close RPC already reserved the single
+        # declared cleanup operation and host call before dispatch.  Its
+        # consumption remains unknown by design; process-tree cleanup below is
+        # containment only and must not double-charge or rewrite that outcome.
         cleanup_started = time.perf_counter()
         transport.close()
         cleanup_seconds = time.perf_counter() - cleanup_started
-        ledger.complete(cleanup_reservation)
         transport = None
         sampler.stop()
 
