@@ -885,6 +885,14 @@ class FlightResourceGuard:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
 
+    @property
+    def running(self) -> bool:
+        return (
+            self._thread is not None
+            and self._thread.is_alive()
+            and not self._stop.is_set()
+        )
+
     def bind_declaration(self, declaration: FlightDeclaration) -> None:
         if not isinstance(declaration, FlightDeclaration):
             _fail(
