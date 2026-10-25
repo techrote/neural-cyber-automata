@@ -132,6 +132,16 @@ admission. After target metadata is recovered, new clean-source preparation,
 measured startup validation, exact-head CI and two fresh exact-packet admissions
 remain necessary. The owner explicitly requires stopping before the long GPU run.
 
+## Dated recipe annotation correction - 25 October 2026
+
+The frozen v4 recipe retains the inherited admission prose referring to a
+60-second publication reserve. That sentence describes the refused v3 packet
+and is stale for v4; it does not set an executable limit. The v4 numeric
+`resource_policy.worker_publication_reserve_seconds` and source both specify
+7,200 seconds, with a 10,800-second work reserve and 24-hour ceiling. This
+additive correction preserves the frozen recipe bytes and their refusal binding.
+Fresh reviewers must use those exact numeric fields and this correction.
+
 ## Resource proof and final review
 
 [PREPARATION ONLY] A new CPU storage fixture exercises three concurrent workers,

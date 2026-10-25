@@ -16,8 +16,8 @@ from nca.train import ik_qualification_v4 as q
 class QualificationContracts(unittest.TestCase):
     def test_frozen_recipe_retains_training_contract_and_finite_resource_room(self):
         import json
-        recipe=q.recipe_record()
         root=Path(__file__).resolve().parents[1]
+        recipe=json.loads((root/q.RECIPE).read_text(encoding="utf-8"))
         old=json.loads((root/'configs/ik/experiments/runner-qualification-v3.json').read_text())
         for key in ('config','training_seeds','schedules','selection','tuning_epochs','normalization_sha256',
                     'corpus_identity','loss_weights','optimizer','runtime','final_calls'):
