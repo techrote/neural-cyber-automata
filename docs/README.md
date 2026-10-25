@@ -8,7 +8,7 @@ verified: 2026-10-22
 
 # Documentation map
 
-Flight-learning #74: [Trainer preparation](FLIGHT_LEARNING.md) and [prospective preregistration / final custody](FLIGHT_PREREGISTRATION.md).
+Flight-learning #74: [Trainer preparation](FLIGHT_LEARNING.md), [prospective preregistration / final custody](FLIGHT_PREREGISTRATION.md), and [experiment-admission package](evidence/2026-10-25-4ly004-admission-package.md).
 
 | Question | Owning page |
 |---|---|
