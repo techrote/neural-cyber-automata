@@ -6,7 +6,7 @@ owns: [state.summary]
 verified: 2026-10-28
 ---
 # Current state
-[MEASURED TUNING PASS; FINALS EXCLUDED] The [IK54 strict qualification](evidence/2026-10-28-ik54-qualification.md) completed the frozen full-training recipe for all three seeds under [D-034](decisions/2026-10-28-ik54-qualification-execution.md). Every seed passed the unchanged tuning gate with one sealed attempt; final access and acceptance remain separate and unmeasured. The earlier [development sweep](evidence/2026-10-24-ik-dev-sweep.md), refusals and consumed evidence remain unchanged.
+[MEASURED TUNING PASS; FINAL PREPARATION] All three seeds passed the unchanged [IK54 tuning gate](evidence/2026-10-28-ik54-qualification.md). The owner commissioned a separate [candidate-bound final declaration and admissions](design/IK54_FINAL_QUALIFICATION.md) under [D-035](decisions/2026-10-28-ik54-final-qualification.md). Final access and acceptance remain unmeasured; prior evidence remains unchanged.
 
 [MEASURED NO-GO; NEXT DESIGN ONLY] The admitted matched endpoint-weight-4 trials completed at `6a6961f`: serial and three-worker TITAN runs agree exactly at all paired checkpoints and tuning reports, with recorded prepublication elapsed times 2438.985 / 1245.062 seconds. Every seed fails tuning quality; both final suites remain excluded. [The diagnosis and bounded next parallel order experiment](design/IK_ENDPOINT4_FOLLOWUP.md) preserve every consumed allocation and propose one whole-batch-order change. The earlier D-030 owner instruction authorized investigation and reviewed preparation only, with no training, no issued allocation and no execution admission. Physical actor faults are not established by this synthetic geometric task.
 

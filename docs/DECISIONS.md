@@ -7,9 +7,9 @@ verified: 2026-10-28
 ---
 
 # Decisions — newest first
-IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built.
-D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
+IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built. D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 ## Current entries
+### D-035 — Candidate-bound IK54 final qualification; [ACCEPTED SCOPE] 2026-10-28; [single-use declaration and independent admissions](decisions/2026-10-28-ik54-final-qualification.md).
 ### D-034 — Execute the admitted IK54 qualification; [ACCEPTED SCOPE] 2026-10-28; [one frozen three-seed training run, finals excluded](decisions/2026-10-28-ik54-qualification-execution.md).
 ### D-033 — Generous development and useful VRAM utilization; [ACCEPTED SCOPE] 2026-10-24; [larger finite local allowances, preserving explicit caps and strict gates](decisions/2026-10-24-training-resource-policy.md). Preparation/review resumed 2026-10-25; stop before training.
 ### D-032 — IK54 development lane; [ACCEPTED SCOPE] 2026-10-23; [owner-commissioned development sweep and strict qualification preparation](decisions/2026-10-23-ik-development-lane.md). No final access or Part B execution.
