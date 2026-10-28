@@ -4,6 +4,8 @@ All observations are synthetic native-shaped fixtures and all neural models
 are untrained. These tests do not open an experiment or sample physical cases.
 """
 
+from jolt_source_fixture import synthetic_capture_provenance
+
 from collections import Counter
 from copy import deepcopy
 from dataclasses import replace
@@ -179,12 +181,13 @@ class JoltAuditV3Tests(unittest.TestCase):
         controller = f"{kind}-seed190103-initial" if policy is not None else kind
         identifier = f"ppo-seed190103-u0-e{int(bool(prior_decisions))}" if stage == "ppo" else "synthetic-v3-" + kind
         case = {"id": "synthetic-emergency-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]}
-        sample, row, sequence = capture(owner, ledger, journal, case,
-            identifier=identifier, controller_id=controller, kind=kind, stage=stage, output=output,
-            root=ROOT, config={"profile_sha256": sha256_json(owner.profile)}, source_sha256="c" * 64,
-            policy=policy, base=base, generator=torch.Generator().manual_seed(390103),
-            maximum_decisions=maximum_decisions, execution_version=3,
-            case_stream_entry={"seed": 190103, "index": int(bool(prior_decisions)), "update": 0} if stage == "ppo" else None)
+        with synthetic_capture_provenance():
+            sample, row, sequence = capture(owner, ledger, journal, case,
+                identifier=identifier, controller_id=controller, kind=kind, stage=stage, output=output,
+                root=ROOT, config={"profile_sha256": sha256_json(owner.profile)}, source_sha256="c" * 64,
+                policy=policy, base=base, generator=torch.Generator().manual_seed(390103),
+                maximum_decisions=maximum_decisions, execution_version=3,
+                case_stream_entry={"seed": 190103, "index": int(bool(prior_decisions)), "update": 0} if stage == "ppo" else None)
         raw = read_episode(output / row["artifact"])
         costs = Counter()
         audit = _Audit.__new__(_Audit)
@@ -549,9 +552,10 @@ class JoltAuditJournalV3Tests(unittest.TestCase):
         note(journal, "host_start_reserved", counts=ledger.snapshot())
         note(journal, "host_started", identity=host.identity)
         case = {"id": "synthetic-emergency-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]}
-        _, row, _ = capture(owner, ledger, journal, case, identifier="synthetic-v3-authored",
-            controller_id="authored", kind="authored", stage="teacher", output=output, root=ROOT,
-            config={"profile_sha256": sha256_json(host.profile)}, source_sha256="c" * 64, execution_version=3)
+        with synthetic_capture_provenance():
+            _, row, _ = capture(owner, ledger, journal, case, identifier="synthetic-v3-authored",
+                controller_id="authored", kind="authored", stage="teacher", output=output, root=ROOT,
+                config={"profile_sha256": sha256_json(host.profile)}, source_sha256="c" * 64, execution_version=3)
         ledger.enter_phase("closure")
         owner.request("close")
         ledger.reserve("host_terminations", cleanup=True)

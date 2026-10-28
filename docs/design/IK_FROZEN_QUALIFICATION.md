@@ -109,4 +109,15 @@ the two independent admissions cover the exact amended head and green CI.
 The old preparation/proof/seal artifacts remain immutable with their actual
 executed revision. This is a provenance repair, not new computation or a retry.
 
+The expanded repository also exposed an unrelated synthetic-fixture assumption:
+its real source manifest now has 167 entries and 16,655 canonical bytes, above
+Jolt v3's frozen 16,384-byte source allowance. Scoped artificial provenance is
+used only around synthetic Jolt lifecycle captures; recorder/writer/audit
+validation stays real. A regression requires the production writer to reject
+oversized provenance before artifact creation. No production Jolt limit,
+serializer or source-discovery implementation changes. Whole-current-source
+Jolt v3 capture therefore remains inadmissible under that legacy allowance;
+green synthetic tests do not claim live Jolt readiness. This fixture repair
+changes no IK production-source hash and consumes no new suite or proof work.
+
 © 2026 techrote. All rights reserved.

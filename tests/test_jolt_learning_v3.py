@@ -1,5 +1,7 @@
 """Execution-v3 synthetic boundary tests; no physical experiment or trained weights."""
 
+from jolt_source_fixture import synthetic_capture_provenance
+
 from collections import Counter
 from copy import deepcopy
 from dataclasses import replace
@@ -123,6 +125,21 @@ if TORCH_AVAILABLE:
 
 @unittest.skipUnless(TORCH_AVAILABLE, "optional CPU learning extra is not installed")
 class JoltV3CaptureTests(unittest.TestCase):
+    def test_consistent_oversized_source_provenance_still_refuses_before_publication(self):
+        from nca.train.jolt_storage_v3 import write_episode_v3
+        from nca.contracts import canonical_json
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory)
+            _,_,_,(_,row,_)=self.capture(folder,kind='idle')
+            raw=read_episode(folder/row['artifact'])
+            files={f'synthetic-source-{i:04d}.py':'a'*64 for i in range(250)}
+            self.assertGreater(len(canonical_json(files).encode()),16*1024)
+            oversized=replace(raw,source_files=files,learner_sources_sha256=sha256_json(files))
+            output=folder/'must-not-exist.json.gz'
+            with self.assertRaises(ContractError) as caught:write_episode_v3(output,oversized)
+            self.assertEqual(caught.exception.code,'jolt_storage_metadata')
+            self.assertFalse(output.exists())
+
     def capture(self, output, *, kind="residual", maximum_decisions=40,
                 start_emergency=0, invalid_cancel=None, identifier="synthetic-v3", owner=None):
         owner = owner or SyntheticRetirementOwner(start_emergency=start_emergency, invalid_cancel=invalid_cancel)
@@ -130,13 +147,14 @@ class JoltV3CaptureTests(unittest.TestCase):
         policy = JoltPolicy(kind) if kind in ("bc", "residual") else None
         base = JoltPolicy("bc") if kind == "residual" else None
         stage = "teacher" if kind == "authored" else "ppo" if kind == "residual" else "open"
-        result = capture(owner, ledger, journal,
-            {"id": "synthetic-emergency-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]},
-            identifier=identifier, controller_id=kind, kind=kind, stage=stage,
-            output=output, root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
-            source_sha256="c" * 64, policy=policy, base=base,
-            generator=torch.Generator().manual_seed(390103), maximum_decisions=maximum_decisions,
-            execution_version=3)
+        with synthetic_capture_provenance():
+            result = capture(owner, ledger, journal,
+                {"id": "synthetic-emergency-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]},
+                identifier=identifier, controller_id=kind, kind=kind, stage=stage,
+                output=output, root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
+                source_sha256="c" * 64, policy=policy, base=base,
+                generator=torch.Generator().manual_seed(390103), maximum_decisions=maximum_decisions,
+                execution_version=3)
         return owner, ledger, journal, result
 
     def test_ordinary_arrival_keeps_native_task_terminal_without_retirement(self):
@@ -450,11 +468,12 @@ class JoltV3CaptureTests(unittest.TestCase):
             owner, journal = DeadlineOwner(start_emergency=0), Journal()
             try:
                 with self.assertRaises(ContractError) as caught:
-                    capture(owner, ledger, journal,
-                        {"id": "synthetic-deadline-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]},
-                        identifier="synthetic-deadline-v3", controller_id="idle", kind="idle", stage="open",
-                        output=output, root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
-                        source_sha256="c" * 64, execution_version=3)
+                    with synthetic_capture_provenance():
+                        capture(owner, ledger, journal,
+                            {"id": "synthetic-deadline-v3", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]},
+                            identifier="synthetic-deadline-v3", controller_id="idle", kind="idle", stage="open",
+                            output=output, root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
+                            source_sha256="c" * 64, execution_version=3)
                 self.assertEqual(caught.exception.code, "jolt_v3_phase_deadline")
                 row = caught.exception.row
                 sample = read_sample_episode_v3(output / row["sample_artifact"])

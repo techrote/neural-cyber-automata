@@ -1,4 +1,6 @@
 """Explicit null operational clocks; synthetic receipts only, no host launch."""
+
+from jolt_source_fixture import synthetic_capture_provenance
 from copy import deepcopy
 import importlib.util
 import json
@@ -165,10 +167,11 @@ class UnlimitedCaptureAndTransportV3Tests(unittest.TestCase):
         ledger.remaining_seconds = lambda **kwargs: None
         case = {"id": "synthetic-unlimited", "host_seed": 7, "spawn": [0., 0.], "target": [48., 0.]}
         with tempfile.TemporaryDirectory() as temp, mock.patch.object(EpisodeRecorder, "_wall", return_value=40_000_000_000_000):
-            episode, row, sequence = capture_v3(owner, ledger, journal, case,
-                identifier="unlimited-synthetic", controller_id="idle", kind="idle", stage="open",
-                output=Path(temp), root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
-                source_sha256="c" * 64)
+            with synthetic_capture_provenance():
+                episode, row, sequence = capture_v3(owner, ledger, journal, case,
+                    identifier="unlimited-synthetic", controller_id="idle", kind="idle", stage="open",
+                    output=Path(temp), root=ROOT, config={"profile_sha256": sha256_json(owner.profile)},
+                    source_sha256="c" * 64)
         self.assertEqual(len(episode.decisions), 40)
         self.assertEqual(row["consumed_ticks"], 240)
         self.assertEqual(row["outcome"]["kind"], "task_terminal")
