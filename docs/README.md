@@ -8,7 +8,7 @@ verified: 2026-10-28
 
 # Documentation map
 
-IK CPU: [inference development scope](decisions/2026-10-28-ik-cpu-development.md).
+IK CPU: [utility diagnosis and inference improvement](evidence/2026-10-28-ik-cpu-development.md); [development scope](decisions/2026-10-28-ik-cpu-development.md).
 
 IK54: [final qualification result](evidence/2026-10-28-ik54-final-qualification.md) and [declaration](design/IK54_FINAL_QUALIFICATION.md).
 IK54: [strict training/tuning result](evidence/2026-10-28-ik54-qualification.md); finals excluded.

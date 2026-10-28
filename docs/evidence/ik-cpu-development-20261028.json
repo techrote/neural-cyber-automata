@@ -1,0 +1,272 @@
+{
+  "artifact_hashes": {
+    "declaration.json": "1752ebb65c8e275f61d2c9b093b22c4cb62e63d972ac831b0ff2499b153bbcd4",
+    "parity-41011.json": "3ac061de07d0718bd198517ee2be8c09b6e788ae1e5ec2857ecc02b7a627287f",
+    "parity-42013.json": "ba448a4e9ecd51aa756e2fce6a5d4a3d0da5fd4f1d44bbf4a8ac0da940e5b86e",
+    "parity-43019.json": "37de24f0f7c703f71136c1167fcea9b3706c33aa8abb0f57c0e3a4ae50433eab",
+    "profile-41011-eager.txt": "8d34b5a138867a8b03985b9be00a89436aa040c7d6c93b94d127f676a6525d2c",
+    "profile-41011-frozen.txt": "1b2e148fc8b41656384591a044329fc65fba8fc40a18dd75f9959ffec1b276b4",
+    "profile-42013-eager.txt": "da65ce1485457f32ac23057df858cfbe5c7ef4c48045370487135fef03458b82",
+    "profile-42013-frozen.txt": "ed40065443c888241bc6193c41922e1dc2804ef287e3bfaf73112301ec1e9eea",
+    "profile-43019-eager.txt": "3c0c5c1a008df7bd02944fb19f68043c7df758e0d0213bfbbfa188c3fe59c16e",
+    "profile-43019-frozen.txt": "c7fa0df4d34587eb4f895a1e307305120ec64f02e77837b11b9d2f9c9bb6b178",
+    "summary.json": "d97da690df268936608fc6f2bc29b5f024231fb146d9f2c9b68c0ebc5f6ece03",
+    "timing-1-41011-eager.json": "7fe508d8f4f17dafb80608eab734775ee751fca9f1b62b2e2712f401223b40f8",
+    "timing-1-41011-frozen.json": "c0e1281bcead918484d6d211303d130493662ee94a2dd5701a808bdca850d8b7",
+    "timing-1-42013-eager.json": "5c1ed049cc0991ec12ca1130df70c509dbdbc457dda96120164a552ec46b7d21",
+    "timing-1-42013-frozen.json": "2fe2578ba22aa8dec9381c241a29f641ac1c6b9f3a9ab0df724a6da425e0faa0",
+    "timing-1-43019-eager.json": "7959fb76c4effaec0277bc30ddf720d253d7464d805ebff6fb7a5187f60fb829",
+    "timing-1-43019-frozen.json": "d97bb72edc028bafdcbf38dc1715d9df7f99bae850dc733c7617475fb905bed4",
+    "timing-2-41011-eager.json": "c2119dd80f634dfdb27ba29d54541f263d3a7c6b14bacc352f534211546766d3",
+    "timing-2-41011-frozen.json": "6f0dc9de4076ff9d2fd7dd400e42118ebddb1dbeb3733201a318cd3b5c520fee",
+    "timing-2-42013-eager.json": "2266e649291bf3018740914645d7cee5f0b47cb8aaf8faed40141f4fd3df0dde",
+    "timing-2-42013-frozen.json": "0015d322e4378f3b1036d7e23363987e40065f79f328597cfc6dee209a6906af",
+    "timing-2-43019-eager.json": "68004e88d6bb0726666138fb7288d3988e320de1b3c220e97a5851a4b4ae8124",
+    "timing-2-43019-frozen.json": "f455b1fe0decdca16c6248ff5abb9d819be484fcff20d8f317062d50469be753"
+  },
+  "checkpoints": {
+    "41011": "436c0499cd4eab533ed10315b63c229c6c52ad5af5ef61e278b91ad759f0f609",
+    "42013": "d43ee34c7b541f11fecd06f833b43c2dc7999b1bb71c9672393ac6d8ce93832e",
+    "43019": "45bb2d0e4260279f99425d7f04e0790fcdefb7eb6da038ee8f5fac90471958b5"
+  },
+  "copyright": "2026 techrote. All rights reserved.",
+  "declaration_file_sha256": "1752ebb65c8e275f61d2c9b093b22c4cb62e63d972ac831b0ff2499b153bbcd4",
+  "elapsed_seconds": 237.71899999999732,
+  "evidence": "development_only_no_qualification_claim",
+  "executed_source": "871462498858e3c3123238d7adb82d9e399a1fd1",
+  "final_calls": 0,
+  "hardware": {
+    "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+    "cuda_visible_devices": "",
+    "os_caption": "Microsoft Windows 11 Pro",
+    "torch_interop_threads": 1,
+    "torch_threads": 1
+  },
+  "optimizer_calls": 0,
+  "parity": {
+    "41011": {
+      "max_joint_difference_radians": 0.0,
+      "rows": 2020
+    },
+    "42013": {
+      "max_joint_difference_radians": 0.0,
+      "rows": 2020
+    },
+    "43019": {
+      "max_joint_difference_radians": 0.0,
+      "rows": 2020
+    }
+  },
+  "predictor_calls": 619560,
+  "results": [
+    {
+      "development_cost_check": "no_go",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10219999239780009,
+        "independent_numerical_reference": 0.8433000039076433,
+        "learned_disabled_current_reference": 0.012199991033412516,
+        "matched_untrained_initialization": 0.6852000078652054,
+        "trained_raw_reference": 0.6977000011829659
+      },
+      "p95_ratio_to_numerical": 0.8273449519150919,
+      "round": 1,
+      "seed": 41011,
+      "variant": "eager"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10569998994469643,
+        "independent_numerical_reference": 0.9508999937679619,
+        "learned_disabled_current_reference": 0.012400007108226418,
+        "matched_untrained_initialization": 0.46860000293236226,
+        "trained_raw_reference": 0.47679999261163175
+      },
+      "p95_ratio_to_numerical": 0.5014197031617399,
+      "round": 1,
+      "seed": 41011,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.11170000652782619,
+        "independent_numerical_reference": 1.0503999947104603,
+        "learned_disabled_current_reference": 0.012899996363557875,
+        "matched_untrained_initialization": 0.7771000091452152,
+        "trained_raw_reference": 0.7886999956099316
+      },
+      "p95_ratio_to_numerical": 0.7508568160525692,
+      "round": 1,
+      "seed": 42013,
+      "variant": "eager"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10850001126527786,
+        "independent_numerical_reference": 1.050599996233359,
+        "learned_disabled_current_reference": 0.012699994840659201,
+        "matched_untrained_initialization": 0.48409998998977244,
+        "trained_raw_reference": 0.4926999972667545
+      },
+      "p95_ratio_to_numerical": 0.46897011139653205,
+      "round": 1,
+      "seed": 42013,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.11100000119768083,
+        "independent_numerical_reference": 1.051500003086403,
+        "learned_disabled_current_reference": 0.012799995602108538,
+        "matched_untrained_initialization": 0.7688000041525811,
+        "trained_raw_reference": 0.781099995947443
+      },
+      "p95_ratio_to_numerical": 0.7428435507890903,
+      "round": 1,
+      "seed": 43019,
+      "variant": "eager"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10680001287255436,
+        "independent_numerical_reference": 0.9358999959658831,
+        "learned_disabled_current_reference": 0.012400007108226418,
+        "matched_untrained_initialization": 0.4692000075010583,
+        "trained_raw_reference": 0.48010000318754464
+      },
+      "p95_ratio_to_numerical": 0.5129821618302967,
+      "round": 1,
+      "seed": 43019,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10970000585075468,
+        "independent_numerical_reference": 0.9525999921606854,
+        "learned_disabled_current_reference": 0.012699994840659201,
+        "matched_untrained_initialization": 0.48750000132713467,
+        "trained_raw_reference": 0.4972000024281442
+      },
+      "p95_ratio_to_numerical": 0.521939960654835,
+      "round": 2,
+      "seed": 43019,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "no_go",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10580000525806099,
+        "independent_numerical_reference": 0.8918999956222251,
+        "learned_disabled_current_reference": 0.012400007108226418,
+        "matched_untrained_initialization": 0.7060999923851341,
+        "trained_raw_reference": 0.7186000002548099
+      },
+      "p95_ratio_to_numerical": 0.8056957100369596,
+      "round": 2,
+      "seed": 43019,
+      "variant": "eager"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.08870000601746142,
+        "independent_numerical_reference": 0.825700000859797,
+        "learned_disabled_current_reference": 0.011399999493733048,
+        "matched_untrained_initialization": 0.36890000046696514,
+        "trained_raw_reference": 0.37369999336078763
+      },
+      "p95_ratio_to_numerical": 0.45258567636145797,
+      "round": 2,
+      "seed": 42013,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "no_go",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10639999527484179,
+        "independent_numerical_reference": 0.8908999880077317,
+        "learned_disabled_current_reference": 0.01239999255631119,
+        "matched_untrained_initialization": 0.7065999961923808,
+        "trained_raw_reference": 0.7220999978017062
+      },
+      "p95_ratio_to_numerical": 0.8105286873069746,
+      "round": 2,
+      "seed": 42013,
+      "variant": "eager"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.10489999840501696,
+        "independent_numerical_reference": 0.8933999924920499,
+        "learned_disabled_current_reference": 0.012400007108226418,
+        "matched_untrained_initialization": 0.4668000037781894,
+        "trained_raw_reference": 0.47709999489597976
+      },
+      "p95_ratio_to_numerical": 0.5340273101694987,
+      "round": 2,
+      "seed": 41011,
+      "variant": "frozen"
+    },
+    {
+      "development_cost_check": "pass",
+      "p95_ms": {
+        "independent_analytic_reference": 0.09070000669453293,
+        "independent_numerical_reference": 0.8188000065274537,
+        "learned_disabled_current_reference": 0.010799994925037026,
+        "matched_untrained_initialization": 0.5504000000655651,
+        "trained_raw_reference": 0.5661000031977892
+      },
+      "p95_ratio_to_numerical": 0.6913776241876572,
+      "round": 2,
+      "seed": 41011,
+      "variant": "eager"
+    }
+  ],
+  "runtime": {
+    "architecture": "AMD64",
+    "byte_order": "little",
+    "os": "Windows",
+    "os_release": "11",
+    "packages": {
+      "MarkupSafe": "3.0.3",
+      "filelock": "3.32.3",
+      "fsspec": "2026.7.0",
+      "jinja2": "3.1.6",
+      "mpmath": "1.3.0",
+      "networkx": "3.6.1",
+      "numpy": "2.3.5",
+      "nvidia-cublas-cu12": null,
+      "nvidia-cuda-cupti-cu12": null,
+      "nvidia-cuda-nvrtc-cu12": null,
+      "nvidia-cuda-runtime-cu12": null,
+      "nvidia-cudnn-cu12": null,
+      "nvidia-cufft-cu12": null,
+      "nvidia-cufile-cu12": null,
+      "nvidia-curand-cu12": null,
+      "nvidia-cusolver-cu12": null,
+      "nvidia-cusparse-cu12": null,
+      "nvidia-cusparselt-cu12": null,
+      "nvidia-nccl-cu12": null,
+      "nvidia-nvjitlink-cu12": null,
+      "nvidia-nvtx-cu12": null,
+      "pip": "25.0.1",
+      "setuptools": "84.0.0",
+      "sympy": "1.14.0",
+      "torch": "2.8.0+cu126",
+      "triton": null,
+      "typing_extensions": "4.16.0",
+      "wheel": "0.45.1"
+    },
+    "python": "3.12.10",
+    "python_implementation": "CPython"
+  },
+  "schema": "nca-ik-cpu-development-public/v1",
+  "source_sha256": "9d708d8fb696c6017b9fb590ea92570d205c3be729d02f8d613541a3428e3861",
+  "summary_file_sha256": "d97da690df268936608fc6f2bc29b5f024231fb146d9f2c9b68c0ebc5f6ece03"
+}
