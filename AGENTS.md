@@ -3,7 +3,7 @@ title: Agent instructions — neural-cyber-automata
 kind: navigation
 summary: Task entry, current charter, authority and evidence requirements.
 owns: [agents.entry]
-verified: 2026-10-18
+verified: 2026-10-24
 ---
 
 # Agent instructions
@@ -39,6 +39,8 @@ A paper result never becomes a Cybersand result. An untrained network, a mock se
 
 - One issue, one branch, one PR. Preserve unrelated work. Required checks must pass on the final head before a merge, then verify the merge.
 - A research prepass edits documentation and task definitions. Do not launch training, acquire compute, call a paid model service or modify a host runtime as a side effect.
+- An owner-commissioned training or development task authorizes its routine local experiments without a second permission ceremony. Plan generous, finite budgets under [D-033](docs/decisions/2026-10-24-training-resource-policy.md): allow enough epochs, seeds, retries and concurrency to distinguish hypotheses. Historical packet limits are not universal defaults.
+- Use available VRAM when larger batches, cached tensors, parallel workers or stress tests improve throughput or evidence. Choose measured memory limits with host/board headroom and watchdogs; do not minimize VRAM use as an end in itself or fill it without benefit. Explicit device bans and task-specific caps still govern.
 - Cybersand remains read-only for this prepass. Host integration changes need a corresponding Cybersand task and that project's acceptance process.
 - Keep the gameplay plant in Cybersand: Rapier integrates bodies/contacts, authored assists and compliant connections shape their behaviour, and the native cellular owner controls material changes. Controllers submit bounded requests. D-011 permits deliberate flex/play and gyro assistance without momentum accounting.
 - Preserve ACT003 wire/metal, perception, decision placement, coordination and training-privilege distinctions. A new version cannot silently reinterpret existing packets or presets.

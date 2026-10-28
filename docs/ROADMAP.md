@@ -3,7 +3,7 @@ title: Cybersand behaviour implementation programme
 kind: roadmap
 summary: Bounded tasks, dependencies and acceptance gates following the ACT-004 research prepass.
 owns: [roadmap.order, roadmap.tasks]
-verified: 2026-10-23
+verified: 2026-10-24
 ---
 
 # Implementation programme
@@ -149,6 +149,12 @@ actual CUDA learning, exact CPU export and physical tracking evidence.
 | [#55](https://github.com/techrote/neural-cyber-automata/issues/55) | Host joint-target handoff and NCA adapter | #50, accepted separate Cybersand capability | Specification only |
 | [#56](https://github.com/techrote/neural-cyber-automata/issues/56) | Exact CPU runtime export | #54 | Unimplemented |
 | [#57](https://github.com/techrote/neural-cyber-automata/issues/57) | Physical qualification and runbook for the exported bundle | #55, #56 | Unmeasured |
+
+The later D-032 [IK54 development sweep](evidence/2026-10-24-ik-dev-sweep.md)
+completed 45 training/dev runs and once-only top-three tuning confirmation.
+This is development evidence with unchanged thresholds, not qualification.
+One full-training recipe is [prepared](design/IK_DEV_SWEEP.md); execution still
+requires two independent admissions and a new owner go. Finals remain excluded.
 
 After #50, CUDA infrastructure, reference geometry and host-interface preparation
 can proceed independently. Export precedes final physics scoring so the scored

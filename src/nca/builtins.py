@@ -143,6 +143,11 @@ def ik_polar_training_step(**kwargs):
     return build_trainer(**kwargs)
 
 
+def ik_v3_model(**kwargs):
+    from .ik.models_v3 import build_model
+    return build_model(**kwargs)
+
+
 def ik_compact_continuation(**kwargs):
     from .train.ik_continuation import supervise
     return supervise(**kwargs)
@@ -192,6 +197,8 @@ def builtin_registry() -> Registry:
                       ("nominal-geometry", "bounded-reference", "source-bound", "point-ik-2d"))
     registry.register("ik_solver", "planar-analytic-2r", 1, ik_analytic_solver,
                       ("nominal-geometry", "independent-comparator", "multiple-branches"))
+    registry.register("policy", "runner-compact-ik", 3, ik_v3_model,
+                      ("optional-torch", "polar-v2-inputs", "versioned-output-head", "development"))
     registry.register("policy", "runner-compact-ik", 1, ik_compact_model,
                       ("optional-torch", "nominal-geometry", "bounded-reference", "explicit-device", "masked"))
     registry.register("policy", "runner-compact-ik", 2, ik_polar_model,

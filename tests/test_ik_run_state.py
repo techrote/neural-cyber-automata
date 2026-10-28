@@ -81,8 +81,11 @@ assert "numpy" not in sys.modules
         for cap, expected, status in ((120., 61., "paused"), (20., 20., "capped")):
             ledger = IKRunLedger.create(self.path.parent / f"reserve-{int(cap)}",
                 identity=identity(), allocation=allocation(max_wall_seconds=cap))
-            attempt = ledger.begin_attempt()
-            with patch("nca.train.ik_run_state.time.monotonic", return_value=attempt.started+1.):
+            # Exact synthetic timestamps isolate the publication-reserve rule
+            # from cancellation in (real fractional start + 1) - start.
+            with patch("nca.train.ik_run_state.time.monotonic", return_value=100.):
+                attempt = ledger.begin_attempt()
+            with patch("nca.train.ik_run_state.time.monotonic", return_value=101.):
                 state = attempt.finish("paused", reason="bounded publication",
                                        publication_reserve_seconds=60.)
             self.assertEqual(state["charged_wall_seconds"], expected)

@@ -3,7 +3,7 @@ title: Constraints
 kind: constraints
 summary: The rules of the project. What must always hold, what must not be done (and until when), and the default preferences.
 owns: [constraints.register]
-verified: 2026-10-18
+verified: 2026-10-24
 ---
 
 # Constraints
@@ -40,7 +40,7 @@ Every entry is tagged. `FORBIDDEN` always states its lift condition (`until: …
 
 ### C-007 — Keep evidence and execution scope distinct
 
-[REQUIRED] This prepass produces research/design and task definitions. It does not run training or call model services. A later implementation task must record its budget and exact runtime. Unknown or unavailable readings are not zero; a learned metadata flag is not evidence of training. A proposed method becomes an executed experiment only when its task is commissioned.
+[REQUIRED] A research-only prepass produces research/design and task definitions. An owner-commissioned training task authorizes routine local development within its recorded finite campaign, without another permission ceremony (D-033). Record budget and exact runtime; preserve qualification and final-access gates. Unknown or unavailable readings are not zero; a learned metadata flag is not evidence of training. Paid services, new compute acquisition and host changes require their own authorized scope.
 
 ## Preferred
 
@@ -55,3 +55,7 @@ Every entry is tagged. `FORBIDDEN` always states its lift condition (`until: …
 ### C-022 — Windows-first, low-friction owner steps
 
 [PREFERRED] Anything the owner runs works on Windows where possible, takes one bundled command block or a direct download link, and states prerequisites before the commands. Owner's standing preference.
+
+### C-023 — Generous development and useful hardware utilization
+
+[PREFERRED] D-033 makes generous local development allocations the default: initially plan up to 72 hours per campaign and 24 hours per run when useful, with multiple seeds, bounded crash retries, concurrency and predeclared extension room. These are planning allowances, not a demand to consume them. Use more VRAM when measurements support a benefit, retaining host/board headroom and hard watchdogs. Existing declarations remain immutable; task-specific limits, device bans and strict qualification rules take precedence. Expand a legacy runtime through a new version rather than weakening its historical accounting.

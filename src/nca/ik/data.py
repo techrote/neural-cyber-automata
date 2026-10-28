@@ -147,7 +147,8 @@ def _partition_families(config, partition):
     split = _families(config.split_seed)
     families = getattr(split, "evaluation" if partition == "final" else partition)
     from .fresh_final import FreshFinalConfig
-    if type(config) is FreshFinalConfig:
+    from .frozen_final_v1 import FrozenFinalConfig
+    if type(config) in (FreshFinalConfig, FrozenFinalConfig):
         if partition != "final":
             raise ContractError("ik_fresh_partition", "fresh recipe is final-only")
         return tuple(config.family_namespace + ":" + f for f in families)
@@ -156,7 +157,8 @@ def _partition_families(config, partition):
 
 def _bounds_for(config, partition, bin_index):
     from .fresh_final import FreshFinalConfig
-    if type(config) is FreshFinalConfig:
+    from .frozen_final_v1 import FrozenFinalConfig
+    if type(config) in (FreshFinalConfig, FrozenFinalConfig):
         return config.bounds(partition, bin_index)
     if partition not in PARTITIONS or not 0 <= bin_index < 80:
         raise ContractError("ik_dataset_region", "unknown partition or bin")
@@ -171,7 +173,8 @@ def _bounds_for(config, partition, bin_index):
 def build_split_plan(config: DatasetConfig):
     """Freeze all families and FK-image regions before any variant is generated."""
     from .fresh_final import FreshFinalConfig
-    partitions = ("final",) if type(config) is FreshFinalConfig else PARTITIONS
+    from .frozen_final_v1 import FrozenFinalConfig
+    partitions = ("final",) if type(config) in (FreshFinalConfig, FrozenFinalConfig) else PARTITIONS
     families = {p: list(_partition_families(config, p)) for p in partitions}
     regions = []
     for p in partitions:
@@ -402,7 +405,8 @@ def iter_tasks(config: DatasetConfig, partition: str | None = None):
     if partition is not None and partition not in PARTITIONS:
         raise ContractError("ik_dataset_partition", "unknown partition")
     from .fresh_final import FreshFinalConfig
-    if type(config) is FreshFinalConfig:
+    from .frozen_final_v1 import FrozenFinalConfig
+    if type(config) in (FreshFinalConfig, FrozenFinalConfig):
         if partition not in (None, "final"):
             raise ContractError("ik_fresh_partition", "fresh recipe is final-only")
         partition = "final"
