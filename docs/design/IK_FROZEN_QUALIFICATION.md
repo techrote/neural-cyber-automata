@@ -120,4 +120,13 @@ Jolt v3 capture therefore remains inadmissible under that legacy allowance;
 green synthetic tests do not claim live Jolt readiness. This fixture repair
 changes no IK production-source hash and consumes no new suite or proof work.
 
+## Outcome — 28 October 2026
+
+The [single admitted qualification](../evidence/2026-10-28-frozen-ik-qualification.md)
+completed once with exit zero and two clean independent terminal audits. CPU
+cost ratios meet .8 for every seed, but withheld p95 and success fail for every
+seed, so accuracy and compound practical utility are no-go. The new suite is
+consumed/development-only. No retry, reselection, training or threshold change
+occurred; all earlier outcomes remain preserved.
+
 © 2026 techrote. All rights reserved.

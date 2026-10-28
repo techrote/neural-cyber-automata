@@ -8,7 +8,7 @@ verified: 2026-10-28
 
 # Documentation map
 
-IK CPU qualification: [new sealed-suite preparation](design/IK_FROZEN_QUALIFICATION.md).
+IK CPU qualification: [fresh frozen-path result (withheld accuracy no-go)](evidence/2026-10-28-frozen-ik-qualification.md) and [contract](design/IK_FROZEN_QUALIFICATION.md).
 
 IK CPU: [utility diagnosis and inference improvement](evidence/2026-10-28-ik-cpu-development.md); [development scope](decisions/2026-10-28-ik-cpu-development.md).
 
