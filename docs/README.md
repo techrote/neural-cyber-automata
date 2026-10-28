@@ -3,11 +3,12 @@ title: Documentation map
 kind: navigation
 summary: Where to find current state, the ACT-004 research design and its execution programme.
 owns: [docs.map]
-verified: 2026-10-24
+verified: 2026-10-28
 ---
 
 # Documentation map
 
+IK54: [strict training/tuning result](evidence/2026-10-28-ik54-qualification.md); finals excluded.
 IK54: [development results](evidence/2026-10-24-ik-dev-sweep.md) and [strict qualification preparation](design/IK_DEV_SWEEP.md).
 Current continuation: [independent packet review and versioned repair](design/IK_QUALIFICATION_REVIEW.md); [generous development/resource policy](decisions/2026-10-24-training-resource-policy.md).
 

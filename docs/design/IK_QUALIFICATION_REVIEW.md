@@ -3,10 +3,14 @@ title: IK54 independent qualification review and versioned repair
 kind: guide
 summary: Two non-author refusals of the v3 packet, a separate large-run ledger repair and fresh exact-packet admission before any training.
 owns: [design.ik_qualification_review]
-verified: 2026-10-25
+verified: 2026-10-28
 ---
 
 # IK54 qualification review
+
+[2026-10-28 UPDATE] Target metadata recovered. The owner authorized the admitted
+qualification; [three full-training seeds passed tuning](../evidence/2026-10-28-ik54-qualification.md).
+The dated refusal below remains historical. Finals stay excluded.
 
 [OWNER SCOPE] The 24 October instruction commissions two independent non-author
 reviews, remediation and more generous general training/resource rules. It
@@ -115,7 +119,7 @@ No new learner or CUDA probe is part of this preparation.
 The public [resource artifact index](../evidence/ik54-qualification-v4-resources-20261025.json)
 records exact retained fixture hashes and measurement limits.
 
-## Current blocker - target metadata unavailable
+## Metadata refusal - 25 October 2026
 
 At source `da0a3763e9fa7d60c59dfd629dfcd184674507b6`, actual packet
 preparation invoked the existing target-only visibility check. The metadata
