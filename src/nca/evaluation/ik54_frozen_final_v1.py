@@ -23,6 +23,7 @@ from nca.evaluation import ik54_final_v1 as historical
 from nca.train import ik_frozen_seal_v1 as custodian
 from nca.train.ik_qualification_v4 import SEEDS
 from nca.train.ik_run_state_v2 import _verify_checkpoint
+from nca.ik.frozen_source_binding_v1 import source_binding
 
 WALL_SECONDS=86400
 EXIT_MARGIN_SECONDS=30
@@ -150,10 +151,11 @@ def prove(args):
 def verify_proof(root,source,candidates):
     from nca.ik.declaration import runtime_expectation
     root=Path(root);p=_bounded_json(root/'proof.json',16*1024**2);pd=_bounded_json(root/'declaration.json',16*1024**2)
+    source_binding(p['source'],source);source_binding(pd['source'],source)
     exit_receipt=_bounded_json(root/'process-exit.json')
-    if ((root/'failure.json').exists() or p.get('source')!=source or p.get('runtime')!=runtime_expectation()
+    if ((root/'failure.json').exists() or p.get('runtime')!=runtime_expectation()
         or p.get('route')!=inference_route() or p.get('declaration_file_sha256')!=sha256_file(root/'declaration.json')
-        or pd.get('source')!=source or canonical_json(pd.get('allocation'))!=canonical_json(allocation())
+        or canonical_json(pd.get('allocation'))!=canonical_json(allocation())
         or pd.get('runtime')!=runtime_expectation() or pd.get('route')!=inference_route()
         or pd.get('training_declaration_file_sha256')!=historical.TRAIN_DECLARATION
         or pd.get('schema')!='nca-ik-frozen-proof-declaration/v1' or pd.get('partition')!='tuning'
@@ -177,10 +179,13 @@ def prepare(args):
     _titan_visibility(expected_sha256=TITAN_FINGERPRINT)
     source=_source(Path(__file__).resolve().parents[3]);seal=custodian.inspect(args.suite)
     training,candidates,frozen=training_choices(args.training,args.polar_declaration,args.archived,seal)
-    corpus_for(training);verify_proof(args.proof,source,candidates)
+    corpus_for(training);proof=verify_proof(args.proof,source,candidates)
+    prepared_suite=_bounded_json(Path(args.suite)/'declaration.json',16*1024**2)
     from nca.ik.declaration import runtime_expectation
     if runtime_expectation()!=training['runtime']:raise ValueError('original runtime changed')
     declaration={'schema':'nca-ik54-frozen-final-declaration/v1','id':'ik54-frozen-final-v1','source':source,
+        'proof_source_binding':source_binding(proof['source'],source),
+        'suite_source_binding':source_binding(prepared_suite['source'],source),
         'training_root':str(Path(args.training).resolve()),'polar_declaration':str(Path(args.polar_declaration).resolve()),
         'archived_root':str(Path(args.archived).resolve()),'suite_root':str(Path(args.suite).resolve()),
         'proof_root':str(Path(args.proof).resolve()),'proof_file_sha256':sha256_file(Path(args.proof)/'proof.json'),

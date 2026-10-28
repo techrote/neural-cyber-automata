@@ -25,6 +25,7 @@ from nca.ik.declaration import runtime_expectation
 from nca.ik.process_limits import memory_limit
 from nca.train.ik_experiment import _source, _read
 from nca.train.ik_followup_seal import process_peak_bytes
+from nca.ik.frozen_source_binding_v1 import source_binding
 
 TRAIN_DECLARATION='5e0ce7c4e36bbcbebe7543f8d230c5df166cf33d291a01d847efc6ed9ad2c4f8'
 STARTED=time.monotonic()
@@ -140,10 +141,11 @@ def declare(root,training_declaration):
 
 def load(root):
     root=Path(root);d=_read(root/'declaration.json');config=FrozenFinalConfig();identity=_read(root/'geometry.json')
+    source_binding(d['source'],_source(Path(__file__).resolve().parents[3]))
     validate_isolation(_read(root/'isolation.json'),identity,d.get('training_corpus_identity'))
     preparation=_read(root/'preparation.json')
     for key in ('ordered_task_ids_sha256','ordered_geometry_sha256'):digest(identity.get(key),key)
-    if (d.get('schema')!='nca-ik-frozen-seal-declaration/v1' or d.get('source')!=_source(Path(__file__).resolve().parents[3])
+    if (d.get('schema')!='nca-ik-frozen-seal-declaration/v1'
         or d.get('runtime')!=runtime_expectation() or d.get('config')!=config.to_dict()
         or d.get('allocation')!=config.budget.to_dict() or d.get('attempts')!=1 or d.get('retry_or_resume') is not False
         or d.get('sha256')!=sha256_json({k:v for k,v in d.items() if k!='sha256'})

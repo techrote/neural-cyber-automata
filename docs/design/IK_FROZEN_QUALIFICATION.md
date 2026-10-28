@@ -91,4 +91,22 @@ ratio limit stays <= .8 against the same-quality numerical reference, with
 analytic cost reported. There is one fixed measurement per seed; no best-round
 substitution. Passing software scoring is not export or physical acceptance.
 
+## Source amendment before qualification
+
+The model-free suite and tuning proof were prepared at `e2aec1f`. Linux CI
+identified a new test that incorrectly required the Windows trigonometric
+geometry hash on Linux. Its correction uses the platform-neutral recipe hash;
+the existing historical tests retain Windows replay and Linux refusal checks.
+No suite is regenerated or modified for this correction.
+
+The explicit `frozen_source_binding_v1` amendment pins that prepared revision
+and its full production-source closure. It permits only one new provenance
+module and changes to three named provenance-validation functions. AST equality
+requires every other statement/function in those files to remain unchanged;
+all other production file hashes, including geometry, isolation, inference and
+scoring, must match exactly. The new packet records both source bindings, and
+the two independent admissions cover the exact amended head and green CI.
+The old preparation/proof/seal artifacts remain immutable with their actual
+executed revision. This is a provenance repair, not new computation or a retry.
+
 © 2026 techrote. All rights reserved.

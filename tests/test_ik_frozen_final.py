@@ -8,6 +8,16 @@ from nca.evaluation import ik54_frozen_final_v1 as final
 
 
 class FrozenRecipeTests(unittest.TestCase):
+    def test_provenance_amendment_cannot_mask_computation_changes(self):
+        from nca.ik.frozen_source_binding_v1 import nonbinding_ast,source_binding
+        old='def load(): return 1\ndef worker(): return 2\n'
+        binding_only='def load(): return 3\ndef worker(): return 2\n'
+        computation='def load(): return 3\ndef worker(): return 4\n'
+        self.assertEqual(nonbinding_ast(old,{'load'}),nonbinding_ast(binding_only,{'load'}))
+        self.assertNotEqual(nonbinding_ast(old,{'load'}),nonbinding_ast(computation,{'load'}))
+        with self.assertRaises(ValueError):nonbinding_ast('from nca.ik.frozen_source_binding_v1 import source_binding as worker',{'load'})
+        with self.assertRaises(ValueError):nonbinding_ast('from nca.ik.frozen_source_binding_v1 import source_binding\n'*2,{'load'})
+        with self.assertRaises(ValueError):source_binding({'revision':'unknown'}, {'revision':'other'})
     def test_new_recipe_dispatches_exact_final_schedule_and_namespaces(self):
         from nca.ik.data import iter_tasks,build_split_plan
         from nca.contracts import ContractError
@@ -25,9 +35,10 @@ class FrozenRecipeTests(unittest.TestCase):
         with self.assertRaises(ContractError):tuple(iter_tasks(config,'training'))
 
     def test_historical_recipe_geometry_identity_is_unchanged(self):
-        from nca.train.ik_followup_seal import geometry_identity
-        _,_,identity=geometry_identity()
-        self.assertEqual(identity['ordered_geometry_sha256'],'57f7008cbaf6d776ad36e2aeec97019a68a8929e697a2734ea3fde2d7abe64c2')
+        from nca.ik.fresh_final import FreshFinalConfig
+        # Platform-neutral identity. Existing historical tests separately retain
+        # the exact Windows trigonometric replay check and Linux refusal case.
+        self.assertEqual(FreshFinalConfig().sha256,'b7c59d037bffb00ecaba6537f865dad7303949cdaf5c5dcf4e89b7126c93b5b8')
 
     def test_continuous_guard_rejects_crossing_between_endpoints(self):
         from nca.train.ik_frozen_seal_v1 import separated
