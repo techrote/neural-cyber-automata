@@ -8,6 +8,7 @@ verified: 2026-10-28
 # Decisions — newest first
 IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERSEDED by D-###]`. Accepted designs are described in [ARCHITECTURE.md](ARCHITECTURE.md) as `[TARGET D-###]` until built. D-002 to D-008 record the original 13 October acceptance, qualified at that time by D-009. The current scope is D-010 and fidelity target D-011. Historical text below explains the earlier rationale; superseded clauses are not current gates. D-002/D-003/D-005 retain their meaning only for a cellular experiment, not for every actor controller.
 ## Current entries
+### D-037 — Fresh frozen-inference qualification; [ACCEPTED SCOPE] 2026-10-28; [new sealed suite, same checkpoints and unchanged gates](decisions/2026-10-28-frozen-ik-qualification.md).
 ### D-036 — CPU inference investigation; [ACCEPTED SCOPE] 2026-10-28; [development performance work, unchanged thresholds and no consumed-final reuse](decisions/2026-10-28-ik-cpu-development.md).
 ### D-035 — Candidate-bound IK54 final qualification; [ACCEPTED SCOPE] 2026-10-28; [single-use declaration and independent admissions](decisions/2026-10-28-ik54-final-qualification.md).
 ### D-034 — Execute the admitted IK54 qualification; [ACCEPTED SCOPE] 2026-10-28; [one frozen three-seed training run, finals excluded](decisions/2026-10-28-ik54-qualification-execution.md).
@@ -19,7 +20,6 @@ IDs are never reused. A replaced decision keeps its entry and is tagged `[SUPERS
 ### D-027 — Bounded polar-feature IK follow-up; [ACCEPTED] 2026-10-23; [new conditional TITAN allocation, fresh final and unchanged gates](decisions/2026-10-23-ik-polar-followup.md).
 ### D-026 — Reviewed recovery of the same frozen IK evaluation
 [ACCEPTED] 2026-10-23: [preserved markers, accounted costs and no retraining](decisions/2026-10-23-ik-evaluation-recovery.md).
-
 ### D-025 — Preserve the original IK allocation through an admitted source amendment
 
 [ACCEPTED] 2026-10-23: [original allocation, fresh admissions and necessary source amendment](decisions/2026-10-23-ik-continuation.md).

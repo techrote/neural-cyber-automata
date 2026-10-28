@@ -8,6 +8,8 @@ verified: 2026-10-28
 
 # Documentation map
 
+IK CPU qualification: [new sealed-suite preparation](design/IK_FROZEN_QUALIFICATION.md).
+
 IK CPU: [utility diagnosis and inference improvement](evidence/2026-10-28-ik-cpu-development.md); [development scope](decisions/2026-10-28-ik-cpu-development.md).
 
 IK54: [final qualification result](evidence/2026-10-28-ik54-final-qualification.md) and [declaration](design/IK54_FINAL_QUALIFICATION.md).
